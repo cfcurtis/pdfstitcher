@@ -27,7 +27,7 @@ except:
 page_count = in_doc.GetPageCount()
 
 if args.pages is None:
-    pages = list(range(page_count+1))
+    pages = list(range(1,page_count+1))
 else:
     # parse out the requested pages. Note that this allows for pages to be repeated and out of order.
     ptext = args.pages.split(',')
@@ -87,6 +87,9 @@ print('Tiling with {} rows and {} columns'.format(rows,cols))
 
 # define the media box with the final grid + margins
 media_box = Rect(0,0,width*cols + 2*m,height*rows + 2*m)
+
+print('Page size detected as {} x {} inches'.format(width/72,height/72))
+
 new_page = new_doc.PageCreate(media_box)
 
 builder = ElementBuilder()
