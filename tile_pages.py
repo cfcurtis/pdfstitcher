@@ -5,7 +5,8 @@ import sys
 import math
 
 parser = argparse.ArgumentParser(description='Tile pdf pages into one document.',
-                                 epilog='Note: If both rows and columns are specified, rows are ignored.')
+                                 epilog='Note: If both rows and columns are specified, rows are ignored. ' + 
+                                        'To insert a blank page, include a zero in the page list.')
 
 parser.add_argument('input',help='Input filename (pdf)')
 parser.add_argument('output',help='Output filename (pdf)')
@@ -13,6 +14,8 @@ parser.add_argument('-p','--pages',help='Pages to tile. May be range or list (e.
 parser.add_argument('-r','--rows',help='Number of rows in tiled grid.')
 parser.add_argument('-c','--columns',help='Number of columns in tiled grid.')
 parser.add_argument('-m','--margins',help='Margin size in inches.')
+parser.add_argument('-t','--trim',help='Amount to trim from edges. ' +
+                    'Options are None, auto, or manual (in inches) given as left, right, top, bottom')
 
 args = parser.parse_args()
 
@@ -35,7 +38,6 @@ else:
     for r in [p.split('-') for p in ptext]:
         if len(r) == 1:
             pages.append(int(r[0]))
-            
         else:
             pages += list(range(int(r[0]),int(r[-1])+1))
 
@@ -44,16 +46,26 @@ itr = in_doc.GetPageIterator(pages[0])
 
 # get the dimensions of the pages (assumes they're all the same)
 # TODO: add the option to deal with inconsistent dimensions
-# TODO: deal with margins for pages designed to be trimmed
 width = itr.Current().GetPageWidth()
 height = itr.Current().GetPageHeight()
+print('Page size detected as {} x {} inches'.format(width/72,height/72))
 
 if args.margins is None:
-    m = 0.0
-
+    margin = 0
 else:
     # all the docs/examples seem to assume 72 dpi all the time
-    m = float(args.margins)*72
+    margin = float(args.margins)*72
+
+if args.trim is None or args.trim.lower() == 'none':
+    trim = [0,0,0,0]
+else:
+    if args.trim.lower() == 'auto':
+        # TODO
+        print('Auto trim not yet implemented')
+    else:
+        trim = [float(t)*72 for t in args.trim.split(',')]
+        width -= trim[0] + trim[1]
+        height -= trim[2] + trim[3]
 
 for p in pages:
     if p > page_count:
@@ -86,10 +98,8 @@ if args.rows is not None:
 print('Tiling with {} rows and {} columns'.format(rows,cols))
 
 # define the media box with the final grid + margins
-media_box = Rect(0,0,width*cols + 2*m,height*rows + 2*m)
-
-print('Page size detected as {} x {} inches'.format(width/72,height/72))
-
+media_box = Rect(0,0,(width)*cols + 
+    2*margin,(height)*rows + 2*margin)
 new_page = new_doc.PageCreate(media_box)
 
 builder = ElementBuilder()
@@ -104,10 +114,9 @@ while i < n_imported:
     r = math.floor(i/cols)
     c = i % cols
 
-    # print('Placing at {}, {}'.format(m+c*width, (n_imported-r-1)*height + m))
     # don't scale, just shift
     element.GetGState().SetTransform(1, 0, 0, 1,
-        m + c*width,(rows-r-1)*height + m)
+        margin + c*width - trim[0],(rows-r-1)*height + margin + trim[2])
     writer.WritePlacedElement(element)
     i += 1
 
