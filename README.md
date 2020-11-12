@@ -25,11 +25,14 @@ where `input.pdf` is the pattern file provided by the designer and `output.pdf` 
 
 `-m MARGINS, --margins MARGINS`: Margin size in inches. Adding a margin can be very useful for projecting patterns as it allows for greater flexibility in positioning the pattern piece within the projected area.
 
-`-t TRIM, --trim TRIM`  Amount to trim from edges given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from left and top).
+`-t TRIM, --trim TRIM`  Amount to trim from edges given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from left and top). Tip: use the "measure" tool in Adobe Reader DC to determine the amount to trim.
 
 ### Examples
     python tile_pages.py -c 5 -m 10 input.pdf output.pdf 
+Simple example for no-trim pages where the entire document contains pattern pieces (no instructions or title page). The options specified here result in 5 columns and 10" margins.
 
-    python tile_pages.py -r 3 -p 33-39,40-44,0,0,45-51 input.pdf output.pdf
-    
+    python tile_pages.py -r 3 -p 33-44,0,0,45-51 input.pdf output.pdf
+More complicated example with 3 rows of pages. Pattern pieces are only on pages 33-51, but the assembly diagram has two pages missing from the middle row, so two zeros are inserted into the page list.
+
     python tile_pages.py -c 2 -p 5,7,6,8-10,0,11-16 -t 0,1.4,1.4,0 input.pdf output.pdf
+Yet more complication. This pattern has somewhat unusual assembly instructions as the pieces are designed to be split across two pages each, not assembled into one large grid. The workaround is to to give the pages left to right then top to bottom order. In addition, 1.4" is trimmed from the right and top of each page.
