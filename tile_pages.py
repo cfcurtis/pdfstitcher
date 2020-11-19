@@ -4,128 +4,212 @@ import argparse
 import sys
 import math
 
-parser = argparse.ArgumentParser(description='Tile pdf pages into one document.',
+class PageTiler():
+    def __init__(self,in_doc = None):
+        self.in_doc = in_doc
+        self.trim = [0,0,0,0]
+        self.margin = 0
+
+        self.import_pages = None
+        self.page_width = []
+        self.page_height = []
+
+    def SetTrim(self,trim):
+        if len(trim) == 1:
+            self.trim = [trim,trim,trim,trim]
+        
+        if len(trim) == 2:
+            self.trim = [trim[0],trim[0],trim[1],trim[1]]
+        
+        if len(trim) == 4:
+            self.trim = trim
+        
+        else:
+            print('Invalid trim value specified, ignoring')
+            self.trim = [0,0,0,0]
+        
+    def SetMargin(self,margin):
+        self.margin = margin
+
+    def SetPageRange(self,pages=None):
+        if self.in_doc is None:
+            print("Input document not loaded")
+            return
+        
+        self.import_pages = VectorPage()
+        self.page_width = []
+        self.page_height = []
+
+        page_count = self.in_doc.GetPageCount()
+
+        if pages is None:
+            pages = list(range(1,page_count+1))
+
+        itr = self.in_doc.GetPageIterator(pages[0])    
+        nzeros = 0
+        
+        for p in pages:
+            if p > page_count:
+                print('Only {} pages in document, skipping {}'.format(page_count,p))
+                continue
+
+            itr = self.in_doc.GetPageIterator(p)
+            self.import_pages.push_back(itr.Current())
+
+            if p > 0:
+                self.page_width.append(itr.Current().GetPageWidth())
+                self.page_height.append(itr.Current().GetPageHeight())
+            else:
+                self.page_width.append(0)
+                self.page_height.append(0)
+                nzeros += 1
+            
+        # replace the zero pages with the average height/width
+        if nzeros > 0:
+            mean_width = sum(self.page_width)/(len(self.page_width) - nzeros)
+            mean_height = sum(self.page_height)/(len(self.page_height) - nzeros)
+            self.page_width = [w if w > 0 else mean_width for w in self.page_width]
+            self.page_height = [h if h > 0 else mean_height for h in self.page_height]
+
+    def Run(self,rows = None,cols = None):
+        if self.import_pages is None:
+            self.SetPageRange(None)
+
+        # create a new document with a page big enough to contain all the tiled pages, plus requested margin
+        new_doc = PDFDoc()
+        imported_pages = new_doc.ImportPages(self.import_pages)
+        n_imported = len(imported_pages)
+
+        # figure out how big it needs to be based on requested columns/rows
+        if cols is None and rows is None:
+            # try for square
+            cols = math.ceil(math.sqrt(n_imported))
+            rows = cols
+
+        # columns take priority if both are specified
+        if rows is not None:
+            cols = math.ceil(n_imported/rows)
+
+        if cols is not None:
+            rows = math.ceil(n_imported/cols)
+
+        print('Tiling with {} rows and {} columns'.format(rows,cols))
+
+        # define the media box with the final grid + margins
+        # run through the width/height combos to find the maximum required
+        width = 0
+        height = 0
+        row_height = [0]*rows
+        for r in range(rows):
+            width = max(width,sum(self.page_width[r*cols:r*cols+cols]))
+            row_height[r] = max(self.page_height[r*cols:r*cols+cols])
+        
+        width -= (self.trim[0] + self.trim[1])*cols
+        height = sum(row_height) - (self.trim[2] + self.trim[3])*rows
+
+        media_box = Rect(0,0,width + 2*self.margin,height + 2*self.margin)
+        new_page = new_doc.PageCreate(media_box)
+
+        builder = ElementBuilder()
+        writer = ElementWriter()
+        writer.Begin(new_page)
+
+        i = 0    
+        while i < n_imported:
+            element = builder.CreateForm(imported_pages[i])
+
+            # left to right, top to bottom is assumed
+            r = math.floor(i/cols)
+            c = i % cols
+            
+            x0 = self.margin - self.trim[0] + sum(self.page_width[r*cols:r*cols + c]) - c*(self.trim[0] + self.trim[1])
+            y0 = self.margin - self.trim[3] + sum(row_height[r+1:]) - (rows-r-1)*(self.trim[2] + self.trim[3])
+
+            # don't scale, just shift
+            element.GetGState().SetTransform(1, 0, 0, 1, x0, y0)
+            writer.WritePlacedElement(element)
+            i += 1
+
+        writer.End()
+        new_doc.PagePushBack(new_page)
+
+        return new_doc
+
+def main(args):
+    PDFNet.Initialize()
+    # first try opening the document
+    try:
+        in_doc = PDFDoc(args.input)
+    except:
+        print("Unable to open " + args.input)
+        sys.exit()
+    
+    tiler = PageTiler(in_doc)
+
+    if args.pages is not None:
+        # parse out the requested pages. Note that this allows for pages to be repeated and out of order.
+        ptext = args.pages.split(',')
+        pages = []
+        for r in [p.split('-') for p in ptext]:
+            if len(r) == 1:
+                pages.append(int(r[0]))
+            else:
+                pages += list(range(int(r[0]),int(r[-1])+1))
+        
+        if len(pages) == 0:
+            pages = None
+        
+        tiler.SetPageRange(pages)
+
+    if args.margins is not None:
+        # all the docs/examples seem to assume 72 dpi all the time
+        margin = float(args.margins)*72
+        tiler.SetMargin(margin)
+
+    if args.trim is not None:
+        trim = [float(t)*72 for t in args.trim.split(',')]
+        tiler.SetTrim(trim)
+
+    cols = None
+    rows = None
+    if args.columns is not None:
+        cols = int(args.columns)
+
+    if args.rows is not None:
+        rows = int(args.rows)
+    
+    # run it!
+    new_doc = tiler.Run(rows,cols)
+        
+    try:
+        new_doc.Save(args.output,SDFDoc.e_linearized)
+        success = True
+    except:
+        success = False
+
+    in_doc.Close()
+    new_doc.Close()
+
+    return success
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='Tile pdf pages into one document.',
                                  epilog='Note: If both rows and columns are specified, rows are ignored. ' + 
                                         'To insert a blank page, include a zero in the page list.')
 
-parser.add_argument('input',help='Input filename (pdf)')
-parser.add_argument('output',help='Output filename (pdf)')
-parser.add_argument('-p','--pages',help='Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: entire document.')
-parser.add_argument('-r','--rows',help='Number of rows in tiled grid.')
-parser.add_argument('-c','--columns',help='Number of columns in tiled grid.')
-parser.add_argument('-m','--margins',help='Margin size in inches.')
-parser.add_argument('-t','--trim',help='Amount to trim from edges. ' +
-                    'Options are None, auto, or manual (in inches) given as left, right, top, bottom')
+    parser.add_argument('input',help='Input filename (pdf)')
+    parser.add_argument('output',help='Output filename (pdf)')
+    parser.add_argument('-p','--pages',help='Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: entire document.')
+    parser.add_argument('-r','--rows',help='Number of rows in tiled grid.')
+    parser.add_argument('-c','--columns',help='Number of columns in tiled grid.')
+    parser.add_argument('-m','--margins',help='Margin size in inches.')
+    parser.add_argument('-t','--trim',help='Amount to trim from edges ' +
+                        'given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from left and top)')
 
-args = parser.parse_args()
+    return parser.parse_args()
 
-# first try opening the document
-try:
-    in_doc = PDFDoc(args.input)
-    
-except:
-    print("Unable to open " + args.input)
-    sys.exit()
+if __name__ == "__main__":
+    args = parse_arguments()
+    success = main(args)
 
-page_count = in_doc.GetPageCount()
-
-if args.pages is None:
-    pages = list(range(1,page_count+1))
-else:
-    # parse out the requested pages. Note that this allows for pages to be repeated and out of order.
-    ptext = args.pages.split(',')
-    pages = []
-    for r in [p.split('-') for p in ptext]:
-        if len(r) == 1:
-            pages.append(int(r[0]))
-        else:
-            pages += list(range(int(r[0]),int(r[-1])+1))
-
-import_pages = VectorPage()
-itr = in_doc.GetPageIterator(pages[0])
-
-# get the dimensions of the pages (assumes they're all the same)
-# TODO: add the option to deal with inconsistent dimensions
-width = itr.Current().GetPageWidth()
-height = itr.Current().GetPageHeight()
-print('Page size detected as {} x {} inches'.format(width/72,height/72))
-
-if args.margins is None:
-    margin = 0
-else:
-    # all the docs/examples seem to assume 72 dpi all the time
-    margin = float(args.margins)*72
-
-if args.trim is None or args.trim.lower() == 'none':
-    trim = [0,0,0,0]
-else:
-    if args.trim.lower() == 'auto':
-        # TODO
-        print('Auto trim not yet implemented')
-    else:
-        trim = [float(t)*72 for t in args.trim.split(',')]
-        width -= trim[0] + trim[1]
-        height -= trim[2] + trim[3]
-
-for p in pages:
-    if p > page_count:
-        print('Only {} pages in document, skipping {}'.format(page_count,p))
-        continue
-
-    itr = in_doc.GetPageIterator(p)
-    import_pages.push_back(itr.Current())
-
-# create a new document with a page big enough to contain all the tiled pages, plus requested margin
-new_doc = PDFDoc()
-imported_pages = new_doc.ImportPages(import_pages)
-n_imported = len(imported_pages)
-
-# figure out how big it needs to be based on requested columns/rows
-if args.columns is None and args.rows is None:
-    # try for square
-    cols = math.ceil(math.sqrt(n_imported))
-    rows = cols
-
-# columns take priority if both are specified
-if args.columns is not None:
-    cols = int(args.columns)
-    rows = math.ceil(n_imported/cols)
-
-if args.rows is not None:
-    rows = int(args.rows)
-    cols = math.ceil(n_imported/rows)
-
-print('Tiling with {} rows and {} columns'.format(rows,cols))
-
-# define the media box with the final grid + margins
-media_box = Rect(0,0,(width)*cols + 
-    2*margin,(height)*rows + 2*margin)
-new_page = new_doc.PageCreate(media_box)
-
-builder = ElementBuilder()
-writer = ElementWriter()
-writer.Begin(new_page)
-
-i = 0    
-while i < n_imported:
-    element = builder.CreateForm(imported_pages[i])
-
-    # left to right, top to bottom is assumed
-    r = math.floor(i/cols)
-    c = i % cols
-
-    # don't scale, just shift
-    element.GetGState().SetTransform(1, 0, 0, 1,
-        margin + c*width - trim[0],(rows-r-1)*height + margin + trim[2])
-    writer.WritePlacedElement(element)
-    i += 1
-
-writer.End()
-new_doc.PagePushBack(new_page)
-    
-new_doc.Save(args.output,SDFDoc.e_linearized)
-
-in_doc.Close()
-new_doc.Close()
-
-subprocess.call(args.output,shell=True)
+    subprocess.call(args.output,shell=True)
