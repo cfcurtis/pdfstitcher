@@ -14,7 +14,7 @@ class PageTiler():
         self.page_width = []
         self.page_height = []
 
-    def SetTrim(self,trim):
+    def set_trim(self,trim):
         if len(trim) == 1:
             self.trim = [trim,trim,trim,trim]
         
@@ -28,10 +28,10 @@ class PageTiler():
             print('Invalid trim value specified, ignoring')
             self.trim = [0,0,0,0]
         
-    def SetMargin(self,margin):
+    def set_margin(self,margin):
         self.margin = margin
 
-    def SetPageRange(self,pages=None):
+    def set_page_range(self,pages=None):
         if self.in_doc is None:
             print("Input document not loaded")
             return
@@ -71,9 +71,9 @@ class PageTiler():
             self.page_width = [w if w > 0 else mean_width for w in self.page_width]
             self.page_height = [h if h > 0 else mean_height for h in self.page_height]
 
-    def Run(self,rows = None,cols = None):
+    def run(self,rows=0,cols=0):
         if self.import_pages is None:
-            self.SetPageRange(None)
+            self.set_page_range(None)
 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
         new_doc = PDFDoc()
@@ -81,19 +81,22 @@ class PageTiler():
         n_imported = len(imported_pages)
 
         # figure out how big it needs to be based on requested columns/rows
-        if cols is None and rows is None:
+        if cols == 0 and rows == 0:
             # try for square
             cols = math.ceil(math.sqrt(n_imported))
             rows = cols
 
         # columns take priority if both are specified
-        if rows is not None:
+        if rows > 0:
             cols = math.ceil(n_imported/rows)
 
-        if cols is not None:
+        if cols > 0:
             rows = math.ceil(n_imported/cols)
 
         print('Tiling with {} rows and {} columns'.format(rows,cols))
+        print('Options:')
+        print('    Margins: {} pixels'.format(self.margin))
+        print('    Trim: {} pixels'.format(self.trim))
 
         # define the media box with the final grid + margins
         # run through the width/height combos to find the maximum required
@@ -159,16 +162,16 @@ def main(args):
         if len(pages) == 0:
             pages = None
         
-        tiler.SetPageRange(pages)
+        tiler.set_page_range(pages)
 
     if args.margins is not None:
         # all the docs/examples seem to assume 72 dpi all the time
         margin = float(args.margins)*72
-        tiler.SetMargin(margin)
+        tiler.set_margin(margin)
 
     if args.trim is not None:
         trim = [float(t)*72 for t in args.trim.split(',')]
-        tiler.SetTrim(trim)
+        tiler.set_trim(trim)
 
     cols = None
     rows = None
@@ -179,7 +182,7 @@ def main(args):
         rows = int(args.rows)
     
     # run it!
-    new_doc = tiler.Run(rows,cols)
+    new_doc = tiler.run(rows,cols)
         
     try:
         new_doc.Save(args.output,SDFDoc.e_linearized)
@@ -187,10 +190,7 @@ def main(args):
     except:
         success = False
 
-    in_doc.Close()
-    new_doc.Close()
-
-    return success
+    return new_doc, success
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Tile pdf pages into one document.',
@@ -210,6 +210,10 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
-    success = main(args)
-
-    subprocess.call(args.output,shell=True)
+    new_doc, success = main(args)
+    new_doc.Close()
+    
+    view = PDFView()
+    doc = PDFDoc(args.output)
+    view.SetDoc(doc)
+    # subprocess.call(args.output,shell=True)
