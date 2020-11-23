@@ -21,7 +21,7 @@ where `input.pdf` is the pattern file provided by the designer and `output.pdf` 
 ### GUI Usage
 The gui can be launched by running `python sew_gui.py`. The following window should appear:
 
-![PDF Tiler GUI](sew_gui_screenshot.png "sew_gui")
+<a href="url"><img src="sew_gui_screenshot.png" width="600" ></a>
 
 "Select Input PDF" launches a file browser allowing you to choose the print at home PDF. "Select Output PDF" launches a file browser to select the name of the document to write. If you don't specify a filename here, you will be asked to choose one when you click "Generate Tiled PDF".
 
