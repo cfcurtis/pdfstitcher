@@ -9,12 +9,25 @@ Many sewing patterns are provided as print-at-home PDFs with pages suitable for 
 
 * [PDFTron SDK](https://www.pdftron.com/documentation/python/get-started/python3) Precombiled binary can be installed by running `pip install PDFNetPython3`
 
-### Basic Usage
+* [wxPython](https://www.wxpython.org/) (Optional, for GUI support). Testing was done with version 4.0.4 provided by `conda`.
+
+### Command Line Usage
 The script `tile_pages.py` can be called as followed:
 
     python tile_pages.py <options> input.pdf output.pdf
 
 where `input.pdf` is the pattern file provided by the designer and `output.pdf` is the name of the output file to generate.
+
+### GUI Usage
+The gui can be launched by running `python sew_gui.py`. The following window should appear:
+
+![PDF Tiler GUI](sew_gui_screenshot.png "sew_gui")
+
+"Select Input PDF" launches a file browser allowing you to choose the print at home PDF. "Select Output PDF" launches a file browser to select the name of the document to write. If you don't specify a filename here, you will be asked to choose one when you click "Generate Tiled PDF".
+
+So far the only difference between the GUI and the script version is the ability to specify units for the margin/trim options (inches or centimetres).
+
+The GUI does not display the input or output PDF. You will need to use an external PDF viewer such as Adobe Reader for this. Remember to close your output PDF if you want to re-generate with different options, otherwise it will be locked for writing.
 
 ### Optional arguments
 `-p PAGES, --pages PAGES`: Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). If no pages are specified, the entire document is tiled. Pages may be repeated and blank pages can be inserted using zeros.
