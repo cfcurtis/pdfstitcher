@@ -3,16 +3,45 @@ import subprocess
 import argparse
 import sys
 import math
+import gettext
+
+def txt_to_float(txt):
+    if txt is None or not txt.strip():
+        return 0
+    try:
+        txtnum = float(txt)
+    except:
+        print('Invalid input ' + txt + ', only numeric values allowed')
+    
+    return txtnum
 
 class PageTiler():
     def __init__(self,in_doc = None):
         self.in_doc = in_doc
+        
+        # 0 = inches, 1 = centimetres
+        self.units = 0
         self.trim = [0,0,0,0]
         self.margin = 0
+        self.rotation = 0
 
         self.import_pages = None
         self.page_width = []
         self.page_height = []
+    
+    def set_units(self,units=0):
+        self.units = units
+    
+    def set_rotation(self,rot):
+        # 0 = None, 1 = Clockwise, 2 = Counter Clockwise
+        self.rotation = rot
+
+    def units_to_px(self,val):
+        pxval = val*72
+        if self.units == 0:
+            return pxval
+        else:
+            return pxval/2.54
 
     def set_trim(self,trim):
         if len(trim) == 1:
@@ -92,32 +121,75 @@ class PageTiler():
 
         if cols > 0:
             rows = math.ceil(n_imported/cols)
+        
+        # convert the margin and trim options into pixels
+        unitstr = 'cm' if self.units else 'in'
+        margin = self.units_to_px(self.margin)
+        trim = [self.units_to_px(t) for t in self.trim]
+
+        rotstr = 'None'
+        
+        if self.rotation == 1:
+            rotstr = 'Clockwise'
+
+        if self.rotation == 2:
+            rotstr = 'Counterclockwise'
 
         print('Tiling with {} rows and {} columns'.format(rows,cols))
         print('Options:')
-        print('    Margins: {} pixels'.format(self.margin))
-        print('    Trim: {} pixels'.format(self.trim))
+        print('    Margins: {} {}'.format(self.margin,unitstr))
+        print('    Trim: {} {}'.format(self.trim,unitstr))
+        print('    Rotation: {}'.format(rotstr))
 
         # define the media box with the final grid + margins
         # run through the width/height combos to find the maximum required
+        ph = self.page_height
+        pw = self.page_width
+        
+        # R is the rotation matrix (default to identity)
+        R = [1,0,0,1]
+
+        # We need to account for the shift in origin if page rotation is applied
+        o_shift = [0,0]
+
+        if self.rotation != 0:
+            # swap width and height of pages
+            ph = self.page_width
+            pw = self.page_height
+            
+            # define the rotation transform and
+            # swap the trim order
+            if self.rotation == 1:
+                R = [0,1,-1,0]
+                o_shift = [pw[0],0]
+                order = [2,3,1,0]
+
+            if self.rotation == 2:
+                R = [0,-1,1,0]
+                o_shift = [0,ph[0]]
+                order = [3,2,0,1]
+            
+            trim = [trim[o] for o in order]
+
         width = 0
         height = 0
         row_height = [0]*rows
         for r in range(rows):
-            width = max(width,sum(self.page_width[r*cols:r*cols+cols]))
-            row_height[r] = max(self.page_height[r*cols:r*cols+cols])
+            width = max(width,sum(pw[r*cols:r*cols+cols]))
+            row_height[r] = max(ph[r*cols:r*cols+cols])
         
-        width -= (self.trim[0] + self.trim[1])*cols
-        height = sum(row_height) - (self.trim[2] + self.trim[3])*rows
+        width -= (trim[0] + trim[1])*cols
+        height = sum(row_height) - (trim[2] + trim[3])*rows
 
-        media_box = Rect(0,0,width + 2*self.margin,height + 2*self.margin)
+        media_box = Rect(0,0,width + 2*margin,height + 2*margin)
         new_page = new_doc.PageCreate(media_box)
 
         builder = ElementBuilder()
         writer = ElementWriter()
         writer.Begin(new_page)
 
-        i = 0    
+        i = 0  
+        
         while i < n_imported:
             element = builder.CreateForm(imported_pages[i])
 
@@ -125,11 +197,13 @@ class PageTiler():
             r = math.floor(i/cols)
             c = i % cols
             
-            x0 = self.margin - self.trim[0] + sum(self.page_width[r*cols:r*cols + c]) - c*(self.trim[0] + self.trim[1])
-            y0 = self.margin - self.trim[3] + sum(row_height[r+1:]) - (rows-r-1)*(self.trim[2] + self.trim[3])
+            x0 = margin - trim[0] + sum(pw[r*cols:r*cols + c]) - c*(trim[0] + trim[1])
+            y0 = margin - trim[3] + sum(row_height[r+1:]) - (rows-r-1)*(trim[2] + trim[3])
 
-            # don't scale, just shift
-            element.GetGState().SetTransform(1, 0, 0, 1, x0, y0)
+            # don't scale, just shift and rotate
+            # first shift to origin, then rotate, then shift to final destination
+            element.GetGState().SetTransform(R[0],R[1],R[2],R[3],x0+o_shift[0],y0+o_shift[1])
+
             writer.WritePlacedElement(element)
             i += 1
 
@@ -166,15 +240,18 @@ def main(args):
 
     if args.margins is not None:
         # all the docs/examples seem to assume 72 dpi all the time
-        margin = float(args.margins)*72
+        margin = txt_to_float(args.margins)
         tiler.set_margin(margin)
 
     if args.trim is not None:
-        trim = [float(t)*72 for t in args.trim.split(',')]
+        trim = [txt_to_float(t) for t in args.trim.split(',')]
         tiler.set_trim(trim)
+    
+    if args.rotate is not None:
+        tiler.set_rotation(int(args.rotate))
 
-    cols = None
-    rows = None
+    cols = 0
+    rows = 0
     if args.columns is not None:
         cols = int(args.columns)
 
@@ -205,6 +282,7 @@ def parse_arguments():
     parser.add_argument('-m','--margins',help='Margin size in inches.')
     parser.add_argument('-t','--trim',help='Amount to trim from edges ' +
                         'given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from left and top)')
+    parser.add_argument('-R','--rotate',help='Rotate pages (0 for none, 1 for clockwise, 2 for counterclockwise)')
 
     return parser.parse_args()
 
@@ -212,8 +290,5 @@ if __name__ == "__main__":
     args = parse_arguments()
     new_doc, success = main(args)
     new_doc.Close()
-    
-    view = PDFView()
-    doc = PDFDoc(args.output)
-    view.SetDoc(doc)
-    # subprocess.call(args.output,shell=True)
+
+    subprocess.call(args.output,shell=True)
