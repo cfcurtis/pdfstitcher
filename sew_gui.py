@@ -186,6 +186,7 @@ class SewGUI(wx.Frame):
         
         try:
             new_doc.Save(self.out_doc,SDFDoc.e_linearized)
+            new_doc.Close()
             print('Successfully written to ' + self.out_doc)
         except:
             print('Something went wrong, unable to write to ' + self.out_doc)
@@ -238,6 +239,10 @@ class SewGUI(wx.Frame):
                 print('Opening {} with {} pages.'.format(pathname,self.in_doc.GetPageCount()))
                 self.input_fname_display.SetLabel(os.path.basename(pathname))
                 self.page_range_txt.SetValue('1-{}'.format(self.in_doc.GetPageCount()))
+
+                # clear the output if it's already set
+                self.out_doc = None
+                self.output_fname_display.SetLabel('None')
 
             except IOError:
                 wx.LogError('Cannot open file {}'.format(pathname))

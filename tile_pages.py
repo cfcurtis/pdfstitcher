@@ -160,14 +160,14 @@ class PageTiler():
             # define the rotation transform and
             # swap the trim order
             if self.rotation == 1:
-                R = [0,1,-1,0]
-                o_shift = [pw[0],0]
-                order = [2,3,1,0]
-
-            if self.rotation == 2:
                 R = [0,-1,1,0]
                 o_shift = [0,ph[0]]
                 order = [3,2,0,1]
+
+            if self.rotation == 2:
+                R = [0,1,-1,0]
+                o_shift = [pw[0],0]
+                order = [2,3,1,0]
             
             trim = [trim[o] for o in order]
 
