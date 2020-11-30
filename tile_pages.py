@@ -3,15 +3,15 @@ import subprocess
 import argparse
 import sys
 import math
-import gettext
 
 def txt_to_float(txt):
     if txt is None or not txt.strip():
         return 0
+    
     try:
-        txtnum = float(txt)
+        txtnum = float(txt.replace(',','.'))
     except:
-        print('Invalid input ' + txt + ', only numeric values allowed')
+        print(_('Invalid input ') + txt + ', ' + _('only numeric values allowed'))
     
     return txtnum
 
@@ -62,7 +62,7 @@ class PageTiler():
 
     def set_page_range(self,pages=None):
         if self.in_doc is None:
-            print("Input document not loaded")
+            print('Input document not loaded')
             return
         
         self.import_pages = VectorPage()
@@ -127,13 +127,13 @@ class PageTiler():
         margin = self.units_to_px(self.margin)
         trim = [self.units_to_px(t) for t in self.trim]
 
-        rotstr = 'None'
+        rotstr = _('None')
         
         if self.rotation == 1:
-            rotstr = 'Clockwise'
+            rotstr = _('Clockwise')
 
         if self.rotation == 2:
-            rotstr = 'Counterclockwise'
+            rotstr = _('Counterclockwise')
 
         print('Tiling with {} rows and {} columns'.format(rows,cols))
         print('Options:')
