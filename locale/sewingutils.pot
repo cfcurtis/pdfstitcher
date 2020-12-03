@@ -1,0 +1,216 @@
+# Translations template for sewingutils.
+# Copyright (C) 2020 Charlotte Curtis
+# This file is distributed under the same license as the sewingutils
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: sewingutils VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2020-12-02 18:43-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.1\n"
+
+#: sew_gui.py:27 sew_gui.py:266
+msgid "Select input PDF"
+msgstr ""
+
+#: sew_gui.py:30 sew_gui.py:38 sew_gui.py:85 sew_gui.py:285 tile_pages.py:143
+msgid "None"
+msgstr ""
+
+#: sew_gui.py:35 sew_gui.py:250
+msgid "Save output as"
+msgstr ""
+
+#: sew_gui.py:44
+msgid "Required Parameters"
+msgstr ""
+
+#: sew_gui.py:50
+msgid "Page Range:"
+msgstr ""
+
+#: sew_gui.py:52
+msgid "Pages assemble in specified order. 0 inserts a blank page."
+msgstr ""
+
+#: sew_gui.py:58
+msgid "Number of Columns:"
+msgstr ""
+
+#: sew_gui.py:62
+msgid "Number of Rows"
+msgstr ""
+
+#: sew_gui.py:70 tile_pages.py:151
+msgid "Rows then columns"
+msgstr ""
+
+#: sew_gui.py:70 tile_pages.py:153
+msgid "Columns then rows"
+msgstr ""
+
+#: sew_gui.py:71 tile_pages.py:155
+msgid "Left to right"
+msgstr ""
+
+#: sew_gui.py:71 tile_pages.py:157
+msgid "Right to left"
+msgstr ""
+
+#: sew_gui.py:72 tile_pages.py:159
+msgid "Top to bottom"
+msgstr ""
+
+#: sew_gui.py:72 tile_pages.py:161
+msgid "Bottom to top"
+msgstr ""
+
+#: sew_gui.py:74
+msgid "Page order"
+msgstr ""
+
+#: sew_gui.py:85 tile_pages.py:146
+msgid "Clockwise"
+msgstr ""
+
+#: sew_gui.py:85 tile_pages.py:149
+msgid "Counterclockwise"
+msgstr ""
+
+#: sew_gui.py:86
+msgid "Page Rotation"
+msgstr ""
+
+#: sew_gui.py:94
+msgid "Optional Parameters"
+msgstr ""
+
+#: sew_gui.py:99
+msgid "Inches"
+msgstr ""
+
+#: sew_gui.py:99
+msgid "Centimetres"
+msgstr ""
+
+#: sew_gui.py:100
+msgid "Units"
+msgstr ""
+
+#: sew_gui.py:106
+msgid "Margin to add to final output:"
+msgstr ""
+
+#: sew_gui.py:113
+msgid "Amount to trim from each page"
+msgstr ""
+
+#: sew_gui.py:118
+msgid "Left:"
+msgstr ""
+
+#: sew_gui.py:123
+msgid "Right:"
+msgstr ""
+
+#: sew_gui.py:128
+msgid "Top:"
+msgstr ""
+
+#: sew_gui.py:133
+msgid "Bottom:"
+msgstr ""
+
+#: sew_gui.py:140
+msgid "Generate PDF"
+msgstr ""
+
+#: sew_gui.py:221
+msgid "Tiling successful"
+msgstr ""
+
+#: sew_gui.py:223 sew_gui.py:232
+msgid "Something went wrong"
+msgstr ""
+
+#: sew_gui.py:223
+msgid "tiling failed"
+msgstr ""
+
+#: sew_gui.py:224
+msgid "Exception"
+msgstr ""
+
+#: sew_gui.py:230
+msgid "Successfully written to"
+msgstr ""
+
+#: sew_gui.py:232 sew_gui.py:263
+msgid "unable to write to"
+msgstr ""
+
+#: sew_gui.py:279
+msgid "Opening"
+msgstr ""
+
+#: sew_gui.py:288
+msgid "Cannot open file"
+msgstr ""
+
+#: tile_pages.py:14
+msgid "Invalid input "
+msgstr ""
+
+#: tile_pages.py:14
+msgid "only numeric values allowed"
+msgstr ""
+
+#: tile_pages.py:70
+msgid "Invalid trim value specified, ignoring"
+msgstr ""
+
+#: tile_pages.py:78
+msgid "Input document not loaded"
+msgstr ""
+
+#: tile_pages.py:95
+msgid "Only {} pages in document, skipping {}"
+msgstr ""
+
+#: tile_pages.py:163
+msgid "Tiling with {} rows and {} columns"
+msgstr ""
+
+#: tile_pages.py:164
+msgid "Options"
+msgstr ""
+
+#: tile_pages.py:165
+msgid "Margins: {} {}"
+msgstr ""
+
+#: tile_pages.py:166
+msgid "Trim: {} {}"
+msgstr ""
+
+#: tile_pages.py:167
+msgid "Rotation"
+msgstr ""
+
+#: tile_pages.py:168
+msgid "Page order: {}, {}, {}"
+msgstr ""
+
+#: tile_pages.py:256
+msgid "Unable to open"
+msgstr ""
+
