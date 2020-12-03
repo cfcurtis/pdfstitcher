@@ -8,7 +8,7 @@ import gettext
 # testing French
 # os.environ['LANG'] = 'fr'
 
-translate = gettext.translation('messages', 'locale',fallback=False)
+translate = gettext.translation('sewingutils', 'locale', fallback=True)
 translate.install()
 
 class SewGUI(wx.Frame):
@@ -50,6 +50,7 @@ class SewGUI(wx.Frame):
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(pnl, label=_('Page Range' + ':')), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.page_range_txt = wx.TextCtrl(pnl)
+        self.page_range_txt.SetToolTip(wx.ToolTip(_('Pages assemble in specified order. 0 inserts a blank page.')))
         newline.Add(self.page_range_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
@@ -57,30 +58,43 @@ class SewGUI(wx.Frame):
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(pnl, label=_('Number of Columns' + ':')), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.columns_txt = wx.TextCtrl(pnl,size=(40,-1),style=wx.TE_RIGHT)
+        self.columns_txt.Bind(wx.EVT_TEXT,self.on_cols_changed)
         newline.Add(self.columns_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         newline.Add(wx.StaticText(pnl, label=_('Number of Rows') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
         self.rows_txt = wx.TextCtrl(pnl,size=(40,-1),style=wx.TE_RIGHT)
+        self.rows_txt.Bind(wx.EVT_TEXT,self.on_rows_changed)
         newline.Add(self.rows_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
+        # page order
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        note = wx.StaticText(pnl,label=_('Note: if both columns and rows are specified, columns take precedence.'))
-        note.SetFont(note.GetFont().Italic())
-        newline.Add(note)
-        vert_sizer.Add(newline,flag=wx.ALL,border=10)
+        col_row_order_opts = [_('Rows then columns'),_('Columns then rows')]
+        left_right_opts = [_('Left to right'),_('Right to left')]
+        top_bottom_opts = [_('Top to bottom'),_('Bottom to top')]
 
-        ## OPTIONAL PARAMETERS
-        vert_sizer.Add(wx.StaticLine(pnl, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)
-        lbl = wx.StaticText(pnl, label=_('Optional Parameters'))
-        lbl.SetFont(lbl.GetFont().Bold())
-        vert_sizer.Add(lbl, flag=wx.TOP|wx.LEFT, border=5)
+        newline.Add(wx.StaticText(pnl, label=_('Page order') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
+        self.col_row_order_combo = wx.ComboBox(pnl, choices=col_row_order_opts, value=col_row_order_opts[0], style=wx.CB_READONLY)
+        newline.Add(self.col_row_order_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=5)
+        self.left_right_combo = wx.ComboBox(pnl, choices=left_right_opts, value=left_right_opts[0], style=wx.CB_READONLY)
+        newline.Add(self.left_right_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=5)
+        self.top_bottom_combo = wx.ComboBox(pnl, choices=top_bottom_opts, value=top_bottom_opts[0], style=wx.CB_READONLY)
+        newline.Add(self.top_bottom_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=5)
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
         
         # rotation 
         newline = wx.BoxSizer(wx.HORIZONTAL)
         rotate_opts = [_('None'),_('Clockwise'),_('Counterclockwise')]
-        newline.Add(wx.StaticText(pnl, label=_('Page Rotation' + ':')), flag=wx.ALIGN_CENTRE_VERTICAL)
+        newline.Add(wx.StaticText(pnl, label=_('Page Rotation') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.rotate_combo = wx.ComboBox(pnl, choices=rotate_opts, value=rotate_opts[0], style=wx.CB_READONLY)
         newline.Add(self.rotate_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=5)
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+
+        ## OPTIONAL PARAMETERS
+        vert_sizer.Add(wx.StaticLine(pnl, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)
+        newline = wx.BoxSizer(wx.HORIZONTAL)
+        lbl = wx.StaticText(pnl, label=_('Optional Parameters'))
+        lbl.SetFont(lbl.GetFont().Bold())
+        newline.Add(lbl, flag=wx.TOP|wx.LEFT, border=5)
 
         # unit selection
         unit_opts = [_('Inches'),_('Centimetres')]     
@@ -143,6 +157,20 @@ class SewGUI(wx.Frame):
 
         self.working_dir = os.getcwd()
     
+    def on_cols_changed(self,event):
+        txt = self.columns_txt.GetValue().strip()
+        if txt and self.in_doc:
+            cols = int(txt)
+            rows = math.ceil(self.in_doc.GetPageCount()/cols)
+            self.rows_txt.ChangeValue(str(rows))
+    
+    def on_rows_changed(self,event):
+        txt = self.rows_txt.GetValue().strip()
+        if txt and self.in_doc:
+            rows = int(txt)
+            cols = math.ceil(self.in_doc.GetPageCount()/rows)
+            self.columns_txt.ChangeValue(str(cols))
+    
     def on_go_pressed(self,event):
         if self.out_doc is None:
             self.on_output(event)
@@ -159,6 +187,11 @@ class SewGUI(wx.Frame):
         
         if len(pages) == 0:
             pages = None
+        
+        # define the page order
+        self.tiler.set_col_major(self.col_row_order_combo.GetSelection())
+        self.tiler.set_right_left(self.left_right_combo.GetSelection())
+        self.tiler.set_bottom_top(self.top_bottom_combo.GetSelection())
         
         self.tiler.set_page_range(pages)
 

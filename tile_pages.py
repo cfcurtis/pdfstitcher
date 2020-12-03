@@ -28,7 +28,20 @@ class PageTiler():
         self.import_pages = None
         self.page_width = []
         self.page_height = []
+
+        self.col_major = False
+        self.right_to_left = False
+        self.bottom_to_top = False
     
+    def set_col_major(self,val):
+        self.col_major = bool(val)
+    
+    def set_right_left(self,val):
+        self.right_to_left = bool(val)
+    
+    def set_bottom_top(self,val):
+        self.bottom_to_top = bool(val)
+
     def set_units(self,units=0):
         self.units = units
     
@@ -54,7 +67,7 @@ class PageTiler():
             self.trim = trim
         
         else:
-            print('Invalid trim value specified, ignoring')
+            print(_('Invalid trim value specified, ignoring'))
             self.trim = [0,0,0,0]
         
     def set_margin(self,margin):
@@ -62,7 +75,7 @@ class PageTiler():
 
     def set_page_range(self,pages=None):
         if self.in_doc is None:
-            print('Input document not loaded')
+            print(_('Input document not loaded'))
             return
         
         self.import_pages = VectorPage()
@@ -79,7 +92,7 @@ class PageTiler():
         
         for p in pages:
             if p > page_count:
-                print('Only {} pages in document, skipping {}'.format(page_count,p))
+                print(_('Only {} pages in document, skipping {}').format(page_count,p))
                 continue
 
             itr = self.in_doc.GetPageIterator(p)
@@ -92,7 +105,7 @@ class PageTiler():
                 self.page_width.append(0)
                 self.page_height.append(0)
                 nzeros += 1
-            
+        
         # replace the zero pages with the average height/width
         if nzeros > 0:
             mean_width = sum(self.page_width)/(len(self.page_width) - nzeros)
@@ -134,12 +147,25 @@ class PageTiler():
 
         if self.rotation == 2:
             rotstr = _('Counterclockwise')
+        
+        orderstr = _('Rows then columns')
+        if self.col_major:
+            orderstr = _('Columns then rows')
+        
+        lrstr = _('Left to right')
+        if self.right_to_left:
+            lrstr = _('Right to left')
+        
+        btstr = _('Top to bottom')
+        if self.bottom_to_top:
+            btstr = _('Bottom to top')
 
-        print('Tiling with {} rows and {} columns'.format(rows,cols))
-        print('Options:')
-        print('    Margins: {} {}'.format(self.margin,unitstr))
-        print('    Trim: {} {}'.format(self.trim,unitstr))
-        print('    Rotation: {}'.format(rotstr))
+        print(_('Tiling with {} rows and {} columns').format(rows,cols))
+        print(_('Options') + ':')
+        print('    ' + _('Margins' + ': {} {}').format(self.margin,unitstr))
+        print('    ' + _('Trim' + ': {} {}').format(self.trim,unitstr))
+        print('    ' + _('Rotation') + ': {}'.format(rotstr))
+        print('    ' + _('Page order' + ': {}, {}, {}'.format(orderstr, lrstr, btstr)))
 
         # define the media box with the final grid + margins
         # run through the width/height combos to find the maximum required
@@ -193,9 +219,18 @@ class PageTiler():
         while i < n_imported:
             element = builder.CreateForm(imported_pages[i])
 
-            # left to right, top to bottom is assumed
-            r = math.floor(i/cols)
-            c = i % cols
+            if self.col_major:
+                c = math.floor(i/rows)
+                r = i % rows
+            else:
+                r = math.floor(i/cols)
+                c = i % cols
+            
+            if self.right_to_left:
+                c = cols - c - 1
+            
+            if self.bottom_to_top:
+                r = rows - r - 1
             
             x0 = margin - trim[0] + sum(pw[r*cols:r*cols + c]) - c*(trim[0] + trim[1])
             y0 = margin - trim[3] + sum(row_height[r+1:]) - (rows-r-1)*(trim[2] + trim[3])
@@ -218,7 +253,7 @@ def main(args):
     try:
         in_doc = PDFDoc(args.input)
     except:
-        print("Unable to open " + args.input)
+        print(_('Unable to open') + ' ' + args.input)
         sys.exit()
     
     tiler = PageTiler(in_doc)
