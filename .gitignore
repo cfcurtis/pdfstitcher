@@ -3,3 +3,9 @@ sewingutils.code-workspace
 .vscode/.ropeproject/config.py
 .vscode/.ropeproject/objectdb
 *.pdf
+*.svg
+dist/*
+__pycache__/*
+.vscode/*
+build/*
+*.mo
