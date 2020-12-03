@@ -127,13 +127,15 @@ class PageTiler():
             # try for square
             cols = math.ceil(math.sqrt(n_imported))
             rows = cols
-
+        
         # columns take priority if both are specified
-        if rows > 0:
-            cols = math.ceil(n_imported/rows)
-
         if cols > 0:
+            rrows = rows
             rows = math.ceil(n_imported/cols)
+            if rrows != rows:
+                print(_('Warning: requested {} columns and {} rows, but {} rows are needed with {} pages').format(cols,rrows,rows,n_imported))
+        else:
+            cols = math.ceil(n_imported/rows)
         
         # convert the margin and trim options into pixels
         unitstr = 'cm' if self.units else 'in'

@@ -58,11 +58,9 @@ class SewGUI(wx.Frame):
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(pnl, label=_('Number of Columns' + ':')), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.columns_txt = wx.TextCtrl(pnl,size=(40,-1),style=wx.TE_RIGHT)
-        self.columns_txt.Bind(wx.EVT_TEXT,self.on_cols_changed)
         newline.Add(self.columns_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         newline.Add(wx.StaticText(pnl, label=_('Number of Rows') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
         self.rows_txt = wx.TextCtrl(pnl,size=(40,-1),style=wx.TE_RIGHT)
-        self.rows_txt.Bind(wx.EVT_TEXT,self.on_rows_changed)
         newline.Add(self.rows_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
@@ -156,20 +154,6 @@ class SewGUI(wx.Frame):
         self.tiler = None
 
         self.working_dir = os.getcwd()
-    
-    def on_cols_changed(self,event):
-        txt = self.columns_txt.GetValue().strip()
-        if txt and self.in_doc:
-            cols = int(txt)
-            rows = math.ceil(self.in_doc.GetPageCount()/cols)
-            self.rows_txt.ChangeValue(str(rows))
-    
-    def on_rows_changed(self,event):
-        txt = self.rows_txt.GetValue().strip()
-        if txt and self.in_doc:
-            rows = int(txt)
-            cols = math.ceil(self.in_doc.GetPageCount()/rows)
-            self.columns_txt.ChangeValue(str(cols))
     
     def on_go_pressed(self,event):
         if self.out_doc is None:
