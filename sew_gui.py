@@ -276,6 +276,12 @@ if __name__ == '__main__':
     # When this module is run (not imported) then create the app, the
     # frame, show it, and start the event loop.
     app = wx.App()
-    frm = SewGUI(None, title=_('PDF Stitcher'),size=(600,800))
+    disp_h = wx.Display().GetGeometry().GetHeight()
+    disp_w = wx.Display().GetGeometry().GetWidth()
+
+    h = min(int(disp_h*0.8),800)
+    w = min(int(disp_w*0.4),600)
+
+    frm = SewGUI(None, title=_('PDF Stitcher'),size=(w,h))
     frm.Show()
     app.MainLoop()
