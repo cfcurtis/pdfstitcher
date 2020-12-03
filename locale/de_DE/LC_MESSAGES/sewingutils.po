@@ -1,4 +1,3 @@
-                                                                                    h   q1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111114# German (Germany) translations for sewingutils.
 # Copyright (C) 2020 Charlotte Curtis
 # This file is distributed under the same license as the sewingutils
 # project.
@@ -8,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sewingutils VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-02 18:43-0700\n"
+"POT-Creation-Date: 2020-12-02 20:38-0700\n"
 "PO-Revision-Date: 2020-12-02 15:48-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de_DE\n"
@@ -19,152 +18,156 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.1\n"
 
-#: sew_gui.py:27 sew_gui.py:266
+#: sew_gui.py:28 sew_gui.py:267
 msgid "Select input PDF"
 msgstr ""
 
-#: sew_gui.py:30 sew_gui.py:38 sew_gui.py:85 sew_gui.py:285 tile_pages.py:143
+#: sew_gui.py:31 sew_gui.py:39 sew_gui.py:86 sew_gui.py:286 tile_pages.py:143
 msgid "None"
 msgstr ""
 
-#: sew_gui.py:35 sew_gui.py:250
+#: sew_gui.py:36 sew_gui.py:251
 msgid "Save output as"
 msgstr ""
 
-#: sew_gui.py:44
+#: sew_gui.py:45
 msgid "Required Parameters"
 msgstr ""
 
-#: sew_gui.py:50
+#: sew_gui.py:51
 msgid "Page Range:"
 msgstr ""
 
-#: sew_gui.py:52
+#: sew_gui.py:53
 msgid "Pages assemble in specified order. 0 inserts a blank page."
 msgstr ""
 
-#: sew_gui.py:58
+#: sew_gui.py:59
 msgid "Number of Columns:"
 msgstr ""
 
-#: sew_gui.py:62
+#: sew_gui.py:63
 msgid "Number of Rows"
 msgstr ""
 
-#: sew_gui.py:70 tile_pages.py:151
+#: sew_gui.py:71 tile_pages.py:151
 msgid "Rows then columns"
 msgstr ""
 
-#: sew_gui.py:70 tile_pages.py:153
+#: sew_gui.py:71 tile_pages.py:153
 msgid "Columns then rows"
 msgstr ""
 
-#: sew_gui.py:71 tile_pages.py:155
+#: sew_gui.py:72 tile_pages.py:155
 msgid "Left to right"
 msgstr ""
 
-#: sew_gui.py:71 tile_pages.py:157
+#: sew_gui.py:72 tile_pages.py:157
 msgid "Right to left"
 msgstr ""
 
-#: sew_gui.py:72 tile_pages.py:159
+#: sew_gui.py:73 tile_pages.py:159
 msgid "Top to bottom"
 msgstr ""
 
-#: sew_gui.py:72 tile_pages.py:161
+#: sew_gui.py:73 tile_pages.py:161
 msgid "Bottom to top"
 msgstr ""
 
-#: sew_gui.py:74
+#: sew_gui.py:75
 msgid "Page order"
 msgstr ""
 
-#: sew_gui.py:85 tile_pages.py:146
+#: sew_gui.py:86 tile_pages.py:146
 msgid "Clockwise"
 msgstr ""
 
-#: sew_gui.py:85 tile_pages.py:149
+#: sew_gui.py:86 tile_pages.py:149
 msgid "Counterclockwise"
 msgstr ""
 
-#: sew_gui.py:86
+#: sew_gui.py:87
 msgid "Page Rotation"
 msgstr ""
 
-#: sew_gui.py:94
+#: sew_gui.py:95
 msgid "Optional Parameters"
 msgstr ""
 
-#: sew_gui.py:99
+#: sew_gui.py:100
 msgid "Inches"
 msgstr ""
 
-#: sew_gui.py:99
+#: sew_gui.py:100
 msgid "Centimetres"
 msgstr ""
 
-#: sew_gui.py:100
+#: sew_gui.py:101
 msgid "Units"
 msgstr ""
 
-#: sew_gui.py:106
+#: sew_gui.py:107
 msgid "Margin to add to final output:"
 msgstr ""
 
-#: sew_gui.py:113
+#: sew_gui.py:114
 msgid "Amount to trim from each page"
 msgstr ""
 
-#: sew_gui.py:118
+#: sew_gui.py:119
 msgid "Left:"
 msgstr ""
 
-#: sew_gui.py:123
+#: sew_gui.py:124
 msgid "Right:"
 msgstr ""
 
-#: sew_gui.py:128
+#: sew_gui.py:129
 msgid "Top:"
 msgstr ""
 
-#: sew_gui.py:133
+#: sew_gui.py:134
 msgid "Bottom:"
 msgstr ""
 
-#: sew_gui.py:140
+#: sew_gui.py:141
 msgid "Generate PDF"
 msgstr ""
 
-#: sew_gui.py:221
+#: sew_gui.py:222
 msgid "Tiling successful"
 msgstr ""
 
-#: sew_gui.py:223 sew_gui.py:232
+#: sew_gui.py:224 sew_gui.py:233
 msgid "Something went wrong"
 msgstr ""
 
-#: sew_gui.py:223
+#: sew_gui.py:224
 msgid "tiling failed"
 msgstr ""
 
-#: sew_gui.py:224
+#: sew_gui.py:225
 msgid "Exception"
 msgstr ""
 
-#: sew_gui.py:230
+#: sew_gui.py:231
 msgid "Successfully written to"
 msgstr ""
 
-#: sew_gui.py:232 sew_gui.py:263
+#: sew_gui.py:233 sew_gui.py:264
 msgid "unable to write to"
 msgstr ""
 
-#: sew_gui.py:279
+#: sew_gui.py:280
 msgid "Opening"
 msgstr ""
 
-#: sew_gui.py:288
+#: sew_gui.py:289
 msgid "Cannot open file"
+msgstr ""
+
+#: sew_gui.py:295
+msgid "PDF Stitcher"
 msgstr ""
 
 #: tile_pages.py:14
