@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sewingutils VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-02 20:38-0700\n"
+"POT-Creation-Date: 2020-12-03 10:12-0700\n"
 "PO-Revision-Date: 2020-12-02 15:48-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de_DE\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.1\n"
 
-#: sew_gui.py:28 sew_gui.py:267
+#: sew_gui.py:28 sew_gui.py:251
 msgid "Select input PDF"
 msgstr ""
 
-#: sew_gui.py:31 sew_gui.py:39 sew_gui.py:86 sew_gui.py:286 tile_pages.py:143
+#: sew_gui.py:31 sew_gui.py:39 sew_gui.py:84 sew_gui.py:270 tile_pages.py:145
 msgid "None"
 msgstr ""
 
-#: sew_gui.py:36 sew_gui.py:251
+#: sew_gui.py:36 sew_gui.py:235
 msgid "Save output as"
 msgstr ""
 
@@ -46,127 +46,127 @@ msgstr ""
 msgid "Number of Columns:"
 msgstr ""
 
-#: sew_gui.py:63
+#: sew_gui.py:62
 msgid "Number of Rows"
 msgstr ""
 
-#: sew_gui.py:71 tile_pages.py:151
+#: sew_gui.py:69 tile_pages.py:153
 msgid "Rows then columns"
 msgstr ""
 
-#: sew_gui.py:71 tile_pages.py:153
+#: sew_gui.py:69 tile_pages.py:155
 msgid "Columns then rows"
 msgstr ""
 
-#: sew_gui.py:72 tile_pages.py:155
+#: sew_gui.py:70 tile_pages.py:157
 msgid "Left to right"
 msgstr ""
 
-#: sew_gui.py:72 tile_pages.py:157
+#: sew_gui.py:70 tile_pages.py:159
 msgid "Right to left"
 msgstr ""
 
-#: sew_gui.py:73 tile_pages.py:159
+#: sew_gui.py:71 tile_pages.py:161
 msgid "Top to bottom"
 msgstr ""
 
-#: sew_gui.py:73 tile_pages.py:161
+#: sew_gui.py:71 tile_pages.py:163
 msgid "Bottom to top"
 msgstr ""
 
-#: sew_gui.py:75
+#: sew_gui.py:73
 msgid "Page order"
 msgstr ""
 
-#: sew_gui.py:86 tile_pages.py:146
+#: sew_gui.py:84 tile_pages.py:148
 msgid "Clockwise"
 msgstr ""
 
-#: sew_gui.py:86 tile_pages.py:149
+#: sew_gui.py:84 tile_pages.py:151
 msgid "Counterclockwise"
 msgstr ""
 
-#: sew_gui.py:87
+#: sew_gui.py:85
 msgid "Page Rotation"
 msgstr ""
 
-#: sew_gui.py:95
+#: sew_gui.py:93
 msgid "Optional Parameters"
 msgstr ""
 
-#: sew_gui.py:100
+#: sew_gui.py:98
 msgid "Inches"
 msgstr ""
 
-#: sew_gui.py:100
+#: sew_gui.py:98
 msgid "Centimetres"
 msgstr ""
 
-#: sew_gui.py:101
+#: sew_gui.py:99
 msgid "Units"
 msgstr ""
 
-#: sew_gui.py:107
+#: sew_gui.py:105
 msgid "Margin to add to final output:"
 msgstr ""
 
-#: sew_gui.py:114
+#: sew_gui.py:112
 msgid "Amount to trim from each page"
 msgstr ""
 
-#: sew_gui.py:119
+#: sew_gui.py:117
 msgid "Left:"
 msgstr ""
 
-#: sew_gui.py:124
+#: sew_gui.py:122
 msgid "Right:"
 msgstr ""
 
-#: sew_gui.py:129
+#: sew_gui.py:127
 msgid "Top:"
 msgstr ""
 
-#: sew_gui.py:134
+#: sew_gui.py:132
 msgid "Bottom:"
 msgstr ""
 
-#: sew_gui.py:141
+#: sew_gui.py:139
 msgid "Generate PDF"
 msgstr ""
 
-#: sew_gui.py:222
+#: sew_gui.py:206
 msgid "Tiling successful"
 msgstr ""
 
-#: sew_gui.py:224 sew_gui.py:233
+#: sew_gui.py:208 sew_gui.py:217
 msgid "Something went wrong"
 msgstr ""
 
-#: sew_gui.py:224
+#: sew_gui.py:208
 msgid "tiling failed"
 msgstr ""
 
-#: sew_gui.py:225
+#: sew_gui.py:209
 msgid "Exception"
 msgstr ""
 
-#: sew_gui.py:231
+#: sew_gui.py:215
 msgid "Successfully written to"
 msgstr ""
 
-#: sew_gui.py:233 sew_gui.py:264
+#: sew_gui.py:217 sew_gui.py:248
 msgid "unable to write to"
 msgstr ""
 
-#: sew_gui.py:280
+#: sew_gui.py:264
 msgid "Opening"
 msgstr ""
 
-#: sew_gui.py:289
+#: sew_gui.py:273
 msgid "Cannot open file"
 msgstr ""
 
-#: sew_gui.py:295
+#: sew_gui.py:279
 msgid "PDF Stitcher"
 msgstr ""
 
@@ -190,31 +190,37 @@ msgstr ""
 msgid "Only {} pages in document, skipping {}"
 msgstr ""
 
-#: tile_pages.py:163
-msgid "Tiling with {} rows and {} columns"
-msgstr ""
-
-#: tile_pages.py:164
-msgid "Options"
+#: tile_pages.py:136
+msgid ""
+"Warning: requested {} columns and {} rows, but {} rows are needed with {}"
+" pages"
 msgstr ""
 
 #: tile_pages.py:165
-msgid "Margins: {} {}"
+msgid "Tiling with {} rows and {} columns"
 msgstr ""
 
 #: tile_pages.py:166
-msgid "Trim: {} {}"
+msgid "Options"
 msgstr ""
 
 #: tile_pages.py:167
-msgid "Rotation"
+msgid "Margins: {} {}"
 msgstr ""
 
 #: tile_pages.py:168
+msgid "Trim: {} {}"
+msgstr ""
+
+#: tile_pages.py:169
+msgid "Rotation"
+msgstr ""
+
+#: tile_pages.py:170
 msgid "Page order: {}, {}, {}"
 msgstr ""
 
-#: tile_pages.py:256
+#: tile_pages.py:258
 msgid "Unable to open"
 msgstr ""
 
