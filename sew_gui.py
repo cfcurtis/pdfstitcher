@@ -204,8 +204,9 @@ class SewGUI(wx.Frame):
         try:
             new_doc.save(self.out_doc_path)
             print(_('Successfully written to') + ' ' + self.out_doc_path)
-        except:
+        except Exception as e:
             print(_('Something went wrong') + ', ' + _('unable to write to') + ' ' + self.out_doc_path)
+            print(e)
 
     def make_menu_bar(self):
         # Make a file menu with load and exit items

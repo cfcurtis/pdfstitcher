@@ -1,4 +1,5 @@
 import pikepdf
+from pikepdf import _cpphelpers
 import subprocess
 import argparse
 import sys
