@@ -8,7 +8,11 @@ This is a utility for stitching together many PDF pages from a single document i
 * Trim the edges of each page by a specified amount
 
 ## Prerequisites
-Most people probably want to just use the executable (TODO: add link). However, if you want to run the script directly, you'll need the following:
+Most people probably want to just use the executable:
+* [Windows](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.exe)
+* [MacOs](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.app.zip)
+
+However, if you want to run the script directly, you'll need the following:
 
 * [Python](https://www.python.org/downloads/) and `pip`. Testing was done with 64-bit Python 3.9.0 provided by [Anaconda](https://www.anaconda.com/) on Windows 10.
 
