@@ -8,7 +8,7 @@ import gettext
 # testing French
 # os.environ['LANG'] = 'fr'
 
-translate = gettext.translation('sewingutils', 'locale', fallback=True)
+translate = gettext.translation('pdfstitcher', 'locale', fallback=True)
 translate.install()
 
 class SewGUI(wx.Frame):
