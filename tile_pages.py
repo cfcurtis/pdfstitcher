@@ -92,14 +92,15 @@ class PageTiler():
         if len(self.page_range) == 0:
             self.set_page_range()
         
-        # initialize a new document and copy over the layer info (OCGs)
+        # initialize a new document and copy over the layer info (OCGs) if it exists
         new_doc = pikepdf.Pdf.new()
 
         if '/OCProperties' in self.in_doc.Root.keys():
             localRoot = new_doc.copy_foreign(self.in_doc.Root)
             new_doc.Root.OCProperties = localRoot.OCProperties
 
-        page_xobjs = []
+        content_dict = pikepdf.Dictionary({})
+        page_names = []
         pw = []
         ph = []
 
@@ -112,14 +113,20 @@ class PageTiler():
                 continue
 
             if p > 0:
-                # copy the page over as an xobject
-                # pikepdf.pages is zero indexed, so subtract one
-                localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
-                page_xobjs.append(pikepdf.Page(localpage).as_form_xobject())
-                pw.append(localpage.MediaBox[2])
-                ph.append(localpage.MediaBox[3])
+                pagekey = f'/Page{p}'
+                pagembox = self.in_doc.pages[p-1].MediaBox
+                
+                if pagekey not in content_dict.keys():
+                    # copy the page over as an xobject
+                    # pikepdf.pages is zero indexed, so subtract one
+                    localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
+                    content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
+
+                pw.append(float(pagembox[2]))
+                ph.append(float(pagembox[3]))
+                page_names.append(pagekey)
             else:
-                page_xobjs.append(None)
+                page_names.append(None)
                 pw.append(0)
                 ph.append(0)
                 nzeros += 1
@@ -133,20 +140,20 @@ class PageTiler():
     
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
         # figure out how big it needs to be based on requested columns/rows
-        n_imported = len(page_xobjs)
+        n_tiles = len(page_names)
         if cols == 0 and rows == 0:
             # try for square
-            cols = math.ceil(math.sqrt(n_imported))
+            cols = math.ceil(math.sqrt(n_tiles))
             rows = cols
         
         # columns take priority if both are specified
         if cols > 0:
             rrows = rows
-            rows = math.ceil(n_imported/cols)
+            rows = math.ceil(n_tiles/cols)
             if rrows != rows:
-                print(_('Warning: requested {} columns and {} rows, but {} rows are needed with {} pages').format(cols,rrows,rows,n_imported))
+                print(_('Warning: requested {} columns and {} rows, but {} rows are needed with {} pages').format(cols,rrows,rows,n_tiles))
         else:
-            cols = math.ceil(n_imported/rows)
+            cols = math.ceil(n_tiles/rows)
         
         # convert the margin and trim options into pixels
         unitstr = 'cm' if self.units else 'in'
@@ -220,10 +227,12 @@ class PageTiler():
         media_box = [0,0,width + 2*margin,height + 2*margin]
 
         i = 0
-        content_txt = 'q '
-        content_dict = pikepdf.Dictionary({})
+        content_txt = ''
         
-        while i < n_imported:
+        for i in range(n_tiles):
+            if not page_names[i]:
+                continue
+
             if self.col_major:
                 c = math.floor(i/rows)
                 r = i % rows
@@ -242,12 +251,8 @@ class PageTiler():
 
             # don't scale, just shift and rotate
             # first shift to origin, then rotate, then shift to final destination
-            content_txt += f'{R[0]} {R[1]} {R[2]} {R[3]} {x0+o_shift[0]} {y0+o_shift[1]} cm '
-            content_txt += f'/Page{i} Do '
-            content_dict[f'/Page{i}'] = page_xobjs[i]
-            i += 1
-
-        content_txt += "Q"
+            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0+o_shift[0]} {y0+o_shift[1]} cm '
+            content_txt += f'{page_names[i]} Do Q '
 
         newpage = pikepdf.Dictionary(
             Type=pikepdf.Name.Page, 
