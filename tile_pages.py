@@ -210,7 +210,7 @@ class PageTiler():
             # swap width and height of pages
             tmp = ph
             ph = pw
-            pw = ph
+            pw = tmp
             
             trim = [trim[o] for o in order]
         
