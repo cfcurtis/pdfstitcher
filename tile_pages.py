@@ -1,4 +1,4 @@
-from PDFNetPython3 import *
+import pikepdf
 import subprocess
 import argparse
 import sys
@@ -18,16 +18,13 @@ def txt_to_float(txt):
 class PageTiler():
     def __init__(self,in_doc = None):
         self.in_doc = in_doc
-        
+        self.page_range = []
+
         # 0 = inches, 1 = centimetres
         self.units = 0
         self.trim = [0,0,0,0]
         self.margin = 0
         self.rotation = 0
-
-        self.import_pages = None
-        self.page_width = []
-        self.page_height = []
 
         self.col_major = False
         self.right_to_left = False
@@ -73,56 +70,70 @@ class PageTiler():
     def set_margin(self,margin):
         self.margin = margin
 
-    def set_page_range(self,pages=None):
+    def set_page_range(self,ptext=""):
+        # parse out the requested pages. Note that this allows for pages to be repeated and out of order.
+        self.page_range = []
+        
+        if ptext:
+            for r in [p.split('-') for p in ptext.split(',')]:
+                if len(r) == 1:
+                    self.page_range.append(int(r[0]))
+                else:
+                    self.page_range += list(range(int(r[0]),int(r[-1])+1))
+            
+        if len(self.page_range) == 0:
+            self.page_range = list(range(1,len(self.in_doc.pages)+1))
+
+    def run(self,rows=0,cols=0):
         if self.in_doc is None:
             print(_('Input document not loaded'))
             return
+
+        if len(self.page_range) == 0:
+            self.set_page_range()
         
-        self.import_pages = VectorPage()
-        self.page_width = []
-        self.page_height = []
+        # initialize a new document and copy over the layer info (OCGs)
+        new_doc = pikepdf.Pdf.new()
 
-        page_count = self.in_doc.GetPageCount()
+        if '/OCProperties' in self.in_doc.Root.keys():
+            localRoot = new_doc.copy_foreign(self.in_doc.Root)
+            new_doc.Root.OCProperties = localRoot.OCProperties
 
-        if pages is None:
-            pages = list(range(1,page_count+1))
+        page_xobjs = []
+        pw = []
+        ph = []
 
-        itr = self.in_doc.GetPageIterator(pages[0])    
+        page_count = len(self.in_doc.pages)
         nzeros = 0
         
-        for p in pages:
+        for p in self.page_range:
             if p > page_count:
                 print(_('Only {} pages in document, skipping {}').format(page_count,p))
                 continue
 
-            itr = self.in_doc.GetPageIterator(p)
-            self.import_pages.push_back(itr.Current())
-
             if p > 0:
-                self.page_width.append(itr.Current().GetPageWidth())
-                self.page_height.append(itr.Current().GetPageHeight())
+                # copy the page over as an xobject
+                # pikepdf.pages is zero indexed, so subtract one
+                localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
+                page_xobjs.append(pikepdf.Page(localpage).as_form_xobject())
+                pw.append(localpage.MediaBox[2])
+                ph.append(localpage.MediaBox[3])
             else:
-                self.page_width.append(0)
-                self.page_height.append(0)
+                page_xobjs.append(None)
+                pw.append(0)
+                ph.append(0)
                 nzeros += 1
         
         # replace the zero pages with the average height/width
         if nzeros > 0:
-            mean_width = sum(self.page_width)/(len(self.page_width) - nzeros)
-            mean_height = sum(self.page_height)/(len(self.page_height) - nzeros)
-            self.page_width = [w if w > 0 else mean_width for w in self.page_width]
-            self.page_height = [h if h > 0 else mean_height for h in self.page_height]
-
-    def run(self,rows=0,cols=0):
-        if self.import_pages is None:
-            self.set_page_range(None)
-
+            mean_width = sum(pw)/(len(pw) - nzeros)
+            mean_height = sum(ph)/(len(ph) - nzeros)
+            pw = [w if w > 0 else mean_width for w in pw]
+            ph = [h if h > 0 else mean_height for h in ph]
+    
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
-        new_doc = PDFDoc()
-        imported_pages = new_doc.ImportPages(self.import_pages)
-        n_imported = len(imported_pages)
-
         # figure out how big it needs to be based on requested columns/rows
+        n_imported = len(page_xobjs)
         if cols == 0 and rows == 0:
             # try for square
             cols = math.ceil(math.sqrt(n_imported))
@@ -171,9 +182,6 @@ class PageTiler():
 
         # define the media box with the final grid + margins
         # run through the width/height combos to find the maximum required
-        ph = self.page_height
-        pw = self.page_width
-        
         # R is the rotation matrix (default to identity)
         R = [1,0,0,1]
 
@@ -181,21 +189,22 @@ class PageTiler():
         o_shift = [0,0]
 
         if self.rotation != 0:
-            # swap width and height of pages
-            ph = self.page_width
-            pw = self.page_height
-            
             # define the rotation transform and
             # swap the trim order
             if self.rotation == 1:
                 R = [0,-1,1,0]
-                o_shift = [0,ph[0]]
+                o_shift = [0,pw[0]]
                 order = [3,2,0,1]
 
             if self.rotation == 2:
                 R = [0,1,-1,0]
-                o_shift = [pw[0],0]
+                o_shift = [ph[0],0]
                 order = [2,3,1,0]
+                       
+            # swap width and height of pages
+            tmp = ph
+            ph = pw
+            pw = ph
             
             trim = [trim[o] for o in order]
 
@@ -208,19 +217,13 @@ class PageTiler():
         
         width -= (trim[0] + trim[1])*cols
         height = sum(row_height) - (trim[2] + trim[3])*rows
+        media_box = [0,0,width + 2*margin,height + 2*margin]
 
-        media_box = Rect(0,0,width + 2*margin,height + 2*margin)
-        new_page = new_doc.PageCreate(media_box)
-
-        builder = ElementBuilder()
-        writer = ElementWriter()
-        writer.Begin(new_page)
-
-        i = 0  
+        i = 0
+        content_txt = 'q '
+        content_dict = pikepdf.Dictionary({})
         
         while i < n_imported:
-            element = builder.CreateForm(imported_pages[i])
-
             if self.col_major:
                 c = math.floor(i/rows)
                 r = i % rows
@@ -239,21 +242,27 @@ class PageTiler():
 
             # don't scale, just shift and rotate
             # first shift to origin, then rotate, then shift to final destination
-            element.GetGState().SetTransform(R[0],R[1],R[2],R[3],x0+o_shift[0],y0+o_shift[1])
-
-            writer.WritePlacedElement(element)
+            content_txt += f'{R[0]} {R[1]} {R[2]} {R[3]} {x0+o_shift[0]} {y0+o_shift[1]} cm '
+            content_txt += f'/Page{i} Do '
+            content_dict[f'/Page{i}'] = page_xobjs[i]
             i += 1
 
-        writer.End()
-        new_doc.PagePushBack(new_page)
+        content_txt += "Q"
 
+        newpage = pikepdf.Dictionary(
+            Type=pikepdf.Name.Page, 
+            MediaBox=media_box,
+            Resources=pikepdf.Dictionary(XObject=content_dict),
+            Contents=pikepdf.Stream(new_doc,content_txt.encode())
+        )
+
+        new_doc.pages.append(newpage)
         return new_doc
 
 def main(args):
-    PDFNet.Initialize()
     # first try opening the document
     try:
-        in_doc = PDFDoc(args.input)
+        in_doc = pikepdf.Pdf.open(args.input)
     except:
         print(_('Unable to open') + ' ' + args.input)
         sys.exit()
@@ -261,19 +270,7 @@ def main(args):
     tiler = PageTiler(in_doc)
 
     if args.pages is not None:
-        # parse out the requested pages. Note that this allows for pages to be repeated and out of order.
-        ptext = args.pages.split(',')
-        pages = []
-        for r in [p.split('-') for p in ptext]:
-            if len(r) == 1:
-                pages.append(int(r[0]))
-            else:
-                pages += list(range(int(r[0]),int(r[-1])+1))
-        
-        if len(pages) == 0:
-            pages = None
-        
-        tiler.set_page_range(pages)
+        tiler.set_page_range(args.pages)
 
     if args.margins is not None:
         # all the docs/examples seem to assume 72 dpi all the time
@@ -299,7 +296,7 @@ def main(args):
     new_doc = tiler.run(rows,cols)
         
     try:
-        new_doc.Save(args.output,SDFDoc.e_linearized)
+        new_doc.save(args.output)
         success = True
     except:
         success = False
@@ -326,6 +323,5 @@ def parse_arguments():
 if __name__ == "__main__":
     args = parse_arguments()
     new_doc, success = main(args)
-    new_doc.Close()
 
     subprocess.call(args.output,shell=True)

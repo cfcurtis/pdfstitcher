@@ -150,34 +150,26 @@ class SewGUI(wx.Frame):
         pnl.SetSizer(vert_sizer)
 
         self.in_doc = None
-        self.out_doc = None
+        self.out_doc_path = None
         self.tiler = None
 
         self.working_dir = os.getcwd()
     
     def on_go_pressed(self,event):
-        if self.out_doc is None:
+        if self.tiler is None:
+            return
+
+        if self.out_doc_path is None:
             self.on_output(event)
 
         # set all the various options of the tiler
-        # parse out the requested pages. Note that this allows for pages to be repeated and out of order.
-        ptext = self.page_range_txt.GetValue().split(',')
-        pages = []
-        for r in [p.split('-') for p in ptext]:
-            if len(r) == 1:
-                pages.append(int(r[0]))
-            else:
-                pages += list(range(int(r[0]),int(r[-1])+1))
-        
-        if len(pages) == 0:
-            pages = None
         
         # define the page order
         self.tiler.set_col_major(self.col_row_order_combo.GetSelection())
         self.tiler.set_right_left(self.left_right_combo.GetSelection())
         self.tiler.set_bottom_top(self.top_bottom_combo.GetSelection())
         
-        self.tiler.set_page_range(pages)
+        self.tiler.set_page_range(self.page_range_txt.GetValue())
 
         # set the optional stuff
         self.tiler.set_units(self.unit_box.GetSelection())
@@ -210,11 +202,10 @@ class SewGUI(wx.Frame):
             print(e)
         
         try:
-            new_doc.Save(self.out_doc,SDFDoc.e_linearized)
-            new_doc.Close()
-            print(_('Successfully written to') + ' ' + self.out_doc)
+            new_doc.save(self.out_doc_path)
+            print(_('Successfully written to') + ' ' + self.out_doc_path)
         except:
-            print(_('Something went wrong') + ', ' + _('unable to write to') + ' ' + self.out_doc)
+            print(_('Something went wrong') + ', ' + _('unable to write to') + ' ' + self.out_doc_path)
 
     def make_menu_bar(self):
         # Make a file menu with load and exit items
@@ -241,7 +232,7 @@ class SewGUI(wx.Frame):
 
             pathname = fileDialog.GetPath()
             try:
-                self.out_doc = pathname
+                self.out_doc_path = pathname
                 self.output_fname_display.SetLabel(os.path.basename(pathname))
 
             except IOError:
@@ -259,14 +250,15 @@ class SewGUI(wx.Frame):
             pathname = fileDialog.GetPath()
             self.working_dir = os.path.dirname(pathname)
             try:
-                self.in_doc = PDFDoc(pathname)
-                self.tiler = PageTiler(self.in_doc)
+                # open the pdf
                 print(_('Opening') + ' ' + pathname)
+                self.in_doc = pikepdf.Pdf.open(pathname)
+                self.tiler = PageTiler(self.in_doc)
                 self.input_fname_display.SetLabel(os.path.basename(pathname))
-                self.page_range_txt.SetValue('1-{}'.format(self.in_doc.GetPageCount()))
+                self.page_range_txt.SetValue('1-{}'.format(len(self.in_doc.pages)))
 
                 # clear the output if it's already set
-                self.out_doc = None
+                self.out_doc_path = None
                 self.output_fname_display.SetLabel(_('None'))
 
             except IOError:
