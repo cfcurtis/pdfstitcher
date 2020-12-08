@@ -102,11 +102,11 @@ class PageTiler():
 
         content_dict = pikepdf.Dictionary({})
         page_names = []
-        pw = []
-        ph = []
+        pw = None
+        ph = None
+        page_size_ref = 0
 
         page_count = len(self.in_doc.pages)
-        nzeros = 0
         
         for p in self.page_range:
             if p > page_count:
@@ -115,7 +115,6 @@ class PageTiler():
 
             if p > 0:
                 pagekey = f'/Page{p}'
-                pagembox = self.in_doc.pages[p-1].MediaBox
                 
                 if pagekey not in content_dict.keys():
                     # copy the page over as an xobject
@@ -123,22 +122,21 @@ class PageTiler():
                     localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
                     content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
 
-                pw.append(float(pagembox[2]))
-                ph.append(float(pagembox[3]))
+                    # only get the width/height for the first page
+                    if pw is None:
+                        pw = float(localpage.MediaBox[2])
+                        ph = float(localpage.MediaBox[3])
+                        page_size_ref = p
+                    elif abs(pw - float(localpage.MediaBox[2])) > 1 or abs(ph - float(localpage.MediaBox[3])) > 1:
+                        print(_('Warning: page {} is a different size from {}, output may be unpredictable'.format(p,page_size_ref)))
+
                 page_names.append(pagekey)
             else:
                 page_names.append(None)
-                pw.append(0)
-                ph.append(0)
-                nzeros += 1
         
-        # replace the zero pages with the average height/width
-        if nzeros > 0:
-            mean_width = sum(pw)/(len(pw) - nzeros)
-            mean_height = sum(ph)/(len(ph) - nzeros)
-            pw = [w if w > 0 else mean_width for w in pw]
-            ph = [h if h > 0 else mean_height for h in ph]
-    
+        # take the most common page width/height
+        
+        
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
         # figure out how big it needs to be based on requested columns/rows
         n_tiles = len(page_names)
@@ -201,12 +199,12 @@ class PageTiler():
             # swap the trim order
             if self.rotation == 1:
                 R = [0,-1,1,0]
-                o_shift = [0,pw[0]]
+                o_shift = [0,pw]
                 order = [3,2,0,1]
 
             if self.rotation == 2:
                 R = [0,1,-1,0]
-                o_shift = [ph[0],0]
+                o_shift = [ph,0]
                 order = [2,3,1,0]
                        
             # swap width and height of pages
@@ -215,16 +213,10 @@ class PageTiler():
             pw = ph
             
             trim = [trim[o] for o in order]
-
-        width = 0
-        height = 0
-        row_height = [0]*rows
-        for r in range(rows):
-            width = max(width,sum(pw[r*cols:r*cols+cols]))
-            row_height[r] = max(ph[r*cols:r*cols+cols])
         
-        width -= (trim[0] + trim[1])*cols
-        height = sum(row_height) - (trim[2] + trim[3])*rows
+        # define the output page media box
+        width = (pw - trim[0] - trim[1])*cols
+        height = (ph - trim[2] - trim[3])*rows
         media_box = [0,0,width + 2*margin,height + 2*margin]
 
         i = 0
@@ -244,11 +236,11 @@ class PageTiler():
             if self.right_to_left:
                 c = cols - c - 1
             
-            if self.bottom_to_top:
+            if not self.bottom_to_top:
                 r = rows - r - 1
             
-            x0 = margin - trim[0] + sum(pw[r*cols:r*cols + c]) - c*(trim[0] + trim[1])
-            y0 = margin - trim[3] + sum(row_height[r+1:]) - (rows-r-1)*(trim[2] + trim[3])
+            x0 = margin - trim[0] + c*(pw - trim[0] - trim[1])
+            y0 = margin - trim[3] + r*(ph - trim[2] - trim[3])
 
             # don't scale, just shift and rotate
             # first shift to origin, then rotate, then shift to final destination
