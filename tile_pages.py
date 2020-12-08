@@ -151,7 +151,7 @@ class PageTiler():
         if cols > 0:
             rrows = rows
             rows = math.ceil(n_tiles/cols)
-            if rrows != rows:
+            if rrows != rows and rrows != 0:
                 print(_('Warning: requested {} columns and {} rows, but {} rows are needed with {} pages').format(cols,rrows,rows,n_tiles))
         else:
             cols = math.ceil(n_tiles/rows)
