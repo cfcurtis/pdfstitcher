@@ -16,7 +16,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 print(resource_path('locale'))
-translate = gettext.translation('pdfstitcher', resource_path('locale'), fallback=False)
+translate = gettext.translation('pdfstitcher', resource_path('locale'), fallback=True)
 translate.install()
 
 class SewGUI(wx.Frame):
