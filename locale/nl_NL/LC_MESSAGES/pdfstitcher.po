@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-08 12:29-0700\n"
+"POT-Creation-Date: 2020-12-09 17:03-0700\n"
 "PO-Revision-Date: 2020-12-08 12:27-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: nl_NL\n"
@@ -19,155 +19,156 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: sew_gui.py:28 sew_gui.py:243
+#: pdfstitcher.py:25 pdfstitcher.py:240
 msgid "Select input PDF"
 msgstr ""
 
-#: sew_gui.py:31 sew_gui.py:39 sew_gui.py:84 sew_gui.py:263 tile_pages.py:164
+#: pdfstitcher.py:28 pdfstitcher.py:36 pdfstitcher.py:81 pdfstitcher.py:260
+#: tile_pages.py:162
 msgid "None"
 msgstr ""
 
-#: sew_gui.py:36 sew_gui.py:227
+#: pdfstitcher.py:33 pdfstitcher.py:224
 msgid "Save output as"
 msgstr ""
 
-#: sew_gui.py:45
+#: pdfstitcher.py:42
 msgid "Required Parameters"
 msgstr ""
 
-#: sew_gui.py:51
+#: pdfstitcher.py:48
 msgid "Page Range:"
 msgstr ""
 
-#: sew_gui.py:53
+#: pdfstitcher.py:50
 msgid "Pages assemble in specified order. 0 inserts a blank page."
 msgstr ""
 
-#: sew_gui.py:59
+#: pdfstitcher.py:56
 msgid "Number of Columns:"
 msgstr ""
 
-#: sew_gui.py:62
+#: pdfstitcher.py:59
 msgid "Number of Rows"
 msgstr ""
 
-#: sew_gui.py:69 tile_pages.py:172
+#: pdfstitcher.py:66 tile_pages.py:170
 msgid "Rows then columns"
 msgstr ""
 
-#: sew_gui.py:69 tile_pages.py:174
+#: pdfstitcher.py:66 tile_pages.py:172
 msgid "Columns then rows"
 msgstr ""
 
-#: sew_gui.py:70 tile_pages.py:176
+#: pdfstitcher.py:67 tile_pages.py:174
 msgid "Left to right"
 msgstr ""
 
-#: sew_gui.py:70 tile_pages.py:178
+#: pdfstitcher.py:67 tile_pages.py:176
 msgid "Right to left"
 msgstr ""
 
-#: sew_gui.py:71 tile_pages.py:180
+#: pdfstitcher.py:68 tile_pages.py:178
 msgid "Top to bottom"
 msgstr ""
 
-#: sew_gui.py:71 tile_pages.py:182
+#: pdfstitcher.py:68 tile_pages.py:180
 msgid "Bottom to top"
 msgstr ""
 
-#: sew_gui.py:73
+#: pdfstitcher.py:70
 msgid "Page order"
 msgstr ""
 
-#: sew_gui.py:84 tile_pages.py:167
+#: pdfstitcher.py:81 tile_pages.py:165
 msgid "Clockwise"
 msgstr ""
 
-#: sew_gui.py:84 tile_pages.py:170
+#: pdfstitcher.py:81 tile_pages.py:168
 msgid "Counterclockwise"
 msgstr ""
 
-#: sew_gui.py:85
+#: pdfstitcher.py:82
 msgid "Page Rotation"
 msgstr ""
 
-#: sew_gui.py:93
+#: pdfstitcher.py:90
 msgid "Optional Parameters"
 msgstr ""
 
-#: sew_gui.py:98
+#: pdfstitcher.py:95
 msgid "Inches"
 msgstr ""
 
-#: sew_gui.py:98
+#: pdfstitcher.py:95
 msgid "Centimetres"
 msgstr ""
 
-#: sew_gui.py:99
+#: pdfstitcher.py:96
 msgid "Units"
 msgstr ""
 
-#: sew_gui.py:105
+#: pdfstitcher.py:102
 msgid "Margin to add to final output:"
 msgstr ""
 
-#: sew_gui.py:112
+#: pdfstitcher.py:109
 msgid "Amount to trim from each page"
 msgstr ""
 
-#: sew_gui.py:117
+#: pdfstitcher.py:114
 msgid "Left:"
 msgstr ""
 
-#: sew_gui.py:122
+#: pdfstitcher.py:119
 msgid "Right:"
 msgstr ""
 
-#: sew_gui.py:127
+#: pdfstitcher.py:124
 msgid "Top:"
 msgstr ""
 
-#: sew_gui.py:132
+#: pdfstitcher.py:129
 msgid "Bottom:"
 msgstr ""
 
-#: sew_gui.py:139
+#: pdfstitcher.py:136
 msgid "Generate PDF"
 msgstr ""
 
-#: sew_gui.py:198
+#: pdfstitcher.py:195
 msgid "Tiling successful"
 msgstr ""
 
-#: sew_gui.py:200 sew_gui.py:208
+#: pdfstitcher.py:197 pdfstitcher.py:205
 msgid "Something went wrong"
 msgstr ""
 
-#: sew_gui.py:200
+#: pdfstitcher.py:197
 msgid "tiling failed"
 msgstr ""
 
-#: sew_gui.py:201
+#: pdfstitcher.py:198
 msgid "Exception"
 msgstr ""
 
-#: sew_gui.py:206
+#: pdfstitcher.py:203
 msgid "Successfully written to"
 msgstr ""
 
-#: sew_gui.py:208 sew_gui.py:240
+#: pdfstitcher.py:205 pdfstitcher.py:237
 msgid "unable to write to"
 msgstr ""
 
-#: sew_gui.py:255
+#: pdfstitcher.py:252
 msgid "Opening"
 msgstr ""
 
-#: sew_gui.py:266
+#: pdfstitcher.py:263
 msgid "Cannot open file"
 msgstr ""
 
-#: sew_gui.py:278
+#: pdfstitcher.py:275
 msgid "PDF Stitcher"
 msgstr ""
 
@@ -191,37 +192,41 @@ msgstr ""
 msgid "Only {} pages in document, skipping {}"
 msgstr ""
 
-#: tile_pages.py:155
+#: tile_pages.py:131
+msgid "Warning: page {} is a different size from {}, output may be unpredictable"
+msgstr ""
+
+#: tile_pages.py:153
 msgid ""
 "Warning: requested {} columns and {} rows, but {} rows are needed with {}"
 " pages"
 msgstr ""
 
-#: tile_pages.py:184
+#: tile_pages.py:182
 msgid "Tiling with {} rows and {} columns"
 msgstr ""
 
-#: tile_pages.py:185
+#: tile_pages.py:183
 msgid "Options"
 msgstr ""
 
-#: tile_pages.py:186
+#: tile_pages.py:184
 msgid "Margins: {} {}"
 msgstr ""
 
-#: tile_pages.py:187
+#: tile_pages.py:185
 msgid "Trim: {} {}"
 msgstr ""
 
-#: tile_pages.py:188
+#: tile_pages.py:186
 msgid "Rotation"
 msgstr ""
 
-#: tile_pages.py:189
+#: tile_pages.py:187
 msgid "Page order: {}, {}, {}"
 msgstr ""
 
-#: tile_pages.py:273
+#: tile_pages.py:265
 msgid "Unable to open"
 msgstr ""
 

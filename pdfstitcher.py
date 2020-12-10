@@ -5,10 +5,18 @@ import os
 # localization stuff
 import gettext
 
-# testing French
-# os.environ['LANG'] = 'fr'
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
 
-translate = gettext.translation('pdfstitcher', 'locale', fallback=True)
+    return os.path.join(base_path, relative_path)
+
+print(resource_path('locale'))
+translate = gettext.translation('pdfstitcher', resource_path('locale'), fallback=False)
 translate.install()
 
 class SewGUI(wx.Frame):
