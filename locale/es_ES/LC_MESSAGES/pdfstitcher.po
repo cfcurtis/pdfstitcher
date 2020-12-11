@@ -114,7 +114,7 @@ msgstr "Margen para agregar alrededor del patron final:"
 
 #: pdfstitcher.py:109
 msgid "Amount to trim from each page"
-msgstr "Cantidad a recortar de cada página"
+msgstr "Margen a recortar de cada página"
 
 #: pdfstitcher.py:114
 msgid "Left:"
