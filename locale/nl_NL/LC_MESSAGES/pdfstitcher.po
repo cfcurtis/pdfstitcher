@@ -20,213 +20,213 @@ msgstr ""
 "Generated-By: Babel 2.9.0\n"
 
 #: pdfstitcher.py:25 pdfstitcher.py:240
-msgid "Select input PDF"
+msgid "Select input PDF"                       Selecteer invoer PDF
 msgstr ""
 
 #: pdfstitcher.py:28 pdfstitcher.py:36 pdfstitcher.py:81 pdfstitcher.py:260
 #: tile_pages.py:162
-msgid "None"
+msgid "None"                                   Geen
 msgstr ""
 
 #: pdfstitcher.py:33 pdfstitcher.py:224
-msgid "Save output as"
+msgid "Save output as"                        Uitvoer opslaan als....
 msgstr ""
 
 #: pdfstitcher.py:42
-msgid "Required Parameters"
+msgid "Required Parameters"                   Gewenste parameters
 msgstr ""
 
 #: pdfstitcher.py:48
-msgid "Page Range:"
+msgid "Page Range:"                          Pagina´s van .. tot...
 msgstr ""
 
 #: pdfstitcher.py:50
-msgid "Pages assemble in specified order. 0 inserts a blank page."
+msgid "Pages assemble in specified order. 0 inserts a blank page."      Pagina´s samengesteld in gewenste volgorde. 0 voegt blanco pagina toe
 msgstr ""
 
 #: pdfstitcher.py:56
-msgid "Number of Columns:"
+msgid "Number of Columns:"                    Aantal kolommen
 msgstr ""
 
 #: pdfstitcher.py:59
-msgid "Number of Rows"
+msgid "Number of Rows"                        Aantal rijen
 msgstr ""
 
 #: pdfstitcher.py:66 tile_pages.py:170
-msgid "Rows then columns"
+msgid "Rows then columns"                     Rij dan kolom
 msgstr ""
 
-#: pdfstitcher.py:66 tile_pages.py:172
-msgid "Columns then rows"
+#: pdfstitcher.py:66 tile_pages.py:172        
+msgid "Columns then rows"                     Kolom dan rij
 msgstr ""
 
-#: pdfstitcher.py:67 tile_pages.py:174
-msgid "Left to right"
+#: pdfstitcher.py:67 tile_pages.py:174 
+msgid "Left to right"                         Links naar rechts
 msgstr ""
 
 #: pdfstitcher.py:67 tile_pages.py:176
-msgid "Right to left"
+msgid "Right to left"                          Rechts naar links
 msgstr ""
 
 #: pdfstitcher.py:68 tile_pages.py:178
-msgid "Top to bottom"
+msgid "Top to bottom"                          Boven naar beneden
 msgstr ""
 
 #: pdfstitcher.py:68 tile_pages.py:180
-msgid "Bottom to top"
+msgid "Bottom to top"                          Beneden naar boven
 msgstr ""
 
 #: pdfstitcher.py:70
-msgid "Page order"
+msgid "Page order"                             Pagina volgorde
 msgstr ""
 
 #: pdfstitcher.py:81 tile_pages.py:165
-msgid "Clockwise"
+msgid "Clockwise"                              Met de klok mee
 msgstr ""
 
 #: pdfstitcher.py:81 tile_pages.py:168
-msgid "Counterclockwise"
+msgid "Counterclockwise"                       Tegen de klok in
 msgstr ""
 
 #: pdfstitcher.py:82
-msgid "Page Rotation"
+msgid "Page Rotation"                          Pagina rotatie
 msgstr ""
 
 #: pdfstitcher.py:90
-msgid "Optional Parameters"
+msgid "Optional Parameters"                    Optionele parameters
 msgstr ""
 
-#: pdfstitcher.py:95
+#: pdfstitcher.py:95                            Inches
 msgid "Inches"
 msgstr ""
 
 #: pdfstitcher.py:95
-msgid "Centimetres"
+msgid "Centimetres"                             Centimeters
 msgstr ""
 
 #: pdfstitcher.py:96
-msgid "Units"
-msgstr ""
+msgid "Units"                                     Eenheden
+msgstr ""         
 
 #: pdfstitcher.py:102
-msgid "Margin to add to final output:"
+msgid "Margin to add to final output:"            Rand toe te voegen aan het uiteindelijke patroon
 msgstr ""
 
 #: pdfstitcher.py:109
-msgid "Amount to trim from each page"
+msgid "Amount to trim from each page"             Hoeveelheid af te scheiden van iedere pagina
 msgstr ""
 
 #: pdfstitcher.py:114
-msgid "Left:"
+msgid "Left:"                                     Links
 msgstr ""
 
 #: pdfstitcher.py:119
-msgid "Right:"
+msgid "Right:"                                    Rechts
 msgstr ""
 
 #: pdfstitcher.py:124
-msgid "Top:"
+msgid "Top:"                                      Boven
 msgstr ""
 
 #: pdfstitcher.py:129
-msgid "Bottom:"
+msgid "Bottom:"                                   Onder
 msgstr ""
 
 #: pdfstitcher.py:136
-msgid "Generate PDF"
+msgid "Generate PDF"                              Maak PDF
 msgstr ""
 
 #: pdfstitcher.py:195
-msgid "Tiling successful"
+msgid "Tiling successful"                         Plaatsing succesvol
 msgstr ""
 
 #: pdfstitcher.py:197 pdfstitcher.py:205
-msgid "Something went wrong"
+msgid "Something went wrong"                      Er is iets fout gegaan
 msgstr ""
 
 #: pdfstitcher.py:197
-msgid "tiling failed"
+msgid "tiling failed"                             Plaatsing niet gelukt
 msgstr ""
 
 #: pdfstitcher.py:198
-msgid "Exception"
+msgid "Exception"                                 Uitzondering
 msgstr ""
 
 #: pdfstitcher.py:203
-msgid "Successfully written to"
+msgid "Successfully written to"                   Succesvol opgeslagen in
 msgstr ""
 
 #: pdfstitcher.py:205 pdfstitcher.py:237
-msgid "unable to write to"
+msgid "unable to write to"                         Niet mogelijk om op te slaan in
 msgstr ""
 
 #: pdfstitcher.py:252
-msgid "Opening"
+msgid "Opening"                                     Bezig met openen
 msgstr ""
 
 #: pdfstitcher.py:263
-msgid "Cannot open file"
+msgid "Cannot open file"                            Kan het bestand niet openen
 msgstr ""
 
 #: pdfstitcher.py:275
-msgid "PDF Stitcher"
+msgid "PDF Stitcher"                                PDF Stitcher
 msgstr ""
 
 #: tile_pages.py:15
-msgid "Invalid input "
+msgid "Invalid input "                              Ongeldige invoer
 msgstr ""
 
 #: tile_pages.py:15
-msgid "only numeric values allowed"
+msgid "only numeric values allowed"                 Alleen numerieke waarden toegstaan
 msgstr ""
 
 #: tile_pages.py:68
-msgid "Invalid trim value specified, ignoring"
+msgid "Invalid trim value specified, ignoring"     Ongeldige afscheidwaarde gespecificeerd, wordt genegeerd
 msgstr ""
 
 #: tile_pages.py:90
-msgid "Input document not loaded"
+msgid "Input document not loaded"                   Invoer document niet geladen
 msgstr ""
 
 #: tile_pages.py:113
-msgid "Only {} pages in document, skipping {}"
+msgid "Only {} pages in document, skipping {}"      Enkel  pagina´s in document, overslaan
 msgstr ""
 
 #: tile_pages.py:131
-msgid "Warning: page {} is a different size from {}, output may be unpredictable"
+msgid "Warning: page {} is a different size from {}, output may be unpredictable"      Waarschuwing: pagina ... heeft een ander formaat dan ..., uitvoer is niet zeker
 msgstr ""
 
 #: tile_pages.py:153
 msgid ""
-"Warning: requested {} columns and {} rows, but {} rows are needed with {}"
+"Warning: requested {} columns and {} rows, but {} rows are needed with {}"            Waarschuwing: gewenste ... kolommen en ... rijen, maar ... rijen zijn nodig met ... pagina´s
 " pages"
 msgstr ""
 
 #: tile_pages.py:182
-msgid "Tiling with {} rows and {} columns"
+msgid "Tiling with {} rows and {} columns"            Plaatsen van ... rijen en ... kolommen
 msgstr ""
 
-#: tile_pages.py:183
+#: tile_pages.py:183                                  Mogelijkheden
 msgid "Options"
 msgstr ""
 
 #: tile_pages.py:184
-msgid "Margins: {} {}"
+msgid "Margins: {} {}"                                Marges: 
 msgstr ""
 
 #: tile_pages.py:185
-msgid "Trim: {} {}"
+msgid "Trim: {} {}"                                   Afschneiding
 msgstr ""
 
 #: tile_pages.py:186
-msgid "Rotation"
+msgid "Rotation"                                       Rotatie
 msgstr ""
 
 #: tile_pages.py:187
-msgid "Page order: {}, {}, {}"
+msgid "Page order: {}, {}, {}"                          Pagina volgorde
 msgstr ""
 
 #: tile_pages.py:265
-msgid "Unable to open"
+msgid "Unable to open"                                  Kan het bestand niet openen
 msgstr ""
 
