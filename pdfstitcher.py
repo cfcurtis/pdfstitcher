@@ -4,6 +4,7 @@ import os
 
 # localization stuff
 import gettext
+import locale
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -15,7 +16,17 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-print(resource_path('locale'))
+lc = locale.getdefaultlocale()
+
+# supported languages are currently german, spanish, french, dutch. Fallback in English.
+lang = lc[0][:2]
+language_warning = None
+
+if lang in ('de','es','fr','nl'):
+    os.environ['LC_MESSAGES'] = lang
+elif lang != 'en':
+    language_warning = 'System language code ' + lang + ' is not supported, defaulting to English.'
+
 translate = gettext.translation('pdfstitcher', resource_path('locale'), fallback=True)
 translate.install()
 
@@ -56,7 +67,7 @@ class SewGUI(wx.Frame):
 
         # Page Range
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(pnl, label=_('Page Range' + ':')), flag=wx.ALIGN_CENTRE_VERTICAL)
+        newline.Add(wx.StaticText(pnl, label=_('Page Range') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.page_range_txt = wx.TextCtrl(pnl)
         self.page_range_txt.SetToolTip(wx.ToolTip(_('Pages assemble in specified order. 0 inserts a blank page.')))
         newline.Add(self.page_range_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
@@ -64,7 +75,7 @@ class SewGUI(wx.Frame):
 
         # Columns/Rows
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(pnl, label=_('Number of Columns' + ':')), flag=wx.ALIGN_CENTRE_VERTICAL)
+        newline.Add(wx.StaticText(pnl, label=_('Number of Columns') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.columns_txt = wx.TextCtrl(pnl,size=(40,-1),style=wx.TE_RIGHT)
         newline.Add(self.columns_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         newline.Add(wx.StaticText(pnl, label=_('Number of Rows') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
@@ -110,7 +121,7 @@ class SewGUI(wx.Frame):
 
         # Margin
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(pnl, label=_('Margin to add to final output' + ':')),flag=wx.ALIGN_CENTRE_VERTICAL)
+        newline.Add(wx.StaticText(pnl, label=_('Margin to add to final output') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL)
         self.margin_txt = wx.TextCtrl(pnl,size=(40,-1),style=wx.TE_RIGHT)
         newline.Add(self.margin_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
@@ -122,22 +133,22 @@ class SewGUI(wx.Frame):
 
         # Left trim
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(pnl, label=_('Left' + ':')),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
+        newline.Add(wx.StaticText(pnl, label=_('Left') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
         self.left_trim_txt = wx.TextCtrl(pnl,size=(40,-1),style=wx.TE_RIGHT)
         newline.Add(self.left_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
 
         # Right trim
-        newline.Add(wx.StaticText(pnl, label=_('Right' + ':')),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
+        newline.Add(wx.StaticText(pnl, label=_('Right') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
         self.right_trim_txt = wx.TextCtrl(pnl,size=(40,-1),style=wx.TE_RIGHT)
         newline.Add(self.right_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
        
         # Top trim
-        newline.Add(wx.StaticText(pnl, label=_('Top' + ':')),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
+        newline.Add(wx.StaticText(pnl, label=_('Top') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
         self.top_trim_txt = wx.TextCtrl(pnl,size=(40,-1),style=wx.TE_RIGHT)
         newline.Add(self.top_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
 
         # Bottom trim
-        newline.Add(wx.StaticText(pnl, label=_('Bottom' + ':')),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
+        newline.Add(wx.StaticText(pnl, label=_('Bottom') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
         self.bottom_trim_txt = wx.TextCtrl(pnl,size=(40,-1),style=wx.TE_RIGHT)
         newline.Add(self.bottom_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
@@ -162,6 +173,9 @@ class SewGUI(wx.Frame):
         self.tiler = None
 
         self.working_dir = os.getcwd()
+
+        if language_warning:
+            print(language_warning)
     
     def on_go_pressed(self,event):
         if self.tiler is None:

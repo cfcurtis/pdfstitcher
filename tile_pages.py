@@ -12,7 +12,7 @@ def txt_to_float(txt):
     try:
         txtnum = float(txt.replace(',','.'))
     except:
-        print(_('Invalid input ') + txt + ', ' + _('only numeric values allowed'))
+        print(_('Invalid input') + txt + ' , ' + _('only numeric values allowed'))
     
     return txtnum
 
@@ -181,10 +181,10 @@ class PageTiler():
 
         print(_('Tiling with {} rows and {} columns').format(rows,cols))
         print(_('Options') + ':')
-        print('    ' + _('Margins' + ': {} {}').format(self.margin,unitstr))
-        print('    ' + _('Trim' + ': {} {}').format(self.trim,unitstr))
+        print('    ' + _('Margins') + ': {} {}'.format(self.margin,unitstr))
+        print('    ' + _('Trim') + ': {} {}'.format(self.trim,unitstr))
         print('    ' + _('Rotation') + ': {}'.format(rotstr))
-        print('    ' + _('Page order' + ': {}, {}, {}'.format(orderstr, lrstr, btstr)))
+        print('    ' + _('Page order') + ': {}, {}, {}'.format(orderstr, lrstr, btstr))
 
         # define the media box with the final grid + margins
         # run through the width/height combos to find the maximum required

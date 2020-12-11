@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-11 13:39-0700\n"
+"POT-Creation-Date: 2020-12-11 13:57-0700\n"
 "PO-Revision-Date: 2020-12-08 12:27-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de_DE\n"
@@ -19,161 +19,161 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: pdfstitcher.py:47 pdfstitcher.py:265
+#: pdfstitcher.py:48 pdfstitcher.py:266
 msgid "Select input PDF"
 msgstr ""
 
-#: pdfstitcher.py:50 pdfstitcher.py:58 pdfstitcher.py:103 pdfstitcher.py:285
+#: pdfstitcher.py:51 pdfstitcher.py:59 pdfstitcher.py:104 pdfstitcher.py:286
 #: tile_pages.py:162
 msgid "None"
 msgstr ""
 
-#: pdfstitcher.py:55 pdfstitcher.py:249
+#: pdfstitcher.py:56 pdfstitcher.py:250
 msgid "Save output as"
 msgstr ""
 
-#: pdfstitcher.py:64
+#: pdfstitcher.py:65
 msgid "Required Parameters"
 msgstr ""
 
-#: pdfstitcher.py:70
+#: pdfstitcher.py:71
 msgid "Page Range"
 msgstr ""
 
-#: pdfstitcher.py:72
+#: pdfstitcher.py:73
 msgid "Pages assemble in specified order. 0 inserts a blank page."
 msgstr ""
 
-#: pdfstitcher.py:78
+#: pdfstitcher.py:79
 msgid "Number of Columns"
 msgstr ""
 
-#: pdfstitcher.py:81
+#: pdfstitcher.py:82
 msgid "Number of Rows"
 msgstr ""
 
-#: pdfstitcher.py:88 tile_pages.py:170
+#: pdfstitcher.py:89 tile_pages.py:170
 msgid "Rows then columns"
 msgstr ""
 
-#: pdfstitcher.py:88 tile_pages.py:172
+#: pdfstitcher.py:89 tile_pages.py:172
 msgid "Columns then rows"
 msgstr ""
 
-#: pdfstitcher.py:89 tile_pages.py:174
+#: pdfstitcher.py:90 tile_pages.py:174
 msgid "Left to right"
 msgstr ""
 
-#: pdfstitcher.py:89 tile_pages.py:176
+#: pdfstitcher.py:90 tile_pages.py:176
 msgid "Right to left"
 msgstr ""
 
-#: pdfstitcher.py:90 tile_pages.py:178
+#: pdfstitcher.py:91 tile_pages.py:178
 msgid "Top to bottom"
 msgstr ""
 
-#: pdfstitcher.py:90 tile_pages.py:180
+#: pdfstitcher.py:91 tile_pages.py:180
 msgid "Bottom to top"
 msgstr ""
 
-#: pdfstitcher.py:92 tile_pages.py:187
+#: pdfstitcher.py:93 tile_pages.py:187
 msgid "Page order"
 msgstr ""
 
-#: pdfstitcher.py:103 tile_pages.py:165
+#: pdfstitcher.py:104 tile_pages.py:165
 msgid "Clockwise"
 msgstr ""
 
-#: pdfstitcher.py:103 tile_pages.py:168
+#: pdfstitcher.py:104 tile_pages.py:168
 msgid "Counterclockwise"
 msgstr ""
 
-#: pdfstitcher.py:104
+#: pdfstitcher.py:105
 msgid "Page Rotation"
 msgstr ""
 
-#: pdfstitcher.py:112
+#: pdfstitcher.py:113
 msgid "Optional Parameters"
 msgstr ""
 
-#: pdfstitcher.py:117
+#: pdfstitcher.py:118
 msgid "Inches"
 msgstr ""
 
-#: pdfstitcher.py:117
+#: pdfstitcher.py:118
 msgid "Centimetres"
 msgstr ""
 
-#: pdfstitcher.py:118
+#: pdfstitcher.py:119
 msgid "Units"
 msgstr ""
 
-#: pdfstitcher.py:124
+#: pdfstitcher.py:125
 msgid "Margin to add to final output"
 msgstr ""
 
-#: pdfstitcher.py:131
+#: pdfstitcher.py:132
 msgid "Amount to trim from each page"
 msgstr ""
 
-#: pdfstitcher.py:136
-msgid "Left:"
+#: pdfstitcher.py:137
+msgid "Left"
 msgstr ""
 
-#: pdfstitcher.py:141
-msgid "Right:"
+#: pdfstitcher.py:142
+msgid "Right"
 msgstr ""
 
-#: pdfstitcher.py:146
-msgid "Top:"
+#: pdfstitcher.py:147
+msgid "Top"
 msgstr ""
 
-#: pdfstitcher.py:151
-msgid "Bottom:"
+#: pdfstitcher.py:152
+msgid "Bottom"
 msgstr ""
 
-#: pdfstitcher.py:158
+#: pdfstitcher.py:159
 msgid "Generate PDF"
 msgstr ""
 
-#: pdfstitcher.py:220
+#: pdfstitcher.py:221
 msgid "Tiling successful"
 msgstr ""
 
-#: pdfstitcher.py:222 pdfstitcher.py:230
+#: pdfstitcher.py:223 pdfstitcher.py:231
 msgid "Something went wrong"
 msgstr ""
 
-#: pdfstitcher.py:222
+#: pdfstitcher.py:223
 msgid "tiling failed"
 msgstr ""
 
-#: pdfstitcher.py:223
+#: pdfstitcher.py:224
 msgid "Exception"
 msgstr ""
 
-#: pdfstitcher.py:228
+#: pdfstitcher.py:229
 msgid "Successfully written to"
 msgstr ""
 
-#: pdfstitcher.py:230 pdfstitcher.py:262
+#: pdfstitcher.py:231 pdfstitcher.py:263
 msgid "unable to write to"
 msgstr ""
 
-#: pdfstitcher.py:277
+#: pdfstitcher.py:278
 msgid "Opening"
 msgstr ""
 
-#: pdfstitcher.py:288
+#: pdfstitcher.py:289
 msgid "Cannot open file"
 msgstr ""
 
-#: pdfstitcher.py:300
+#: pdfstitcher.py:301
 msgid "PDF Stitcher"
 msgstr ""
 
 #: tile_pages.py:15
-msgid "Invalid input "
+msgid "Invalid input"
 msgstr ""
 
 #: tile_pages.py:15
@@ -225,3 +225,4 @@ msgstr ""
 #: tile_pages.py:265
 msgid "Unable to open"
 msgstr ""
+

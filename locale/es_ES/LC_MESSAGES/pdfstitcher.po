@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-09 17:03-0700\n"
+"POT-Creation-Date: 2020-12-11 13:57-0700\n"
 "PO-Revision-Date: 2020-12-08 12:27-0700\n"
 "Last-Translator: Leia McFly <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -19,156 +19,158 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: pdfstitcher.py:25 pdfstitcher.py:240
+#: pdfstitcher.py:48 pdfstitcher.py:266
 msgid "Select input PDF"
 msgstr "Selecciona PDF a combinar"
 
-#: pdfstitcher.py:28 pdfstitcher.py:36 pdfstitcher.py:81 pdfstitcher.py:260
+#: pdfstitcher.py:51 pdfstitcher.py:59 pdfstitcher.py:104 pdfstitcher.py:286
 #: tile_pages.py:162
 msgid "None"
 msgstr "Nada"
 
-#: pdfstitcher.py:33 pdfstitcher.py:224
+#: pdfstitcher.py:56 pdfstitcher.py:250
 msgid "Save output as"
 msgstr "Guardar el nuevo PDF como"
 
-#: pdfstitcher.py:42
+#: pdfstitcher.py:65
 msgid "Required Parameters"
 msgstr "Parámetros Requeridos"
 
-#: pdfstitcher.py:48
+#: pdfstitcher.py:71
 msgid "Page Range"
 msgstr "Rango de páginas"
 
-#: pdfstitcher.py:50
+#: pdfstitcher.py:73
 msgid "Pages assemble in specified order. 0 inserts a blank page."
-msgstr "Las páginas se ensamblan en el orden especificado. Use 0 para insertar una página en blanco."
+msgstr ""
+"Las páginas se ensamblan en el orden especificado. Use 0 para insertar "
+"una página en blanco."
 
-#: pdfstitcher.py:56
+#: pdfstitcher.py:79
 msgid "Number of Columns"
 msgstr "Numero de Columnas"
 
-#: pdfstitcher.py:59
+#: pdfstitcher.py:82
 msgid "Number of Rows"
 msgstr "Numero de Filas"
 
-#: pdfstitcher.py:66 tile_pages.py:170
+#: pdfstitcher.py:89 tile_pages.py:170
 msgid "Rows then columns"
 msgstr "Filas luego Columnas"
 
-#: pdfstitcher.py:66 tile_pages.py:172
+#: pdfstitcher.py:89 tile_pages.py:172
 msgid "Columns then rows"
 msgstr "Columnas luego Filas"
 
-#: pdfstitcher.py:67 tile_pages.py:174
+#: pdfstitcher.py:90 tile_pages.py:174
 msgid "Left to right"
 msgstr "Izquierda a Derecha"
 
-#: pdfstitcher.py:67 tile_pages.py:176
+#: pdfstitcher.py:90 tile_pages.py:176
 msgid "Right to left"
 msgstr "Derecha a Izquierda"
 
-#: pdfstitcher.py:68 tile_pages.py:178
+#: pdfstitcher.py:91 tile_pages.py:178
 msgid "Top to bottom"
 msgstr " De Arriba hacia abajo "
 
-#: pdfstitcher.py:68 tile_pages.py:180
+#: pdfstitcher.py:91 tile_pages.py:180
 msgid "Bottom to top"
 msgstr "De Abajo hacia arriba"
 
-#: pdfstitcher.py:70
+#: pdfstitcher.py:93 tile_pages.py:187
 msgid "Page order"
 msgstr "Orden de las páginas"
 
-#: pdfstitcher.py:81 tile_pages.py:165
+#: pdfstitcher.py:104 tile_pages.py:165
 msgid "Clockwise"
 msgstr "En el sentido de las manecillas del reloj"
 
-#: pdfstitcher.py:81 tile_pages.py:168
+#: pdfstitcher.py:104 tile_pages.py:168
 msgid "Counterclockwise"
 msgstr "Sentido contrario a las manecillas del reloj"
 
-#: pdfstitcher.py:82
+#: pdfstitcher.py:105
 msgid "Page Rotation"
 msgstr "Rotación de página"
 
-#: pdfstitcher.py:90
+#: pdfstitcher.py:113
 msgid "Optional Parameters"
 msgstr "Párametros Opcionales"
 
-#: pdfstitcher.py:95
+#: pdfstitcher.py:118
 msgid "Inches"
 msgstr "Pulgadas"
 
-#: pdfstitcher.py:95
+#: pdfstitcher.py:118
 msgid "Centimetres"
 msgstr "Centímetros"
 
-#: pdfstitcher.py:96
+#: pdfstitcher.py:119
 msgid "Units"
 msgstr "Unidades"
 
-#: pdfstitcher.py:102
+#: pdfstitcher.py:125
 msgid "Margin to add to final output"
 msgstr "Margen para agregar alrededor del patron final"
 
-#: pdfstitcher.py:109
+#: pdfstitcher.py:132
 msgid "Amount to trim from each page"
 msgstr "Margen a recortar de cada página"
 
-#: pdfstitcher.py:114
+#: pdfstitcher.py:137
 msgid "Left"
 msgstr "Izquierda"
 
-#: pdfstitcher.py:119
+#: pdfstitcher.py:142
 msgid "Right"
 msgstr "Derecha"
 
-#: pdfstitcher.py:124
+#: pdfstitcher.py:147
 msgid "Top"
 msgstr "Arriba"
 
-#: pdfstitcher.py:129
+#: pdfstitcher.py:152
 msgid "Bottom"
 msgstr "Abajo"
 
-#: pdfstitcher.py:136
+#: pdfstitcher.py:159
 msgid "Generate PDF"
 msgstr "Generar PDF"
 
-#: pdfstitcher.py:195
+#: pdfstitcher.py:221
 msgid "Tiling successful"
 msgstr "Combinación exitosa"
 
-#: pdfstitcher.py:197 pdfstitcher.py:205
+#: pdfstitcher.py:223 pdfstitcher.py:231
 msgid "Something went wrong"
 msgstr "Algo salió mal"
 
-#: pdfstitcher.py:197
+#: pdfstitcher.py:223
 msgid "tiling failed"
 msgstr "La combinación fallo"
 
-#: pdfstitcher.py:198
+#: pdfstitcher.py:224
 msgid "Exception"
 msgstr "Excepción"
 
-#: pdfstitcher.py:203
+#: pdfstitcher.py:229
 msgid "Successfully written to"
 msgstr "Guardado exitosamente en"
 
-#: pdfstitcher.py:205 pdfstitcher.py:237
+#: pdfstitcher.py:231 pdfstitcher.py:263
 msgid "unable to write to"
 msgstr "Imposible guardar en"
 
-#: pdfstitcher.py:252
+#: pdfstitcher.py:278
 msgid "Opening"
 msgstr "Abriendo"
 
-#: pdfstitcher.py:263
+#: pdfstitcher.py:289
 msgid "Cannot open file"
 msgstr "No se puede abrir el archivo"
 
-#: pdfstitcher.py:275
+#: pdfstitcher.py:301
 msgid "PDF Stitcher"
 msgstr "Cosedor de PDF"
 
@@ -194,13 +196,17 @@ msgstr "Solo hay {} páginas en el documento, omitiendo {}"
 
 #: tile_pages.py:131
 msgid "Warning: page {} is a different size from {}, output may be unpredictable"
-msgstr "Advertencia: la página {} tiene un tamaño diferente al de {}, el resultado puede ser impredecible"
+msgstr ""
+"Advertencia: la página {} tiene un tamaño diferente al de {}, el "
+"resultado puede ser impredecible"
 
 #: tile_pages.py:153
 msgid ""
 "Warning: requested {} columns and {} rows, but {} rows are needed with {}"
 " pages"
-msgstr "Advertencia: solicitó {} columnas y {} filas, pero {} filas son necesarias con {} páginas"
+msgstr ""
+"Advertencia: solicitó {} columnas y {} filas, pero {} filas son "
+"necesarias con {} páginas"
 
 #: tile_pages.py:182
 msgid "Tiling with {} rows and {} columns"
