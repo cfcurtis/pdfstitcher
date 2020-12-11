@@ -46,11 +46,11 @@ msgstr "Las páginas se ensamblan en el orden especificado. Use 0 para insertar 
 
 #: pdfstitcher.py:56
 msgid "Number of Columns:"
-msgstr "Numero de Columnas"
+msgstr "Numero de Columnas:"
 
 #: pdfstitcher.py:59
 msgid "Number of Rows"
-msgstr "Numero de Filas"
+msgstr "Numero de Filas:"
 
 #: pdfstitcher.py:66 tile_pages.py:170
 msgid "Rows then columns"
@@ -118,19 +118,19 @@ msgstr "Cantidad a recortar de cada página"
 
 #: pdfstitcher.py:114
 msgid "Left:"
-msgstr "Izquierda"
+msgstr "Izquierda:"
 
 #: pdfstitcher.py:119
 msgid "Right:"
-msgstr "Derecha"
+msgstr "Derecha:"
 
 #: pdfstitcher.py:124
 msgid "Top:"
-msgstr "Arriba"
+msgstr "Arriba:"
 
 #: pdfstitcher.py:129
 msgid "Bottom:"
-msgstr "Abajo"
+msgstr "Abajo:"
 
 #: pdfstitcher.py:136
 msgid "Generate PDF"
