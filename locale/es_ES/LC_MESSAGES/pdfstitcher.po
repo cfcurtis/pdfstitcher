@@ -37,7 +37,7 @@ msgid "Required Parameters"
 msgstr "Parámetros Requeridos"
 
 #: pdfstitcher.py:48
-msgid "Page Range:"
+msgid "Page Range"
 msgstr "Rango de páginas"
 
 #: pdfstitcher.py:50
@@ -45,12 +45,12 @@ msgid "Pages assemble in specified order. 0 inserts a blank page."
 msgstr "Las páginas se ensamblan en el orden especificado. Use 0 para insertar una página en blanco."
 
 #: pdfstitcher.py:56
-msgid "Number of Columns:"
-msgstr "Numero de Columnas:"
+msgid "Number of Columns"
+msgstr "Numero de Columnas"
 
 #: pdfstitcher.py:59
 msgid "Number of Rows"
-msgstr "Numero de Filas:"
+msgstr "Numero de Filas"
 
 #: pdfstitcher.py:66 tile_pages.py:170
 msgid "Rows then columns"
@@ -109,28 +109,28 @@ msgid "Units"
 msgstr "Unidades"
 
 #: pdfstitcher.py:102
-msgid "Margin to add to final output:"
-msgstr "Margen para agregar alrededor del patron final:"
+msgid "Margin to add to final output"
+msgstr "Margen para agregar alrededor del patron final"
 
 #: pdfstitcher.py:109
 msgid "Amount to trim from each page"
 msgstr "Margen a recortar de cada página"
 
 #: pdfstitcher.py:114
-msgid "Left:"
-msgstr "Izquierda:"
+msgid "Left"
+msgstr "Izquierda"
 
 #: pdfstitcher.py:119
-msgid "Right:"
-msgstr "Derecha:"
+msgid "Right"
+msgstr "Derecha"
 
 #: pdfstitcher.py:124
-msgid "Top:"
-msgstr "Arriba:"
+msgid "Top"
+msgstr "Arriba"
 
 #: pdfstitcher.py:129
-msgid "Bottom:"
-msgstr "Abajo:"
+msgid "Bottom"
+msgstr "Abajo"
 
 #: pdfstitcher.py:136
 msgid "Generate PDF"
@@ -173,7 +173,7 @@ msgid "PDF Stitcher"
 msgstr "Cosedor de PDF"
 
 #: tile_pages.py:15
-msgid "Invalid input "
+msgid "Invalid input"
 msgstr "Selección invalida"
 
 #: tile_pages.py:15
@@ -211,20 +211,16 @@ msgid "Options"
 msgstr "Opciones"
 
 #: tile_pages.py:184
-msgid "Margins: {} {}"
-msgstr "Margenes: {} {}"
+msgid "Margins"
+msgstr "Margenes"
 
 #: tile_pages.py:185
-msgid "Trim: {} {}"
-msgstr "Recortar:  {} {}"
+msgid "Trim"
+msgstr "Recortar"
 
 #: tile_pages.py:186
 msgid "Rotation"
 msgstr "Rotación"
-
-#: tile_pages.py:187
-msgid "Page order: {}, {}, {}"
-msgstr "Orden de las páginas: {}, {}, {}"
 
 #: tile_pages.py:265
 msgid "Unable to open"
