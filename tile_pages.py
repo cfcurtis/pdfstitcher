@@ -4,11 +4,12 @@ import subprocess
 import argparse
 import sys
 import math
+import copy
 
 def txt_to_float(txt):
     if txt is None or not txt.strip():
         return 0
-    
+
     try:
         txtnum = float(txt.replace(',','.'))
     except:
@@ -107,6 +108,7 @@ class PageTiler():
         page_size_ref = 0
 
         page_count = len(self.in_doc.pages)
+        trim = [self.units_to_px(t) for t in self.trim]
         
         for p in self.page_range:
             if p > page_count:
@@ -120,6 +122,16 @@ class PageTiler():
                     # copy the page over as an xobject
                     # pikepdf.pages is zero indexed, so subtract one
                     localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
+
+                    # set the trim box to cut off content
+                    if '/CropBox' not in localpage.keys():
+                        localpage.TrimBox = copy.copy(localpage.MediaBox)
+
+                    localpage.TrimBox[0] += trim[0]
+                    localpage.TrimBox[1] += trim[3]
+                    localpage.TrimBox[2] -= trim[1]
+                    localpage.TrimBox[3] -= trim[2]
+ 
                     content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
 
                     # only get the width/height for the first page
@@ -157,7 +169,6 @@ class PageTiler():
         # convert the margin and trim options into pixels
         unitstr = 'cm' if self.units else 'in'
         margin = self.units_to_px(self.margin)
-        trim = [self.units_to_px(t) for t in self.trim]
 
         rotstr = _('None')
         

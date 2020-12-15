@@ -183,14 +183,16 @@ class SewGUI(wx.Frame):
 
         if self.out_doc_path is None:
             self.on_output(event)
+            
+            if self.out_doc_path is None:
+                return
 
         # set all the various options of the tiler
-        
         # define the page order
         self.tiler.set_col_major(self.col_row_order_combo.GetSelection())
         self.tiler.set_right_left(self.left_right_combo.GetSelection())
         self.tiler.set_bottom_top(self.top_bottom_combo.GetSelection())
-        
+    
         self.tiler.set_page_range(self.page_range_txt.GetValue())
 
         # set the optional stuff
