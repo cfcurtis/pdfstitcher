@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-11 13:57-0700\n"
+"POT-Creation-Date: 2020-12-15 09:48-0700\n"
 "PO-Revision-Date: 2020-12-08 12:27-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: nl_NL\n"
@@ -19,16 +19,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: pdfstitcher.py:48 pdfstitcher.py:266
+#: pdfstitcher.py:48 pdfstitcher.py:268
 msgid "Select input PDF"
 msgstr "Selecteer invoer PDF"
 
-#: pdfstitcher.py:51 pdfstitcher.py:59 pdfstitcher.py:104 pdfstitcher.py:286
-#: tile_pages.py:162
+#: pdfstitcher.py:51 pdfstitcher.py:59 pdfstitcher.py:104 pdfstitcher.py:288
+#: tile_pages.py:173
 msgid "None"
 msgstr "Geen"
 
-#: pdfstitcher.py:56 pdfstitcher.py:250
+#: pdfstitcher.py:56 pdfstitcher.py:252
 msgid "Save output as"
 msgstr "Uitvoer opslaan als..."
 
@@ -52,39 +52,39 @@ msgstr "Aantal kolommen"
 msgid "Number of Rows"
 msgstr "Aantal rijen"
 
-#: pdfstitcher.py:89 tile_pages.py:170
+#: pdfstitcher.py:89 tile_pages.py:181
 msgid "Rows then columns"
 msgstr "Rij dan kolom"
 
-#: pdfstitcher.py:89 tile_pages.py:172
+#: pdfstitcher.py:89 tile_pages.py:183
 msgid "Columns then rows"
 msgstr "Kolom dan rij"
 
-#: pdfstitcher.py:90 tile_pages.py:174
+#: pdfstitcher.py:90 tile_pages.py:185
 msgid "Left to right"
 msgstr "Links naar rechts"
 
-#: pdfstitcher.py:90 tile_pages.py:176
+#: pdfstitcher.py:90 tile_pages.py:187
 msgid "Right to left"
 msgstr "Rechts naar links"
 
-#: pdfstitcher.py:91 tile_pages.py:178
+#: pdfstitcher.py:91 tile_pages.py:189
 msgid "Top to bottom"
 msgstr "Boven naar beneden"
 
-#: pdfstitcher.py:91 tile_pages.py:180
+#: pdfstitcher.py:91 tile_pages.py:191
 msgid "Bottom to top"
 msgstr "Beneden naar boven"
 
-#: pdfstitcher.py:93 tile_pages.py:187
+#: pdfstitcher.py:93 tile_pages.py:198
 msgid "Page order"
 msgstr "Pagina volgorde"
 
-#: pdfstitcher.py:104 tile_pages.py:165
+#: pdfstitcher.py:104 tile_pages.py:176
 msgid "Clockwise"
 msgstr "Met de klok mee"
 
-#: pdfstitcher.py:104 tile_pages.py:168
+#: pdfstitcher.py:104 tile_pages.py:179
 msgid "Counterclockwise"
 msgstr "Tegen de klok in"
 
@@ -136,69 +136,69 @@ msgstr "Onder"
 msgid "Generate PDF"
 msgstr "Maak PDF"
 
-#: pdfstitcher.py:221
+#: pdfstitcher.py:223
 msgid "Tiling successful"
 msgstr "Plaatsing succesvol"
 
-#: pdfstitcher.py:223 pdfstitcher.py:231
+#: pdfstitcher.py:225 pdfstitcher.py:233
 msgid "Something went wrong"
 msgstr "Er is iets fout gegaan"
 
-#: pdfstitcher.py:223
+#: pdfstitcher.py:225
 msgid "tiling failed"
 msgstr "Plaatsing niet gelukt"
 
-#: pdfstitcher.py:224
+#: pdfstitcher.py:226
 msgid "Exception"
 msgstr "Uitzondering"
 
-#: pdfstitcher.py:229
+#: pdfstitcher.py:231
 msgid "Successfully written to"
 msgstr "Succesvol opgeslagen in"
 
-#: pdfstitcher.py:231 pdfstitcher.py:263
+#: pdfstitcher.py:233 pdfstitcher.py:265
 msgid "unable to write to"
 msgstr "Niet mogelijk om op te slaan in"
 
-#: pdfstitcher.py:278
+#: pdfstitcher.py:280
 msgid "Opening"
 msgstr "Bezig met openen"
 
-#: pdfstitcher.py:289
+#: pdfstitcher.py:291
 msgid "Cannot open file"
 msgstr "Kan het bestand niet openen"
 
-#: pdfstitcher.py:301
+#: pdfstitcher.py:303
 msgid "PDF Stitcher"
 msgstr "PDF Stitcher"
 
-#: tile_pages.py:15
+#: tile_pages.py:16
 msgid "Invalid input"
 msgstr "Ongeldige invoer"
 
-#: tile_pages.py:15
+#: tile_pages.py:16
 msgid "only numeric values allowed"
 msgstr "Alleen numerieke waarden toegstaan"
 
-#: tile_pages.py:68
+#: tile_pages.py:69
 msgid "Invalid trim value specified, ignoring"
 msgstr "Ongeldige afscheidwaarde gespecificeerd, wordt genegeerd"
 
-#: tile_pages.py:90
+#: tile_pages.py:91
 msgid "Input document not loaded"
 msgstr "Invoer document niet geladen"
 
-#: tile_pages.py:113
+#: tile_pages.py:115
 msgid "Only {} pages in document, skipping {}"
 msgstr "Enkel {} pagina's in document, overslaan {}"
 
-#: tile_pages.py:131
+#: tile_pages.py:143
 msgid "Warning: page {} is a different size from {}, output may be unpredictable"
 msgstr ""
 "Waarschuwing: pagina {} heeft een ander formaat dan {}, uitvoer is niet "
 "zeker"
 
-#: tile_pages.py:153
+#: tile_pages.py:165
 msgid ""
 "Warning: requested {} columns and {} rows, but {} rows are needed with {}"
 " pages"
@@ -206,27 +206,27 @@ msgstr ""
 "Waarschuwing: gewenste {} kolommen en {} rijen, maar {} rijen zijn nodig "
 "met {} pagina's"
 
-#: tile_pages.py:182
+#: tile_pages.py:193
 msgid "Tiling with {} rows and {} columns"
 msgstr "Plaatsen van {} rijen en {} kolommen"
 
-#: tile_pages.py:183
+#: tile_pages.py:194
 msgid "Options"
 msgstr ""
 
-#: tile_pages.py:184
+#: tile_pages.py:195
 msgid "Margins"
 msgstr "Marges"
 
-#: tile_pages.py:185
+#: tile_pages.py:196
 msgid "Trim"
 msgstr "Afschneiding"
 
-#: tile_pages.py:186
+#: tile_pages.py:197
 msgid "Rotation"
 msgstr "Rotatie"
 
-#: tile_pages.py:265
+#: tile_pages.py:276
 msgid "Unable to open"
 msgstr "Kan het bestand niet openen"
 

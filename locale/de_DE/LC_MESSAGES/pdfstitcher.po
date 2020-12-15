@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-11 13:57-0700\n"
-"PO-Revision-Date: 2020-12-08 12:27-0700\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2020-12-15 09:48-0700\n"
+"PO-Revision-Date: 2020-12-11 09:45+0100\n"
+"Last-Translator: \n"
 "Language: de_DE\n"
 "Language-Team: de_DE <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -19,210 +19,216 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: pdfstitcher.py:48 pdfstitcher.py:266
+#: pdfstitcher.py:48 pdfstitcher.py:268
 msgid "Select input PDF"
-msgstr ""
+msgstr "PDF-Datei öffnen"
 
-#: pdfstitcher.py:51 pdfstitcher.py:59 pdfstitcher.py:104 pdfstitcher.py:286
-#: tile_pages.py:162
+#: pdfstitcher.py:51 pdfstitcher.py:59 pdfstitcher.py:104 pdfstitcher.py:288
+#: tile_pages.py:173
 msgid "None"
-msgstr ""
+msgstr "Keine"
 
-#: pdfstitcher.py:56 pdfstitcher.py:250
+#: pdfstitcher.py:56 pdfstitcher.py:252
 msgid "Save output as"
-msgstr ""
+msgstr "Datei speichern als"
 
 #: pdfstitcher.py:65
 msgid "Required Parameters"
-msgstr ""
+msgstr "Erforderliche Eingaben"
 
 #: pdfstitcher.py:71
 msgid "Page Range"
-msgstr ""
+msgstr "Seitenauswahl"
 
 #: pdfstitcher.py:73
 msgid "Pages assemble in specified order. 0 inserts a blank page."
 msgstr ""
+"Die Seiten werden in der angegebenen Reihenfolge zusammengestellt. 0 fügt"
+" eine leere Seite ein."
 
 #: pdfstitcher.py:79
 msgid "Number of Columns"
-msgstr ""
+msgstr "Anzahl der Spalten"
 
 #: pdfstitcher.py:82
 msgid "Number of Rows"
-msgstr ""
+msgstr "Anzahl der Reihen"
 
-#: pdfstitcher.py:89 tile_pages.py:170
+#: pdfstitcher.py:89 tile_pages.py:181
 msgid "Rows then columns"
-msgstr ""
+msgstr "Reihen dann Spalten"
 
-#: pdfstitcher.py:89 tile_pages.py:172
+#: pdfstitcher.py:89 tile_pages.py:183
 msgid "Columns then rows"
-msgstr ""
+msgstr "Spalten dann Reihen"
 
-#: pdfstitcher.py:90 tile_pages.py:174
+#: pdfstitcher.py:90 tile_pages.py:185
 msgid "Left to right"
-msgstr ""
+msgstr "Links nach Rechts"
 
-#: pdfstitcher.py:90 tile_pages.py:176
+#: pdfstitcher.py:90 tile_pages.py:187
 msgid "Right to left"
-msgstr ""
+msgstr "Rechts nach Links"
 
-#: pdfstitcher.py:91 tile_pages.py:178
+#: pdfstitcher.py:91 tile_pages.py:189
 msgid "Top to bottom"
-msgstr ""
+msgstr "Oben nach Unten"
 
-#: pdfstitcher.py:91 tile_pages.py:180
+#: pdfstitcher.py:91 tile_pages.py:191
 msgid "Bottom to top"
-msgstr ""
+msgstr "Unten nach oben"
 
-#: pdfstitcher.py:93 tile_pages.py:187
+#: pdfstitcher.py:93 tile_pages.py:198
 msgid "Page order"
-msgstr ""
+msgstr "Seitenbefehl"
 
-#: pdfstitcher.py:104 tile_pages.py:165
+#: pdfstitcher.py:104 tile_pages.py:176
 msgid "Clockwise"
-msgstr ""
+msgstr "Im Uhrzeiger"
 
-#: pdfstitcher.py:104 tile_pages.py:168
+#: pdfstitcher.py:104 tile_pages.py:179
 msgid "Counterclockwise"
-msgstr ""
+msgstr "Gegen den Uhrzeiger"
 
 #: pdfstitcher.py:105
 msgid "Page Rotation"
-msgstr ""
+msgstr "Seitenausrichtung"
 
 #: pdfstitcher.py:113
 msgid "Optional Parameters"
-msgstr ""
+msgstr "Optionale Eingaben"
 
 #: pdfstitcher.py:118
 msgid "Inches"
-msgstr ""
+msgstr "Inches"
 
 #: pdfstitcher.py:118
 msgid "Centimetres"
-msgstr ""
+msgstr "Zentimeter"
 
 #: pdfstitcher.py:119
 msgid "Units"
-msgstr ""
+msgstr "Maßeinheit"
 
 #: pdfstitcher.py:125
 msgid "Margin to add to final output"
-msgstr ""
+msgstr "Zusätzlicher Projektionsrand"
 
 #: pdfstitcher.py:132
 msgid "Amount to trim from each page"
-msgstr ""
+msgstr "Angabe Randbeschneidung"
 
 #: pdfstitcher.py:137
 msgid "Left"
-msgstr ""
+msgstr "Links"
 
 #: pdfstitcher.py:142
 msgid "Right"
-msgstr ""
+msgstr "Rechts"
 
 #: pdfstitcher.py:147
 msgid "Top"
-msgstr ""
+msgstr "Oben"
 
 #: pdfstitcher.py:152
 msgid "Bottom"
-msgstr ""
+msgstr "Unten"
 
 #: pdfstitcher.py:159
 msgid "Generate PDF"
-msgstr ""
-
-#: pdfstitcher.py:221
-msgid "Tiling successful"
-msgstr ""
-
-#: pdfstitcher.py:223 pdfstitcher.py:231
-msgid "Something went wrong"
-msgstr ""
+msgstr "PDF erstellen"
 
 #: pdfstitcher.py:223
+msgid "Tiling successful"
+msgstr "Zusammensetzen erfolgreich"
+
+#: pdfstitcher.py:225 pdfstitcher.py:233
+msgid "Something went wrong"
+msgstr "Etwas ist schief gelaufen"
+
+#: pdfstitcher.py:225
 msgid "tiling failed"
-msgstr ""
+msgstr "Zusammensetzen fehlgeschlagen"
 
-#: pdfstitcher.py:224
+#: pdfstitcher.py:226
 msgid "Exception"
-msgstr ""
+msgstr "Ausnahme"
 
-#: pdfstitcher.py:229
+#: pdfstitcher.py:231
 msgid "Successfully written to"
-msgstr ""
+msgstr "Erfolgreich gespeichert in"
 
-#: pdfstitcher.py:231 pdfstitcher.py:263
+#: pdfstitcher.py:233 pdfstitcher.py:265
 msgid "unable to write to"
-msgstr ""
+msgstr "Speichern nicht möglich in"
 
-#: pdfstitcher.py:278
+#: pdfstitcher.py:280
 msgid "Opening"
-msgstr ""
+msgstr "Öffnen"
 
-#: pdfstitcher.py:289
+#: pdfstitcher.py:291
 msgid "Cannot open file"
-msgstr ""
+msgstr "Datei kann nicht geöffnet werden"
 
-#: pdfstitcher.py:301
+#: pdfstitcher.py:303
 msgid "PDF Stitcher"
-msgstr ""
+msgstr "PDF-Klebetool"
 
-#: tile_pages.py:15
+#: tile_pages.py:16
 msgid "Invalid input"
-msgstr ""
+msgstr "Ungültige Eingabe"
 
-#: tile_pages.py:15
+#: tile_pages.py:16
 msgid "only numeric values allowed"
-msgstr ""
+msgstr "nur numerische Werte erlaubt"
 
-#: tile_pages.py:68
+#: tile_pages.py:69
 msgid "Invalid trim value specified, ignoring"
-msgstr ""
+msgstr "Ungültiger Wert bei der Randbeschneidung, Werte ignoriert"
 
-#: tile_pages.py:90
+#: tile_pages.py:91
 msgid "Input document not loaded"
-msgstr ""
+msgstr "Eingabedokument nicht geladen"
 
-#: tile_pages.py:113
+#: tile_pages.py:115
 msgid "Only {} pages in document, skipping {}"
-msgstr ""
+msgstr "Nur {} Seiten im Dokument, überspringen {}"
 
-#: tile_pages.py:131
+#: tile_pages.py:143
 msgid "Warning: page {} is a different size from {}, output may be unpredictable"
 msgstr ""
+"Warnung: Seite  {} ist eine andere Grösse als  {}, Ergebnis kann nicht "
+"korrekt sein"
 
-#: tile_pages.py:153
+#: tile_pages.py:165
 msgid ""
 "Warning: requested {} columns and {} rows, but {} rows are needed with {}"
 " pages"
 msgstr ""
+"Warnung: angefragte {} Spalten und {}  Reihen, aber {}  Reihen werden mit"
+" {}  Seiten benötigt"
 
-#: tile_pages.py:182
+#: tile_pages.py:193
 msgid "Tiling with {} rows and {} columns"
-msgstr ""
+msgstr "Zusammensetzung mit {}  Reihen und {}  Spalten"
 
-#: tile_pages.py:183
+#: tile_pages.py:194
 msgid "Options"
-msgstr ""
+msgstr "Optionen"
 
-#: tile_pages.py:184
+#: tile_pages.py:195
 msgid "Margins"
-msgstr ""
+msgstr "Ränder"
 
-#: tile_pages.py:185
+#: tile_pages.py:196
 msgid "Trim"
-msgstr ""
+msgstr "Abschneiden"
 
-#: tile_pages.py:186
+#: tile_pages.py:197
 msgid "Rotation"
-msgstr ""
+msgstr "Rotation"
 
-#: tile_pages.py:265
+#: tile_pages.py:276
 msgid "Unable to open"
-msgstr ""
+msgstr "Öffnen nicht möglich"
 
