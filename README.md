@@ -34,7 +34,7 @@ The test document "testdoc.pdf" is a simple 20 page document with one label per 
 
 ## Fancy stuff
 Some PDFs require trimming pages, assembling with gaps, tiling with columns first, etc. The following options allow for *most* patterns to be assembled.
-* Page range: this field can take arbitrary ranges (e.g. 3-10), a comma separated list, or a combination (e.g. 3-10, 4, 11-12). Page repetition is allowed, and adding a "0" inserts a blank page. The following example would be constructed by specifying 4 columns and/or 3 rows and the page range `1-4,0,5-6,0,7-8`
+* Page range: this field can take arbitrary ranges (e.g. 3-10), a comma separated list, or a combination (e.g. 3-10, 4, 11-12). Page repetition is allowed, and adding a "0" inserts a blank page. The following example would be constructed by specifying 3 columns and/or 3 rows and the page range `1-4,0,5-6,0,7-8`
 
 <a href="url"><img src="resources/blank-page-example.png" width="300" ></a>
 
