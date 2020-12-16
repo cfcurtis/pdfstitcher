@@ -124,7 +124,7 @@ class PageTiler():
                     localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
 
                     # set the trim box to cut off content
-                    if '/CropBox' not in localpage.keys():
+                    if '/TrimBox' not in localpage.keys():
                         localpage.TrimBox = copy.copy(localpage.MediaBox)
 
                     localpage.TrimBox[0] += trim[0]
