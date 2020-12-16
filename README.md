@@ -1,6 +1,12 @@
 # PDFStitcher
 This is a utility for stitching together many PDF pages from a single document into one single page. This is also called "N-Up" or page imposition. This utility was created in order to convert sewing patterns into a convenient format for projecting, though it could be used to stitch together any PDF.
 
+## Download the latest release
+* [Windows (64-bit Windows 7 or 10)](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.exe)
+* [MacOs (Catalina or higher)](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.app.zip)
+
+Previous versions can be found by clicking on the "releases" link to the right.
+
 ## Features
 * Stitch together pages in any order with specified number of rows or columns
 * Layers are automatically preserved if present in the source document
@@ -10,11 +16,7 @@ This is a utility for stitching together many PDF pages from a single document i
 * Trim the edges of each page by a specified amount
 
 ## Installation
-Most people probably want to just use the executable:
-* [Windows](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.exe)
-* [MacOs](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.app.zip)
-
-However, if you want to run the script directly, you'll need the following:
+Most people probably want to just use the executable links above. However, if you want to run the script directly, you'll need the following:
 
 * [Python 3.6+](https://www.python.org/downloads/) and `pip`. Testing was done with 64-bit Python 3.9.0 provided by [Anaconda](https://www.anaconda.com/) on Windows 10 and Python 3.9.1 provided by [homebrew](https://brew.sh/) on macOS Catalina 10.15.7.
 
