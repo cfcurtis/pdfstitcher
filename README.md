@@ -1,6 +1,12 @@
 # PDFStitcher
 This is a utility for stitching together many PDF pages from a single document into one single page. This is also called "N-Up" or page imposition. This utility was created in order to convert sewing patterns into a convenient format for projecting, though it could be used to stitch together any PDF.
 
+## Download the latest release
+* [Windows (64-bit Windows 7 or 10)](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.exe)
+* [MacOs (Catalina or higher)](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.app.zip)
+
+Previous versions can be found by clicking on the "releases" link to the right.
+
 ## Features
 * Stitch together pages in any order with specified number of rows or columns
 * Layers are automatically preserved if present in the source document
@@ -9,12 +15,8 @@ This is a utility for stitching together many PDF pages from a single document i
 * Add margins around the final output
 * Trim the edges of each page by a specified amount
 
-## Prerequisites
-Most people probably want to just use the executable:
-* [Windows](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.exe)
-* [MacOs](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.app.zip)
-
-However, if you want to run the script directly, you'll need the following:
+## Installation
+Most people probably want to just use the executable links above. However, if you want to run the script directly, you'll need the following:
 
 * [Python 3.6+](https://www.python.org/downloads/) and `pip`. Testing was done with 64-bit Python 3.9.0 provided by [Anaconda](https://www.anaconda.com/) on Windows 10 and Python 3.9.1 provided by [homebrew](https://brew.sh/) on macOS Catalina 10.15.7.
 
@@ -34,7 +36,7 @@ The test document "testdoc.pdf" is a simple 20 page document with one label per 
 
 ## Fancy stuff
 Some PDFs require trimming pages, assembling with gaps, tiling with columns first, etc. The following options allow for *most* patterns to be assembled.
-* Page range: this field can take arbitrary ranges (e.g. 3-10), a comma separated list, or a combination (e.g. 3-10, 4, 11-12). Page repetition is allowed, and adding a "0" inserts a blank page. The following example would be constructed by specifying 4 columns and/or 3 rows and the page range `1-4,0,5-6,0,7-8`
+* Page range: this field can take arbitrary ranges (e.g. 3-10), a comma separated list, or a combination (e.g. 3-10, 4, 11-12). Page repetition is allowed, and adding a "0" inserts a blank page. The following example would be constructed by specifying 3 columns and/or 3 rows and the page range `1-4,0,5-6,0,7-8`
 
 <a href="url"><img src="resources/blank-page-example.png" width="300" ></a>
 
