@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-15 09:48-0700\n"
+"POT-Creation-Date: 2020-12-16 14:35-0700\n"
 "PO-Revision-Date: 2020-12-08 12:27-0700\n"
 "Last-Translator: Leia McFly <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -19,16 +19,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: pdfstitcher.py:48 pdfstitcher.py:268
+#: pdfstitcher.py:48 pdfstitcher.py:271
 msgid "Select input PDF"
 msgstr "Selecciona PDF a combinar"
 
-#: pdfstitcher.py:51 pdfstitcher.py:59 pdfstitcher.py:104 pdfstitcher.py:288
-#: tile_pages.py:173
+#: pdfstitcher.py:51 pdfstitcher.py:59 pdfstitcher.py:104 pdfstitcher.py:291
+#: tile_pages.py:174
 msgid "None"
 msgstr "Nada"
 
-#: pdfstitcher.py:56 pdfstitcher.py:252
+#: pdfstitcher.py:56 pdfstitcher.py:255
 msgid "Save output as"
 msgstr "Guardar el nuevo PDF como"
 
@@ -54,39 +54,39 @@ msgstr "Numero de Columnas"
 msgid "Number of Rows"
 msgstr "Numero de Filas"
 
-#: pdfstitcher.py:89 tile_pages.py:181
+#: pdfstitcher.py:89 tile_pages.py:182
 msgid "Rows then columns"
 msgstr "Filas luego Columnas"
 
-#: pdfstitcher.py:89 tile_pages.py:183
+#: pdfstitcher.py:89 tile_pages.py:184
 msgid "Columns then rows"
 msgstr "Columnas luego Filas"
 
-#: pdfstitcher.py:90 tile_pages.py:185
+#: pdfstitcher.py:90 tile_pages.py:186
 msgid "Left to right"
 msgstr "Izquierda a Derecha"
 
-#: pdfstitcher.py:90 tile_pages.py:187
+#: pdfstitcher.py:90 tile_pages.py:188
 msgid "Right to left"
 msgstr "Derecha a Izquierda"
 
-#: pdfstitcher.py:91 tile_pages.py:189
+#: pdfstitcher.py:91 tile_pages.py:190
 msgid "Top to bottom"
 msgstr " De Arriba hacia abajo "
 
-#: pdfstitcher.py:91 tile_pages.py:191
+#: pdfstitcher.py:91 tile_pages.py:192
 msgid "Bottom to top"
 msgstr "De Abajo hacia arriba"
 
-#: pdfstitcher.py:93 tile_pages.py:198
+#: pdfstitcher.py:93 tile_pages.py:199
 msgid "Page order"
 msgstr "Orden de las páginas"
 
-#: pdfstitcher.py:104 tile_pages.py:176
+#: pdfstitcher.py:104 tile_pages.py:177
 msgid "Clockwise"
 msgstr "En el sentido de las manecillas del reloj"
 
-#: pdfstitcher.py:104 tile_pages.py:179
+#: pdfstitcher.py:104 tile_pages.py:180
 msgid "Counterclockwise"
 msgstr "Sentido contrario a las manecillas del reloj"
 
@@ -118,59 +118,67 @@ msgstr "Margen para agregar alrededor del patron final"
 msgid "Amount to trim from each page"
 msgstr "Margen a recortar de cada página"
 
-#: pdfstitcher.py:137
+#: pdfstitcher.py:133
+msgid "Overlap"
+msgstr "Traslapar"
+
+#: pdfstitcher.py:133 tile_pages.py:197
+msgid "Trim"
+msgstr "Recortar"
+
+#: pdfstitcher.py:140
 msgid "Left"
 msgstr "Izquierda"
 
-#: pdfstitcher.py:142
+#: pdfstitcher.py:145
 msgid "Right"
 msgstr "Derecha"
 
-#: pdfstitcher.py:147
+#: pdfstitcher.py:150
 msgid "Top"
 msgstr "Arriba"
 
-#: pdfstitcher.py:152
+#: pdfstitcher.py:155
 msgid "Bottom"
 msgstr "Abajo"
 
-#: pdfstitcher.py:159
+#: pdfstitcher.py:162
 msgid "Generate PDF"
 msgstr "Generar PDF"
 
-#: pdfstitcher.py:223
+#: pdfstitcher.py:226
 msgid "Tiling successful"
 msgstr "Combinación exitosa"
 
-#: pdfstitcher.py:225 pdfstitcher.py:233
+#: pdfstitcher.py:228 pdfstitcher.py:236
 msgid "Something went wrong"
 msgstr "Algo salió mal"
 
-#: pdfstitcher.py:225
+#: pdfstitcher.py:228
 msgid "tiling failed"
 msgstr "La combinación fallo"
 
-#: pdfstitcher.py:226
+#: pdfstitcher.py:229
 msgid "Exception"
 msgstr "Excepción"
 
-#: pdfstitcher.py:231
+#: pdfstitcher.py:234
 msgid "Successfully written to"
 msgstr "Guardado exitosamente en"
 
-#: pdfstitcher.py:233 pdfstitcher.py:265
+#: pdfstitcher.py:236 pdfstitcher.py:268
 msgid "unable to write to"
 msgstr "Imposible guardar en"
 
-#: pdfstitcher.py:280
+#: pdfstitcher.py:283
 msgid "Opening"
 msgstr "Abriendo"
 
-#: pdfstitcher.py:291
+#: pdfstitcher.py:294
 msgid "Cannot open file"
 msgstr "No se puede abrir el archivo"
 
-#: pdfstitcher.py:303
+#: pdfstitcher.py:306
 msgid "PDF Stitcher"
 msgstr "Cosedor de PDF"
 
@@ -194,13 +202,13 @@ msgstr "Documento a combinar no cargado"
 msgid "Only {} pages in document, skipping {}"
 msgstr "Solo hay {} páginas en el documento, omitiendo {}"
 
-#: tile_pages.py:143
+#: tile_pages.py:144
 msgid "Warning: page {} is a different size from {}, output may be unpredictable"
 msgstr ""
 "Advertencia: la página {} tiene un tamaño diferente al de {}, el "
 "resultado puede ser impredecible"
 
-#: tile_pages.py:165
+#: tile_pages.py:166
 msgid ""
 "Warning: requested {} columns and {} rows, but {} rows are needed with {}"
 " pages"
@@ -208,27 +216,23 @@ msgstr ""
 "Advertencia: solicitó {} columnas y {} filas, pero {} filas son "
 "necesarias con {} páginas"
 
-#: tile_pages.py:193
+#: tile_pages.py:194
 msgid "Tiling with {} rows and {} columns"
 msgstr "Combinando con {} filas y {} columnas"
 
-#: tile_pages.py:194
+#: tile_pages.py:195
 msgid "Options"
 msgstr "Opciones"
 
-#: tile_pages.py:195
+#: tile_pages.py:196
 msgid "Margins"
 msgstr "Margenes"
 
-#: tile_pages.py:196
-msgid "Trim"
-msgstr "Recortar"
-
-#: tile_pages.py:197
+#: tile_pages.py:198
 msgid "Rotation"
 msgstr "Rotación"
 
-#: tile_pages.py:276
+#: tile_pages.py:277
 msgid "Unable to open"
 msgstr "No es posible abrir el archivo"
 

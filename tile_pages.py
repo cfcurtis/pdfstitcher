@@ -86,7 +86,7 @@ class PageTiler():
         if len(self.page_range) == 0:
             self.page_range = list(range(1,len(self.in_doc.pages)+1))
 
-    def run(self,rows=0,cols=0):
+    def run(self,rows=0,cols=0,actually_trim=0):
         if self.in_doc is None:
             print(_('Input document not loaded'))
             return
@@ -123,14 +123,15 @@ class PageTiler():
                     # pikepdf.pages is zero indexed, so subtract one
                     localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
 
-                    # set the trim box to cut off content
-                    if '/TrimBox' not in localpage.keys():
-                        localpage.TrimBox = copy.copy(localpage.MediaBox)
+                    # set the trim box to cut off content if requested
+                    if actually_trim == 1:
+                        if '/TrimBox' not in localpage.keys():
+                            localpage.TrimBox = copy.copy(localpage.MediaBox)
 
-                    localpage.TrimBox[0] += trim[0]
-                    localpage.TrimBox[1] += trim[3]
-                    localpage.TrimBox[2] -= trim[1]
-                    localpage.TrimBox[3] -= trim[2]
+                        localpage.TrimBox[0] = float(localpage.TrimBox[0]) + trim[0]
+                        localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[3]
+                        localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[1]
+                        localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[2]
  
                     content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
 

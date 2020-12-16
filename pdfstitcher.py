@@ -129,7 +129,10 @@ class SewGUI(wx.Frame):
 
         # Trim header
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(pnl, label=_('Amount to trim from each page') + ':'))
+        newline.Add(wx.StaticText(pnl, label=_('Amount to trim from each page') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
+        trim_overlap_opts = [_('Overlap'),_('Trim')]
+        self.trim_overlap_combo = wx.ComboBox(pnl, choices=trim_overlap_opts, value=trim_overlap_opts[0], style=wx.CB_READONLY)
+        newline.Add(self.trim_overlap_combo, flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=15)
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
         # Left trim
@@ -219,7 +222,7 @@ class SewGUI(wx.Frame):
 
         # do it
         try:
-            new_doc = self.tiler.run(rows,cols)
+            new_doc = self.tiler.run(rows,cols,actually_trim=self.trim_overlap_combo.GetSelection())
             print(_('Tiling successful'))
         except Exception as e:
             print(_('Something went wrong') + ', ' + _('tiling failed'))
