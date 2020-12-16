@@ -9,7 +9,7 @@ This is a utility for stitching together many PDF pages from a single document i
 * Add margins around the final output
 * Trim the edges of each page by a specified amount
 
-## Prerequisites
+## Installation
 Most people probably want to just use the executable:
 * [Windows](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.exe)
 * [MacOs](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.app.zip)
