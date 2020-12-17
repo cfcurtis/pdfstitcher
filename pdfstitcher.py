@@ -17,19 +17,28 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-lc = locale.getdefaultlocale()
-
-# supported languages are currently german, spanish, french, dutch. Fallback in English.
-lang = lc[0][:2]
 language_warning = None
 
-if lang in ('de','es','fr','nl'):
-    os.environ['LC_MESSAGES'] = lang
-elif lang != 'en':
-    language_warning = 'System language code ' + lang + ' is not supported, defaulting to English.'
+lc = locale.getdefaultlocale()
 
-translate = gettext.translation('pdfstitcher', resource_path('locale'), fallback=True)
-translate.install()
+try:
+    lang = lc[0][:2]
+except:
+    lang = 'en'
+    language_warning = 'Could not detect system language, defaulting to English'
+
+if lang not in ('de','es','fr','nl','en'):
+    language_warning = 'System language code ' + lang + ' is not supported, defaulting to English.'
+else:
+    try:
+        translate = gettext.translation('pdfstitcher', resource_path('locale'), 
+            languages=[lang], fallback=True)
+        translate.install()
+    except Exception as e:
+        def _(text):
+            return text
+            
+        language_warning = e
 
 class SewGUI(wx.Frame):
     def __init__(self, *args, **kw):
