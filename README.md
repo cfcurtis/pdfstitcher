@@ -2,8 +2,8 @@
 This is a utility for stitching together many PDF pages from a single document into one single page. This is also called "N-Up" or page imposition. This utility was created in order to convert sewing patterns into a convenient format for projecting, though it could be used to stitch together any PDF.
 
 ## Download the latest release
-* [Windows (64-bit Windows 7 or 10)](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.exe)
-* [MacOs (Catalina or higher)](https://github.com/cfcurtis/sewingutils/releases/download/v0.3-alpha/pdfstitcher.app.zip)
+* [Windows (64-bit Windows 7 or 10)](https://github.com/cfcurtis/sewingutils/releases/latest/download/pdfstitcher.exe)
+* [MacOs (High Sierra or higher)](https://github.com/cfcurtis/sewingutils/releases/latest/download/pdfstitcher.app.zip)
 
 Previous versions can be found by clicking on the "releases" link to the right.
 
@@ -13,12 +13,12 @@ Previous versions can be found by clicking on the "releases" link to the right.
 * Rotate pages before stitching
 * Add blank pages by including zeros in the page list (e.g. 1-5,0,6-10)
 * Add margins around the final output
-* Trim the edges of each page by a specified amount
+* Trim or overlap the edges of each page by a specified amount
 
 ## Installation
 Most people probably want to just use the executable links above. However, if you want to run the script directly, you'll need the following:
 
-* [Python 3.6+](https://www.python.org/downloads/) and `pip`. Testing was done with 64-bit Python 3.9.0 provided by [Anaconda](https://www.anaconda.com/) on Windows 10 and Python 3.9.1 provided by [homebrew](https://brew.sh/) on macOS Catalina 10.15.7.
+* [Python 3.6+](https://www.python.org/downloads/) and `pip`. Testing was done with 64-bit Python 3.8.5 provided by [Anaconda](https://www.anaconda.com/) on Windows 10 and Python 3.9.1 provided by [homebrew](https://brew.sh/) on macOS High Sierra 10.13.6.
 
 * [pikepdf](https://github.com/pikepdf/pikepdf) - can be installed by running `pip install pikepdf`
 
@@ -43,6 +43,8 @@ Some PDFs require trimming pages, assembling with gaps, tiling with columns firs
 * Page order: most PDFs are assembled row by row, left to right, top to bottom. The page order options allow for columns first, right to left, or bottom to top, in any combination.
 
 * Rotation: The pages can be rotated either clockwise or counterclockwise prior to assembly. Note that when rotation is enabled, the trim values (left/right/top/bottom) refer to the original non-rotated page.
+
+* Overlap or trim: By default, the pages are overlapped by the trim amount specified. In some cases (e.g. if the background is white instead of transparent) this results in gaps between pages, and selecting "trim" might give better results.
 
 ## Not yet supported
 * Different trim for each page
