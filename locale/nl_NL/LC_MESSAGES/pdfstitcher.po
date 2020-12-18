@@ -54,11 +54,11 @@ msgstr "Aantal rijen"
 
 #: pdfstitcher.py:89 tile_pages.py:182
 msgid "Rows then columns"
-msgstr "Rij dan kolom"
+msgstr "Rijen dan kolommen"
 
 #: pdfstitcher.py:89 tile_pages.py:184
 msgid "Columns then rows"
-msgstr "Kolom dan rij"
+msgstr "Kolommen dan rijen"
 
 #: pdfstitcher.py:90 tile_pages.py:186
 msgid "Left to right"
@@ -114,7 +114,7 @@ msgstr "Rand toe te voegen aan het uiteindelijke patroon"
 
 #: pdfstitcher.py:132
 msgid "Amount to trim from each page"
-msgstr "Hoeveelheid af te scheiden van iedere pagina"
+msgstr "Hoeveelheid af te snijden van iedere pagina"
 
 #: pdfstitcher.py:133
 msgid "Overlap"
@@ -122,7 +122,7 @@ msgstr "Overlappen"
 
 #: pdfstitcher.py:133 tile_pages.py:197
 msgid "Trim"
-msgstr "Afschneiding"
+msgstr "Afsnijden"
 
 #: pdfstitcher.py:140
 msgid "Left"
@@ -190,7 +190,7 @@ msgstr "Alleen numerieke waarden toegstaan"
 
 #: tile_pages.py:69
 msgid "Invalid trim value specified, ignoring"
-msgstr "Ongeldige afscheidwaarde gespecificeerd, wordt genegeerd"
+msgstr "Ongeldige waarde om af te snijden, wordt genegeerd"
 
 #: tile_pages.py:91
 msgid "Input document not loaded"
@@ -203,8 +203,7 @@ msgstr "Enkel {} pagina's in document, overslaan {}"
 #: tile_pages.py:144
 msgid "Warning: page {} is a different size from {}, output may be unpredictable"
 msgstr ""
-"Waarschuwing: pagina {} heeft een ander formaat dan {}, uitvoer is niet "
-"zeker"
+"Waarschuwing: pagina {} heeft een ander formaat dan {}, uitvoer is mogelijk onjuist"
 
 #: tile_pages.py:166
 msgid ""
@@ -232,5 +231,5 @@ msgstr "Rotatie"
 
 #: tile_pages.py:277
 msgid "Unable to open"
-msgstr "Kan het bestand niet openen"
+msgstr "Niet in staat bestand te openen"
 
