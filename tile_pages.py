@@ -231,6 +231,18 @@ class PageTiler():
         height = (ph - trim[2] - trim[3])*rows
         media_box = [0,0,width + 2*margin,height + 2*margin]
 
+        if media_box[2] > 14400 or media_box[3] > 14400:
+            print ('**************************************')
+            if self.units:
+                print('Warning! Output is larger than 508 cm, may not open correctly.')
+            else:
+                print('Warning! Output is larger than 200 in, may not open correctly.')
+            print ('**************************************')
+        if self.units:
+            print(_('Output size: {} by {} {} ').format((width + 2*margin)*2.54/72,(height + 2*margin)*2.54/72,unitstr))
+        else:
+            print(_('Output size: {} by {} {} ').format((width + 2*margin)/72,(height + 2*margin)/72,unitstr))
+        
         i = 0
         content_txt = ''
         
