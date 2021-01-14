@@ -5,6 +5,9 @@ This is a utility for stitching together many PDF pages from a single document i
 * [Windows (64-bit Windows 7 or 10)](https://github.com/cfcurtis/sewingutils/releases/latest/download/pdfstitcher.exe)
 * [MacOs (High Sierra or higher)](https://github.com/cfcurtis/sewingutils/releases/latest/download/pdfstitcher.app.zip)
 
+**Translations:**
+The Windows version will detect system language settings and change language if supported. Mac versions for different languages can be downloaed from the [latest release page](https://github.com/cfcurtis/sewingutils/releases/latest).
+
 Previous versions can be found by clicking on the "releases" link to the right.
 
 ## Features
