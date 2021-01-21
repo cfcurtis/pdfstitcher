@@ -29,16 +29,16 @@ except:
 
 if lang not in ('de','es','fr','nl','en'):
     language_warning = 'System language code ' + lang + ' is not supported, defaulting to English.'
-else:
-    try:
-        translate = gettext.translation('pdfstitcher', resource_path('locale'), 
-            languages=[lang], fallback=True)
-        translate.install()
-    except Exception as e:
-        def _(text):
-            return text
-            
-        language_warning = e
+
+try:
+    translate = gettext.translation('pdfstitcher', resource_path('locale'), 
+        languages=[lang], fallback=True)
+    translate.install()
+except Exception as e:
+    def _(text):
+        return text
+        
+    language_warning = e
 
 class SewGUI(wx.Frame):
     def __init__(self, *args, **kw):
