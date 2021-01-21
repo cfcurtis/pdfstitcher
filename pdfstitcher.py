@@ -339,6 +339,7 @@ class SewGUI(wx.Frame):
         # set up the layer filter
         selected_layers = self.lt.get_selected_layers()
         self.layer_filter.set_keep_ocs(selected_layers)
+        self.layer_filter.set_keep_non_oc(self.lt.include_nonoc.GetValue())
 
         # set all the various options of the tiler
         # define the page order
@@ -370,9 +371,9 @@ class SewGUI(wx.Frame):
         rows = int(rows) if rows else 0
 
         # do it
+        filtered = self.layer_filter.run(self.tiler.page_range)
         try:
-            self.layer_filter.run(self.tiler.page_range)
-            self.tiler.set_input(self.layer_filter.pdf)
+            self.tiler.set_input(filtered)
             new_doc = self.tiler.run(rows,cols)
             print(_('Tiling successful'))
         except Exception as e:
@@ -381,7 +382,9 @@ class SewGUI(wx.Frame):
             print(e)
         
         try:
-            new_doc.save(self.out_doc_path)
+            new_doc.save(self.out_doc_path,normalize_content=True)
+            filtered.close()
+            new_doc.close()
             print(_('Successfully written to') + ' ' + self.out_doc_path)
         except Exception as e:
             print(_('Something went wrong') + ', ' + _('unable to write to') + ' ' + self.out_doc_path)
