@@ -268,7 +268,7 @@ class PageTiler():
             else:
                 print(_('Warning! Output is larger than 200 in, may not open correctly.'))
             print ('**************************************')
-        print(_('Output size:') + ' {} x {} {}'.format(self.px_to_units(width + 2*margin), 
+        print(_('Output size:') + ' {:0.2f} x {:0.2f} {}'.format(self.px_to_units(width + 2*margin), 
             self.px_to_units(height + 2*margin),unitstr))
         
         i = 0
