@@ -92,8 +92,8 @@ class TileTab(wx.Panel):
         newline.Add(wx.StaticText(self, label=_('Page Range') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.page_range_txt = wx.TextCtrl(self)
         self.page_range_txt.SetToolTip(wx.ToolTip(_('Pages assemble in specified order. 0 inserts a blank page.')))
-        newline.Add(self.page_range_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
-        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        newline.Add(self.page_range_txt,proportion=1,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
+        vert_sizer.Add(newline,flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
         # Columns/Rows
         newline = wx.BoxSizer(wx.HORIZONTAL)
