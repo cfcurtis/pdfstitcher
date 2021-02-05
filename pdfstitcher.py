@@ -414,6 +414,9 @@ class SewGUI(wx.Frame):
                 return
 
             pathname = fileDialog.GetPath()
+            if pathname == self.in_doc.filename:
+                wx.MessageBox(_('Can''t overwrite input file, please select a different file for output'), 'Error', wx.OK | wx.ICON_ERROR)
+                self.on_output(event)
             try:
                 self.out_doc_path = pathname
                 self.tt.output_fname_display.SetLabel(os.path.basename(pathname))
