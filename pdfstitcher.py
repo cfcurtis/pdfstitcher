@@ -212,21 +212,18 @@ class LayersTab(wx.Panel):
         layer_sizer.Add(self.select_all,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=5)
         
         # the main list box for layers
-        self.layer_list = wx.ListCtrl(layer_pane,style=wx.LC_REPORT)
+        self.layer_list = wx.ListCtrl(layer_pane,style=wx.LC_REPORT|wx.LC_SINGLE_SEL)
         self.layer_list.EnableCheckBoxes(True)
         self.layer_list.InsertColumn(0,_('Layer Name'))
-        # self.layer_list.InsertColumn(1,_('Line Width'))
-        # self.layer_list.InsertColumn(2,_('Line Colour'))
-        # self.layer_list.InsertColumn(3,_('Line Style'))
+        # self.layer_list.InsertColumn(1,_('Line Properties'))
         layer_sizer.Add(self.layer_list,proportion=1,flag=wx.EXPAND|wx.LEFT|wx.TOP, border=5)
         
         # build the set of controls for layer options
         layer_opt_pane = wx.Panel(self.layer_splitter)
         layer_opt_sizer = wx.BoxSizer(wx.VERTICAL)
         layer_opt_pane.SetSizer(layer_opt_sizer)
-        # layer_opt_sizer.Add(wx.StaticText(layer_opt_pane,label=_('Selected layer') + ':'),flag=wx.LEFT,border=10)
-        # line_style_opts = 
-        # self.line_style_combo = 
+        
+        # layer_opt_sizer.Add(wx.StaticText(layer_opt_pane,label=_('Select a layer to modify lines')),flag=wx.LEFT,border=10)
 
         # Final assembly
         self.layer_splitter.SplitVertically(layer_pane,layer_opt_pane)

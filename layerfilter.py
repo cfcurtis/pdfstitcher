@@ -16,8 +16,7 @@
 
 import pikepdf
 import re
-import numpy as np
-import copy
+import pdf_operators
 
 def match_nested(s_idx,e_idx,names):
     if len(s_idx) != len(e_idx):
@@ -50,7 +49,7 @@ class LayerFilter():
         self.pdf = doc
         self.keep_ocs = 'all'
         self.keep_non_oc = True
-    
+
     def set_input(self,doc):
         self.pdf = doc
     
@@ -66,6 +65,7 @@ class LayerFilter():
             return None 
 
         return [str(oc.Name) for oc in self.pdf.Root.OCProperties.OCGs]
+        
     
     def find_page_keep(self,res):
         if '/Properties' in res.keys():
@@ -74,78 +74,6 @@ class LayerFilter():
             return page_keep
         else:
             return []
-
-    def find_layer_indices(self,stream):
-        s_pattern = rb'(.*)BDC|BMC\s+'
-        e_pattern = rb'EMC\s+'
-        s_iter = re.finditer(s_pattern,stream)
-        e_iter = re.finditer(e_pattern,stream)
-
-        s_idx = []
-        e_idx = []
-        oc_names = []
-        oc_pattern = rb'/OC\s+(/?\w+)'
-
-        # loop through the start iterator and find the name of the layer, plus the starting index
-        for s in s_iter:
-            s_idx.append(s.span()[0])
-            oc_name = re.findall(oc_pattern,s.groups(0)[0])
-
-            if len(oc_name) > 0:
-                oc_names.append(oc_name[0].decode())
-            else:
-                oc_names.append(None)
-
-        # ending just needs the index
-        for e in e_iter:
-            e_idx.append(e.span()[1])
-        
-        matches = match_nested(s_idx,e_idx,oc_names)
-
-        return matches
-    
-    def filter_obj(self,obj,is_xobj = False):
-        # obj can be either a page or an xobject
-        if '/Resources' in obj.keys():
-            page_keep = self.find_page_keep(obj.Resources)
-        else:
-            page_keep = []
-        
-        if len(page_keep) == 0:
-            if self.keep_non_oc:
-                # nothing to be done if there's no layers in this object
-                return None
-            else:
-                # otherwise replace it with an empty stream
-                return b''
-    
-        if is_xobj:
-            stream = obj.read_bytes()
-        else:
-            # Contents could be an array if it's part of a page, so squish them just in case
-            obj.page_contents_coalesce()
-            stream = obj.Contents.read_bytes()
-        
-        layer_ind = self.find_layer_indices(stream)
-        
-        # the stream needs to be in a format that numpy can handle for masking
-        np_stream = np.array(bytearray(stream))
-        if self.keep_non_oc:           
-            mask = np.ones(shape=(len(stream),),dtype=np.bool)
-            # subtract non-selected layers from the original stream
-            for layer in layer_ind:
-                if layer[0] is not None and layer[0] not in page_keep:
-                    mask[layer[1]:layer[2]] = 0
-        else:
-            mask = np.zeros(shape=(len(stream),),dtype=np.bool)
-            # add only selected layers
-            for layer in layer_ind:
-                if layer[0] in page_keep:
-                    mask[layer[1]:layer[2]] = 1
-
-        newstream = b''.join([b for b in np_stream[mask]])
-        
-        return newstream
 
     def filter_content(self,content):
         # content can be either a page or an xobject
@@ -163,70 +91,35 @@ class LayerFilter():
                 return b''
 
         commands = pikepdf.parse_content_stream(content)
-        copy_range = []
-        # q_pos = []
+        show_ops = [pikepdf.Operator(k) for k,v in pdf_operators.ops.items() if v[0] == 'show'] 
+        new_content = []
         in_oc = False
+        currently_copying = self.keep_non_oc
 
-        # helper function to check if we're currently copying the commands
-        def currently_copying():
-            return len(copy_range) > 0 and copy_range[-1][1] is None
-
-        for i, ops in enumerate(commands):
-            operator = ops[1]
-            operands = ops[0]
-
+        for operands, operator in commands:
             # look for optional content
             if operator == pikepdf.Operator('BDC'):
                 # BDC/BMC doesn't necessarily mean optional content block
+                # check the operands for the /OC flag
                 if len(operands) > 1 and operands[0] == '/OC':
                     in_oc = True
                     if operands[1] in page_keep:
-                        if not currently_copying():
-                            # start a new range
-                            copy_range.append([i,None])
+                        currently_copying = True
                     else:
-                        if currently_copying():
-                            # stop copying, excluding the current line
-                            copy_range[-1][1] = i
+                        currently_copying = False
 
-            if in_oc and operator == pikepdf.Operator('EMC'):
-                in_oc = False
-                if currently_copying():
-                    # end this block, including this line
-                    copy_range[-1][1] = i + 1
-                
-            elif not in_oc and self.keep_non_oc and not currently_copying():
+            elif not in_oc and self.keep_non_oc and not currently_copying:
                 # check if we're outside the OCs and need to start a new range
                 copy_range.append([i,None])
-        
-            # # finally, check the q/Q blocks
-            # if operator == pikepdf.Operator('q'):
-            #     q_pos.append([i,currently_copying()])
-            
-            # if operator == pikepdf.Operator('Q'):
-            #     # if we're copying the Q but not the previous q, we have a problem
-            #     if currently_copying() and not q_pos[-1][1]:
-            #         copy_range[-1][0] = q_pos[-1][0]
 
-            #     # if we copied the previous q but not the current Q, we also have a problem
-            #     if not currently_copying() and q_pos[-1][1]:
-            #         copy_range[-1][1] = i + 1
+            if currently_copying or operator not in show_ops:
+                new_content.append([operands,operator])
 
-            #     # close out this q/Q block regardless of if we copy it or not
-            #     q_pos.pop(-1)
-        
-        # close out if we copy to the end
-        if currently_copying():
-            copy_range[-1][1] = len(commands)
+            if in_oc and operator == pikepdf.Operator('EMC'):
+                currently_copying = self.keep_non_oc
+                in_oc = False
 
-        new_content = []
-        for r in copy_range:
-            if None in r:
-                print('Invalid range')
-            
-            new_content += commands[r[0]:r[1]]
-
-        return  pikepdf.unparse_content_stream(new_content)
+        return pikepdf.unparse_content_stream(new_content)
 
     def filter_ocg_order(self,input):
         if input._type_name == 'array':
@@ -269,6 +162,7 @@ class LayerFilter():
             page_range = list(set([p for p in page_range if p > 0]))
 
         for p in page_range:
+            print(_('Extracting layers for page {}...'.format(p)))
             # apply the filter and reassign the page contents
             newstream = self.filter_content(output.pages[p-1])
             if newstream:
