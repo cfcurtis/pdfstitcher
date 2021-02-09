@@ -30,6 +30,7 @@ def txt_to_float(txt):
         txtnum = float(txt.replace(',','.'))
     except:
         print(_('Invalid input') + txt + ' , ' + _('only numeric values allowed'))
+        return None
     
     return txtnum
 

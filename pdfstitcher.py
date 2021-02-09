@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wx
+from wx.lib.masked import NumCtrl
 from tile_pages import *
 from layerfilter import *
 import os
@@ -215,15 +216,50 @@ class LayersTab(wx.Panel):
         self.layer_list = wx.ListCtrl(layer_pane,style=wx.LC_REPORT|wx.LC_SINGLE_SEL)
         self.layer_list.EnableCheckBoxes(True)
         self.layer_list.InsertColumn(0,_('Layer Name'))
-        # self.layer_list.InsertColumn(1,_('Line Properties'))
+        self.layer_list.InsertColumn(1,_('Line Properties'))
         layer_sizer.Add(self.layer_list,proportion=1,flag=wx.EXPAND|wx.LEFT|wx.TOP, border=5)
+        self.layer_list.Bind(wx.EVT_LIST_ITEM_SELECTED,self.on_layer_selected)
         
         # build the set of controls for layer options
         layer_opt_pane = wx.Panel(self.layer_splitter)
         layer_opt_sizer = wx.BoxSizer(wx.VERTICAL)
         layer_opt_pane.SetSizer(layer_opt_sizer)
         
-        # layer_opt_sizer.Add(wx.StaticText(layer_opt_pane,label=_('Select a layer to modify lines')),flag=wx.LEFT,border=10)
+        # line properties
+        self.line_prop_label = wx.StaticText(layer_opt_pane,label=_('Select a layer to modify line properties'))
+        layer_opt_sizer.Add(self.line_prop_label,flag=wx.LEFT,border=10)
+        newline = wx.BoxSizer(wx.HORIZONTAL)
+
+        # colour
+        newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Colour') + ':'),flag=wx.LEFT,border=10)
+        self.line_colour_ctrl = wx.ColourPickerCtrl(layer_opt_pane)
+        newline.Add(self.line_colour_ctrl,flag=wx.LEFT,border=5)
+        layer_opt_sizer.Add(newline,flag=wx.TOP,border=30)        
+        
+        # thickness
+        newline = wx.BoxSizer(wx.HORIZONTAL)
+        newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Thickness (px)') + ':'),flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
+        self.line_thick_ctrl = wx.TextCtrl(layer_opt_pane,size=(30,-1),value='1')
+        newline.Add(self.line_thick_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
+        layer_opt_sizer.Add(newline,flag=wx.TOP,border=10)
+
+        # style
+        newline = wx.BoxSizer(wx.HORIZONTAL)
+        newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Style') + ':'),flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
+        self.style_names = (_('Solid'),_('Dashed'),_('Dotted'))
+        self.line_style_ctrl = wx.ComboBox(layer_opt_pane,choices=self.style_names, value=self.style_names[0], style=wx.CB_READONLY)
+        newline.Add(self.line_style_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
+        layer_opt_sizer.Add(newline,flag=wx.TOP,border=10)
+
+        # apply/reset buttons
+        newline = wx.BoxSizer(wx.HORIZONTAL)
+        self.apply_ls_btn = wx.Button(layer_opt_pane,label=_('Apply'))
+        self.apply_ls_btn.Bind(wx.EVT_BUTTON,self.apply_ls_pressed)
+        self.reset_ls_btn = wx.Button(layer_opt_pane,label=_('Reset'))
+        self.reset_ls_btn.Bind(wx.EVT_BUTTON,self.reset_ls_pressed)
+        newline.Add(self.apply_ls_btn,flag=wx.LEFT,border=5)
+        newline.Add(self.reset_ls_btn,flag=wx.LEFT,border=5)
+        layer_opt_sizer.Add(newline,flag=wx.TOP,border=10)
 
         # Final assembly
         self.layer_splitter.SplitVertically(layer_pane,layer_opt_pane)
@@ -235,7 +271,45 @@ class LayersTab(wx.Panel):
 
         self.SetSizer(vert_sizer)
         self.SetBackgroundColour(parent.GetBackgroundColour())
+        self.line_props = {}
     
+    def apply_ls_pressed(self,event):
+        sel = self.layer_list.GetFirstSelected()
+        line_thick = txt_to_float(self.line_thick_ctrl.GetValue())
+        
+        if sel == -1 or line_thick is None:
+            return
+
+        layer = self.layer_list.GetItemText(sel,0)
+        colour = self.line_colour_ctrl.GetColour()
+        # ignore alpha
+        rgb = [val/255 for val in colour.Get()[:3]]
+
+        self.line_props[layer] = {
+            'rgb': rgb,
+            'thickness': line_thick,
+            'style': self.line_style_ctrl.GetSelection()
+        }
+
+        line_str = f'{line_thick} px {self.style_names[self.line_style_ctrl.GetSelection()]}'
+        self.layer_list.SetItem(sel,1,line_str)
+        self.layer_list.SetItemTextColour(sel,colour)
+        return
+
+    def reset_ls_pressed(self,event):
+        sel = self.layer_list.GetFirstSelected()
+        layer = self.layer_list.GetItemText(sel,0)
+        
+        if layer in self.line_props:
+            del self.line_props[layer]
+
+        self.layer_list.SetItem(sel,1,'')
+        self.layer_list.SetItemTextColour(sel,wx.Colour(0,0,0))
+        return
+    
+    def on_layer_selected(self,event):
+        self.line_prop_label.SetLabel(_('Modify line properties for layer') + ' ' + event.Label)
+
     def load_new(self,layers):
         if not layers:
             self.layer_splitter.Hide()
@@ -246,7 +320,8 @@ class LayersTab(wx.Panel):
         for l in layers:
             self.layer_list.InsertItem(0,l)
 
-        self.layer_list.SetColumnWidth(0,wx.LIST_AUTOSIZE)
+        self.layer_list.SetColumnWidth(0,wx.LIST_AUTOSIZE_USEHEADER)
+        self.layer_list.SetColumnWidth(1,wx.LIST_AUTOSIZE_USEHEADER)
         self.set_all_checked(True)
 
         self.status_txt.SetLabel(_('Select layers to include in output document.'))
@@ -334,9 +409,9 @@ class SewGUI(wx.Frame):
                 return
 
         # set up the layer filter
-        selected_layers = self.lt.get_selected_layers()
-        self.layer_filter.set_keep_ocs(selected_layers)
-        self.layer_filter.set_keep_non_oc(self.lt.include_nonoc.GetValue())
+        self.layer_filter.keep_ocs = self.lt.get_selected_layers()
+        self.layer_filter.line_props = self.lt.line_props
+        self.layer_filter.keep_non_oc = bool(self.lt.include_nonoc.GetValue())
 
         # set all the various options of the tiler
         # define the page order
@@ -465,5 +540,8 @@ if __name__ == '__main__':
 
     frm = SewGUI(None, title=_('PDF Stitcher'),size=(w,h))
     frm.Show()
+
+    frm.load_file(r"C:\Users\curtcha\Downloads\Bridge 1 OJ1 harem overalls Sunny Mountain.pdf")
+    frm.out_doc_path = r"C:\Users\curtcha\Downloads\sunny.pdf"
 
     app.MainLoop()

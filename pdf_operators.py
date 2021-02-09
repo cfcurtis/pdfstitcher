@@ -92,3 +92,28 @@ ops = {
     "'": ('show','text'), # Move to next line and show text
     '"': ('show','text')  # Set word and character spacing, move to next line, and show text
 }
+
+line_style_arr = [
+    [[], 0], # solid
+    [[3, 0], 0], # dashed
+    [[1, 1], 0] # dotted
+]
+
+def rgb_to_cmyk(rgb):
+    if rgb == [0,0,0]:
+        # black
+        return [0, 0, 0, 1]
+
+    c = 1 - rgb[0]
+    m = 1 - rgb[1]
+    y = 1 - rgb[2]
+
+    # extract out k [0, 1]
+    min_cmy = min(c, m, y)
+    c = (c - min_cmy) / (1 - min_cmy)
+    m = (m - min_cmy) / (1 - min_cmy)
+    y = (y - min_cmy) / (1 - min_cmy)
+    k = min_cmy
+
+    return [c, m, y, k]
+

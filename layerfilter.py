@@ -15,34 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import pikepdf
-import re
-import pdf_operators
-
-def match_nested(s_idx,e_idx,names):
-    if len(s_idx) != len(e_idx):
-        print(_('Mismatched start and end blocks, cannot process layers.'))
-        return []
-         
-    matches = []
-
-    # iterate the indices to match start/ends. This isn't quite as straightforward as it might
-    # seem because the blocks could be nested.
-    while len(e_idx) > 0:
-        min_dist = 1e6
-        match = 0
-        for i, s in enumerate(s_idx):
-            dist = e_idx[0] - s
-            if dist <= 0:
-                break
-
-            if dist < min_dist:
-                min_dist = dist
-                match = i
-
-        matches.append([names.pop(match),s_idx.pop(match),e_idx.pop(0)])
-        # matches is in order of ending blocks, reasonable for now
-    
-    return matches
+import pdf_operators as pdf_ops
 
 class LayerFilter():
     def __init__(self,doc = None):
@@ -50,14 +23,7 @@ class LayerFilter():
         self.keep_ocs = 'all'
         self.keep_non_oc = True
 
-    def set_input(self,doc):
-        self.pdf = doc
-    
-    def set_keep_ocs(self,keeplist):
-        self.keep_ocs = keeplist
-    
-    def set_keep_non_oc(self,keep):
-        self.keep_non_oc = keep
+        self.line_props = {}
         
     def get_layer_names(self):
         # reads through the root to parse out the layers present in the file
@@ -65,22 +31,23 @@ class LayerFilter():
             return None 
 
         return [str(oc.Name) for oc in self.pdf.Root.OCProperties.OCGs]
-        
     
     def find_page_keep(self,res):
         if '/Properties' in res.keys():
-            page_ocs = {key:str(val.Name) for key, val in res.Properties.items() if '/Type' in val.keys() and str(val.Type) == '/OCG'}
-            page_keep = [k for k,v in page_ocs.items() if v in self.keep_ocs]
-            return page_keep
+            page_ocs = {key:str(val.Name) for key, val in res.Properties.items() if 
+                '/Type' in val.keys() 
+                and str(val.Type) == '/OCG'
+                and val.Name in self.keep_ocs}
+            return page_ocs
         else:
-            return []
+            return {}
 
     def filter_content(self,content):
         # content can be either a page or an xobject
         if '/Resources' in content.keys():
             page_keep = self.find_page_keep(content.Resources)
         else:
-            page_keep = []
+            page_keep = {}
         
         if len(page_keep) == 0:
             if self.keep_non_oc:
@@ -91,10 +58,13 @@ class LayerFilter():
                 return b''
 
         commands = pikepdf.parse_content_stream(content)
-        show_ops = [pikepdf.Operator(k) for k,v in pdf_operators.ops.items() if v[0] == 'show'] 
+        show_ops = [pikepdf.Operator(k) for k,v in pdf_ops.ops.items() if v[0] == 'show'] 
         new_content = []
         in_oc = False
         currently_copying = self.keep_non_oc
+        layer_mod = None
+        mod_applied = None
+        first_mod = None
 
         for operands, operator in commands:
             # look for optional content
@@ -103,21 +73,59 @@ class LayerFilter():
                 # check the operands for the /OC flag
                 if len(operands) > 1 and operands[0] == '/OC':
                     in_oc = True
-                    if operands[1] in page_keep:
+                    if operands[1] in page_keep.keys():
                         currently_copying = True
+
+                        # get a link to the current line property modifications requested
+                        if page_keep[operands[1]] in self.line_props.keys():
+                            layer_mod = self.line_props[page_keep[operands[1]]]
+                            mod_applied = {v:False for v in layer_mod.keys()}
                     else:
                         currently_copying = False
 
-            elif not in_oc and self.keep_non_oc and not currently_copying:
-                # check if we're outside the OCs and need to start a new range
-                copy_range.append([i,None])
-
             if currently_copying or operator not in show_ops:
-                new_content.append([operands,operator])
+                new_command = [operands,operator]
+                if in_oc and layer_mod is not None:
+                    # check for one of the line property modification operators
+                    if operator == pikepdf.Operator('d'):
+                       new_command[0] = pdf_ops.line_style_arr[layer_mod['style']]
+                       mod_applied['style'] = True
+                    
+                    if operator == pikepdf.Operator('w'):
+                        new_command[0] = [layer_mod['thickness']]
+                        mod_applied['thickness'] = True
+                    
+                    if operator == pikepdf.Operator('RG'):
+                        new_command[0] = layer_mod['rgb']
+                        mod_applied['rgb'] = True
+                    
+                    if operator == pikepdf.Operator('K'):
+                        new_command[0] = pdf_ops.rgb_to_cmyk(layer_mod['rgb'])
+                        mod_applied['rgb'] = True
+                    
+                    if any(mod_applied.values()) and first_mod is None:
+                        first_mod = len(new_content)
+                
+                new_content.append(new_command)
 
             if in_oc and operator == pikepdf.Operator('EMC'):
                 currently_copying = self.keep_non_oc
                 in_oc = False
+
+                # make sure the various layer mods were applied. If not, insert them
+                if layer_mod is not None and first_mod is not None:
+                    if not mod_applied['style']:
+                        new_content.insert(first_mod,[pdf_ops.line_style_arr[layer_mod['style']],pikepdf.Operator('d')])
+                    
+                    if not mod_applied['thickness']:
+                        new_content.insert(first_mod,[[layer_mod['thickness']],pikepdf.Operator('w')])
+                    
+                    if not mod_applied['rgb']:
+                        new_content.insert(first_mod,[layer_mod['rgb'],pikepdf.Operator('RG')])
+
+                layer_mod = None
+                mod_applied = None
+                first_mod = None
 
         return pikepdf.unparse_content_stream(new_content)
 
@@ -147,7 +155,7 @@ class LayerFilter():
         # open a new copy of the input
         output = pikepdf.Pdf.open(self.pdf.filename)
 
-        if self.keep_ocs == 'all':
+        if self.keep_ocs == 'all' and len(self.line_props) == 0:
             return output
         
         if self.keep_ocs is None and self.keep_non_oc == False:
@@ -165,6 +173,13 @@ class LayerFilter():
             print(_('Extracting layers for page {}...'.format(p)))
             # apply the filter and reassign the page contents
             newstream = self.filter_content(output.pages[p-1])
+            if p == 2:
+                with open('original.txt','w') as f:
+                    f.write(pikepdf.unparse_content_stream(pikepdf.parse_content_stream(output.pages[p-1])).decode())
+                
+                with open('new.txt','w') as f:
+                    f.write(newstream.decode())
+            
             if newstream:
                 output.pages[p-1].Contents = output.make_stream(newstream)
 
