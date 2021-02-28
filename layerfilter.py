@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import pikepdf
+from pikepdf.objects import Operator
 import pdf_operators as pdf_ops
 
 class LayerFilter():
@@ -63,8 +64,7 @@ class LayerFilter():
         in_oc = False
         currently_copying = self.keep_non_oc
         layer_mod = None
-        mod_applied = None
-        first_mod = None
+        gs_to_mod = []
 
         for operands, operator in commands:
             # look for optional content
@@ -79,7 +79,6 @@ class LayerFilter():
                         # get a link to the current line property modifications requested
                         if page_keep[operands[1]] in self.line_props.keys():
                             layer_mod = self.line_props[page_keep[operands[1]]]
-                            mod_applied = {v:False for v in layer_mod.keys()}
                     else:
                         currently_copying = False
 
@@ -87,45 +86,27 @@ class LayerFilter():
                 new_command = [operands,operator]
                 if in_oc and layer_mod is not None:
                     # check for one of the line property modification operators
+                    if operator == pikepdf.Operator('gs'):
+                        gs_to_mod.append(operands)
+
                     if operator == pikepdf.Operator('d'):
                        new_command[0] = pdf_ops.line_style_arr[layer_mod['style']]
-                       mod_applied['style'] = True
-                    
+
                     if operator == pikepdf.Operator('w'):
                         new_command[0] = [layer_mod['thickness']]
-                        mod_applied['thickness'] = True
                     
                     if operator == pikepdf.Operator('RG'):
                         new_command[0] = layer_mod['rgb']
-                        mod_applied['rgb'] = True
                     
                     if operator == pikepdf.Operator('K'):
                         new_command[0] = pdf_ops.rgb_to_cmyk(layer_mod['rgb'])
-                        mod_applied['rgb'] = True
-                    
-                    if any(mod_applied.values()) and first_mod is None:
-                        first_mod = len(new_content)
-                
+
                 new_content.append(new_command)
 
             if in_oc and operator == pikepdf.Operator('EMC'):
                 currently_copying = self.keep_non_oc
                 in_oc = False
-
-                # make sure the various layer mods were applied. If not, insert them
-                if layer_mod is not None and first_mod is not None:
-                    if not mod_applied['style']:
-                        new_content.insert(first_mod,[pdf_ops.line_style_arr[layer_mod['style']],pikepdf.Operator('d')])
-                    
-                    if not mod_applied['thickness']:
-                        new_content.insert(first_mod,[[layer_mod['thickness']],pikepdf.Operator('w')])
-                    
-                    if not mod_applied['rgb']:
-                        new_content.insert(first_mod,[layer_mod['rgb'],pikepdf.Operator('RG')])
-
                 layer_mod = None
-                mod_applied = None
-                first_mod = None
 
         return pikepdf.unparse_content_stream(new_content)
 
@@ -170,15 +151,9 @@ class LayerFilter():
             page_range = list(set([p for p in page_range if p > 0]))
 
         for p in page_range:
-            print(_('Extracting layers for page {}...'.format(p)))
+            print(_('Processing layers in page {}...'.format(p)))
             # apply the filter and reassign the page contents
             newstream = self.filter_content(output.pages[p-1])
-            if p == 2:
-                with open('original.txt','w') as f:
-                    f.write(pikepdf.unparse_content_stream(pikepdf.parse_content_stream(output.pages[p-1])).decode())
-                
-                with open('new.txt','w') as f:
-                    f.write(newstream.decode())
             
             if newstream:
                 output.pages[p-1].Contents = output.make_stream(newstream)
