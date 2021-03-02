@@ -14,9 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from os import write
 import pikepdf
-from pikepdf.objects import Operator
+from wx.core import ModalDialogHook
 import pdf_operators as pdf_ops
+
+# helper functions to dump page to file for debugging
+def write_page(fname,stream):
+    with open(fname,'w') as f:
+        f.write(stream.decode())
 
 class LayerFilter():
     def __init__(self,doc = None):
@@ -25,7 +31,42 @@ class LayerFilter():
         self.keep_non_oc = True
 
         self.line_props = {}
+        self.colour_type = None
+    
+    def convert_layer_props(self,layer_props):
+        # convert the line properties from the GUI to what the PDF needs
+        layer_mod = {
+            'w': [layer_props['thickness']],
+            'd': list(pdf_ops.line_style_arr[layer_props['style']])
+            # list is needed to make sure this is a copy
+        }
+        # scale the line style
+        w = layer_mod['w'][0]
+        layer_mod['d'][0] = [d*w for d in layer_mod['d'][0]]
+
+        # assign the colour based on colour type
+        if self.colour_type is None or self.colour_type == 'RG':
+            layer_mod['RG'] = layer_props['rgb']
+        elif self.colour_type == 'K':
+            layer_mod['K'] = pdf_ops.rgb_to_cmyk(layer_props['rgb'])
         
+        # create the dictionary keeping track of modifications
+        mod_applied = {key: False for key in layer_mod.keys()}
+        
+        return layer_mod, mod_applied
+    
+    def check_colour(self,operator,operands):
+        operator = str(operator)
+        # check to see what type of colour is defined in this PDF
+        if operator in ('CS','K','RG','SC','SCN'):
+            if operator in ('K','RG'):
+                self.colour_type = operator
+            else:
+                print('Found colour command ' + operator + ' with operands ', operands)
+            return True
+        else:
+            return False
+
     def get_layer_names(self):
         # reads through the root to parse out the layers present in the file
         if '/OCProperties' not in self.pdf.Root.keys():
@@ -38,7 +79,7 @@ class LayerFilter():
             page_ocs = {key:str(val.Name) for key, val in res.Properties.items() if 
                 '/Type' in val.keys() 
                 and str(val.Type) == '/OCG'
-                and val.Name in self.keep_ocs}
+                and str(val.Name) in self.keep_ocs}
             return page_ocs
         else:
             return {}
@@ -50,23 +91,26 @@ class LayerFilter():
         else:
             page_keep = {}
         
-        if len(page_keep) == 0:
-            if self.keep_non_oc:
-                # nothing to be done if there's no layers in this object
-                return None
-            else:
-                # otherwise replace it with an empty stream
-                return b''
+        if len(page_keep) == 0 and not self.keep_non_oc:
+            # replace it with an empty stream
+            return b''
 
         commands = pikepdf.parse_content_stream(content)
         show_ops = [pikepdf.Operator(k) for k,v in pdf_ops.ops.items() if v[0] == 'show'] 
+        stroke_ops = [pikepdf.Operator(k) for k,v in pdf_ops.ops.items() if v[0] == 'show' and v[1] == 'stroke'] 
         new_content = []
         in_oc = False
         currently_copying = self.keep_non_oc
         layer_mod = None
-        gs_to_mod = []
+        mod_applied = {}
+        gs_mod = []
+        new_q = False
 
         for operands, operator in commands:
+            # check to see if this pdf has CMYK or RGB colour definitions
+            if not self.colour_type:
+                self.check_colour(operator,operands)
+
             # look for optional content
             if operator == pikepdf.Operator('BDC'):
                 # BDC/BMC doesn't necessarily mean optional content block
@@ -78,30 +122,53 @@ class LayerFilter():
 
                         # get a link to the current line property modifications requested
                         if page_keep[operands[1]] in self.line_props.keys():
-                            layer_mod = self.line_props[page_keep[operands[1]]]
+                            layer_mod,mod_applied = self.convert_layer_props(self.line_props[page_keep[operands[1]]])
                     else:
                         currently_copying = False
 
+            # all kinds of crazy stuff going on behind the scenes, so to select layers we can't just delete everything.
+            # Just copy the non-showing operations
             if currently_copying or operator not in show_ops:
                 new_command = [operands,operator]
+                
                 if in_oc and layer_mod is not None:
+                    op_string = str(operator)
+
+                    # # save/restore the graphics state so we don't mess with other layers
+                    # if op_string == 'BDC':
+                    #     new_q = True
+                    
+                    # if op_string == 'EMC':
+                    #     new_content.append([[],pikepdf.Operator('Q')])
+
+                    # if we need to modify graphics state dictionaries, we need to retrieve that from the resources
+                    if op_string == 'gs' and str(operands) not in gs_mod:
+                        gs_mod.append(operands)
+                        print('Found gs dictionary')
+
                     # check for one of the line property modification operators
-                    if operator == pikepdf.Operator('gs'):
-                        gs_to_mod.append(operands)
+                    if op_string in layer_mod.keys():
+                        new_command[0] = layer_mod[op_string]
+                        mod_applied[op_string] = True
 
-                    if operator == pikepdf.Operator('d'):
-                       new_command[0] = pdf_ops.line_style_arr[layer_mod['style']]
-
-                    if operator == pikepdf.Operator('w'):
-                        new_command[0] = [layer_mod['thickness']]
+                    # check if we're drawing but haven't applied all mods yet
+                    if operator in stroke_ops and not all(mod_applied.values()):
+                        needs_mod = [k for k, v in mod_applied.items() if not v]
+                        for key in needs_mod:
+                            new_content.append([layer_mod[key],pikepdf.Operator(key)])
+                            mod_applied[key] = True
                     
-                    if operator == pikepdf.Operator('RG'):
-                        new_command[0] = layer_mod['rgb']
-                    
-                    if operator == pikepdf.Operator('K'):
-                        new_command[0] = pdf_ops.rgb_to_cmyk(layer_mod['rgb'])
-
+                    if op_string == 'Q':
+                        # reset the dictionary if we're in a new q/Q block
+                        if all(mod_applied.values()):
+                            mod_applied = {key: False for key in mod_applied.keys()}
+                
                 new_content.append(new_command)
+
+                # q is the only command that needs to go after the current command
+                if new_q:
+                    new_content.append([[],pikepdf.Operator('q')])
+                    new_q = False
 
             if in_oc and operator == pikepdf.Operator('EMC'):
                 currently_copying = self.keep_non_oc
@@ -133,8 +200,10 @@ class LayerFilter():
             return input
 
     def run(self,page_range = None):
+
         # open a new copy of the input
         output = pikepdf.Pdf.open(self.pdf.filename)
+        self.colour_type = None
 
         if self.keep_ocs == 'all' and len(self.line_props) == 0:
             return output
@@ -150,6 +219,7 @@ class LayerFilter():
             # get rid of duplicates and zeros in the page range
             page_range = list(set([p for p in page_range if p > 0]))
 
+        # change the decimal precision because it's really high
         for p in page_range:
             print(_('Processing layers in page {}...'.format(p)))
             # apply the filter and reassign the page contents

@@ -227,7 +227,7 @@ class LayersTab(wx.Panel):
         
         # line properties
         self.line_prop_label = wx.StaticText(layer_opt_pane,label=_('Select a layer to modify line properties'))
-        layer_opt_sizer.Add(self.line_prop_label,flag=wx.LEFT,border=10)
+        layer_opt_sizer.Add(self.line_prop_label,flag=wx.LEFT|wx.TOP,border=10)
         newline = wx.BoxSizer(wx.HORIZONTAL)
 
         # colour
@@ -238,7 +238,7 @@ class LayersTab(wx.Panel):
         
         # thickness
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Thickness (px)') + ':'),flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
+        newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Thickness (pt)') + ':'),flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
         self.line_thick_ctrl = wx.TextCtrl(layer_opt_pane,size=(30,-1),value='1')
         newline.Add(self.line_thick_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
         layer_opt_sizer.Add(newline,flag=wx.TOP,border=10)
@@ -291,7 +291,7 @@ class LayersTab(wx.Panel):
             'style': self.line_style_ctrl.GetSelection()
         }
 
-        line_str = f'{line_thick} px {self.style_names[self.line_style_ctrl.GetSelection()]}'
+        line_str = f'{line_thick} pt {self.style_names[self.line_style_ctrl.GetSelection()]}'
         self.layer_list.SetItem(sel,1,line_str)
         self.layer_list.SetItemTextColour(sel,colour)
         return
@@ -343,7 +343,7 @@ class LayersTab(wx.Panel):
             if self.layer_list.IsItemChecked(i):
                 selected.append(self.layer_list.GetItemText(i,col=0))
         
-        if n_layers == len(selected):
+        if n_layers == len(selected) and len(self.line_props) == 0:
             return 'all'
         
         if len(selected) == 0:
@@ -540,8 +540,4 @@ if __name__ == '__main__':
 
     frm = SewGUI(None, title=_('PDF Stitcher'),size=(w,h))
     frm.Show()
-
-    frm.load_file(r"C:\Users\curtcha\Downloads\Bridge 1 OJ1 harem overalls Sunny Mountain.pdf")
-    frm.out_doc_path = r"C:\Users\curtcha\Downloads\sunny.pdf"
-
     app.MainLoop()
