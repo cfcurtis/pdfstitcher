@@ -29,16 +29,16 @@ except:
 
 if lang not in ('de','es','fr','nl','en'):
     language_warning = 'System language code ' + lang + ' is not supported, defaulting to English.'
-else:
-    try:
-        translate = gettext.translation('pdfstitcher', resource_path('locale'), 
-            languages=[lang], fallback=True)
-        translate.install()
-    except Exception as e:
-        def _(text):
-            return text
-            
-        language_warning = e
+
+try:
+    translate = gettext.translation('pdfstitcher', resource_path('locale'), 
+        languages=[lang], fallback=True)
+    translate.install()
+except Exception as e:
+    def _(text):
+        return text
+        
+    language_warning = e
 
 class SewGUI(wx.Frame):
     def __init__(self, *args, **kw):
@@ -222,6 +222,7 @@ class SewGUI(wx.Frame):
         trim[2] = txt_to_float(self.top_trim_txt.GetValue())
         trim[3] = txt_to_float(self.bottom_trim_txt.GetValue())
         self.tiler.set_trim(trim)
+        self.tiler.set_trim_overlap(self.trim_overlap_combo.GetSelection())
 
         # rows/cols
         cols = self.columns_txt.GetValue().strip()
@@ -231,7 +232,7 @@ class SewGUI(wx.Frame):
 
         # do it
         try:
-            new_doc = self.tiler.run(rows,cols,actually_trim=self.trim_overlap_combo.GetSelection())
+            new_doc = self.tiler.run(rows,cols)
             print(_('Tiling successful'))
         except Exception as e:
             print(_('Something went wrong') + ', ' + _('tiling failed'))

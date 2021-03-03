@@ -1,3 +1,19 @@
+# PDFStitcher is a utility to work with PDF sewing patterns.
+# Copyright (C) 2021 Charlotte Curtis
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import pikepdf
 from pikepdf import _cpphelpers
 import subprocess
@@ -27,11 +43,15 @@ class PageTiler():
         self.trim = [0,0,0,0]
         self.margin = 0
         self.rotation = 0
+        self.actually_trim = False
 
         self.col_major = False
         self.right_to_left = False
         self.bottom_to_top = False
     
+    def set_input(self,doc):
+        self.in_doc = doc
+
     def set_col_major(self,val):
         self.col_major = bool(val)
     
@@ -54,6 +74,13 @@ class PageTiler():
             return pxval
         else:
             return pxval/2.54
+        
+    def px_to_units(self,val):
+        inch_val = val/72
+        if self.units == 0:
+            return inch_val
+        else:
+            return inch_val*2.54
 
     def set_trim(self,trim):
         if len(trim) == 1:
@@ -68,6 +95,9 @@ class PageTiler():
         else:
             print(_('Invalid trim value specified, ignoring'))
             self.trim = [0,0,0,0]
+    
+    def set_trim_overlap(self,actually_trim):
+        self.actually_trim = actually_trim
         
     def set_margin(self,margin):
         self.margin = margin
@@ -86,7 +116,7 @@ class PageTiler():
         if len(self.page_range) == 0:
             self.page_range = list(range(1,len(self.in_doc.pages)+1))
 
-    def run(self,rows=0,cols=0,actually_trim=0):
+    def run(self,rows=0,cols=0):
         if self.in_doc is None:
             print(_('Input document not loaded'))
             return
@@ -124,7 +154,7 @@ class PageTiler():
                     localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
 
                     # set the trim box to cut off content if requested
-                    if actually_trim == 1:
+                    if self.actually_trim:
                         if '/TrimBox' not in localpage.keys():
                             localpage.TrimBox = copy.copy(localpage.MediaBox)
 
@@ -231,6 +261,16 @@ class PageTiler():
         height = (ph - trim[2] - trim[3])*rows
         media_box = [0,0,width + 2*margin,height + 2*margin]
 
+        if media_box[2] > 14400 or media_box[3] > 14400:
+            print ('**************************************')
+            if self.units == 1:
+                print(_('Warning! Output is larger than 508 cm, may not open correctly.'))
+            else:
+                print(_('Warning! Output is larger than 200 in, may not open correctly.'))
+            print ('**************************************')
+        print(_('Output size:') + ' {:0.2f} x {:0.2f} {}'.format(self.px_to_units(width + 2*margin), 
+            self.px_to_units(height + 2*margin),unitstr))
+        
         i = 0
         content_txt = ''
         
