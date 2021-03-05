@@ -2,10 +2,12 @@
 
 block_cipher = None
 
-locales = ['de_DE','es_ES','fr_FR','nl_NL']
-locale_paths = []
-for l in locales:
-    locale_paths.append((f'locale/{l}/LC_MESSAGES/pdfstitcher.mo',f'locale/{l}/LC_MESSAGES'))
+locale = ''
+basename = 'pdfstitcher'
+
+if locale != '':
+    locale_paths = [(f'locale/{locale}/LC_MESSAGES/pdfstitcher.mo',f'locale/{locale}/LC_MESSAGES')]
+    basename += '_' + locale[:2]
 
 a = Analysis(['pdfstitcher.py'],
              pathex=['/Users/charlotte/sewingutils'],
@@ -27,7 +29,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='pdfstitcher',
+          name=basename,
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -36,6 +38,6 @@ exe = EXE(pyz,
           runtime_tmpdir=None,
           console=False )
 app = BUNDLE(exe,
-             name='pdfstitcher.app',
+             name=basename + '.app',
              icon=None,
              bundle_identifier=None)
