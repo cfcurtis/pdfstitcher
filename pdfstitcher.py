@@ -58,10 +58,10 @@ except Exception as e:
         
     language_warning = e
 
-class TileTab(wx.Panel):
+class IOTab(wx.Panel):
     def __init__(self,parent,main_gui):
         wx.Panel.__init__(self, parent)
-
+        
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
 
         # add the various parameter inputs
@@ -82,6 +82,37 @@ class TileTab(wx.Panel):
         newline.Add(self.output_fname_display, flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
+        # checklist of features to enable/disable
+        vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)        
+        lbl = wx.StaticText(self, label=_('Output Options'))
+        lbl.SetFont(lbl.GetFont().Bold())
+
+        vert_sizer.Add(lbl, flag=wx.TOP|wx.LEFT, border=5)
+        self.do_layers = wx.CheckBox(self,label=_('Process Layers'))
+        self.do_layers.SetValue(1)
+        vert_sizer.Add(self.do_layers,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        self.do_tile = wx.CheckBox(self,label=_('Tile pages'))
+        self.do_tile.SetValue(1)
+        vert_sizer.Add(self.do_tile,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+
+        # unit selection
+        vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)        
+        unit_opts = [_('Inches'),_('Centimetres')]     
+        self.unit_box = wx.RadioBox(self,label=_('Units'),choices=unit_opts,style=wx.RA_SPECIFY_COLS)
+        vert_sizer.Add(self.unit_box,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+
+        self.SetSizer(vert_sizer)
+        self.SetBackgroundColour(parent.GetBackgroundColour())
+
+    def load_new(self,in_doc):
+        self.input_fname_display.SetLabel(in_doc.filename)
+        self.output_fname_display.SetLabel(label=_('None'))
+
+class TileTab(wx.Panel):
+    def __init__(self,parent,main_gui):
+        wx.Panel.__init__(self, parent)
+
+        vert_sizer = wx.BoxSizer(wx.VERTICAL)
         ## REQUIRED PARAMETERS
         vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)
         lbl = wx.StaticText(self, label=_('Required Parameters'))
@@ -131,16 +162,9 @@ class TileTab(wx.Panel):
 
         ## OPTIONAL PARAMETERS
         vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)
-        newline = wx.BoxSizer(wx.HORIZONTAL)
         lbl = wx.StaticText(self, label=_('Optional Parameters'))
         lbl.SetFont(lbl.GetFont().Bold())
-        newline.Add(lbl)
-
-        # unit selection
-        unit_opts = [_('Inches'),_('Centimetres')]     
-        self.unit_box = wx.RadioBox(self,label=_('Units'),choices=unit_opts,style=wx.RA_SPECIFY_COLS)
-        newline.Add(self.unit_box,flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=50)
-        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=5)
+        vert_sizer.Add(lbl,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
         # Margin
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -183,9 +207,7 @@ class TileTab(wx.Panel):
         self.SetBackgroundColour(parent.GetBackgroundColour())
 
     def load_new(self,in_doc):
-        self.input_fname_display.SetLabel(in_doc.filename)
         self.page_range_txt.SetValue('1-{}'.format(len(in_doc.pages)))
-        self.output_fname_display.SetLabel(_('None'))
 
 class LayersTab(wx.Panel):
     def __init__(self,parent):
@@ -361,6 +383,8 @@ class SewGUI(wx.Frame):
 
         # create the notebook for the various tab panes
         nb = wx.Notebook(splitter)
+        self.io = IOTab(nb,self)
+        nb.AddPage(self.io,_('File Options'))
         self.tt = TileTab(nb,self)
         nb.AddPage(self.tt,_('Layout'))
         self.lt = LayersTab(nb)
@@ -399,7 +423,11 @@ class SewGUI(wx.Frame):
             print(language_warning)
     
     def on_go_pressed(self,event):
-        if self.tiler is None or self.layer_filter is None:
+        # retrieve the selected options
+        do_tile = bool(self.io.do_tile.GetValue())
+        do_layers = bool(self.io.do_layers.GetValue())
+
+        if (do_tile and self.tiler is None) or (do_layers and self.layer_filter is None):
             return
 
         if self.out_doc_path is None:
@@ -408,55 +436,62 @@ class SewGUI(wx.Frame):
             if self.out_doc_path is None:
                 return
 
-        # set up the layer filter
-        self.layer_filter.keep_ocs = self.lt.get_selected_layers()
-        self.layer_filter.line_props = self.lt.line_props
-        self.layer_filter.keep_non_oc = bool(self.lt.include_nonoc.GetValue())
+        if do_tile:
+            # set up the layer filter
+            self.layer_filter.keep_ocs = self.lt.get_selected_layers()
+            self.layer_filter.line_props = self.lt.line_props
+            self.layer_filter.keep_non_oc = bool(self.lt.include_nonoc.GetValue())
 
-        # set all the various options of the tiler
-        # define the page order
-        self.tiler.set_col_major(self.tt.col_row_order_combo.GetSelection())
-        self.tiler.set_right_left(self.tt.left_right_combo.GetSelection())
-        self.tiler.set_bottom_top(self.tt.top_bottom_combo.GetSelection())
-        self.tiler.set_page_range(self.tt.page_range_txt.GetValue())
+            # set all the various options of the tiler
+            # define the page order
+            self.tiler.set_col_major(self.tt.col_row_order_combo.GetSelection())
+            self.tiler.set_right_left(self.tt.left_right_combo.GetSelection())
+            self.tiler.set_bottom_top(self.tt.top_bottom_combo.GetSelection())
+            self.tiler.set_page_range(self.tt.page_range_txt.GetValue())
 
-        # set the optional stuff
-        self.tiler.set_units(self.tt.unit_box.GetSelection())
-        self.tiler.set_rotation(self.tt.rotate_combo.GetSelection())
+            # set the optional stuff
+            self.tiler.set_units(self.io.unit_box.GetSelection())
+            self.tiler.set_rotation(self.tt.rotate_combo.GetSelection())
 
-        # margins
-        self.tiler.set_margin(txt_to_float(self.tt.margin_txt.GetValue()))
+            # margins
+            self.tiler.set_margin(txt_to_float(self.tt.margin_txt.GetValue()))
 
-        # trim
-        trim = [0.0]*4
-        trim[0] = txt_to_float(self.tt.left_trim_txt.GetValue())
-        trim[1] = txt_to_float(self.tt.right_trim_txt.GetValue())
-        trim[2] = txt_to_float(self.tt.top_trim_txt.GetValue())
-        trim[3] = txt_to_float(self.tt.bottom_trim_txt.GetValue())
-        self.tiler.set_trim(trim)
-        self.tiler.set_trim_overlap(bool(self.tt.trim_overlap_combo.GetSelection()))
+            # trim
+            trim = [0.0]*4
+            trim[0] = txt_to_float(self.tt.left_trim_txt.GetValue())
+            trim[1] = txt_to_float(self.tt.right_trim_txt.GetValue())
+            trim[2] = txt_to_float(self.tt.top_trim_txt.GetValue())
+            trim[3] = txt_to_float(self.tt.bottom_trim_txt.GetValue())
+            self.tiler.set_trim(trim)
+            self.tiler.set_trim_overlap(bool(self.tt.trim_overlap_combo.GetSelection()))
 
-        # rows/cols
-        cols = self.tt.columns_txt.GetValue().strip()
-        cols = int(cols) if cols else 0
-        rows = self.tt.rows_txt.GetValue().strip()
-        rows = int(rows) if rows else 0
+            # rows/cols
+            cols = self.tt.columns_txt.GetValue().strip()
+            cols = int(cols) if cols else 0
+            rows = self.tt.rows_txt.GetValue().strip()
+            rows = int(rows) if rows else 0
 
         # do it
-        filtered = self.layer_filter.run(self.tiler.page_range)
         try:
-            self.tiler.set_input(filtered)
-            new_doc = self.tiler.run(rows,cols)
-            print(_('Tiling successful'))
+            if do_layers:
+                filtered = self.layer_filter.run(self.tiler.page_range)
+            else:
+                filtered = self.in_doc
+
+            if do_tile:
+                self.tiler.set_input(filtered)
+                new_doc = self.tiler.run(rows,cols)
+                print(_('Tiling successful'))
+            else:
+                new_doc = filtered
+                
         except Exception as e:
-            print(_('Something went wrong') + ', ' + _('tiling failed'))
+            print(_('Something went wrong'))
             print(_('Exception') + ':')
             print(e)
         
         try:
             new_doc.save(self.out_doc_path,normalize_content=True)
-            filtered.close()
-            new_doc.close()
             print(_('Successfully written to') + ' ' + self.out_doc_path)
         except Exception as e:
             print(_('Something went wrong') + ', ' + _('unable to write to') + ' ' + self.out_doc_path)
@@ -491,7 +526,7 @@ class SewGUI(wx.Frame):
                 self.on_output(event)
             try:
                 self.out_doc_path = pathname
-                self.tt.output_fname_display.SetLabel(os.path.basename(pathname))
+                self.io.output_fname_display.SetLabel(os.path.basename(pathname))
 
             except IOError:
                 wx.LogError(_('unable to write to') + pathname)
@@ -514,6 +549,7 @@ class SewGUI(wx.Frame):
             # open the pdf
             print(_('Opening') + ' ' + pathname)
             self.in_doc = pikepdf.Pdf.open(pathname)
+            self.io.load_new(self.in_doc)
 
             # create the processing objects
             self.layer_filter = LayerFilter(self.in_doc)
@@ -539,5 +575,7 @@ if __name__ == '__main__':
     w = min(int(disp_w*0.4),600)
 
     frm = SewGUI(None, title=_('PDF Stitcher'),size=(w,h))
+
+    frm.load_file(r"C:\Users\cfcur\Downloads\Bridge 1 OJ1 harem overalls Sunny Mountain.pdf")
     frm.Show()
     app.MainLoop()
