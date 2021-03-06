@@ -45,6 +45,7 @@ class PageTiler():
         self.margin = 0
         self.rotation = 0
         self.actually_trim = False
+        self.override_trim = False
 
         self.col_major = False
         self.right_to_left = False
@@ -140,6 +141,12 @@ class PageTiler():
 
         page_count = len(self.in_doc.pages)
         trim = [self.units_to_px(t) for t in self.trim]
+
+        # initialize the width/height indices based on page rotation
+        page_rot = 0
+
+        if '/Rotate' in self.in_doc.Root.Pages.keys():
+            page_rot = self.in_doc.Root.Pages.Rotate   
         
         for p in self.page_range:
             if p > page_count:
@@ -154,32 +161,66 @@ class PageTiler():
                     # pikepdf.pages is zero indexed, so subtract one
                     localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
 
+                    if self.override_trim:
+                        localpage.TrimBox = copy.copy(localpage.MediaBox)
+                    
+                    # only get the width/height for the first page
+                    if pw is None:
+                        if '/Rotate' in localpage.keys():
+                            page_rot = localpage.Rotate
+
+                        if page_rot == 90 or page_rot == -90:
+                            pw = float(localpage.MediaBox[3])
+                            ph = float(localpage.MediaBox[2])
+                        else:
+                            pw = float(localpage.MediaBox[2])
+                            ph = float(localpage.MediaBox[3])        
+                        
+                        # store which page we grabbed the size from
+                        page_size_ref = p
+
+                    else:
+                        if page_rot == 90 or page_rot == -90:
+                            this_pw = float(localpage.MediaBox[3])
+                            this_ph = float(localpage.MediaBox[2])
+                        else:
+                            this_pw = float(localpage.MediaBox[2])
+                            this_ph = float(localpage.MediaBox[3])
+                        
+                        if abs(pw - this_pw) > 1 or abs(ph - this_ph) > 1:
+                            print(_('Warning: page {} is a different size from {}, output may be unpredictable'.format(p,page_size_ref)))
+                    
                     # set the trim box to cut off content if requested
                     if self.actually_trim:
                         if '/TrimBox' not in localpage.keys():
                             localpage.TrimBox = copy.copy(localpage.MediaBox)
 
-                        localpage.TrimBox[0] = float(localpage.TrimBox[0]) + trim[0]
-                        localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[3]
-                        localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[1]
-                        localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[2]
+                        # things get tricky if there's rotation, because the user sees top/bottom as right/left
+                        # trim: left, right, top, bottom as defined visually
+                        # trimbox: left, bottom, width, height
+                        if page_rot == 0:
+                            localpage.TrimBox[0] = float(localpage.TrimBox[0]) + trim[0]
+                            localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[3]
+                            localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[1]
+                            localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[2]
+
+                        elif page_rot == 90:
+                            localpage.TrimBox[0] = float(localpage.TrimBox[0]) + trim[2]
+                            localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[0]
+                            localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[3]
+                            localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[1]
+
+                        elif page_rot == -90:
+                            localpage.TrimBox[0] = float(localpage.TrimBox[0]) + trim[3]
+                            localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[1]
+                            localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[2]
+                            localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[0]
  
                     content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
-
-                    # only get the width/height for the first page
-                    if pw is None:
-                        pw = float(localpage.MediaBox[2])
-                        ph = float(localpage.MediaBox[3])
-                        page_size_ref = p
-                    elif abs(pw - float(localpage.MediaBox[2])) > 1 or abs(ph - float(localpage.MediaBox[3])) > 1:
-                        print(_('Warning: page {} is a different size from {}, output may be unpredictable'.format(p,page_size_ref)))
 
                 page_names.append(pagekey)
             else:
                 page_names.append(None)
-        
-        # take the most common page width/height
-        
         
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
         # figure out how big it needs to be based on requested columns/rows
@@ -292,12 +333,12 @@ class PageTiler():
             if not self.bottom_to_top:
                 r = rows - r - 1
             
-            x0 = margin - trim[0] + c*(pw - trim[0] - trim[1])
-            y0 = margin - trim[3] + r*(ph - trim[2] - trim[3])
+            x0 = margin - trim[0] + c*(pw - trim[0] - trim[1]) + o_shift[0]
+            y0 = margin - trim[3] + r*(ph - trim[2] - trim[3]) + o_shift[1]
 
             # don't scale, just shift and rotate
             # first shift to origin, then rotate, then shift to final destination
-            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0+o_shift[0]} {y0+o_shift[1]} cm '
+            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0} {y0} cm '
             content_txt += f'{page_names[i]} Do Q '
 
         newpage = pikepdf.Dictionary(

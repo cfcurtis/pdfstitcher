@@ -86,14 +86,21 @@ class IOTab(wx.Panel):
         vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)        
         lbl = wx.StaticText(self, label=_('Output Options'))
         lbl.SetFont(lbl.GetFont().Bold())
-
         vert_sizer.Add(lbl, flag=wx.TOP|wx.LEFT, border=5)
+        
         self.do_layers = wx.CheckBox(self,label=_('Process Layers'))
         self.do_layers.SetValue(1)
         vert_sizer.Add(self.do_layers,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
         self.do_tile = wx.CheckBox(self,label=_('Tile pages'))
         self.do_tile.SetValue(1)
+        self.do_layers.Bind(wx.EVT_CHECKBOX,self.on_option_checked)
+        self.do_tile.Bind(wx.EVT_CHECKBOX,self.on_option_checked)
         vert_sizer.Add(self.do_tile,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        
+        # describe what the options mean
+        self.output_description = wx.StaticText(self, label=_(''))
+        vert_sizer.Add(self.output_description,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        self.on_option_checked(event=None)
 
         # unit selection
         vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)        
@@ -107,6 +114,23 @@ class IOTab(wx.Panel):
     def load_new(self,in_doc):
         self.input_fname_display.SetLabel(in_doc.filename)
         self.output_fname_display.SetLabel(label=_('None'))
+    
+    def on_option_checked(self,event):
+        do_layers = bool(self.do_layers.GetValue())
+        do_tile = bool(self.do_tile.GetValue())
+        
+        if do_layers and do_tile:
+            self.output_description.SetLabel(_('Process layers with options selected in layers tab, then tile pages and save'))
+        
+        if do_layers and not do_tile:
+            self.output_description.SetLabel(_('Process layers with options selected in layers tab and save without tiling pages'))
+
+        if do_tile and not do_layers:
+            self.output_description.SetLabel(_('Tile pages and save without processing layers'))
+
+        if not do_tile and not do_layers:
+            self.output_description.SetLabel(_('Open and save the PDF without modifying'))
+    
 
 class TileTab(wx.Panel):
     def __init__(self,parent,main_gui):
@@ -165,6 +189,11 @@ class TileTab(wx.Panel):
         lbl = wx.StaticText(self, label=_('Optional Parameters'))
         lbl.SetFont(lbl.GetFont().Bold())
         vert_sizer.Add(lbl,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+
+        # override trimbox - sometimes needed for wonky PDFs
+        self.override_trim = wx.CheckBox(self,label=_('Set TrimBox to MediaBox'))
+        self.override_trim.SetToolTip(wx.ToolTip(_('May help fix things when output is not as expected')))
+        vert_sizer.Add(self.override_trim,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
         # Margin
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -384,9 +413,9 @@ class SewGUI(wx.Frame):
         # create the notebook for the various tab panes
         nb = wx.Notebook(splitter)
         self.io = IOTab(nb,self)
-        nb.AddPage(self.io,_('File Options'))
+        nb.AddPage(self.io,_('Options'))
         self.tt = TileTab(nb,self)
-        nb.AddPage(self.tt,_('Layout'))
+        nb.AddPage(self.tt,_('Tile Pages'))
         self.lt = LayersTab(nb)
         nb.AddPage(self.lt,_('Layers'))
 
@@ -464,6 +493,7 @@ class SewGUI(wx.Frame):
             trim[3] = txt_to_float(self.tt.bottom_trim_txt.GetValue())
             self.tiler.set_trim(trim)
             self.tiler.set_trim_overlap(bool(self.tt.trim_overlap_combo.GetSelection()))
+            self.tiler.override_trim = self.tt.override_trim.GetValue()
 
             # rows/cols
             cols = self.tt.columns_txt.GetValue().strip()
@@ -526,7 +556,7 @@ class SewGUI(wx.Frame):
                 self.on_output(event)
             try:
                 self.out_doc_path = pathname
-                self.io.output_fname_display.SetLabel(os.path.basename(pathname))
+                self.io.output_fname_display.SetLabel(pathname)
 
             except IOError:
                 wx.LogError(_('unable to write to') + pathname)
@@ -576,6 +606,6 @@ if __name__ == '__main__':
 
     frm = SewGUI(None, title=_('PDF Stitcher'),size=(w,h))
 
-    frm.load_file(r"C:\Users\cfcur\Downloads\Bridge 1 OJ1 harem overalls Sunny Mountain.pdf")
+    frm.load_file(r"C:\Users\cfcur\Google Drive\Sewing\ClosetCaseFIles\BombshellSwimsuit_Letter-A4.pdf")
     frm.Show()
     app.MainLoop()
