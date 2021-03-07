@@ -140,7 +140,6 @@ class LayerFilter():
                     # if we need to modify graphics state dictionaries, we need to retrieve that from the resources
                     if op_string == 'gs' and str(operands) not in gs_mod:
                         gs_mod.append(operands)
-                        print('Found gs dictionary')
 
                     # check for one of the line property modification operators
                     if op_string in layer_mod.keys():
@@ -170,6 +169,9 @@ class LayerFilter():
                 currently_copying = self.keep_non_oc
                 in_oc = False
                 layer_mod = None
+        
+        if len(gs_mod) > 0:
+            print('Found graphics state dictionary, layer modification may not work as expected')
 
         return pikepdf.unparse_content_stream(new_content)
 
