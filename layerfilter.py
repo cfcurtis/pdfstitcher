@@ -18,6 +18,7 @@ from os import write
 import pikepdf
 from wx.core import ModalDialogHook
 import pdf_operators as pdf_ops
+from decimal import Decimal
 
 # helper functions to dump page to file for debugging
 def write_page(fname,stream):
@@ -36,7 +37,7 @@ class LayerFilter():
     def convert_layer_props(self,layer_props):
         # convert the line properties from the GUI to what the PDF needs
         layer_mod = {
-            'w': [layer_props['thickness']],
+            'w': [round(Decimal(layer_props['thickness']),1)],
             'd': list(pdf_ops.line_style_arr[layer_props['style']])
             # list is needed to make sure this is a copy
         }
@@ -46,9 +47,9 @@ class LayerFilter():
 
         # assign the colour based on colour type
         if self.colour_type is None or self.colour_type == 'RG':
-            layer_mod['RG'] = layer_props['rgb']
+            layer_mod['RG'] = [round(Decimal(rg),3) for rg in layer_props['rgb']]
         elif self.colour_type == 'K':
-            layer_mod['K'] = pdf_ops.rgb_to_cmyk(layer_props['rgb'])
+            layer_mod['K'] = [round(Decimal(k),3) for k in pdf_ops.rgb_to_cmyk(layer_props['rgb'])]
         
         # create the dictionary keeping track of modifications
         mod_applied = {key: False for key in layer_mod.keys()}
@@ -84,27 +85,29 @@ class LayerFilter():
         else:
             return {}
 
-    def filter_content(self,content):
+    def filter_content(self,content,layer=None):
         # content can be either a page or an xobject
         if '/Resources' in content.keys():
             page_keep = self.find_page_keep(content.Resources)
         else:
             page_keep = {}
         
-        if len(page_keep) == 0 and not self.keep_non_oc:
-            # replace it with an empty stream
-            return b''
-
         commands = pikepdf.parse_content_stream(content)
         show_ops = [pikepdf.Operator(k) for k,v in pdf_ops.ops.items() if v[0] == 'show'] 
         stroke_ops = [pikepdf.Operator(k) for k,v in pdf_ops.ops.items() if v[0] == 'show' and v[1] == 'stroke'] 
         new_content = []
         in_oc = False
         currently_copying = self.keep_non_oc
-        layer_mod = None
-        mod_applied = {}
         gs_mod = []
         new_q = False
+
+        if layer is not None:
+            layer_mod,mod_applied = self.convert_layer_props(self.line_props[layer])
+            in_oc = True
+            currently_copying = True
+        else:
+            layer_mod = None
+            mod_applied = None
 
         for operands, operator in commands:
             # check to see if this pdf has CMYK or RGB colour definitions
@@ -112,7 +115,7 @@ class LayerFilter():
                 self.check_colour(operator,operands)
 
             # look for optional content
-            if operator == pikepdf.Operator('BDC'):
+            if layer is None and operator == pikepdf.Operator('BDC'):
                 # BDC/BMC doesn't necessarily mean optional content block
                 # check the operands for the /OC flag
                 if len(operands) > 1 and operands[0] == '/OC':
@@ -133,13 +136,6 @@ class LayerFilter():
                 
                 if in_oc and layer_mod is not None:
                     op_string = str(operator)
-
-                    # # save/restore the graphics state so we don't mess with other layers
-                    # if op_string == 'BDC':
-                    #     new_q = True
-                    
-                    # if op_string == 'EMC':
-                    #     new_content.append([[],pikepdf.Operator('Q')])
 
                     # if we need to modify graphics state dictionaries, we need to retrieve that from the resources
                     if op_string == 'gs' and str(operands) not in gs_mod:
@@ -199,7 +195,7 @@ class LayerFilter():
         else:
             return input
 
-    def run(self,page_range = None):
+    def run(self,page_range = []):
 
         # open a new copy of the input
         output = pikepdf.Pdf.open(self.pdf.filename)
@@ -212,7 +208,7 @@ class LayerFilter():
             print(_('No layers selected, generated PDF woud be blank.'))
             return None
 
-        if page_range is None:
+        if len(page_range) == 0:
             # human input page range is 1-indexed
             page_range = range(1,len(output.pages)+1)
         else:
@@ -224,17 +220,26 @@ class LayerFilter():
             print(_('Processing layers in page {}...'.format(p)))
             # apply the filter and reassign the page contents
             newstream = self.filter_content(output.pages[p-1])
-            
-            if newstream:
-                output.pages[p-1].Contents = output.make_stream(newstream)
+            output.pages[p-1].Contents = output.make_stream(newstream)
 
             # check if there are form xobjects, and if so, filter them as well
             if '/XObject' in output.pages[p-1].Resources.keys():
                 for k in output.pages[p-1].Resources.XObject.keys():
-                    if output.pages[p-1].Resources.XObject[k].Subtype == pikepdf.Name('/Form'):
-                        newstream = self.filter_content(output.pages[p-1].Resources.XObject[k])
-                        if newstream:
-                            output.pages[p-1].Resources.XObject[k].write(newstream)
+                    xobj = output.pages[p-1].Resources.XObject[k]
+                    if '/OC' in xobj.keys():
+                        # if we don't want to keep it, just blank it out
+                        oc = str(xobj.OC.Name)
+                        if oc in self.keep_ocs:
+                            if oc in self.line_props.keys():
+                                newstream = self.filter_content(xobj,layer=oc)
+                                xobj.write(newstream)
+                        else:
+                            newstream = b''
+                            xobj.write(newstream)
+                    else:
+                        if xobj.Subtype == pikepdf.Name('/Form'):
+                            newstream = self.filter_content(xobj)
+                            xobj.write(newstream)
         
         # edit the OCG listing in the root
         OCGs = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]

@@ -465,12 +465,13 @@ class SewGUI(wx.Frame):
             if self.out_doc_path is None:
                 return
 
-        if do_tile:
+        if do_layers:
             # set up the layer filter
             self.layer_filter.keep_ocs = self.lt.get_selected_layers()
             self.layer_filter.line_props = self.lt.line_props
             self.layer_filter.keep_non_oc = bool(self.lt.include_nonoc.GetValue())
 
+        if do_tile:
             # set all the various options of the tiler
             # define the page order
             self.tiler.set_col_major(self.tt.col_row_order_combo.GetSelection())
@@ -606,6 +607,6 @@ if __name__ == '__main__':
 
     frm = SewGUI(None, title=_('PDF Stitcher'),size=(w,h))
 
-    frm.load_file(r"C:\Users\cfcur\Google Drive\Sewing\ClosetCaseFIles\BombshellSwimsuit_Letter-A4.pdf")
+    frm.load_file(r"C:\Users\cfcur\Downloads\Projector_SINCLAIR_S1065_PETITE-EI_Harper_knit_cardigan_and_duster_US0-US30_RL519.pdf")
     frm.Show()
     app.MainLoop()
