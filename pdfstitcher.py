@@ -676,6 +676,5 @@ if __name__ == '__main__':
 
     frm = SewGUI(None, title=_('PDF Stitcher'),size=(w,h))
 
-    frm.load_file(r"C:\Users\curtcha\Downloads\jalie_2679_veste_sport_jacket_pieces.pdf")
     frm.Show()
     app.MainLoop()
