@@ -259,7 +259,7 @@ class LayersTab(wx.Panel):
         self.include_nonoc.SetValue(1)
         layer_sizer.Add(self.include_nonoc,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=5)
 
-        self.select_all = wx.CheckBox(layer_pane,label=_('Select all'))
+        self.select_all = wx.CheckBox(layer_pane,label=_('Deselect all'))
         self.select_all.Bind(wx.EVT_CHECKBOX, self.on_select_all)
         layer_sizer.Add(self.select_all,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=5)
         
@@ -277,11 +277,8 @@ class LayersTab(wx.Panel):
         layer_opt_pane.SetSizer(layer_opt_sizer)
         
         # line properties
-        self.line_prop_label = wx.StaticText(layer_opt_pane,label=_('Select a layer to modify line properties'))
-        layer_opt_sizer.Add(self.line_prop_label,flag=wx.LEFT|wx.TOP,border=10)
-        newline = wx.BoxSizer(wx.HORIZONTAL)
-
         # colour
+        newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Colour') + ':'),flag=wx.LEFT,border=10)
         self.line_colour_ctrl = wx.ColourPickerCtrl(layer_opt_pane)
         newline.Add(self.line_colour_ctrl,flag=wx.LEFT,border=5)
@@ -289,7 +286,7 @@ class LayersTab(wx.Panel):
         
         # thickness
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Thickness (pt)') + ':'),flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
+        newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Thickness') + ':'),flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
         self.line_thick_ctrl = wx.TextCtrl(layer_opt_pane,size=(60,-1),value='1')
         newline.Add(self.line_thick_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
         unit_choice = [_('pt'),_('in'),_('cm')]
@@ -315,6 +312,16 @@ class LayersTab(wx.Panel):
         newline.Add(self.reset_ls_btn,flag=wx.LEFT,border=5)
         layer_opt_sizer.Add(newline,flag=wx.TOP,border=10)
 
+        # apply to checked
+        newline = wx.BoxSizer(wx.HORIZONTAL)
+        self.apply_ls_all = wx.Button(layer_opt_pane,label=_('Apply to checked'))
+        self.apply_ls_all.Bind(wx.EVT_BUTTON,self.apply_all_pressed)
+        self.reset_all = wx.Button(layer_opt_pane,label=_('Reset checked'))
+        self.reset_all.Bind(wx.EVT_BUTTON,self.reset_all_pressed)
+        newline.Add(self.apply_ls_all,flag=wx.LEFT,border=5)
+        newline.Add(self.reset_all,flag=wx.LEFT,border=5)
+        layer_opt_sizer.Add(newline,flag=wx.TOP,border=5)
+
         # Final assembly
         self.layer_splitter.SplitVertically(layer_pane,layer_opt_pane)
         self.layer_splitter.SetSashGravity(0.5)
@@ -327,26 +334,23 @@ class LayersTab(wx.Panel):
         self.SetBackgroundColour(parent.GetBackgroundColour())
         self.line_props = {}
     
-    def apply_ls_pressed(self,event):
-        sel = self.layer_list.GetFirstSelected()
+    def apply_ls(self,layer):
         line_thick = utils.txt_to_float(self.line_thick_ctrl.GetValue())
         
-        if sel == -1 or line_thick is None:
-            return
+        if line_thick is None:
+            return None, None
 
         units = self.line_thick_units.GetStringSelection()
         if units == '':
             units = _('pt')
 
         line_str = f'{line_thick} {units} {self.style_names[self.line_style_ctrl.GetSelection()]}'
-        self.layer_list.SetItem(sel,1,line_str)
 
         if units == _('in'):
             line_thick = line_thick*72
         elif units == _('cm'):
             line_thick = line_thick*72/2.54
-
-        layer = self.layer_list.GetItemText(sel,0)
+        
         colour = self.line_colour_ctrl.GetColour()
         # ignore alpha
         rgb = [val/255 for val in colour.Get()[:3]]
@@ -357,8 +361,32 @@ class LayersTab(wx.Panel):
             'style': self.line_style_ctrl.GetSelection()
         }
 
-        self.layer_list.SetItemTextColour(sel,colour)
-        return
+        return line_str, colour
+
+    def apply_ls_pressed(self,event):
+        sel = self.layer_list.GetFirstSelected()
+        
+        if sel == -1:
+            return
+
+        layer = self.layer_list.GetItemText(sel,0)
+        line_str,colour = self.apply_ls(layer)
+
+        if line_str is not None:
+            self.layer_list.SetItem(sel,1,line_str)
+            self.layer_list.SetItemTextColour(sel,colour)
+    
+    def apply_all_pressed(self,event):
+        n_layers = self.layer_list.GetItemCount()
+         
+        for i in range(n_layers):
+            if self.layer_list.IsItemChecked(i):
+                layer = self.layer_list.GetItemText(i,0)
+                line_str,colour = self.apply_ls(layer)
+
+                if line_str is not None:
+                    self.layer_list.SetItem(i,1,line_str)
+                    self.layer_list.SetItemTextColour(i,colour)
 
     def reset_ls_pressed(self,event):
         sel = self.layer_list.GetFirstSelected()
@@ -369,10 +397,23 @@ class LayersTab(wx.Panel):
 
         self.layer_list.SetItem(sel,1,'')
         self.layer_list.SetItemTextColour(sel,wx.Colour(0,0,0))
-        return
+    
+    def reset_all_pressed(self,event):
+        n_layers = self.layer_list.GetItemCount()
+         
+        for i in range(n_layers):
+            if self.layer_list.IsItemChecked(i):
+                layer = self.layer_list.GetItemText(i,0)
+
+                if layer in self.line_props:
+                    del self.line_props[layer]
+
+                self.layer_list.SetItem(i,1,'')
+                self.layer_list.SetItemTextColour(i,wx.Colour(0,0,0))
     
     def on_layer_selected(self,event):
-        self.line_prop_label.SetLabel(_('Modify line properties for layer') + ' ' + event.Label)
+        self.apply_ls_btn.SetLabel(_('Apply to') + ' ' + event.Label)
+        self.reset_ls_btn.SetLabel(_('Reset') + ' ' + event.Label)
 
     def load_new(self,layers):
         if not layers:
@@ -398,7 +439,13 @@ class LayersTab(wx.Panel):
             self.layer_list.CheckItem(i,select)
 
     def on_select_all(self,event):
+        is_checked = event.GetSelection()
         self.set_all_checked(event.GetSelection())
+
+        if is_checked:
+            self.select_all.SetLabel(_('Deselect all'))
+        else:
+            self.select_all.SetLabel(_('Select all'))
     
     def get_selected_layers(self):
         n_layers = self.layer_list.GetItemCount()
