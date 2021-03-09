@@ -18,8 +18,10 @@ import wx
 from wx.lib.masked import NumCtrl
 from tile_pages import *
 from layerfilter import *
+from pagefilter import *
 import os
 import sys
+import utils 
 
 # localization stuff
 import gettext
@@ -82,12 +84,21 @@ class IOTab(wx.Panel):
         newline.Add(self.output_fname_display, flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
-        # checklist of features to enable/disable
+        # Output options
         vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)        
         lbl = wx.StaticText(self, label=_('Output Options'))
         lbl.SetFont(lbl.GetFont().Bold())
         vert_sizer.Add(lbl, flag=wx.TOP|wx.LEFT, border=5)
         
+        # Page Range
+        newline = wx.BoxSizer(wx.HORIZONTAL)
+        newline.Add(wx.StaticText(self, label=_('Page Range') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
+        self.page_range_txt = wx.TextCtrl(self)
+        self.page_range_txt.SetToolTip(wx.ToolTip(_('Pages assemble in specified order. 0 inserts a blank page.')))
+        newline.Add(self.page_range_txt,proportion=1,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
+        vert_sizer.Add(newline,flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        
+        # checklist of features to enable/disable
         self.do_layers = wx.CheckBox(self,label=_('Process Layers'))
         self.do_layers.SetValue(1)
         vert_sizer.Add(self.do_layers,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
@@ -102,34 +113,29 @@ class IOTab(wx.Panel):
         vert_sizer.Add(self.output_description,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
         self.on_option_checked(event=None)
 
-        # unit selection
-        vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)        
-        unit_opts = [_('Inches'),_('Centimetres')]     
-        self.unit_box = wx.RadioBox(self,label=_('Units'),choices=unit_opts,style=wx.RA_SPECIFY_COLS)
-        vert_sizer.Add(self.unit_box,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
-
         self.SetSizer(vert_sizer)
         self.SetBackgroundColour(parent.GetBackgroundColour())
 
     def load_new(self,in_doc):
         self.input_fname_display.SetLabel(in_doc.filename)
         self.output_fname_display.SetLabel(label=_('None'))
+        self.page_range_txt.SetValue('1-{}'.format(len(in_doc.pages)))
     
     def on_option_checked(self,event):
         do_layers = bool(self.do_layers.GetValue())
         do_tile = bool(self.do_tile.GetValue())
         
         if do_layers and do_tile:
-            self.output_description.SetLabel(_('Process layers with options selected in layers tab, then tile pages and save'))
+            self.output_description.SetLabel(_('Process layers then tile pages and save'))
         
         if do_layers and not do_tile:
-            self.output_description.SetLabel(_('Process layers with options selected in layers tab and save without tiling pages'))
+            self.output_description.SetLabel(_('Process layers and save without tiling pages'))
 
         if do_tile and not do_layers:
             self.output_description.SetLabel(_('Tile pages and save without processing layers'))
 
         if not do_tile and not do_layers:
-            self.output_description.SetLabel(_('Open and save the PDF without modifying'))
+            self.output_description.SetLabel(_('Open the PDF and save selected page range without modifying'))
     
 
 class TileTab(wx.Panel):
@@ -142,14 +148,6 @@ class TileTab(wx.Panel):
         lbl = wx.StaticText(self, label=_('Required Parameters'))
         lbl.SetFont(lbl.GetFont().Bold())
         vert_sizer.Add(lbl, flag=wx.TOP|wx.LEFT, border=5)
-
-        # Page Range
-        newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(self, label=_('Page Range') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
-        self.page_range_txt = wx.TextCtrl(self)
-        self.page_range_txt.SetToolTip(wx.ToolTip(_('Pages assemble in specified order. 0 inserts a blank page.')))
-        newline.Add(self.page_range_txt,proportion=1,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
-        vert_sizer.Add(newline,flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
         # Columns/Rows
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -189,6 +187,11 @@ class TileTab(wx.Panel):
         lbl = wx.StaticText(self, label=_('Optional Parameters'))
         lbl.SetFont(lbl.GetFont().Bold())
         vert_sizer.Add(lbl,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+
+        # unit selection      
+        unit_opts = [_('Inches'),_('Centimetres')]     
+        self.unit_box = wx.RadioBox(self,label=_('Units'),choices=unit_opts,style=wx.RA_SPECIFY_COLS)
+        vert_sizer.Add(self.unit_box,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
         # override trimbox - sometimes needed for wonky PDFs
         self.override_trim = wx.CheckBox(self,label=_('Set TrimBox to MediaBox'))
@@ -234,9 +237,6 @@ class TileTab(wx.Panel):
 
         self.SetSizer(vert_sizer)
         self.SetBackgroundColour(parent.GetBackgroundColour())
-
-    def load_new(self,in_doc):
-        self.page_range_txt.SetValue('1-{}'.format(len(in_doc.pages)))
 
 class LayersTab(wx.Panel):
     def __init__(self,parent):
@@ -290,8 +290,11 @@ class LayersTab(wx.Panel):
         # thickness
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Thickness (pt)') + ':'),flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
-        self.line_thick_ctrl = wx.TextCtrl(layer_opt_pane,size=(30,-1),value='1')
+        self.line_thick_ctrl = wx.TextCtrl(layer_opt_pane,size=(60,-1),value='1')
         newline.Add(self.line_thick_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
+        unit_choice = [_('pt'),_('in'),_('cm')]
+        self.line_thick_units = wx.ComboBox(layer_opt_pane,value=unit_choice[0],choices=unit_choice)
+        newline.Add(self.line_thick_units,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
         layer_opt_sizer.Add(newline,flag=wx.TOP,border=10)
 
         # style
@@ -326,10 +329,22 @@ class LayersTab(wx.Panel):
     
     def apply_ls_pressed(self,event):
         sel = self.layer_list.GetFirstSelected()
-        line_thick = txt_to_float(self.line_thick_ctrl.GetValue())
+        line_thick = utils.txt_to_float(self.line_thick_ctrl.GetValue())
         
         if sel == -1 or line_thick is None:
             return
+
+        units = self.line_thick_units.GetStringSelection()
+        if units == '':
+            units = _('pt')
+
+        line_str = f'{line_thick} {units} {self.style_names[self.line_style_ctrl.GetSelection()]}'
+        self.layer_list.SetItem(sel,1,line_str)
+
+        if units == _('in'):
+            line_thick = line_thick*72
+        elif units == _('cm'):
+            line_thick = line_thick*72/2.54
 
         layer = self.layer_list.GetItemText(sel,0)
         colour = self.line_colour_ctrl.GetColour()
@@ -342,8 +357,6 @@ class LayersTab(wx.Panel):
             'style': self.line_style_ctrl.GetSelection()
         }
 
-        line_str = f'{line_thick} pt {self.style_names[self.line_style_ctrl.GetSelection()]}'
-        self.layer_list.SetItem(sel,1,line_str)
         self.layer_list.SetItemTextColour(sel,colour)
         return
 
@@ -465,35 +478,42 @@ class SewGUI(wx.Frame):
             if self.out_doc_path is None:
                 return
 
+        # global options
+        page_range = utils.parse_page_range(self.io.page_range_txt.GetValue())
+
+        if page_range is None:
+            return
+
         if do_layers:
             # set up the layer filter
             self.layer_filter.keep_ocs = self.lt.get_selected_layers()
             self.layer_filter.line_props = self.lt.line_props
             self.layer_filter.keep_non_oc = bool(self.lt.include_nonoc.GetValue())
+            self.layer_filter.page_range = page_range
 
         if do_tile:
             # set all the various options of the tiler
             # define the page order
-            self.tiler.set_col_major(self.tt.col_row_order_combo.GetSelection())
-            self.tiler.set_right_left(self.tt.left_right_combo.GetSelection())
-            self.tiler.set_bottom_top(self.tt.top_bottom_combo.GetSelection())
-            self.tiler.set_page_range(self.tt.page_range_txt.GetValue())
+            self.tiler.col_major = bool(self.tt.col_row_order_combo.GetSelection())
+            self.tiler.right_to_left = bool(self.tt.left_right_combo.GetSelection())
+            self.tiler.bottom_to_top = bool(self.tt.top_bottom_combo.GetSelection())
+            self.tiler.page_range = page_range
 
             # set the optional stuff
-            self.tiler.set_units(self.io.unit_box.GetSelection())
-            self.tiler.set_rotation(self.tt.rotate_combo.GetSelection())
+            self.tiler.units = (self.tt.unit_box.GetSelection())
+            self.tiler.rotation = (self.tt.rotate_combo.GetSelection())
 
             # margins
-            self.tiler.set_margin(txt_to_float(self.tt.margin_txt.GetValue()))
+            self.tiler.margin = utils.txt_to_float(self.tt.margin_txt.GetValue())
 
             # trim
             trim = [0.0]*4
-            trim[0] = txt_to_float(self.tt.left_trim_txt.GetValue())
-            trim[1] = txt_to_float(self.tt.right_trim_txt.GetValue())
-            trim[2] = txt_to_float(self.tt.top_trim_txt.GetValue())
-            trim[3] = txt_to_float(self.tt.bottom_trim_txt.GetValue())
+            trim[0] = utils.txt_to_float(self.tt.left_trim_txt.GetValue())
+            trim[1] = utils.txt_to_float(self.tt.right_trim_txt.GetValue())
+            trim[2] = utils.txt_to_float(self.tt.top_trim_txt.GetValue())
+            trim[3] = utils.txt_to_float(self.tt.bottom_trim_txt.GetValue())
             self.tiler.set_trim(trim)
-            self.tiler.set_trim_overlap(bool(self.tt.trim_overlap_combo.GetSelection()))
+            self.tiler.actually_trim = bool(self.tt.trim_overlap_combo.GetSelection())
             self.tiler.override_trim = self.tt.override_trim.GetValue()
 
             # rows/cols
@@ -505,16 +525,19 @@ class SewGUI(wx.Frame):
         # do it
         try:
             if do_layers:
-                filtered = self.layer_filter.run(self.tiler.page_range)
+                filtered = self.layer_filter.run()
             else:
                 filtered = self.in_doc
 
             if do_tile:
-                self.tiler.set_input(filtered)
+                self.tiler.in_doc = filtered
                 new_doc = self.tiler.run(rows,cols)
                 print(_('Tiling successful'))
             else:
-                new_doc = filtered
+                # extract the requested pages
+                page_filter = PageFilter(filtered)
+                page_filter.page_range = page_range
+                new_doc = page_filter.run()
                 
         except Exception as e:
             print(_('Something went wrong'))
@@ -587,7 +610,6 @@ class SewGUI(wx.Frame):
             self.lt.load_new(self.layer_filter.get_layer_names())
 
             self.tiler = PageTiler()
-            self.tt.load_new(self.in_doc)
             
             # clear the output if it's already set
             self.out_doc_path = None
@@ -607,6 +629,6 @@ if __name__ == '__main__':
 
     frm = SewGUI(None, title=_('PDF Stitcher'),size=(w,h))
 
-    frm.load_file(r"C:\Users\cfcur\Downloads\Projector_SINCLAIR_S1065_PETITE-EI_Harper_knit_cardigan_and_duster_US0-US30_RL519.pdf")
+    frm.load_file(r"C:\Users\curtcha\Downloads\jalie_2679_veste_sport_jacket_pieces.pdf")
     frm.Show()
     app.MainLoop()

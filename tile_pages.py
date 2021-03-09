@@ -21,18 +21,7 @@ import argparse
 import sys
 import math
 import copy
-
-def txt_to_float(txt):
-    if txt is None or not txt.strip():
-        return 0
-
-    try:
-        txtnum = float(txt.replace(',','.'))
-    except:
-        print(_('Invalid input') + txt + ' , ' + _('only numeric values allowed'))
-        return None
-    
-    return txtnum
+import utils
 
 class PageTiler():
     def __init__(self,in_doc = None):
@@ -50,25 +39,6 @@ class PageTiler():
         self.col_major = False
         self.right_to_left = False
         self.bottom_to_top = False
-    
-    def set_input(self,doc):
-        self.in_doc = doc
-
-    def set_col_major(self,val):
-        self.col_major = bool(val)
-    
-    def set_right_left(self,val):
-        self.right_to_left = bool(val)
-    
-    def set_bottom_top(self,val):
-        self.bottom_to_top = bool(val)
-
-    def set_units(self,units=0):
-        self.units = units
-    
-    def set_rotation(self,rot):
-        # 0 = None, 1 = Clockwise, 2 = Counter Clockwise
-        self.rotation = rot
 
     def units_to_px(self,val):
         pxval = val*72
@@ -97,34 +67,11 @@ class PageTiler():
         else:
             print(_('Invalid trim value specified, ignoring'))
             self.trim = [0,0,0,0]
-    
-    def set_trim_overlap(self,actually_trim):
-        self.actually_trim = actually_trim
-        
-    def set_margin(self,margin):
-        self.margin = margin
-
-    def set_page_range(self,ptext=""):
-        # parse out the requested pages. Note that this allows for pages to be repeated and out of order.
-        self.page_range = []
-        
-        if ptext:
-            for r in [p.split('-') for p in ptext.split(',')]:
-                if len(r) == 1:
-                    self.page_range.append(int(r[0]))
-                else:
-                    self.page_range += list(range(int(r[0]),int(r[-1])+1))
-            
-        if len(self.page_range) == 0:
-            self.page_range = list(range(1,len(self.in_doc.pages)+1))
 
     def run(self,rows=0,cols=0):
         if self.in_doc is None:
             print(_('Input document not loaded'))
             return
-
-        if len(self.page_range) == 0:
-            self.set_page_range()
         
         # initialize a new document and copy over the layer info (OCGs) if it exists
         new_doc = pikepdf.Pdf.new()
@@ -366,11 +313,11 @@ def main(args):
 
     if args.margins is not None:
         # all the docs/examples seem to assume 72 dpi all the time
-        margin = txt_to_float(args.margins)
+        margin = utils.txt_to_float(args.margins)
         tiler.set_margin(margin)
 
     if args.trim is not None:
-        trim = [txt_to_float(t) for t in args.trim.split(',')]
+        trim = [utils.txt_to_float(t) for t in args.trim.split(',')]
         tiler.set_trim(trim)
     
     if args.rotate is not None:
@@ -394,26 +341,3 @@ def main(args):
         success = False
 
     return new_doc, success
-
-def parse_arguments():
-    parser = argparse.ArgumentParser(description='Tile pdf pages into one document.',
-                                 epilog='Note: If both rows and columns are specified, rows are ignored. ' + 
-                                        'To insert a blank page, include a zero in the page list.')
-
-    parser.add_argument('input',help='Input filename (pdf)')
-    parser.add_argument('output',help='Output filename (pdf)')
-    parser.add_argument('-p','--pages',help='Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: entire document.')
-    parser.add_argument('-r','--rows',help='Number of rows in tiled grid.')
-    parser.add_argument('-c','--columns',help='Number of columns in tiled grid.')
-    parser.add_argument('-m','--margins',help='Margin size in inches.')
-    parser.add_argument('-t','--trim',help='Amount to trim from edges ' +
-                        'given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from left and top)')
-    parser.add_argument('-R','--rotate',help='Rotate pages (0 for none, 1 for clockwise, 2 for counterclockwise)')
-
-    return parser.parse_args()
-
-if __name__ == "__main__":
-    args = parse_arguments()
-    new_doc, success = main(args)
-
-    subprocess.call(args.output,shell=True)

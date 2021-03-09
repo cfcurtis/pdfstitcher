@@ -30,6 +30,7 @@ class LayerFilter():
         self.pdf = doc
         self.keep_ocs = 'all'
         self.keep_non_oc = True
+        self.page_range = []
 
         self.line_props = {}
         self.colour_type = None
@@ -197,8 +198,7 @@ class LayerFilter():
         else:
             return input
 
-    def run(self,page_range = []):
-
+    def run(self):
         # open a new copy of the input
         output = pikepdf.Pdf.open(self.pdf.filename)
         self.colour_type = None
@@ -210,12 +210,12 @@ class LayerFilter():
             print(_('No layers selected, generated PDF woud be blank.'))
             return None
 
-        if len(page_range) == 0:
+        if len(self.page_range) == 0:
             # human input page range is 1-indexed
             page_range = range(1,len(output.pages)+1)
         else:
             # get rid of duplicates and zeros in the page range
-            page_range = list(set([p for p in page_range if p > 0]))
+            page_range = list(set([p for p in self.page_range if p > 0]))
 
         # change the decimal precision because it's really high
         for p in page_range:
@@ -229,13 +229,19 @@ class LayerFilter():
                 for k in output.pages[p-1].Resources.XObject.keys():
                     xobj = output.pages[p-1].Resources.XObject[k]
                     if '/OC' in xobj.keys():
-                        # if we don't want to keep it, just blank it out
-                        oc = str(xobj.OC.Name)
+                        oc = None
+                        if '/Name' in xobj.OC.keys():
+                            oc = str(xobj.OC.Name)
+                        
+                        elif '/OCGs' in xobj.OC.keys() and '/Name' in xobj.OC.OCGs.keys():
+                            oc = str(xobj.OC.OCGs.keys())
+                        
                         if oc in self.keep_ocs:
                             if oc in self.line_props.keys():
                                 newstream = self.filter_content(xobj,layer=oc)
                                 xobj.write(newstream)
                         else:
+                            # if we don't want to keep it, just blank it out
                             newstream = b''
                             xobj.write(newstream)
                     else:
