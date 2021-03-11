@@ -16,7 +16,7 @@
 
 from os import write
 import pikepdf
-from wx.core import ModalDialogHook
+from wx import Yield, ProgressDialog
 import pdf_operators as pdf_ops
 from decimal import Decimal
 
@@ -198,7 +198,7 @@ class LayerFilter():
         else:
             return input
 
-    def run(self):
+    def run(self,progress_dlg):
         # open a new copy of the input
         output = pikepdf.Pdf.open(self.pdf.filename)
         self.colour_type = None
@@ -217,9 +217,13 @@ class LayerFilter():
             # get rid of duplicates and zeros in the page range
             page_range = list(set([p for p in self.page_range if p > 0]))
 
+        n_page = len(page_range)
+        progress_dlg.SetRange(n_page)
+        Yield()
+
         # change the decimal precision because it's really high
         for p in page_range:
-            print(_('Processing layers in page {}...'.format(p)))
+            # print(_('Processing layers in page {}...'.format(p)))
             # apply the filter and reassign the page contents
             newstream = self.filter_content(output.pages[p-1])
             output.pages[p-1].Contents = output.make_stream(newstream)
@@ -248,6 +252,12 @@ class LayerFilter():
                         if xobj.Subtype == pikepdf.Name('/Form'):
                             newstream = self.filter_content(xobj)
                             xobj.write(newstream)
+            
+            progress_dlg.Update(page_range.index(p))
+            Yield()
+            
+            if progress_dlg.WasCancelled():
+                return None
         
         # edit the OCG listing in the root
         OCGs = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]

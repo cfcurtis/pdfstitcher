@@ -308,9 +308,9 @@ class LayersTab(wx.Panel):
         self.apply_ls_btn.Bind(wx.EVT_BUTTON,self.apply_ls_pressed)
         self.reset_ls_btn = wx.Button(layer_opt_pane,label=_('Reset'))
         self.reset_ls_btn.Bind(wx.EVT_BUTTON,self.reset_ls_pressed)
-        newline.Add(self.apply_ls_btn,flag=wx.LEFT,border=5)
-        newline.Add(self.reset_ls_btn,flag=wx.LEFT,border=5)
-        layer_opt_sizer.Add(newline,flag=wx.TOP,border=10)
+        newline.Add(self.apply_ls_btn,proportion=1,flag=wx.EXPAND|wx.LEFT,border=5)
+        newline.Add(self.reset_ls_btn,proportion=1,flag=wx.EXPAND|wx.LEFT,border=5)
+        layer_opt_sizer.Add(newline,flag=wx.TOP|wx.EXPAND,border=10)
 
         # apply to checked
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -498,7 +498,7 @@ class SewGUI(wx.Frame):
         sys.stderr = self.log
 
         splitter.SplitHorizontally(nb,pnl)
-        splitter.SetSashPosition(int(kw['size'][1]*5/8))
+        splitter.SetSashPosition(int(kw['size'][1]*3/4))
         splitter.SetMinimumPaneSize(40)
 
         self.in_doc = None
@@ -510,6 +510,8 @@ class SewGUI(wx.Frame):
 
         if language_warning:
             print(language_warning)
+        
+        self.make_menu_bar()
     
     def on_go_pressed(self,event):
         # retrieve the selected options
@@ -529,7 +531,8 @@ class SewGUI(wx.Frame):
         page_range = utils.parse_page_range(self.io.page_range_txt.GetValue())
 
         if page_range is None:
-            return
+            print(_('No page range specified, defaulting to all'))
+            page_range = list(range(1,len(self.in_doc.pages) + 1))
 
         if do_layers:
             # set up the layer filter
@@ -572,9 +575,14 @@ class SewGUI(wx.Frame):
         # do it
         try:
             if do_layers:
-                filtered = self.layer_filter.run()
+                progress = wx.ProgressDialog('Processing layers',
+                    'Processing layers, please wait',style=wx.PD_CAN_ABORT)
+                filtered = self.layer_filter.run(progress)
             else:
                 filtered = self.in_doc
+
+            if filtered is None:
+                return
 
             if do_tile:
                 self.tiler.in_doc = filtered
@@ -602,15 +610,16 @@ class SewGUI(wx.Frame):
         # Make a file menu with load and exit items
         fileMenu = wx.Menu()
         openItem = fileMenu.Append(wx.ID_OPEN)
+        saveAsItem = fileMenu.Append(wx.ID_SAVEAS)
         exitItem = fileMenu.Append(wx.ID_EXIT)
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, '&File')
         self.SetMenuBar(menuBar)
         self.Bind(wx.EVT_MENU, self.on_open, openItem)
+        self.Bind(wx.EVT_MENU, self.on_output, saveAsItem)
         self.Bind(wx.EVT_MENU, self.on_exit,  exitItem)
 
     def on_exit(self, event):
-        self.in_doc.Close()
         self.Close(True)
 
     def on_output(self, event):
@@ -671,8 +680,8 @@ if __name__ == '__main__':
     disp_h = wx.Display().GetGeometry().GetHeight()
     disp_w = wx.Display().GetGeometry().GetWidth()
 
-    h = min(int(disp_h*0.8),800)
-    w = min(int(disp_w*0.4),600)
+    h = min(int(disp_h*0.85),800)
+    w = min(int(disp_w*0.5),600)
 
     frm = SewGUI(None, title=_('PDF Stitcher'),size=(w,h))
 
