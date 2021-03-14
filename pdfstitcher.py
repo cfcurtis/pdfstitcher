@@ -702,7 +702,8 @@ if __name__ == '__main__':
     h = min(int(disp_h*0.85),800)
     w = min(int(disp_w*0.5),600)
 
-    frm = SewGUI(None, title=_('PDF Stitcher'),size=(w,h))
+    version = 'v0.4-alpha.2'
+    frm = SewGUI(None, title=_('PDF Stitcher') + ' ' + version,size=(w,h))
 
     frm.Show()
     app.MainLoop()
