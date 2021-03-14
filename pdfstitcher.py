@@ -109,7 +109,7 @@ class IOTab(wx.Panel):
         vert_sizer.Add(self.do_tile,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
         
         # describe what the options mean
-        self.output_description = wx.StaticText(self, label=_(''))
+        self.output_description = wx.StaticText(self, label='')
         vert_sizer.Add(self.output_description,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
         self.on_option_checked(event=None)
 
