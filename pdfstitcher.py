@@ -278,15 +278,20 @@ class LayersTab(wx.Panel):
         
         # line properties
         # colour
+        layer_opt_sizer.Add(wx.StaticText(layer_opt_pane,label=_('Select line properties to modify')))
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Colour') + ':'),flag=wx.LEFT,border=10)
+        self.enable_colour = wx.CheckBox(layer_opt_pane,label=_('Line Colour') + ':')
+        self.enable_colour.SetValue(1)
+        newline.Add(self.enable_colour,flag=wx.LEFT,border=10)
         self.line_colour_ctrl = wx.ColourPickerCtrl(layer_opt_pane)
         newline.Add(self.line_colour_ctrl,flag=wx.LEFT,border=5)
         layer_opt_sizer.Add(newline,flag=wx.TOP,border=30)        
         
         # thickness
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Thickness') + ':'),flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
+        self.enable_thickness = wx.CheckBox(layer_opt_pane,label=_('Line Thickness') + ':')
+        self.enable_thickness.SetValue(1)
+        newline.Add(self.enable_thickness,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
         self.line_thick_ctrl = wx.TextCtrl(layer_opt_pane,size=(60,-1),value='1')
         newline.Add(self.line_thick_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
         unit_choice = [_('pt'),_('in'),_('cm')]
@@ -296,7 +301,9 @@ class LayersTab(wx.Panel):
 
         # style
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(layer_opt_pane,label=_('Line Style') + ':'),flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
+        self.enable_style = wx.CheckBox(layer_opt_pane,label=_('Line Style') + ':')
+        self.enable_style.SetValue(1)
+        newline.Add(self.enable_style,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
         self.style_names = (_('Solid'),_('Dashed'),_('Dotted'))
         self.line_style_ctrl = wx.ComboBox(layer_opt_pane,choices=self.style_names, value=self.style_names[0], style=wx.CB_READONLY)
         newline.Add(self.line_style_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
@@ -335,31 +342,39 @@ class LayersTab(wx.Panel):
         self.line_props = {}
     
     def apply_ls(self,layer):
-        line_thick = utils.txt_to_float(self.line_thick_ctrl.GetValue())
+        line_str = ''
+        self.line_props[layer] = {}
+
+        if self.enable_thickness.IsChecked():
+            line_thick = utils.txt_to_float(self.line_thick_ctrl.GetValue())
+            
+            if line_thick is None:
+                return '', None
+
+            units = self.line_thick_units.GetStringSelection()
+            if units == '':
+                units = _('pt')
+
+            line_str += f'{line_thick} {units} '
+
+            if units == _('in'):
+                line_thick = line_thick*72
+            elif units == _('cm'):
+                line_thick = line_thick*72/2.54
+            
+            self.line_props[layer]['thickness'] = line_thick
+            
+        if self.enable_style.IsChecked():
+            line_str += f'{self.style_names[self.line_style_ctrl.GetSelection()]}'
+            self.line_props[layer]['style'] = self.line_style_ctrl.GetSelection()
         
-        if line_thick is None:
-            return None, None
-
-        units = self.line_thick_units.GetStringSelection()
-        if units == '':
-            units = _('pt')
-
-        line_str = f'{line_thick} {units} {self.style_names[self.line_style_ctrl.GetSelection()]}'
-
-        if units == _('in'):
-            line_thick = line_thick*72
-        elif units == _('cm'):
-            line_thick = line_thick*72/2.54
-        
-        colour = self.line_colour_ctrl.GetColour()
-        # ignore alpha
-        rgb = [val/255 for val in colour.Get()[:3]]
-
-        self.line_props[layer] = {
-            'rgb': rgb,
-            'thickness': line_thick,
-            'style': self.line_style_ctrl.GetSelection()
-        }
+        if self.enable_colour.IsChecked():
+            colour = self.line_colour_ctrl.GetColour()
+            # ignore alpha
+            rgb = [val/255 for val in colour.Get()[:3]]
+            self.line_props[layer]['rgb'] = rgb
+        else:
+            colour = None
 
         return line_str, colour
 
@@ -371,25 +386,30 @@ class LayersTab(wx.Panel):
 
         layer = self.layer_list.GetItemText(sel,0)
         line_str,colour = self.apply_ls(layer)
-
-        if line_str is not None:
-            self.layer_list.SetItem(sel,1,line_str)
+        self.layer_list.SetItem(sel,1,line_str)
+        
+        if colour is not None:
+            self.layer_list.SetItem(sel,1,u'\u25A0 ' + line_str)
             self.layer_list.SetItemTextColour(sel,colour)
     
     def apply_all_pressed(self,event):
         n_layers = self.layer_list.GetItemCount()
          
-        for i in range(n_layers):
-            if self.layer_list.IsItemChecked(i):
-                layer = self.layer_list.GetItemText(i,0)
+        for sel in range(n_layers):
+            if self.layer_list.IsItemChecked(sel):
+                layer = self.layer_list.GetItemText(sel,0)
                 line_str,colour = self.apply_ls(layer)
-
-                if line_str is not None:
-                    self.layer_list.SetItem(i,1,line_str)
-                    self.layer_list.SetItemTextColour(i,colour)
+                self.layer_list.SetItem(sel,1,line_str)
+                
+                if colour is not None:
+                    self.layer_list.SetItem(sel,1,u'\u25A0 ' + line_str)
+                    self.layer_list.SetItemTextColour(sel,colour)
 
     def reset_ls_pressed(self,event):
         sel = self.layer_list.GetFirstSelected()
+        if sel == -1:
+            return
+
         layer = self.layer_list.GetItemText(sel,0)
         
         if layer in self.line_props:
@@ -401,15 +421,15 @@ class LayersTab(wx.Panel):
     def reset_all_pressed(self,event):
         n_layers = self.layer_list.GetItemCount()
          
-        for i in range(n_layers):
-            if self.layer_list.IsItemChecked(i):
-                layer = self.layer_list.GetItemText(i,0)
+        for sel in range(n_layers):
+            if self.layer_list.IsItemChecked(sel):
+                layer = self.layer_list.GetItemText(sel,0)
 
                 if layer in self.line_props:
                     del self.line_props[layer]
 
-                self.layer_list.SetItem(i,1,'')
-                self.layer_list.SetItemTextColour(i,wx.Colour(0,0,0))
+                self.layer_list.SetItem(sel,1,'')
+                self.layer_list.SetItemTextColour(sel,wx.Colour(0,0,0))
     
     def on_layer_selected(self,event):
         self.apply_ls_btn.SetLabel(_('Apply to') + ' ' + event.Label)
@@ -485,15 +505,14 @@ class SewGUI(wx.Frame):
         pnl.SetSizer(vert_sizer)
 
         # the go button
-        vert_sizer.Add(wx.StaticLine(pnl, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)
         go_btn = wx.Button(pnl, label=_('Generate PDF'))
         go_btn.SetFont(go_btn.GetFont().Bold())
         go_btn.Bind(wx.EVT_BUTTON,self.on_go_pressed)
-        vert_sizer.Add(go_btn,flag=wx.ALL,border=10)
+        vert_sizer.Add(go_btn,flag=wx.ALL,border=5)
         
-        # create a log window and redirect console ouput
+        # create a log window and redirect console output
         self.log = wx.TextCtrl(pnl, style=wx.TE_MULTILINE|wx.TE_READONLY|wx.HSCROLL)
-        vert_sizer.Add(self.log,proportion=1,flag=wx.EXPAND|wx.ALL,border=10)
+        vert_sizer.Add(self.log,proportion=1,flag=wx.EXPAND|wx.ALL,border=5)
         sys.stdout = self.log
         sys.stderr = self.log
 
@@ -610,7 +629,7 @@ class SewGUI(wx.Frame):
         # Make a file menu with load and exit items
         fileMenu = wx.Menu()
         openItem = fileMenu.Append(wx.ID_OPEN)
-        saveAsItem = fileMenu.Append(wx.ID_SAVEAS)
+        saveAsItem = fileMenu.Append(wx.ID_SAVE)
         exitItem = fileMenu.Append(wx.ID_EXIT)
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, '&File')

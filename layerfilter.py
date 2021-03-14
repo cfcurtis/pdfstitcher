@@ -37,20 +37,25 @@ class LayerFilter():
     
     def convert_layer_props(self,layer_props):
         # convert the line properties from the GUI to what the PDF needs
-        layer_mod = {
-            'w': [round(Decimal(layer_props['thickness']),1)],
-            'd': list(pdf_ops.line_style_arr[layer_props['style']])
+        layer_mod = {}
+
+        w = 1
+        if 'thickness' in layer_props.keys():
+            layer_mod['w'] = [round(Decimal(layer_props['thickness']),1)]
+            w = layer_mod['w'][0]
+        
+        if 'style' in layer_props.keys():
+            layer_mod['d'] = list(pdf_ops.line_style_arr[layer_props['style']])
             # list is needed to make sure this is a copy
-        }
-        # scale the line style
-        w = layer_mod['w'][0]
-        layer_mod['d'][0] = [d*w for d in layer_mod['d'][0]]
+            # scale the line style
+            layer_mod['d'][0] = [d*w for d in layer_mod['d'][0]]
 
         # assign the colour based on colour type
-        if self.colour_type is None or self.colour_type == 'RG':
-            layer_mod['RG'] = [round(Decimal(rg),3) for rg in layer_props['rgb']]
-        elif self.colour_type == 'K':
-            layer_mod['K'] = [round(Decimal(k),3) for k in pdf_ops.rgb_to_cmyk(layer_props['rgb'])]
+        if 'rgb' in layer_props.keys():
+            if self.colour_type is None or self.colour_type == 'RG':
+                layer_mod['RG'] = [round(Decimal(rg),3) for rg in layer_props['rgb']]
+            elif self.colour_type == 'K':
+                layer_mod['K'] = [round(Decimal(k),3) for k in pdf_ops.rgb_to_cmyk(layer_props['rgb'])]
         
         # create the dictionary keeping track of modifications
         mod_applied = {key: False for key in layer_mod.keys()}
