@@ -22,6 +22,7 @@ import sys
 import math
 import copy
 import utils
+from gettext import gettext as _
 
 class PageTiler():
     def __init__(self,in_doc = None):

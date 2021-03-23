@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 # PDFStitcher is a utility to work with PDF sewing patterns.
 # Copyright (C) 2021 Charlotte Curtis
 #
