@@ -24,22 +24,45 @@ import copy
 import utils
 from gettext import gettext as _
 
-class PageTiler():
-    def __init__(self,in_doc = None):
+class PageTiler:
+    def __init__(
+            self,
+            in_doc = None,
+            page_range = None,
+            units = 0,
+            trim = [0,0,0,0],
+            margin = 0,
+            rotation = 0,
+            actually_trim = False,
+            override_trim = False,
+            col_major = False,
+            right_to_left = False,
+            bottom_to_top = False,
+            rows = None,
+            cols = None,
+        ):
+        
         self.in_doc = in_doc
-        self.page_range = []
-
+        
+        if page_range:
+            self.page_range = utils.parse_page_range(page_range)
+        else:
+            self.page_range = []
+        
         # 0 = inches, 1 = centimetres
-        self.units = 0
-        self.trim = [0,0,0,0]
-        self.margin = 0
-        self.rotation = 0
-        self.actually_trim = False
-        self.override_trim = False
+        self.units = units
+        self.set_trim(trim)
+        self.margin = margin
+        self.rotation = rotation
+        self.actually_trim = actually_trim
+        self.override_trim = override_trim
 
-        self.col_major = False
-        self.right_to_left = False
-        self.bottom_to_top = False
+        self.col_major = col_major
+        self.right_to_left = right_to_left
+        self.bottom_to_top = bottom_to_top
+        
+        self.rows = rows
+        self.cols = cols
 
     def units_to_px(self,val):
         pxval = val*72
@@ -69,7 +92,13 @@ class PageTiler():
             print(_('Invalid trim value specified, ignoring'))
             self.trim = [0,0,0,0]
 
-    def run(self,rows=0,cols=0):
+    def run(self,rows=None,cols=None):
+        
+        if rows is None:
+            rows = self.rows
+        if cols is None:
+            cols = self.cols
+        
         if self.in_doc is None:
             print(_('Input document not loaded'))
             return
