@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from gettext import gettext as _
+
 def txt_to_float(txt):
     if txt is None or not txt.strip():
         return 0
