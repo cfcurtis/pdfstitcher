@@ -45,7 +45,7 @@ class PageTiler:
 
         # 0 = inches, 1 = centimetres
         self.units = units
-        self.trim = self.set_trim(trim)
+        self.set_trim(trim)
         self.margin = margin
         self.rotation = rotation
         self.actually_trim = actually_trim
