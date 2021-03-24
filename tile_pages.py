@@ -40,6 +40,8 @@ class PageTiler:
             bottom_to_top = False,
             rows = None,
             cols = None,
+            dest_width = 21.0,
+            dest_height = 29.7,
         ):
         
         self.in_doc = in_doc
@@ -63,6 +65,14 @@ class PageTiler:
         
         self.rows = rows
         self.cols = cols
+        
+        self.dest_width = dest_width
+        self.dest_height = dest_height
+        
+        if self.dest_width:
+            self.dest_width = self.units_to_px(self.dest_width)
+        if self.dest_height:
+            self.dest_height = self.units_to_px(self.dest_height)
 
     def units_to_px(self,val):
         pxval = val*72
@@ -92,17 +102,27 @@ class PageTiler:
             print(_('Invalid trim value specified, ignoring'))
             self.trim = [0,0,0,0]
 
-    def run(self,rows=None,cols=None):
-        
-        if rows is None:
-            rows = self.rows
-        if cols is None:
-            cols = self.cols
+    def run(
+            self,
+            rows = None,
+            cols = None,
+            dest_width = None,
+            dest_height = None,
+        ):
         
         if self.in_doc is None:
             print(_('Input document not loaded'))
             return
         
+        if rows is not None:
+            self.rows = rows
+        if cols is not None:
+            self.cols = cols
+        if dest_width:
+            self.dest_width = self.units_to_px(self.dest_width)
+        if dest_height:
+            self.dest_height = self.units_to_px(self.dest_height)
+                
         # initialize a new document and copy over the layer info (OCGs) if it exists
         new_doc = pikepdf.Pdf.new()
 
@@ -112,20 +132,51 @@ class PageTiler:
 
         content_dict = pikepdf.Dictionary({})
         page_names = []
-        pw = None
-        ph = None
+        
         page_size_ref = 0
 
         page_count = len(self.in_doc.pages)
         trim = [self.units_to_px(t) for t in self.trim]
 
-        # initialize the width/height indices based on page rotation
+        # create a new document with a page big enough to contain all the tiled pages, plus requested margin
+        # figure out how big it needs to be based on requested columns/rows
+        n_tiles = len(self.page_range)
+        if self.cols == 0 and self.rows == 0:
+            # try for square
+            self.cols = math.ceil(math.sqrt(n_tiles))
+            self.rows = self.cols
+        
+        # columns take priority if both are specified
+        if self.cols > 0:
+            rrows = self.rows
+            self.rows = math.ceil(n_tiles/self.cols)
+            if rrows != self.rows and rrows != 0:
+                print(_('Warning: requested {} columns and {} rows, but {} rows are needed with {} pages').format(self.cols,rrows,self.rows,n_tiles))
+        else:
+            self.cols = math.ceil(n_tiles/self.rows)
+        
+        if self.dest_width and self.dest_height:
+            page_box_width = self.dest_width / self.cols
+            page_box_height = self.dest_height / self.rows
+            page_box_defined = True
+        else:
+            page_box_defined = False
+        
+        if page_box_defined:
+            pw = dest_width
+            ph = dest_height
+        else:
+            pw = None
+            ph = None
+        
+        # initialize the width/height indices based on source page rotation
         page_rot = 0
 
         if '/Rotate' in self.in_doc.Root.Pages.keys():
             page_rot = self.in_doc.Root.Pages.Rotate   
         
         for p in self.page_range:
+            
             if p > page_count:
                 print(_('Only {} pages in document, skipping {}').format(page_count,p))
                 continue
@@ -138,14 +189,40 @@ class PageTiler:
                     # pikepdf.pages is zero indexed, so subtract one
                     localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
 
+                    if page_box_defined:
+                        source_width = float(localpage.MediaBox[2])
+                        source_height = float(localpage.MediaBox[3])
+                        scalef_width = page_box_width / source_width
+                        scalef_height = page_box_height / source_height
+                        scale_factor = [scalef_width, scalef_height]
+                        scale_factor.sort()
+                        scale_factor = scale_factor[0]
+                    else:
+                        scale_factor = 1
+                    
+                    if page_box_defined:
+                        commands = []
+                        for operands,operator in pikepdf.parse_content_stream(localpage):
+                            commands.append([operands, operator])
+                        original_matrix = pikepdf.PdfMatrix(commands[1][0])
+                        
+                        shift_up = (page_box_height - source_height*scale_factor) / 2
+                        shift_right = (page_box_width - source_width*scale_factor) / 2
+                        
+                        new_matrix = original_matrix.scaled(scale_factor, scale_factor)
+                        commands[1][0] = pikepdf.Array([*new_matrix.shorthand])
+                        new_content_stream = pikepdf.unparse_content_stream(commands)
+                        localpage.Contents = new_doc.make_stream(new_content_stream)
+                    
+                    localpage.MediaBox = [scale_factor*float(x) for x in localpage.MediaBox]
+                    
                     if self.override_trim:
                         localpage.TrimBox = copy.copy(localpage.MediaBox)
                     
-                    # only get the width/height for the first page
                     if pw is None:
                         if '/Rotate' in localpage.keys():
                             page_rot = localpage.Rotate
-
+                        
                         if page_rot == 90 or page_rot == -90:
                             pw = float(localpage.MediaBox[3])
                             ph = float(localpage.MediaBox[2])
@@ -164,6 +241,7 @@ class PageTiler:
                             this_pw = float(localpage.MediaBox[2])
                             this_ph = float(localpage.MediaBox[3])
                         
+                        # NOTE comment out if finished with mixed size paging
                         if abs(pw - this_pw) > 1 or abs(ph - this_ph) > 1:
                             print(_('Warning: page {} is a different size from {}, output may be unpredictable'.format(p,page_size_ref)))
                     
@@ -192,29 +270,13 @@ class PageTiler:
                             localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[1]
                             localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[2]
                             localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[0]
- 
+                    
                     content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
+                    
 
                 page_names.append(pagekey)
             else:
                 page_names.append(None)
-        
-        # create a new document with a page big enough to contain all the tiled pages, plus requested margin
-        # figure out how big it needs to be based on requested columns/rows
-        n_tiles = len(page_names)
-        if cols == 0 and rows == 0:
-            # try for square
-            cols = math.ceil(math.sqrt(n_tiles))
-            rows = cols
-        
-        # columns take priority if both are specified
-        if cols > 0:
-            rrows = rows
-            rows = math.ceil(n_tiles/cols)
-            if rrows != rows and rrows != 0:
-                print(_('Warning: requested {} columns and {} rows, but {} rows are needed with {} pages').format(cols,rrows,rows,n_tiles))
-        else:
-            cols = math.ceil(n_tiles/rows)
         
         # convert the margin and trim options into pixels
         unitstr = 'cm' if self.units else 'in'
@@ -240,7 +302,7 @@ class PageTiler:
         if self.bottom_to_top:
             btstr = _('Bottom to top')
 
-        print(_('Tiling with {} rows and {} columns').format(rows,cols))
+        print(_('Tiling with {} rows and {} columns').format(self.rows,self.cols))
         print(_('Options') + ':')
         print('    ' + _('Margins') + ': {} {}'.format(self.margin,unitstr))
         print('    ' + _('Trim') + ': {} {}'.format(self.trim,unitstr))
@@ -269,16 +331,44 @@ class PageTiler:
                 order = [2,3,1,0]
                        
             # swap width and height of pages
-            tmp = ph
-            ph = pw
-            pw = tmp
+            ph, pw = pw, ph
             
             trim = [trim[o] for o in order]
         
+        i = 0
+        content_txt = ''
+        
+        for i in range(n_tiles):
+            if not page_names[i]:
+                continue
+
+            if self.col_major:
+                c = math.floor(i/self.rows)
+                r = i % self.rows
+            else:
+                r = math.floor(i/self.cols)
+                c = i % self.cols
+            
+            if self.right_to_left:
+                c = self.cols - c - 1
+            
+            if not self.bottom_to_top:
+                r = self.rows - r - 1
+            
+            x0 = margin - trim[0] + c*(pw - trim[0] - trim[1]) + o_shift[0]
+            y0 = margin - trim[3] + r*(ph - trim[2] - trim[3]) + o_shift[1]
+                        
+            # first shift to origin, then rotate, then shift to final destination
+            page_ctxt = ''
+            page_ctxt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0} {y0} cm '
+            page_ctxt += f'{page_names[i]} Do Q '
+            
+            content_txt += page_ctxt
+        
         # define the output page media box
-        width = (pw - trim[0] - trim[1])*cols
-        height = (ph - trim[2] - trim[3])*rows
-        media_box = [0,0,width + 2*margin,height + 2*margin]
+        width = (pw - trim[0] - trim[1])*self.cols
+        height = (ph - trim[2] - trim[3])*self.rows
+        media_box = [0, 0, width+2*margin, height+2*margin]
 
         if media_box[2] > 14400 or media_box[3] > 14400:
             print ('**************************************')
@@ -289,34 +379,6 @@ class PageTiler:
             print ('**************************************')
         print(_('Output size:') + ' {:0.2f} x {:0.2f} {}'.format(self.px_to_units(width + 2*margin), 
             self.px_to_units(height + 2*margin),unitstr))
-        
-        i = 0
-        content_txt = ''
-        
-        for i in range(n_tiles):
-            if not page_names[i]:
-                continue
-
-            if self.col_major:
-                c = math.floor(i/rows)
-                r = i % rows
-            else:
-                r = math.floor(i/cols)
-                c = i % cols
-            
-            if self.right_to_left:
-                c = cols - c - 1
-            
-            if not self.bottom_to_top:
-                r = rows - r - 1
-            
-            x0 = margin - trim[0] + c*(pw - trim[0] - trim[1]) + o_shift[0]
-            y0 = margin - trim[3] + r*(ph - trim[2] - trim[3]) + o_shift[1]
-
-            # don't scale, just shift and rotate
-            # first shift to origin, then rotate, then shift to final destination
-            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0} {y0} cm '
-            content_txt += f'{page_names[i]} Do Q '
 
         newpage = pikepdf.Dictionary(
             Type=pikepdf.Name.Page, 
@@ -324,7 +386,7 @@ class PageTiler:
             Resources=pikepdf.Dictionary(XObject=content_dict),
             Contents=pikepdf.Stream(new_doc,content_txt.encode())
         )
-
+        
         new_doc.pages.append(newpage)
         return new_doc
 
