@@ -40,8 +40,8 @@ class PageTiler:
             bottom_to_top = False,
             rows = None,
             cols = None,
-            dest_width = 21.0,
-            dest_height = 29.7,
+            dest_width = None,
+            dest_height = None,
         ):
         
         self.in_doc = in_doc
