@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import pikepdf
+import utils
 
 class PageFilter():
     def __init__(self,doc = None):
@@ -30,17 +31,14 @@ class PageFilter():
         if self.page_range == list(range(1,len(self.pdf.pages)+1)):
             return self.pdf
         
-        # otherwise, append all the pages and then delete the originals
-        og_range = slice(len(self.pdf.pages))
+        # otherwise, copy the selected pages to a new document
+        new_doc = utils.init_new_doc(self.pdf)
 
         for p in self.page_range:
             if p == 0:
                 mbox = self.pdf.pages[-1].MediaBox
-                self.pdf.add_blank_page(page_size=(mbox[2],mbox[3]))
+                new_doc.add_blank_page(page_size=(mbox[2],mbox[3]))
             else:
-                self.pdf.pages.append(self.pdf.pages[p-1])
-        
-        del self.pdf.pages[og_range]
-        self.pdf.remove_unreferenced_resources()
+                new_doc.pages.extend([self.pdf.pages[p-1]])
 
-        return self.pdf
+        return new_doc

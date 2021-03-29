@@ -19,6 +19,7 @@ import pikepdf
 from wx import Yield, ProgressDialog
 import pdf_operators as pdf_ops
 from decimal import Decimal
+import utils 
 
 # helper functions to dump page to file for debugging
 def write_page(fname,stream):

@@ -103,12 +103,8 @@ class PageTiler:
             print(_('Input document not loaded'))
             return
         
-        # initialize a new document and copy over the layer info (OCGs) if it exists
-        new_doc = pikepdf.Pdf.new()
-
-        if '/OCProperties' in self.in_doc.Root.keys():
-            localRoot = new_doc.copy_foreign(self.in_doc.Root)
-            new_doc.Root.OCProperties = localRoot.OCProperties
+        # initialize a new document
+        new_doc = utils.init_new_doc(self.in_doc)
 
         content_dict = pikepdf.Dictionary({})
         page_names = []

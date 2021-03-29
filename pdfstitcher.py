@@ -17,54 +17,18 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import wx
-from wx.lib.masked import NumCtrl
-from tile_pages import *
-from layerfilter import *
-from pagefilter import *
+import wx.lib.scrolledpanel as scrolled
+from tile_pages import PageTiler
+from layerfilter import LayerFilter
+from pagefilter import PageFilter
 import os
 import sys
-import utils 
+import pikepdf
+import utils
 
-# localization stuff
-import gettext
-import locale
-
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    if hasattr(sys,'_MEIPASS'):
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    else:
-        base_path = os.path.abspath('.')
-
-    return os.path.join(base_path, relative_path)
-
-language_warning = None
-
-lc = locale.getdefaultlocale()
-
-try:
-    lang = lc[0][:2]
-except:
-    lang = 'en'
-    language_warning = 'Could not detect system language, defaulting to English'
-
-if lang not in ('de','es','fr','nl','en'):
-    language_warning = 'System language code ' + lang + ' is not supported, defaulting to English.'
-
-try:
-    translate = gettext.translation('pdfstitcher', resource_path('locale'), 
-        languages=[lang], fallback=True)
-    translate.install()
-except Exception as e:
-    def _(text):
-        return text
-        
-    language_warning = e
-
-class IOTab(wx.Panel):
+class IOTab(scrolled.ScrolledPanel):
     def __init__(self,parent,main_gui):
-        wx.Panel.__init__(self, parent)
+        scrolled.ScrolledPanel.__init__(self, parent)
         
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -97,6 +61,7 @@ class IOTab(wx.Panel):
         newline.Add(wx.StaticText(self, label=_('Page Range') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.page_range_txt = wx.TextCtrl(self)
         self.page_range_txt.SetToolTip(wx.ToolTip(_('Pages assemble in specified order. 0 inserts a blank page.')))
+        self.page_range_txt.Bind(wx.EVT_TEXT, main_gui.page_range_updated)
         newline.Add(self.page_range_txt,proportion=1,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         vert_sizer.Add(newline,flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT,border=10)
         
@@ -116,6 +81,7 @@ class IOTab(wx.Panel):
         self.on_option_checked(event=None)
 
         self.SetSizer(vert_sizer)
+        self.SetupScrolling()
         self.SetBackgroundColour(parent.GetBackgroundColour())
 
     def load_new(self,in_doc):
@@ -140,11 +106,12 @@ class IOTab(wx.Panel):
             self.output_description.SetLabel(_('Open the PDF and save selected page range without modifying'))
     
 
-class TileTab(wx.Panel):
+class TileTab(scrolled.ScrolledPanel):
     def __init__(self,parent,main_gui):
-        wx.Panel.__init__(self, parent)
+        scrolled.ScrolledPanel.__init__(self, parent, -1)
 
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
+
         ## REQUIRED PARAMETERS
         vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)
         lbl = wx.StaticText(self, label=_('Required Parameters'))
@@ -183,6 +150,15 @@ class TileTab(wx.Panel):
         self.rotate_combo = wx.ComboBox(self, choices=rotate_opts, value=rotate_opts[0], style=wx.CB_READONLY)
         newline.Add(self.rotate_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=5)
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+
+        # duplicate the page range textbox here
+        newline = wx.BoxSizer(wx.HORIZONTAL)
+        newline.Add(wx.StaticText(self, label=_('Page Range') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
+        self.page_range_txt = wx.TextCtrl(self)
+        self.page_range_txt.SetToolTip(wx.ToolTip(_('Pages assemble in specified order. 0 inserts a blank page.')))
+        self.page_range_txt.Bind(wx.EVT_TEXT, main_gui.page_range_updated)
+        newline.Add(self.page_range_txt,proportion=1,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
+        vert_sizer.Add(newline,flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
         ## OPTIONAL PARAMETERS
         vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)
@@ -238,11 +214,12 @@ class TileTab(wx.Panel):
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
         self.SetSizer(vert_sizer)
+        self.SetupScrolling()
         self.SetBackgroundColour(parent.GetBackgroundColour())
 
-class LayersTab(wx.Panel):
+class LayersTab(scrolled.ScrolledPanel):
     def __init__(self,parent):
-        wx.Panel.__init__(self, parent)
+        scrolled.ScrolledPanel.__init__(self, parent)
 
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -340,6 +317,7 @@ class LayersTab(wx.Panel):
         self.layer_splitter.Hide()
 
         self.SetSizer(vert_sizer)
+        self.SetupScrolling()
         self.SetBackgroundColour(parent.GetBackgroundColour())
         self.line_props = {}
     
@@ -528,12 +506,14 @@ class SewGUI(wx.Frame):
         self.layer_filter = None
 
         self.working_dir = os.getcwd()
-
-        if language_warning:
-            print(language_warning)
-        
         self.make_menu_bar()
     
+    def page_range_updated(self,event):
+        if event.GetId() == self.io.page_range_txt.GetId():
+            self.tt.page_range_txt.ChangeValue(self.io.page_range_txt.GetValue())
+        elif event.GetId() == self.tt.page_range_txt.GetId():
+            self.io.page_range_txt.ChangeValue(self.tt.page_range_txt.GetValue())
+
     def on_go_pressed(self,event):
         # retrieve the selected options
         do_tile = bool(self.io.do_tile.GetValue())
@@ -697,6 +677,9 @@ class SewGUI(wx.Frame):
 if __name__ == '__main__':
     # When this module is run (not imported) then create the app, the
     # frame, show it, and start the event loop.
+
+    language_warning = utils.setup_locale()
+
     app = wx.App()
     disp_h = wx.Display().GetGeometry().GetHeight()
     disp_w = wx.Display().GetGeometry().GetWidth()
@@ -704,8 +687,10 @@ if __name__ == '__main__':
     h = min(int(disp_h*0.85),800)
     w = min(int(disp_w*0.5),600)
 
-    version = 'v0.4-alpha.2'
-    frm = SewGUI(None, title=_('PDF Stitcher') + ' ' + version,size=(w,h))
+    frm = SewGUI(None, title=_('PDF Stitcher') + ' ' + utils.version_string, size=(w,h))
+
+    if language_warning:
+        print(language_warning)
 
     frm.Show()
     app.MainLoop()

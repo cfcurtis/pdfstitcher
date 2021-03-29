@@ -14,7 +14,52 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from gettext import gettext as _
+import sys
+import os
+import pikepdf
+
+# localization stuff
+import gettext
+import locale
+
+version_string = 'v0.4'
+
+def setup_locale():
+    def resource_path(relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        if hasattr(sys,'_MEIPASS'):
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.abspath('.')
+
+        return os.path.join(base_path, relative_path)
+
+    language_warning = None
+
+    lc = locale.getdefaultlocale()
+
+    try:
+        lang = lc[0][:2]
+    except:
+        lang = 'en'
+        language_warning = 'Could not detect system language, defaulting to English'
+
+    if lang not in ('de','es','fr','nl','en'):
+        language_warning = 'System language code ' + lang + ' is not supported, defaulting to English.'
+
+    try:
+        translate = gettext.translation('pdfstitcher', resource_path('locale'), 
+            languages=[lang], fallback=True)
+        translate.install()
+    except Exception as e:
+        global _
+        def _(text):
+            return text
+            
+        language_warning = e
+    
+    return language_warning
 
 def txt_to_float(txt):
     if txt is None or not txt.strip():
@@ -43,3 +88,22 @@ def parse_page_range(ptext=""):
         return None
     
     return page_range
+
+def init_new_doc(pdf):
+    # initialize a new document and copy over the layer info (OCGs) if it exists
+    new_doc = pikepdf.Pdf.new()
+
+    local_root = new_doc.copy_foreign(pdf.Root)
+
+    if '/OCProperties' in local_root:
+        new_doc.Root.OCProperties = local_root.OCProperties
+    
+    if '/Metadata' in local_root:
+        for k in pdf.Root.Metadata.keys():
+            new_doc.Root.Metadata = local_root.Metadata
+    
+    with new_doc.open_metadata() as meta:
+        # update the creator info
+        meta['xmp:CreatorTool'] = 'PDFStitcher ' + version_string
+    
+    return new_doc
