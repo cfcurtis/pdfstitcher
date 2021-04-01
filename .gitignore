@@ -2,7 +2,6 @@ sewingutils.code-workspace
 .vscode/launch.json
 .vscode/.ropeproject/config.py
 .vscode/.ropeproject/objectdb
-*.svg
 dist/*
 __pycache__/*
 .vscode/*
