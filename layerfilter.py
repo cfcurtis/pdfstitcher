@@ -213,7 +213,7 @@ class LayerFilter():
             return output
         
         if self.keep_ocs is None and self.keep_non_oc == False:
-            print(_('No layers selected, generated PDF woud be blank.'))
+            print(_('No layers selected, generated PDF would be blank.'))
             return None
 
         if len(self.page_range) == 0:
