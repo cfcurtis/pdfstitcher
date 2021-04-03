@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-16 14:35-0700\n"
+"POT-Creation-Date: 2021-04-02 19:38-0600\n"
 "PO-Revision-Date: 2020-12-08 12:27-0700\n"
 "Last-Translator: Leia McFly <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -19,196 +19,337 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: pdfstitcher.py:48 pdfstitcher.py:271
+#: layerfilter.py:216
+msgid "No layers selected, generated PDF would be blank."
+msgstr ""
+
+#: pdfstitcher.py:38 pdfstitcher.py:647
 msgid "Select input PDF"
 msgstr "Selecciona PDF a combinar"
 
-#: pdfstitcher.py:51 pdfstitcher.py:59 pdfstitcher.py:104 pdfstitcher.py:291
-#: tile_pages.py:174
+#: pdfstitcher.py:41 pdfstitcher.py:49 pdfstitcher.py:89 pdfstitcher.py:148
+#: tile_pages.py:219
 msgid "None"
 msgstr "Nada"
 
-#: pdfstitcher.py:56 pdfstitcher.py:255
+#: pdfstitcher.py:46 pdfstitcher.py:628
 msgid "Save output as"
 msgstr "Guardar el nuevo PDF como"
 
-#: pdfstitcher.py:65
-msgid "Required Parameters"
-msgstr "Parámetros Requeridos"
+#: pdfstitcher.py:55
+#, fuzzy
+msgid "Output Options"
+msgstr "Opciones"
 
-#: pdfstitcher.py:71
+#: pdfstitcher.py:61 pdfstitcher.py:156
 msgid "Page Range"
 msgstr "Rango de páginas"
 
-#: pdfstitcher.py:73
+#: pdfstitcher.py:63 pdfstitcher.py:158
 msgid "Pages assemble in specified order. 0 inserts a blank page."
 msgstr ""
 "Las páginas se ensamblan en el orden especificado. Use 0 para insertar "
 "una página en blanco."
 
-#: pdfstitcher.py:79
+#: pdfstitcher.py:69
+msgid "Process Layers"
+msgstr ""
+
+#: pdfstitcher.py:72
+msgid "Tile pages"
+msgstr ""
+
+#: pdfstitcher.py:97
+msgid "Process layers then tile pages and save"
+msgstr ""
+
+#: pdfstitcher.py:100
+msgid "Process layers and save without tiling pages"
+msgstr ""
+
+#: pdfstitcher.py:103
+msgid "Tile pages and save without processing layers"
+msgstr ""
+
+#: pdfstitcher.py:106
+msgid "Open the PDF and save selected page range without modifying"
+msgstr ""
+
+#: pdfstitcher.py:117
+msgid "Required Parameters"
+msgstr "Parámetros Requeridos"
+
+#: pdfstitcher.py:123
 msgid "Number of Columns"
 msgstr "Numero de Columnas"
 
-#: pdfstitcher.py:82
+#: pdfstitcher.py:126
 msgid "Number of Rows"
 msgstr "Numero de Filas"
 
-#: pdfstitcher.py:89 tile_pages.py:182
+#: pdfstitcher.py:133 tile_pages.py:227
 msgid "Rows then columns"
 msgstr "Filas luego Columnas"
 
-#: pdfstitcher.py:89 tile_pages.py:184
+#: pdfstitcher.py:133 tile_pages.py:229
 msgid "Columns then rows"
 msgstr "Columnas luego Filas"
 
-#: pdfstitcher.py:90 tile_pages.py:186
+#: pdfstitcher.py:134 tile_pages.py:231
 msgid "Left to right"
 msgstr "Izquierda a Derecha"
 
-#: pdfstitcher.py:90 tile_pages.py:188
+#: pdfstitcher.py:134 tile_pages.py:233
 msgid "Right to left"
 msgstr "Derecha a Izquierda"
 
-#: pdfstitcher.py:91 tile_pages.py:190
+#: pdfstitcher.py:135 tile_pages.py:235
 msgid "Top to bottom"
 msgstr " De Arriba hacia abajo "
 
-#: pdfstitcher.py:91 tile_pages.py:192
+#: pdfstitcher.py:135 tile_pages.py:237
 msgid "Bottom to top"
 msgstr "De Abajo hacia arriba"
 
-#: pdfstitcher.py:93 tile_pages.py:199
+#: pdfstitcher.py:137 tile_pages.py:244
 msgid "Page order"
 msgstr "Orden de las páginas"
 
-#: pdfstitcher.py:104 tile_pages.py:177
+#: pdfstitcher.py:148 tile_pages.py:222
 msgid "Clockwise"
 msgstr "En el sentido de las manecillas del reloj"
 
-#: pdfstitcher.py:104 tile_pages.py:180
+#: pdfstitcher.py:148 tile_pages.py:225
 msgid "Counterclockwise"
 msgstr "Sentido contrario a las manecillas del reloj"
 
-#: pdfstitcher.py:105
+#: pdfstitcher.py:149
 msgid "Page Rotation"
 msgstr "Rotación de página"
 
-#: pdfstitcher.py:113
+#: pdfstitcher.py:165
 msgid "Optional Parameters"
 msgstr "Párametros Opcionales"
 
-#: pdfstitcher.py:118
+#: pdfstitcher.py:170
 msgid "Inches"
 msgstr "Pulgadas"
 
-#: pdfstitcher.py:118
+#: pdfstitcher.py:170
 msgid "Centimetres"
 msgstr "Centímetros"
 
-#: pdfstitcher.py:119
+#: pdfstitcher.py:171
 msgid "Units"
 msgstr "Unidades"
 
-#: pdfstitcher.py:125
+#: pdfstitcher.py:175
+msgid "Set TrimBox to MediaBox"
+msgstr ""
+
+#: pdfstitcher.py:176
+msgid "May help fix things when output is not as expected"
+msgstr ""
+
+#: pdfstitcher.py:181
 msgid "Margin to add to final output"
 msgstr "Margen para agregar alrededor del patron final"
 
-#: pdfstitcher.py:132
+#: pdfstitcher.py:188
 msgid "Amount to trim from each page"
 msgstr "Margen a recortar de cada página"
 
-#: pdfstitcher.py:133
+#: pdfstitcher.py:189
 msgid "Overlap"
 msgstr "Traslapar"
 
-#: pdfstitcher.py:133 tile_pages.py:197
+#: pdfstitcher.py:189 tile_pages.py:242
 msgid "Trim"
 msgstr "Recortar"
 
-#: pdfstitcher.py:140
+#: pdfstitcher.py:196
 msgid "Left"
 msgstr "Izquierda"
 
-#: pdfstitcher.py:145
+#: pdfstitcher.py:201
 msgid "Right"
 msgstr "Derecha"
 
-#: pdfstitcher.py:150
+#: pdfstitcher.py:206
 msgid "Top"
 msgstr "Arriba"
 
-#: pdfstitcher.py:155
+#: pdfstitcher.py:211
 msgid "Bottom"
 msgstr "Abajo"
 
-#: pdfstitcher.py:162
+#: pdfstitcher.py:227
+msgid "Load PDF to view layers."
+msgstr ""
+
+#: pdfstitcher.py:237
+msgid "Include non-optional content"
+msgstr ""
+
+#: pdfstitcher.py:241 pdfstitcher.py:446
+msgid "Deselect all"
+msgstr ""
+
+#: pdfstitcher.py:248
+msgid "Layer Name"
+msgstr ""
+
+#: pdfstitcher.py:249
+msgid "Line Properties"
+msgstr ""
+
+#: pdfstitcher.py:260
+msgid "Select line properties to modify"
+msgstr ""
+
+#: pdfstitcher.py:262
+msgid "Line Colour"
+msgstr ""
+
+#: pdfstitcher.py:271
+msgid "Line Thickness"
+msgstr ""
+
+#: pdfstitcher.py:276 pdfstitcher.py:336
+msgid "pt"
+msgstr ""
+
+#: pdfstitcher.py:276 pdfstitcher.py:340
+msgid "in"
+msgstr ""
+
+#: pdfstitcher.py:276 pdfstitcher.py:342
+msgid "cm"
+msgstr ""
+
+#: pdfstitcher.py:283
+msgid "Line Style"
+msgstr ""
+
+#: pdfstitcher.py:286
+msgid "Solid"
+msgstr ""
+
+#: pdfstitcher.py:286
+msgid "Dashed"
+msgstr ""
+
+#: pdfstitcher.py:286
+msgid "Dotted"
+msgstr ""
+
+#: pdfstitcher.py:293
+msgid "Apply"
+msgstr ""
+
+#: pdfstitcher.py:295 pdfstitcher.py:416
+msgid "Reset"
+msgstr ""
+
+#: pdfstitcher.py:303
+msgid "Apply to checked"
+msgstr ""
+
+#: pdfstitcher.py:305
+msgid "Reset checked"
+msgstr ""
+
+#: pdfstitcher.py:415
+msgid "Apply to"
+msgstr ""
+
+#: pdfstitcher.py:421
+msgid "No layers found in input document."
+msgstr ""
+
+#: pdfstitcher.py:432
+msgid "Select layers to include in output document."
+msgstr ""
+
+#: pdfstitcher.py:448
+msgid "Select all"
+msgstr ""
+
+#: pdfstitcher.py:476 tile_pages.py:240
+msgid "Options"
+msgstr "Opciones"
+
+#: pdfstitcher.py:478
+msgid "Tile Pages"
+msgstr ""
+
+#: pdfstitcher.py:480
+msgid "Layers"
+msgstr ""
+
+#: pdfstitcher.py:488
 msgid "Generate PDF"
 msgstr "Generar PDF"
 
-#: pdfstitcher.py:226
+#: pdfstitcher.py:536
+msgid "No page range specified, defaulting to all"
+msgstr ""
+
+#: pdfstitcher.py:592
 msgid "Tiling successful"
 msgstr "Combinación exitosa"
 
-#: pdfstitcher.py:228 pdfstitcher.py:236
+#: pdfstitcher.py:600 pdfstitcher.py:608
 msgid "Something went wrong"
 msgstr "Algo salió mal"
 
-#: pdfstitcher.py:228
-msgid "tiling failed"
-msgstr "La combinación fallo"
-
-#: pdfstitcher.py:229
+#: pdfstitcher.py:601
 msgid "Exception"
 msgstr "Excepción"
 
-#: pdfstitcher.py:234
+#: pdfstitcher.py:606
 msgid "Successfully written to"
 msgstr "Guardado exitosamente en"
 
-#: pdfstitcher.py:236 pdfstitcher.py:268
+#: pdfstitcher.py:608 pdfstitcher.py:644
 msgid "unable to write to"
 msgstr "Imposible guardar en"
 
-#: pdfstitcher.py:283
+#: pdfstitcher.py:637
+msgid "Cant overwrite input file, please select a different file for output"
+msgstr ""
+
+#: pdfstitcher.py:662
 msgid "Opening"
 msgstr "Abriendo"
 
-#: pdfstitcher.py:294
+#: pdfstitcher.py:676
 msgid "Cannot open file"
 msgstr "No se puede abrir el archivo"
 
-#: pdfstitcher.py:306
+#: pdfstitcher.py:691
 msgid "PDF Stitcher"
 msgstr "Cosedor de PDF"
 
-#: tile_pages.py:16
-msgid "Invalid input"
-msgstr "Selección invalida"
-
-#: tile_pages.py:16
-msgid "only numeric values allowed"
-msgstr "Solo se permiten valores numéricos"
-
-#: tile_pages.py:69
+#: tile_pages.py:92
 msgid "Invalid trim value specified, ignoring"
 msgstr "Valor de recorte especificado no válido, ignorando"
 
-#: tile_pages.py:91
+#: tile_pages.py:103
 msgid "Input document not loaded"
 msgstr "Documento a combinar no cargado"
 
-#: tile_pages.py:115
+#: tile_pages.py:126
 msgid "Only {} pages in document, skipping {}"
 msgstr "Solo hay {} páginas en el documento, omitiendo {}"
 
-#: tile_pages.py:144
+#: tile_pages.py:164
 msgid "Warning: page {} is a different size from {}, output may be unpredictable"
 msgstr ""
 "Advertencia: la página {} tiene un tamaño diferente al de {}, el "
 "resultado puede ser impredecible"
 
-#: tile_pages.py:166
+#: tile_pages.py:211
 msgid ""
 "Warning: requested {} columns and {} rows, but {} rows are needed with {}"
 " pages"
@@ -216,23 +357,901 @@ msgstr ""
 "Advertencia: solicitó {} columnas y {} filas, pero {} filas son "
 "necesarias con {} páginas"
 
-#: tile_pages.py:194
+#: tile_pages.py:239
 msgid "Tiling with {} rows and {} columns"
 msgstr "Combinando con {} filas y {} columnas"
 
-#: tile_pages.py:195
-msgid "Options"
-msgstr "Opciones"
-
-#: tile_pages.py:196
+#: tile_pages.py:241
 msgid "Margins"
 msgstr "Margenes"
 
-#: tile_pages.py:198
+#: tile_pages.py:243
 msgid "Rotation"
 msgstr "Rotación"
 
-#: tile_pages.py:277
+#: tile_pages.py:282
+msgid "Warning! Output is larger than 508 cm, may not open correctly."
+msgstr ""
+
+#: tile_pages.py:284
+msgid "Warning! Output is larger than 200 in, may not open correctly."
+msgstr ""
+
+#: tile_pages.py:286
+#, fuzzy
+msgid "Output size:"
+msgstr "Guardar el nuevo PDF como"
+
+#: tile_pages.py:332
 msgid "Unable to open"
 msgstr "No es posible abrir el archivo"
+
+#: utils.py:72
+msgid "Invalid input"
+msgstr "Selección invalida"
+
+#: utils.py:72
+msgid "only numeric values allowed"
+msgstr "Solo se permiten valores numéricos"
+
+#: utils.py:88
+msgid "Please specify a page range"
+msgstr ""
+
+#~ msgid "No layers selected, generated PDF woud be blank."
+#~ msgstr ""
+
+#~ msgid "Processing layers in page {}..."
+#~ msgstr ""
+
+#~ msgid "Select a layer to modify line properties"
+#~ msgstr ""
+
+#~ msgid "Line Thickness (pt)"
+#~ msgstr ""
+
+#~ msgid "Modify line properties for layer"
+#~ msgstr ""
+
+#~ msgid "Layout"
+#~ msgstr ""
+
+#~ msgid "tiling failed"
+#~ msgstr "La combinación fallo"
+
+#~ msgid "1 second ago"
+#~ msgstr ""
+
+#~ msgid "1 minute ago"
+#~ msgstr ""
+
+#~ msgid "1 hour ago"
+#~ msgstr ""
+
+#~ msgid "%(time)s"
+#~ msgstr ""
+
+#~ msgid "yesterday"
+#~ msgstr ""
+
+#~ msgid "yesterday at %(time)s"
+#~ msgstr ""
+
+#~ msgid "%(weekday)s"
+#~ msgstr ""
+
+#~ msgid "%(weekday)s at %(time)s"
+#~ msgstr ""
+
+#~ msgid "%(month_name)s %(day)s"
+#~ msgstr ""
+
+#~ msgid "%(month_name)s %(day)s at %(time)s"
+#~ msgstr ""
+
+#~ msgid "%(month_name)s %(day)s, %(year)s"
+#~ msgstr ""
+
+#~ msgid "%(month_name)s %(day)s, %(year)s at %(time)s"
+#~ msgstr ""
+
+#~ msgid "%(weekday)s, %(month_name)s %(day)s"
+#~ msgstr ""
+
+#~ msgid "%(commas)s and %(last)s"
+#~ msgstr ""
+
+#~ msgctxt "good"
+#~ msgid "right"
+#~ msgstr "Derecha"
+
+#~ msgctxt "stick"
+#~ msgid "club"
+#~ msgstr ""
+
+#~ msgid "January"
+#~ msgstr ""
+
+#~ msgid "February"
+#~ msgstr ""
+
+#~ msgid "March"
+#~ msgstr ""
+
+#~ msgid "April"
+#~ msgstr ""
+
+#~ msgid "May"
+#~ msgstr ""
+
+#~ msgid "June"
+#~ msgstr ""
+
+#~ msgid "July"
+#~ msgstr ""
+
+#~ msgid "August"
+#~ msgstr ""
+
+#~ msgid "September"
+#~ msgstr ""
+
+#~ msgid "October"
+#~ msgstr ""
+
+#~ msgid "November"
+#~ msgstr ""
+
+#~ msgid "December"
+#~ msgstr ""
+
+#~ msgid "Sunday"
+#~ msgstr ""
+
+#~ msgid "Monday"
+#~ msgstr ""
+
+#~ msgid "Tuesday"
+#~ msgstr ""
+
+#~ msgid "Wednesday"
+#~ msgstr ""
+
+#~ msgid "Thursday"
+#~ msgstr ""
+
+#~ msgid "Friday"
+#~ msgstr ""
+
+#~ msgid "Saturday"
+#~ msgstr ""
+
+#~ msgid "Sun"
+#~ msgstr ""
+
+#~ msgid "Mon"
+#~ msgstr ""
+
+#~ msgid "Tue"
+#~ msgstr ""
+
+#~ msgid "Wed"
+#~ msgstr ""
+
+#~ msgid "Thu"
+#~ msgstr ""
+
+#~ msgid "Fri"
+#~ msgstr ""
+
+#~ msgid "Sat"
+#~ msgstr ""
+
+#~ msgid "Application"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "'%s' has been modified outside of "
+#~ "%s.  Overwrite '%s' with current "
+#~ "changes?"
+#~ msgstr ""
+
+#~ msgid " ("
+#~ msgstr ""
+
+#~ msgid ") |"
+#~ msgstr ""
+
+#~ msgid "Save As"
+#~ msgstr ""
+
+#~ msgid "File Error"
+#~ msgstr ""
+
+#~ msgid "Untitled"
+#~ msgstr ""
+
+#~ msgid "Warning"
+#~ msgstr ""
+
+#~ msgid "Save changes to '%s'?"
+#~ msgstr ""
+
+#~ msgid " - "
+#~ msgstr ""
+
+#~ msgid "Unable to display print preview."
+#~ msgstr ""
+
+#~ msgid "Print Preview"
+#~ msgstr ""
+
+#~ msgid "%s - %s - Preview"
+#~ msgstr ""
+
+#~ msgid "&Undo\tCtrl+Z"
+#~ msgstr ""
+
+#~ msgid "&Redo\tCtrl+Y"
+#~ msgstr ""
+
+#~ msgid "'%s' has been modified outside of %s.  Reload '%s' from file system?"
+#~ msgstr ""
+
+#~ msgid "Couldn't reload '%s'.  Unable to close current '%s'."
+#~ msgstr ""
+
+#~ msgid "Untitled %d"
+#~ msgstr ""
+
+#~ msgid "|"
+#~ msgstr ""
+
+#~ msgid "All|*.*|%s"
+#~ msgstr ""
+
+#~ msgid "*.*"
+#~ msgstr ""
+
+#~ msgid "Select a File"
+#~ msgstr ""
+
+#~ msgid "Select a document type:"
+#~ msgstr ""
+
+#~ msgid "Documents"
+#~ msgstr ""
+
+#~ msgid "Select a document view:"
+#~ msgstr ""
+
+#~ msgid "Views"
+#~ msgstr ""
+
+#~ msgid "Ctrl+Z"
+#~ msgstr ""
+
+#~ msgid "Ctrl+Y"
+#~ msgstr ""
+
+#~ msgid "&Undo "
+#~ msgstr ""
+
+#~ msgid "&Undo"
+#~ msgstr ""
+
+#~ msgid "&Redo "
+#~ msgstr ""
+
+#~ msgid "&Redo"
+#~ msgstr ""
+
+#~ msgid "Set background to white"
+#~ msgstr ""
+
+#~ msgid "Set background to grey"
+#~ msgstr ""
+
+#~ msgid "Set background to black"
+#~ msgstr ""
+
+#~ msgid "Set background to checkered pattern"
+#~ msgstr ""
+
+#~ msgid "No framing around image"
+#~ msgstr ""
+
+#~ msgid "Frame image with a box"
+#~ msgstr ""
+
+#~ msgid "Frame image with a dimmed background"
+#~ msgstr ""
+
+#~ msgid "Image Browser"
+#~ msgstr "Orden de las páginas"
+
+#~ msgid "Up one level"
+#~ msgstr ""
+
+#~ msgid "Browse for a &folder..."
+#~ msgstr ""
+
+#~ msgid "Browse for a folder..."
+#~ msgstr ""
+
+#~ msgid "&New...\tCtrl+N"
+#~ msgstr ""
+
+#~ msgid "Creates a new document"
+#~ msgstr ""
+
+#~ msgid "&Open...\tCtrl+O"
+#~ msgstr ""
+
+#~ msgid "Opens an existing document"
+#~ msgstr ""
+
+#~ msgid "&Close"
+#~ msgstr ""
+
+#~ msgid "Closes the active document"
+#~ msgstr ""
+
+#~ msgid "Close A&ll"
+#~ msgstr ""
+
+#~ msgid "Closes all open documents"
+#~ msgstr ""
+
+#~ msgid "&Save\tCtrl+S"
+#~ msgstr ""
+
+#~ msgid "Saves the active document"
+#~ msgstr ""
+
+#~ msgid "Save &As..."
+#~ msgstr ""
+
+#~ msgid "Saves the active document with a new name"
+#~ msgstr ""
+
+#~ msgid "Save All\tCtrl+Shift+A"
+#~ msgstr ""
+
+#~ msgid "Saves the all active documents"
+#~ msgstr ""
+
+#~ msgid "&Print\tCtrl+P"
+#~ msgstr ""
+
+#~ msgid "Prints the active document"
+#~ msgstr ""
+
+#~ msgid "Print Pre&view"
+#~ msgstr ""
+
+#~ msgid "Displays full pages"
+#~ msgstr ""
+
+#~ msgid "Page Set&up"
+#~ msgstr ""
+
+#~ msgid "Changes page layout settings"
+#~ msgstr ""
+
+#~ msgid "&Quit"
+#~ msgstr ""
+
+#~ msgid "Closes this program"
+#~ msgstr ""
+
+#~ msgid "E&xit"
+#~ msgstr ""
+
+#~ msgid "&File"
+#~ msgstr ""
+
+#~ msgid "Reverses the last action"
+#~ msgstr ""
+
+#~ msgid "Reverses the last undo"
+#~ msgstr ""
+
+#~ msgid "Cu&t\tCtrl+X"
+#~ msgstr ""
+
+#~ msgid "Cuts the selection and puts it on the Clipboard"
+#~ msgstr ""
+
+#~ msgid "&Copy\tCtrl+C"
+#~ msgstr ""
+
+#~ msgid "Copies the selection and puts it on the Clipboard"
+#~ msgstr ""
+
+#~ msgid "&Paste\tCtrl+V"
+#~ msgstr ""
+
+#~ msgid "Inserts Clipboard contents"
+#~ msgstr ""
+
+#~ msgid "&Delete"
+#~ msgstr ""
+
+#~ msgid "Erases the selection"
+#~ msgstr ""
+
+#~ msgid "Select A&ll\tCtrl+A"
+#~ msgstr ""
+
+#~ msgid "Selects all available data"
+#~ msgstr ""
+
+#~ msgid "&Edit"
+#~ msgstr ""
+
+#~ msgid "&Toolbar"
+#~ msgstr ""
+
+#~ msgid "Shows or hides the toolbar"
+#~ msgstr ""
+
+#~ msgid "&Status Bar"
+#~ msgstr ""
+
+#~ msgid "Shows or hides the status bar"
+#~ msgstr ""
+
+#~ msgid "&View"
+#~ msgstr ""
+
+#~ msgid "&About "
+#~ msgstr ""
+
+#~ msgid "Displays program information, version number, and copyright"
+#~ msgstr ""
+
+#~ msgid "&Help"
+#~ msgstr ""
+
+#~ msgid "New"
+#~ msgstr ""
+
+#~ msgid "Open"
+#~ msgstr ""
+
+#~ msgid "Save"
+#~ msgstr ""
+
+#~ msgid "Save All"
+#~ msgstr ""
+
+#~ msgid "Saves all the active documents"
+#~ msgstr ""
+
+#~ msgid "Print"
+#~ msgstr ""
+
+#~ msgid "Cut"
+#~ msgstr ""
+
+#~ msgid "Copy"
+#~ msgstr ""
+
+#~ msgid "Paste"
+#~ msgstr ""
+
+#~ msgid "Undo"
+#~ msgstr ""
+
+#~ msgid "Redo"
+#~ msgstr ""
+
+#~ msgid "Ready"
+#~ msgstr ""
+
+#~ msgid "Close"
+#~ msgstr ""
+
+#~ msgid "Close All but \"%s\""
+#~ msgstr ""
+
+#~ msgid "Select Tab"
+#~ msgstr ""
+
+#~ msgid "&Tools"
+#~ msgstr ""
+
+#~ msgid "&Format"
+#~ msgstr ""
+
+#~ msgid "&Options..."
+#~ msgstr "Opciones"
+
+#~ msgid "Sets options"
+#~ msgstr "Opciones"
+
+#~ msgid "Show tips at start up"
+#~ msgstr ""
+
+#~ msgid "Show each document in its own window"
+#~ msgstr ""
+
+#~ msgid "Show all documents in a single window with tabs"
+#~ msgstr ""
+
+#~ msgid "Show all documents in a single window with child windows"
+#~ msgstr ""
+
+#~ msgid "Document Display Style"
+#~ msgstr ""
+
+#~ msgid "Document Options"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Document interface changes will not "
+#~ "appear until the application is "
+#~ "restarted."
+#~ msgstr ""
+
+#~ msgid "General"
+#~ msgstr ""
+
+#~ msgid "About "
+#~ msgstr ""
+
+#~ msgid "&Properties"
+#~ msgstr ""
+
+#~ msgid "Show file properties"
+#~ msgstr ""
+
+#~ msgid "File Properties"
+#~ msgstr ""
+
+#~ msgid "Filename:"
+#~ msgstr ""
+
+#~ msgid "Location:"
+#~ msgstr "Rotación"
+
+#~ msgid "Size:"
+#~ msgstr ""
+
+#~ msgid "bytes"
+#~ msgstr ""
+
+#~ msgid "Created:"
+#~ msgstr ""
+
+#~ msgid "Modified:"
+#~ msgstr ""
+
+#~ msgid "Accessed:"
+#~ msgstr ""
+
+#~ msgid "&Arrange All"
+#~ msgstr ""
+
+#~ msgid "Arrange the open windows"
+#~ msgstr ""
+
+#~ msgid "Previous"
+#~ msgstr ""
+
+#~ msgid "Previous Tab"
+#~ msgstr ""
+
+#~ msgid "Next"
+#~ msgstr ""
+
+#~ msgid "Next Tab"
+#~ msgstr ""
+
+#~ msgid "Close Current\tCtrl+F4"
+#~ msgstr ""
+
+#~ msgid "Close Current Tab"
+#~ msgstr ""
+
+#~ msgid "&Window"
+#~ msgstr ""
+
+#~ msgid "&More Windows..."
+#~ msgstr ""
+
+#~ msgid "Select a window to show:"
+#~ msgstr ""
+
+#~ msgid "Select Window"
+#~ msgstr ""
+
+#~ msgid "Default"
+#~ msgstr ""
+
+#~ msgid "Dark"
+#~ msgstr ""
+
+#~ msgid "Dark Olive Green"
+#~ msgstr ""
+
+#~ msgid "Generic"
+#~ msgstr ""
+
+#~ msgid "CubeColourDialog: Choose Colour"
+#~ msgstr ""
+
+#~ msgid "HSB"
+#~ msgstr ""
+
+#~ msgid "RGB Values"
+#~ msgstr ""
+
+#~ msgid "HSB Values"
+#~ msgstr ""
+
+#~ msgid "RGB"
+#~ msgstr ""
+
+#~ msgid "Alpha"
+#~ msgstr ""
+
+#~ msgid "Show Alpha Control"
+#~ msgstr ""
+
+#~ msgid "Add to custom colours"
+#~ msgstr ""
+
+#~ msgid "OK"
+#~ msgstr ""
+
+#~ msgid "Cancel"
+#~ msgstr ""
+
+#~ msgid "HTML Code"
+#~ msgstr ""
+
+#~ msgid "Web Safe"
+#~ msgstr ""
+
+#~ msgid "HTML Name"
+#~ msgstr ""
+
+#~ msgid "Custom Colours"
+#~ msgstr ""
+
+#~ msgid "Old Colour"
+#~ msgstr ""
+
+#~ msgid "New Colour"
+#~ msgstr ""
+
+#~ msgid "MS Access Code"
+#~ msgstr ""
+
+#~ msgid "Red"
+#~ msgstr ""
+
+#~ msgid "Green"
+#~ msgstr ""
+
+#~ msgid "Blue"
+#~ msgstr ""
+
+#~ msgid "Hue"
+#~ msgstr ""
+
+#~ msgid "Saturation"
+#~ msgstr "Rotación"
+
+#~ msgid "Brightness"
+#~ msgstr ""
+
+#~ msgid "Customize"
+#~ msgstr ""
+
+#~ msgid "Menus"
+#~ msgstr ""
+
+#~ msgid "Select Menu To Add/Remove:"
+#~ msgstr ""
+
+#~ msgid "Default Style"
+#~ msgstr ""
+
+#~ msgid "Metallic"
+#~ msgstr ""
+
+#~ msgid "Menu bar style"
+#~ msgstr ""
+
+#~ msgid "Default style settings"
+#~ msgstr ""
+
+#~ msgid "Draw vertical gradient"
+#~ msgstr ""
+
+#~ msgid "Draw border around menu bar"
+#~ msgstr ""
+
+#~ msgid "Toolbar float over menu bar"
+#~ msgstr ""
+
+#~ msgid "Colour Scheme"
+#~ msgstr ""
+
+#~ msgid "Don't Save"
+#~ msgstr ""
+
+#~ msgid "Yes"
+#~ msgstr ""
+
+#~ msgid "No"
+#~ msgstr ""
+
+#~ msgid "Help"
+#~ msgstr ""
+
+#~ msgid "Hide this notification message."
+#~ msgstr ""
+
+#~ msgid "Choose one or more folders:"
+#~ msgstr ""
+
+#~ msgid "Browse For Folders"
+#~ msgstr ""
+
+#~ msgid "Folder:"
+#~ msgstr ""
+
+#~ msgid "Make New Folder"
+#~ msgstr ""
+
+#~ msgid "Busy"
+#~ msgstr ""
+
+#~ msgid "New accelerator..."
+#~ msgstr ""
+
+#~ msgid "Disabled"
+#~ msgstr ""
+
+#~ msgid "Configure Keyboard Shortcuts Help"
+#~ msgstr ""
+
+#~ msgid "Back"
+#~ msgstr ""
+
+#~ msgid "Go to the previous page"
+#~ msgstr ""
+
+#~ msgid "Forward"
+#~ msgstr ""
+
+#~ msgid "Go to the next page"
+#~ msgstr ""
+
+#~ msgid "Home"
+#~ msgstr ""
+
+#~ msgid "Home Page"
+#~ msgstr ""
+
+#~ msgid "Go to the home page"
+#~ msgstr "Margen a recortar de cada página"
+
+#~ msgid "Refresh"
+#~ msgstr ""
+
+#~ msgid "Refresh the current page"
+#~ msgstr ""
+
+#~ msgid "Print the current page"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Shortcut \"%(shortcut)s\" is already taken by\n"
+#~ "\"%(item)s\" from the \"%(group)s\" group. "
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Reassigning the shortcut will cause it to be removed from \n"
+#~ "\"%(item)s\". "
+#~ msgstr ""
+
+#~ msgid "Conflicting Shortcuts"
+#~ msgstr ""
+
+#~ msgid "Reassing shortcut "
+#~ msgstr ""
+
+#~ msgid "Action"
+#~ msgstr "Rotación"
+
+#~ msgid "Shortcut"
+#~ msgstr ""
+
+#~ msgid "Help Label"
+#~ msgstr ""
+
+#~ msgid "Configure Keyboard Shortcuts"
+#~ msgstr ""
+
+#~ msgid "&Search:"
+#~ msgstr ""
+
+#~ msgid "Restore Defaults "
+#~ msgstr ""
+
+#~ msgid ""
+#~ "To edit a shortcut key, click on the corresponding row\n"
+#~ "and type a new accelerator, or press backspace to clear."
+#~ msgstr ""
+
+#~ msgid "Accelerators"
+#~ msgstr ""
+
+#~ msgid "Pane Switcher"
+#~ msgstr ""
+
+#~ msgid "<body bgcolor=\"#"
+#~ msgstr ""
+
+#~ msgid "\"><b>"
+#~ msgstr ""
+
+#~ msgid "</b>"
+#~ msgstr ""
+
+#~ msgid "<p>"
+#~ msgstr ""
+
+#~ msgid "</body>"
+#~ msgstr ""
+
+#~ msgid "Pane Preview"
+#~ msgstr ""
+
+#~ msgid "Cl&ose"
+#~ msgstr ""
+
+#~ msgid "Close All"
+#~ msgstr ""
+
+#~ msgid "&Next"
+#~ msgstr ""
+
+#~ msgid "&Previous"
+#~ msgstr ""
+
+#~ msgid "Basic Colours:"
+#~ msgstr ""
+
+#~ msgid "Custom Colours:"
+#~ msgstr ""
+
+#~ msgid "Add to Custom Colours"
+#~ msgstr ""
+
+#~ msgid "Solid Colour"
+#~ msgstr ""
+
+#~ msgid "H:"
+#~ msgstr ""
+
+#~ msgid "S:"
+#~ msgstr ""
+
+#~ msgid "V:"
+#~ msgstr ""
+
+#~ msgid "R:"
+#~ msgstr ""
+
+#~ msgid "G:"
+#~ msgstr ""
+
+#~ msgid "B:"
+#~ msgstr ""
 
