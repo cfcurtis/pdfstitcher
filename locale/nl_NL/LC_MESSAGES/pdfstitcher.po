@@ -1,4 +1,4 @@
-# Dutch (Netherlands) translations for pdfstitcher.
+# Dutch (Nederlands) translations for pdfstitcher.
 # Copyright (C) 2020 Charlotte Curtis
 # This file is distributed under the same license as the pdfstitcher
 # project.
@@ -21,7 +21,7 @@ msgstr ""
 
 #: layerfilter.py:216
 msgid "No layers selected, generated PDF would be blank."
-msgstr ""
+msgstr "Geen lagen geselecteerd, gegenereerde Pdf wordt blanco. "
 
 #: pdfstitcher.py:38 pdfstitcher.py:647
 msgid "Select input PDF"
@@ -38,7 +38,7 @@ msgstr "Uitvoer opslaan als..."
 
 #: pdfstitcher.py:55
 msgid "Output Options"
-msgstr ""
+msgstr "Uitvoer opties"
 
 #: pdfstitcher.py:61 pdfstitcher.py:156
 msgid "Page Range"
@@ -50,27 +50,27 @@ msgstr "Pagina´s samengesteld in gewenste volgorde. 0 voegt blanco pagina toe"
 
 #: pdfstitcher.py:69
 msgid "Process Layers"
-msgstr ""
+msgstr "Verwerken lagen"
 
 #: pdfstitcher.py:72
 msgid "Tile pages"
-msgstr ""
+msgstr "Samenvoegen lagen"
 
 #: pdfstitcher.py:97
 msgid "Process layers then tile pages and save"
-msgstr ""
+msgstr "Verwerk lagen dan pagina's samenvoegen en opslaan"
 
 #: pdfstitcher.py:100
 msgid "Process layers and save without tiling pages"
-msgstr ""
+msgstr "Verwerk lagen en opslaan"
 
 #: pdfstitcher.py:103
 msgid "Tile pages and save without processing layers"
-msgstr ""
+msgstr "Voeg pagina's samen en opslaan zonder lagen verwerken"
 
 #: pdfstitcher.py:106
 msgid "Open the PDF and save selected page range without modifying"
-msgstr ""
+msgstr "Open de PDF en bewaar geselecteerd pagina bereik zonder aanpassingen"
 
 #: pdfstitcher.py:117
 msgid "Required Parameters"
@@ -142,11 +142,11 @@ msgstr "Eenheden"
 
 #: pdfstitcher.py:175
 msgid "Set TrimBox to MediaBox"
-msgstr ""
+msgstr "Gebruik media kader om aan te snijden"
 
 #: pdfstitcher.py:176
 msgid "May help fix things when output is not as expected"
-msgstr ""
+msgstr "Mogelijk helpt dit wanneer de resultaten niet volgens verwachting uitpakken"
 
 #: pdfstitcher.py:181
 msgid "Margin to add to final output"
@@ -182,107 +182,107 @@ msgstr "Onder"
 
 #: pdfstitcher.py:227
 msgid "Load PDF to view layers."
-msgstr ""
+msgstr "Laad PDF om lagen te zien"
 
 #: pdfstitcher.py:237
 msgid "Include non-optional content"
-msgstr ""
+msgstr "Gebruik verplichte inhoud"
 
 #: pdfstitcher.py:241 pdfstitcher.py:446
 msgid "Deselect all"
-msgstr ""
+msgstr "Deselecteer alles"
 
 #: pdfstitcher.py:248
 msgid "Layer Name"
-msgstr ""
+msgstr "Laag titel"
 
 #: pdfstitcher.py:249
 msgid "Line Properties"
-msgstr ""
+msgstr "Lijn eigenschappen"
 
 #: pdfstitcher.py:260
 msgid "Select line properties to modify"
-msgstr ""
+msgstr "Selecteer lijn eigenschappen om te wijzigen"
 
 #: pdfstitcher.py:262
 msgid "Line Colour"
-msgstr ""
+msgstr "Lijn kleur"
 
 #: pdfstitcher.py:271
 msgid "Line Thickness"
-msgstr ""
+msgstr "Lijn dikte"
 
 #: pdfstitcher.py:276 pdfstitcher.py:336
 msgid "pt"
-msgstr ""
+msgstr "punten"
 
 #: pdfstitcher.py:276 pdfstitcher.py:340
 msgid "in"
-msgstr ""
+msgstr "inches"
 
 #: pdfstitcher.py:276 pdfstitcher.py:342
 msgid "cm"
-msgstr ""
+msgstr "cm"
 
 #: pdfstitcher.py:283
 msgid "Line Style"
-msgstr ""
+msgstr "Lijn stijl "
 
 #: pdfstitcher.py:286
 msgid "Solid"
-msgstr ""
+msgstr "Vol"
 
 #: pdfstitcher.py:286
 msgid "Dashed"
-msgstr ""
+msgstr "Streep"
 
 #: pdfstitcher.py:286
 msgid "Dotted"
-msgstr ""
+msgstr "Stippel"
 
 #: pdfstitcher.py:293
 msgid "Apply"
-msgstr ""
+msgstr "Toepassen"
 
 #: pdfstitcher.py:295 pdfstitcher.py:416
 msgid "Reset"
-msgstr ""
+msgstr "Herstel"
 
 #: pdfstitcher.py:303
 msgid "Apply to checked"
-msgstr ""
+msgstr "Pas toe op geselecteerd"
 
 #: pdfstitcher.py:305
 msgid "Reset checked"
-msgstr ""
+msgstr "Herstel geselecteerd"
 
 #: pdfstitcher.py:415
 msgid "Apply to"
-msgstr ""
+msgstr "Pas toe op"
 
 #: pdfstitcher.py:421
 msgid "No layers found in input document."
-msgstr ""
+msgstr "Geen lagen gevonden in het ingevoerde document. "
 
 #: pdfstitcher.py:432
 msgid "Select layers to include in output document."
-msgstr ""
+msgstr "Selecteer lagen voor het uitvoer document"
 
 #: pdfstitcher.py:448
 msgid "Select all"
-msgstr ""
+msgstr "Selecteer alle"
 
 #: pdfstitcher.py:476 tile_pages.py:240
 msgid "Options"
-msgstr ""
+msgstr "Opties"
 
 #: pdfstitcher.py:478
 msgid "Tile Pages"
-msgstr ""
+msgstr "Samenvoegen pagina's"
 
 #: pdfstitcher.py:480
 msgid "Layers"
-msgstr ""
+msgstr "Lagen"
 
 #: pdfstitcher.py:488
 msgid "Generate PDF"
@@ -290,7 +290,7 @@ msgstr "Maak PDF"
 
 #: pdfstitcher.py:536
 msgid "No page range specified, defaulting to all"
-msgstr ""
+msgstr "Geen pagina reeks ingevoerd, standaard invoer naar alle pagina's gehanteerd"
 
 #: pdfstitcher.py:592
 msgid "Tiling successful"
@@ -314,7 +314,7 @@ msgstr "Niet mogelijk om op te slaan in"
 
 #: pdfstitcher.py:637
 msgid "Cant overwrite input file, please select a different file for output"
-msgstr ""
+msgstr "Overschrijving van het originele bestand is niet mogelijk, geef aub een alternatieve bestandslocatie of bestandsnaam. "
 
 #: pdfstitcher.py:662
 msgid "Opening"
@@ -368,11 +368,11 @@ msgstr "Rotatie"
 
 #: tile_pages.py:282
 msgid "Warning! Output is larger than 508 cm, may not open correctly."
-msgstr ""
+msgstr "Let op! Uitvoer is groter dan 508 cm, mogelijk opent het niet juist"
 
 #: tile_pages.py:284
 msgid "Warning! Output is larger than 200 in, may not open correctly."
-msgstr ""
+msgstr "Let op! Uitvoer is groter dan 200 inch, mogelijk opent het niet juist"
 
 #: tile_pages.py:286
 #, fuzzy
@@ -393,5 +393,5 @@ msgstr "Alleen numerieke waarden toegstaan"
 
 #: utils.py:88
 msgid "Please specify a page range"
-msgstr ""
+msgstr "Voer een pagina reeks in aub"
 
