@@ -1,6 +1,8 @@
 # PDFStitcher
 This is a utility for stitching together many PDF pages from a single document into one single page. This is also called "N-Up" or page imposition. This utility was created in order to convert sewing patterns into a convenient format for projecting, though it could be used to stitch together any PDF.
 
+As of v0.4 alpha, layers can be also selected for inclusion/exclusion in the final output. Line properties (thickness, style, colour) can also be modified if the input PDF is compatible.
+
 ## Download the latest release
 * [Windows (64-bit Windows 7 or 10)](https://github.com/cfcurtis/sewingutils/releases/latest/download/pdfstitcher.exe)
 * [MacOs (High Sierra or higher)](https://github.com/cfcurtis/sewingutils/releases/latest/download/pdfstitcher.app.zip)
@@ -51,7 +53,6 @@ Some PDFs require trimming pages, assembling with gaps, tiling with columns firs
 
 ## Not yet supported
 * Different trim for each page
-* Extraction or modification of layers
 * Mixed size or orientation of pages
 
 At this time, the GUI does not display the input or output PDF. You will need to use an external PDF viewer such as Adobe Reader for this. Remember to close your output PDF if you want to re-generate with different options, otherwise it will be locked for writing.
