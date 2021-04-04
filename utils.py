@@ -39,12 +39,24 @@ def setup_locale():
     language_warning = None
 
     lc = locale.getdefaultlocale()
-
+    lc = (None,None)
+    
     try:
         lang = lc[0][:2]
     except:
-        lang = 'en'
-        language_warning = 'Could not detect system language, defaulting to English'
+        try:
+            # try the Apple way
+            from Foundation import NSUserDefaults
+
+            defaults = NSUserDefaults.standardUserDefaults()
+            globalDomain = defaults.persistentDomainForName_("NSGlobalDomain")
+            languages = globalDomain.objectForKey_("AppleLanguages")
+            
+            # just take the first one
+            lang = languages[0][:2]
+        except:
+            lang = 'en'
+            language_warning = 'Could not detect system language, defaulting to English'
 
     if lang not in ('de','es','fr','nl','en'):
         language_warning = 'System language code ' + lang + ' is not supported, defaulting to English.'

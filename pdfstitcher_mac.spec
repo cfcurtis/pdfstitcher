@@ -2,15 +2,21 @@
 
 block_cipher = None
 
-locale = ''
+#locale = ''
 basename = 'pdfstitcher'
+#locale_paths = []
 
-if locale != '':
-    locale_paths = [(f'locale/{locale}/LC_MESSAGES/pdfstitcher.mo',f'locale/{locale}/LC_MESSAGES')]
-    basename += '_' + locale[:2]
+#if locale != '':
+#    locale_paths = [(f'locale/{locale}/LC_MESSAGES/pdfstitcher.mo',f'locale/{locale}/LC_MESSAGES')]
+#    basename += '_' + locale[:2]
+
+locales = ['de_DE','es_ES','fr_FR','nl_NL']
+locale_paths = []
+for l in locales:
+    locale_paths.append((f'locale/{l}/LC_MESSAGES/pdfstitcher.mo',f'locale/{l}/LC_MESSAGES'))
 
 a = Analysis(['pdfstitcher.py'],
-             pathex=['/Users/charlotte/sewingutils'],
+             pathex=['/Users/charlotte/Code/pdfstitcher'],
              binaries=[],
              datas=locale_paths,
              hiddenimports=[],
@@ -39,5 +45,5 @@ exe = EXE(pyz,
           console=False )
 app = BUNDLE(exe,
              name=basename + '.app',
-             icon=None,
+             icon='resources/stitcher-icon.icns',
              bundle_identifier=None)
