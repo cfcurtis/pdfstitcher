@@ -39,7 +39,6 @@ def setup_locale():
     language_warning = None
 
     lc = locale.getdefaultlocale()
-    lc = (None,None)
     
     try:
         lang = lc[0][:2]
