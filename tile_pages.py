@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+
 import pikepdf
 import subprocess
 import argparse
@@ -325,6 +326,7 @@ class PageTiler:
         
         i = 0
         content_txt = ''
+        performed_scale = False
         
         for i in range(n_tiles):
             if not page_names[i]:
@@ -381,12 +383,15 @@ class PageTiler:
                 y0 += shift_up
                         
             if scale_factor != 1:
-                print(f"Warning: Page {i} will be scaled by {round(scale_factor, 4)} because a target size was set. You should not see this warning if using the PDFStitcher GUI, since scaling is unsuitable for sewing patterns.")
-                        
+                performed_scale = True
+            
             # scale, shift and rotate
             # first shift to origin, then rotate, then shift to final destination
             content_txt += f'q {scale_factor} {R[1]} {R[2]} {scale_factor} {x0+o_shift[0]} {y0+o_shift[1]} cm '
             content_txt += f'{page_names[i]} Do Q '
+        
+        if performed_scale:
+            print(f"Warning: Some pages have been scaled because a target size was set. You should not see this warning if using the PDFStitcher GUI, since scaling is unsuitable for sewing patterns.")
         
         newpage = pikepdf.Dictionary(
             Type=pikepdf.Name.Page, 
