@@ -83,7 +83,6 @@ class PageTiler:
             self.target_width = self.units_to_px(self.target_width)
         
         self.center_content = center_content
-        print("def:", self.center_content)
 
     def units_to_px(self,val):
         pxval = val*72
@@ -370,7 +369,6 @@ class PageTiler:
             x0 = margin - trim[0] + cpos_x0 - c*(trim[0] + trim[1])
             y0 = margin - trim[3] + cpos_y0 - (self.rows-r-1)*(trim[2] + trim[3])
             
-            print("center_content:", self.center_content)
             if page_box_defined and self.center_content:
                 # center pages in their box
                 scaled_width = pw[i] * scale_factor
