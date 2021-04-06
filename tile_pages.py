@@ -23,15 +23,24 @@ import copy
 import utils
 from gettext import gettext as _
 
+
+SW_UNITS_INCHES = 0
+SW_UNITS_CENTIMETERS = 1
+
+SW_ROTATION_NONE = 0
+SW_ROTATION_CLOCKWISE = 1
+SW_ROTATION_COUNTERCLOCKWISE = 2
+
+
 class PageTiler:
     def __init__(
             self,
             in_doc = None,
             page_range = None,
-            units = 0,
+            units = SW_UNITS_INCHES,
             trim = [0,0,0,0],
             margin = 0,
-            rotation = 0,
+            rotation = SW_ROTATION_NONE,
             actually_trim = False,
             override_trim = False,
             col_major = False,
@@ -76,14 +85,14 @@ class PageTiler:
 
     def units_to_px(self,val):
         pxval = val*72
-        if self.units == 0:
+        if self.units == SW_UNITS_INCHES:
             return pxval
         else:
             return pxval/2.54
         
     def px_to_units(self,val):
         inch_val = val/72
-        if self.units == 0:
+        if self.units == SW_UNITS_INCHES:
             return inch_val
         else:
             return inch_val*2.54
@@ -222,16 +231,15 @@ class PageTiler:
             self.cols = math.ceil(n_tiles/self.rows)
         
         # convert the margin and trim options into pixels
-        unitstr = 'cm' if self.units else 'in'
+        unitstr = 'cm' if self.units == SW_UNITS_CENTIMETERS else 'in'
         margin = self.units_to_px(self.margin)
         trim = [self.units_to_px(t) for t in self.trim]
 
         rotstr = _('None')
         
-        if self.rotation == 1:
+        if self.rotation == SW_ROTATION_CLOCKWISE:
             rotstr = _('Clockwise')
-
-        if self.rotation == 2:
+        elif self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
             rotstr = _('Counterclockwise')
         
         orderstr = _('Rows then columns')
@@ -261,15 +269,15 @@ class PageTiler:
         # We need to account for the shift in origin if page rotation is applied
         o_shift = [0,0]
 
-        if self.rotation != 0:
+        if self.rotation != SW_ROTATION_NONE:
             # define the rotation transform and
             # swap the trim order
-            if self.rotation == 1:
+            if self.rotation == SW_ROTATION_CLOCKWISE:
                 R = [0,-1,1,0]
                 o_shift = [0,pw[0]]
                 order = [3,2,0,1]
 
-            if self.rotation == 2:
+            if self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
                 R = [0,1,-1,0]
                 o_shift = [ph[0],0]
                 order = [2,3,1,0]
