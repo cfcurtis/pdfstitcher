@@ -391,7 +391,7 @@ class PageTiler:
             content_txt += f'{page_names[i]} Do Q '
         
         if performed_scale:
-            print(f"Warning: Some pages have been scaled because a target size was set. You should not see this warning if using the PDFStitcher GUI, since scaling is unsuitable for sewing patterns.")
+            print("Warning: Some pages have been scaled because a target size was set. You should not see this warning if using the PDFStitcher GUI, since scaling is unsuitable for sewing patterns.")
         
         newpage = pikepdf.Dictionary(
             Type=pikepdf.Name.Page, 
