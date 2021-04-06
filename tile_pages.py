@@ -37,8 +37,8 @@ class PageTiler:
             col_major = False,
             right_to_left = False,
             bottom_to_top = False,
-            rows = 0,
-            cols = 0,
+            rows = None,
+            cols = None,
             target_width = None,
             target_height = None,
         ):
