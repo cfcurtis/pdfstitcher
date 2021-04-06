@@ -12,7 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import pikepdf
 import subprocess
@@ -50,6 +50,7 @@ class PageTiler:
             cols = None,
             target_width = None,
             target_height = None,
+            center_content = None,
         ):
         
         self.in_doc = in_doc
@@ -59,7 +60,6 @@ class PageTiler:
         else:
             self.page_range = []
         
-        # 0 = inches, 1 = centimetres
         self.units = units
         self.set_trim(trim)
         self.margin = margin
@@ -81,7 +81,9 @@ class PageTiler:
             self.target_height = self.units_to_px(self.target_height)
         if self.target_width:
             self.target_width = self.units_to_px(self.target_width)
-
+        
+        self.center_content = center_content
+        print("def:", self.center_content)
 
     def units_to_px(self,val):
         pxval = val*72
@@ -117,6 +119,7 @@ class PageTiler:
             cols = None,
             target_width = None,
             target_height = None,
+            center_content = None,
         ):
         
         if rows is not None:
@@ -128,6 +131,9 @@ class PageTiler:
             self.target_width = self.units_to_px(target_width)
         if target_height is not None:
             self.target_height = self.units_to_px(target_height)
+        
+        if center_content is not None:
+            self.center_content = center_content
         
         if self.in_doc is None:
             print(_('Input document not loaded'))
@@ -364,7 +370,8 @@ class PageTiler:
             x0 = margin - trim[0] + cpos_x0 - c*(trim[0] + trim[1])
             y0 = margin - trim[3] + cpos_y0 - (self.rows-r-1)*(trim[2] + trim[3])
             
-            if page_box_defined:
+            print("center_content:", self.center_content)
+            if page_box_defined and self.center_content:
                 # center pages in their box
                 scaled_width = pw[i] * scale_factor
                 scaled_height = ph[i] * scale_factor
