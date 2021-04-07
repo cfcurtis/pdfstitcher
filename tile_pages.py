@@ -16,6 +16,7 @@
 
 
 import pikepdf
+from pikepdf import _cpphelpers
 import subprocess
 import argparse
 import sys
@@ -266,25 +267,17 @@ class PageTiler:
         print('    ' + _('Trim') + ': {} {}'.format(self.trim,unitstr))
         print('    ' + _('Rotation') + ': {}'.format(rotstr))
         print('    ' + _('Page order') + ': {}, {}, {}'.format(orderstr, lrstr, btstr))
-
-        # define the media box with the final grid + margins
-        # run through the width/height combos to find the maximum required
-        # R is the rotation matrix (default to identity)
-        R = [1,0,0,1]
-
+        
         # We need to account for the shift in origin if page rotation is applied
         o_shift = [0,0]
-
+        
         if self.rotation != SW_ROTATION_NONE:
-            # define the rotation transform and
             # swap the trim order
             if self.rotation == SW_ROTATION_CLOCKWISE:
-                R = [0,-1,1,0]
                 o_shift = [0,pw[0]]
                 order = [3,2,0,1]
 
             if self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
-                R = [0,1,-1,0]
                 o_shift = [ph[0],0]
                 order = [2,3,1,0]
             
@@ -296,12 +289,6 @@ class PageTiler:
         row_height = [0]*self.rows
         width = 0
         height = 0
-        
-        for r in range(self.rows):
-            width = max(width,sum(pw[r*self.cols:r*self.cols+self.cols]))
-            row_height[r] = max(ph[r*self.cols:r*self.cols+self.cols])
-        width -= (trim[0] + trim[1])*self.cols
-        height = sum(row_height) - (trim[2] + trim[3])*self.rows
                 
         if self.target_width and self.target_height:
             width = self.target_width
@@ -311,14 +298,19 @@ class PageTiler:
             page_box_height = self.target_height / self.rows
             page_box_defined = True
         else:
+            for r in range(self.rows):
+                width = max(width,sum(pw[r*self.cols:r*self.cols+self.cols]))
+                row_height[r] = max(ph[r*self.cols:r*self.cols+self.cols])
+            width -= (trim[0] + trim[1])*self.cols
+            height = sum(row_height) - (trim[2] + trim[3])*self.rows
             page_box_defined = False
-                
+        
         media_box = [0,0,width + 2*margin,height + 2*margin]
         
         max_size_px = 14400
         if media_box[2] > max_size_px or media_box[3] > max_size_px:
             print (62 * '*')
-            print(_(f'Warning! Output is larger than {round(self.px_to_units(max_size_px))} {unitstr}, may not open correctly.'))
+            print(_('Warning! Output is larger than {} {}, may not open correctly.').format(round(self.px_to_units(max_size_px)), unitstr))
             print (62 * '*')
         
         print(_('Output size:') + ' {:0.2f} x {:0.2f} {}'.format(self.px_to_units(width + 2*margin), 
@@ -378,20 +370,42 @@ class PageTiler:
                 # unless we are using round here, there is no content - for whatever reason
                 shift_right = round((page_box_width-scaled_width)/2)
                 shift_up = round((page_box_height-scaled_height)/2)
-                
+                # invert shift if we are rotating
+                if self.rotation != SW_ROTATION_NONE:
+                    shift_up = -shift_up
                 x0 += shift_right
                 y0 += shift_up
-                        
+            
             if scale_factor != 1:
                 performed_scale = True
             
+            if self.rotation == SW_ROTATION_NONE:
+                # define the media box with the final grid + margins
+                # run through the width/height combos to find the maximum required
+                # R is the rotation matrix (default to identity)
+                R = [1,0,0,1]
+                R[0] *= scale_factor
+                R[3] *= scale_factor
+            else:
+                if self.rotation == SW_ROTATION_CLOCKWISE:
+                    R = [0,-1,1,0]
+                elif self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
+                    R = [0,1,-1,0]
+                R[1] *= scale_factor
+                R[2] *= scale_factor
+            
+            #print(R)
+            #print(o_shift[1])
+            #if page_box_defined:
+                #print(page_box_width, page_box_height)
+            
             # scale, shift and rotate
             # first shift to origin, then rotate, then shift to final destination
-            content_txt += f'q {scale_factor} {R[1]} {R[2]} {scale_factor} {x0+o_shift[0]} {y0+o_shift[1]} cm '
+            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0+o_shift[0]} {y0+o_shift[1]} cm '
             content_txt += f'{page_names[i]} Do Q '
         
         if performed_scale:
-            print("Warning: Some pages have been scaled because a target size was set. You should not see this warning if using the PDFStitcher GUI, since scaling is unsuitable for sewing patterns.")
+            print(_("Warning: Some pages have been scaled because a target size was set. You should not see this warning if using the PDFStitcher GUI, since scaling is unsuitable for sewing patterns."))
         
         newpage = pikepdf.Dictionary(
             Type=pikepdf.Name.Page, 
