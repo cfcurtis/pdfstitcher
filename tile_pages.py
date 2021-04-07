@@ -32,6 +32,7 @@ SW_UNITS_CENTIMETERS = 1
 SW_ROTATION_NONE = 0
 SW_ROTATION_CLOCKWISE = 1
 SW_ROTATION_COUNTERCLOCKWISE = 2
+SW_ROTATION_TURNAROUND = 3
 
 
 class PageTiler:
@@ -248,6 +249,8 @@ class PageTiler:
             rotstr = _('Clockwise')
         elif self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
             rotstr = _('Counterclockwise')
+        elif self.rotation == SW_ROTATION_TURNAROUND:
+            rotstr = _('Turn Around')
         
         orderstr = _('Rows then columns')
         if self.col_major:
@@ -268,23 +271,20 @@ class PageTiler:
         print('    ' + _('Rotation') + ': {}'.format(rotstr))
         print('    ' + _('Page order') + ': {}, {}, {}'.format(orderstr, lrstr, btstr))
         
-        # We need to account for the shift in origin if page rotation is applied
-        o_shift = [0,0]
+        # swap the trim order
+        if self.rotation == SW_ROTATION_NONE:
+            order = [0,1,2,3]
+        if self.rotation == SW_ROTATION_CLOCKWISE:
+            order = [3,2,0,1]
+        if self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
+            order = [2,3,1,0]
+        if self.rotation == SW_ROTATION_TURNAROUND:
+            order = [1,0,3,2]
+        trim = [trim[o] for o in order]
         
-        if self.rotation != SW_ROTATION_NONE:
-            # swap the trim order
-            if self.rotation == SW_ROTATION_CLOCKWISE:
-                o_shift = [0,pw[0]]
-                order = [3,2,0,1]
-
-            if self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
-                o_shift = [ph[0],0]
-                order = [2,3,1,0]
-            
+        if (self.rotation == SW_ROTATION_CLOCKWISE) or (self.rotation == SW_ROTATION_COUNTERCLOCKWISE):
             # swap width and height of pages
             ph, pw = pw, ph
-            
-            trim = [trim[o] for o in order]
         
         row_height = [0]*self.rows
         width = 0
@@ -371,33 +371,51 @@ class PageTiler:
                 shift_right = round((page_box_width-scaled_width)/2)
                 shift_up = round((page_box_height-scaled_height)/2)
                 # invert shift if we are rotating
-                if self.rotation != SW_ROTATION_NONE:
-                    shift_up = -shift_up
+                if self.rotation == SW_ROTATION_CLOCKWISE:
+                    shift_up *= -1
+                elif self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
+                    shift_right *= -1
+                elif self.rotation == SW_ROTATION_TURNAROUND:
+                    shift_right *= -1
+                    shift_up *= -1
                 x0 += shift_right
                 y0 += shift_up
             
             if scale_factor != 1:
                 performed_scale = True
             
+            # We need to account for the shift in origin if page rotation is applied
+            o_shift = [0,0]
+            
             if self.rotation == SW_ROTATION_NONE:
                 # define the media box with the final grid + margins
                 # run through the width/height combos to find the maximum required
                 # R is the rotation matrix (default to identity)
                 R = [1,0,0,1]
-                R[0] *= scale_factor
-                R[3] *= scale_factor
             else:
                 if self.rotation == SW_ROTATION_CLOCKWISE:
                     R = [0,-1,1,0]
+                    if page_box_defined:
+                        o_shift = [0,page_box_height]
+                    else:
+                        o_shift = [0,ph[i]]
                 elif self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
+                    if page_box_defined:
+                        o_shift = [page_box_width,0]
+                    else:
+                        o_shift = [pw[i],0]
                     R = [0,1,-1,0]
-                R[1] *= scale_factor
-                R[2] *= scale_factor
+                elif self.rotation == SW_ROTATION_TURNAROUND:
+                    R = [-1,0,0,-1]
+                    if page_box_defined:
+                        o_shift = [page_box_width,page_box_height]
+                    else:
+                        o_shift = [pw[i],ph[i]]
             
-            #print(R)
-            #print(o_shift[1])
-            #if page_box_defined:
-                #print(page_box_width, page_box_height)
+            R[0] *= scale_factor
+            R[1] *= scale_factor
+            R[2] *= scale_factor
+            R[3] *= scale_factor
             
             # scale, shift and rotate
             # first shift to origin, then rotate, then shift to final destination
