@@ -273,6 +273,7 @@ class PageTiler:
         
         # swap the trim order
         if self.rotation == SW_ROTATION_NONE:
+            # default: left,right,top,bottom
             order = [0,1,2,3]
         if self.rotation == SW_ROTATION_CLOCKWISE:
             order = [3,2,0,1]
@@ -412,10 +413,7 @@ class PageTiler:
                     else:
                         o_shift = [pw[i],ph[i]]
             
-            R[0] *= scale_factor
-            R[1] *= scale_factor
-            R[2] *= scale_factor
-            R[3] *= scale_factor
+            R = [R[i]*scale_factor for i in range(len(R))]
             
             # scale, shift and rotate
             # first shift to origin, then rotate, then shift to final destination
