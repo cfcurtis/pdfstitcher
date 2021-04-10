@@ -25,7 +25,7 @@ Most people probably want to just use the executable links above. However, if yo
 
 * [Python 3.6+](https://www.python.org/downloads/) and `pip`. Testing was done with 64-bit Python 3.8.5 provided by [Anaconda](https://www.anaconda.com/) on Windows 10 and Python 3.9.1 provided by [homebrew](https://brew.sh/) on macOS High Sierra 10.13.6.
 
-* [pikepdf](https://github.com/pikepdf/pikepdf) - can be installed by running `pip install pikepdf`
+* [pikepdf](https://github.com/pikepdf/pikepdf) - can be installed by running `pip install pikepdf` **Note:** For macOS less than 10.15, pikepdf v2.8.0 is the latest supported version. Specify with `pip install pikepdf==2.8.0` or build it from source if you're feeling adventurous.
 
 * [wxPython](https://www.wxpython.org/) - can be installed by running `pip install wxpython`
 
