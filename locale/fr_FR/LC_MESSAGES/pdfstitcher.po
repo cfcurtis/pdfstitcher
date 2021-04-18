@@ -201,7 +201,7 @@ msgstr "nom du calque"
 
 #: pdfstitcher.py:249
 msgid "Line Properties"
-msgstr "proprietés de la ligne
+msgstr "proprietés de la ligne"
 
 #: pdfstitcher.py:260
 msgid "Select line properties to modify"
