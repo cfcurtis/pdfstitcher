@@ -21,7 +21,7 @@ msgstr ""
 
 #: layerfilter.py:216
 msgid "No layers selected, generated PDF would be blank."
-msgstr ""
+msgstr "pas de calques selectionnés, le fichier généré sera vide"
 
 #: pdfstitcher.py:38 pdfstitcher.py:647
 msgid "Select input PDF"
@@ -39,7 +39,7 @@ msgstr "Enregistrer sous"
 #: pdfstitcher.py:55
 #, fuzzy
 msgid "Output Options"
-msgstr "Options"
+msgstr "Options de sortie"
 
 #: pdfstitcher.py:61 pdfstitcher.py:156
 msgid "Page Range"
@@ -53,27 +53,27 @@ msgstr ""
 
 #: pdfstitcher.py:69
 msgid "Process Layers"
-msgstr ""
+msgstr "traitement des calques"
 
 #: pdfstitcher.py:72
 msgid "Tile pages"
-msgstr ""
+msgstr "assemblage des pages"
 
 #: pdfstitcher.py:97
 msgid "Process layers then tile pages and save"
-msgstr ""
+msgstr "traitement des calques puis assemblage des pages et sauvegarde"
 
 #: pdfstitcher.py:100
 msgid "Process layers and save without tiling pages"
-msgstr ""
+msgstr "traitement des calques et sauvegarde sans assemblage"
 
 #: pdfstitcher.py:103
 msgid "Tile pages and save without processing layers"
-msgstr ""
+msgstr "assemblage des pages et sauvegarde sans traitement des calques"
 
 #: pdfstitcher.py:106
 msgid "Open the PDF and save selected page range without modifying"
-msgstr ""
+msgstr "ouvre le PDF et sauve l intervalle de page sans modification"
 
 #: pdfstitcher.py:117
 msgid "Required Parameters"
@@ -149,7 +149,7 @@ msgstr ""
 
 #: pdfstitcher.py:176
 msgid "May help fix things when output is not as expected"
-msgstr ""
+msgstr "pourrait aider a corriger des erreurs quand le resultat n est pas celui attendu"
 
 #: pdfstitcher.py:181
 msgid "Margin to add to final output"
@@ -185,71 +185,71 @@ msgstr "Bas"
 
 #: pdfstitcher.py:227
 msgid "Load PDF to view layers."
-msgstr ""
+msgstr "ouvrir un PDF pour voir les calques"
 
 #: pdfstitcher.py:237
 msgid "Include non-optional content"
-msgstr ""
+msgstr "inclure un contenu non-optionnel"
 
 #: pdfstitcher.py:241 pdfstitcher.py:446
 msgid "Deselect all"
-msgstr ""
+msgstr "tout deselectionner"
 
 #: pdfstitcher.py:248
 msgid "Layer Name"
-msgstr ""
+msgstr "nom du calque"
 
 #: pdfstitcher.py:249
 msgid "Line Properties"
-msgstr ""
+msgstr "proprietés de la ligne"
 
 #: pdfstitcher.py:260
 msgid "Select line properties to modify"
-msgstr ""
+msgstr "choisir les proprietés de la ligne a modifier"
 
 #: pdfstitcher.py:262
 msgid "Line Colour"
-msgstr ""
+msgstr "couleur de la ligne"
 
 #: pdfstitcher.py:271
 msgid "Line Thickness"
-msgstr ""
+msgstr "epaisseur de la ligne"
 
 #: pdfstitcher.py:276 pdfstitcher.py:336
 msgid "pt"
-msgstr ""
+msgstr "point"
 
 #: pdfstitcher.py:276 pdfstitcher.py:340
 msgid "in"
-msgstr ""
+msgstr "pouces"
 
 #: pdfstitcher.py:276 pdfstitcher.py:342
 msgid "cm"
-msgstr ""
+msgstr "cm"
 
 #: pdfstitcher.py:283
 msgid "Line Style"
-msgstr ""
+msgstr "Style de ligne"
 
 #: pdfstitcher.py:286
 msgid "Solid"
-msgstr ""
+msgstr "Plein"
 
 #: pdfstitcher.py:286
 msgid "Dashed"
-msgstr ""
+msgstr "Tiret"
 
 #: pdfstitcher.py:286
 msgid "Dotted"
-msgstr ""
+msgstr "Pointillés"
 
 #: pdfstitcher.py:293
 msgid "Apply"
-msgstr ""
+msgstr "Appliquer"
 
 #: pdfstitcher.py:295 pdfstitcher.py:416
 msgid "Reset"
-msgstr ""
+msgstr "Remise a zéro"
 
 #: pdfstitcher.py:303
 msgid "Apply to checked"
@@ -265,15 +265,15 @@ msgstr ""
 
 #: pdfstitcher.py:421
 msgid "No layers found in input document."
-msgstr ""
+msgstr "Pas de calques trouvés dans le document"
 
 #: pdfstitcher.py:432
 msgid "Select layers to include in output document."
-msgstr ""
+msgstr "Selectionnez les calques à inclure dans le document"
 
 #: pdfstitcher.py:448
 msgid "Select all"
-msgstr ""
+msgstr "Selectionnez tout"
 
 #: pdfstitcher.py:476 tile_pages.py:240
 msgid "Options"
@@ -281,11 +281,11 @@ msgstr "Options"
 
 #: pdfstitcher.py:478
 msgid "Tile Pages"
-msgstr ""
+msgstr "Assembleer les pages"
 
 #: pdfstitcher.py:480
 msgid "Layers"
-msgstr ""
+msgstr "Calques"
 
 #: pdfstitcher.py:488
 msgid "Generate PDF"
@@ -293,7 +293,7 @@ msgstr "Générer PDF"
 
 #: pdfstitcher.py:536
 msgid "No page range specified, defaulting to all"
-msgstr ""
+msgstr "Pas d intervalle de page selectionné.Par defaut, elles seront toutes traitées"
 
 #: pdfstitcher.py:592
 msgid "Tiling successful"
@@ -305,7 +305,7 @@ msgstr "Un problème est survenu"
 
 #: pdfstitcher.py:601
 msgid "Exception"
-msgstr ""
+msgstr "Erreur"
 
 #: pdfstitcher.py:606
 msgid "Successfully written to"
@@ -317,7 +317,7 @@ msgstr "Impossible d'enregistrer sur"
 
 #: pdfstitcher.py:637
 msgid "Cant overwrite input file, please select a different file for output"
-msgstr ""
+msgstr "Impossible de d ecrire sur le fichier source, choississez un autre nom de fichier pour la destination "
 
 #: pdfstitcher.py:662
 msgid "Opening"
@@ -371,11 +371,11 @@ msgstr "Rotation"
 
 #: tile_pages.py:282
 msgid "Warning! Output is larger than 508 cm, may not open correctly."
-msgstr ""
+msgstr "Attention, le resultat depasse 508 cm, le fichier pourrait ne pas s'ouvrir correctement"
 
 #: tile_pages.py:284
 msgid "Warning! Output is larger than 200 in, may not open correctly."
-msgstr ""
+msgstr "Attention, le resultat depasse 200 pouces, le fichier pourrait ne pas s'ouvrir correctement"
 
 #: tile_pages.py:286
 #, fuzzy
@@ -396,5 +396,5 @@ msgstr "seules les valeurs numériques sont autorisées"
 
 #: utils.py:88
 msgid "Please specify a page range"
-msgstr ""
+msgstr "Merci de preciser un intervalle de page"
 
