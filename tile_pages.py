@@ -22,17 +22,19 @@ import argparse
 import sys
 import math
 import copy
+import types
 import utils
 from gettext import gettext as _
 
+SW_UNITS = types.SimpleNamespace()
+SW_UNITS.INCHES = 0
+SW_UNITS.CENTIMETERS = 1
 
-SW_UNITS_INCHES = 0
-SW_UNITS_CENTIMETERS = 1
-
-SW_ROTATION_NONE = 0
-SW_ROTATION_CLOCKWISE = 1
-SW_ROTATION_COUNTERCLOCKWISE = 2
-SW_ROTATION_TURNAROUND = 3
+SW_ROTATION = types.SimpleNamespace()
+SW_ROTATION.NONE = 0
+SW_ROTATION.CLOCKWISE = 1
+SW_ROTATION.COUNTERCLOCKWISE = 2
+SW_ROTATION.TURNAROUND = 3
 
 
 class PageTiler:
@@ -40,10 +42,10 @@ class PageTiler:
             self,
             in_doc = None,
             page_range = None,
-            units = SW_UNITS_INCHES,
+            units = SW_UNITS.INCHES,
             trim = [0,0,0,0],
             margin = 0,
-            rotation = SW_ROTATION_NONE,
+            rotation = SW_ROTATION.NONE,
             actually_trim = False,
             override_trim = False,
             col_major = False,
@@ -89,14 +91,14 @@ class PageTiler:
 
     def units_to_px(self,val):
         pxval = val*72
-        if self.units == SW_UNITS_INCHES:
+        if self.units == SW_UNITS.INCHES:
             return pxval
         else:
             return pxval/2.54
         
     def px_to_units(self,val):
         inch_val = val/72
-        if self.units == SW_UNITS_INCHES:
+        if self.units == SW_UNITS.INCHES:
             return inch_val
         else:
             return inch_val*2.54
@@ -239,17 +241,17 @@ class PageTiler:
             self.cols = math.ceil(n_tiles/self.rows)
         
         # convert the margin and trim options into pixels
-        unitstr = 'cm' if self.units == SW_UNITS_CENTIMETERS else 'in'
+        unitstr = 'cm' if self.units == SW_UNITS.CENTIMETERS else 'in'
         margin = self.units_to_px(self.margin)
         trim = [self.units_to_px(t) for t in self.trim]
 
         rotstr = _('None')
         
-        if self.rotation == SW_ROTATION_CLOCKWISE:
+        if self.rotation == SW_ROTATION.CLOCKWISE:
             rotstr = _('Clockwise')
-        elif self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
+        elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
             rotstr = _('Counterclockwise')
-        elif self.rotation == SW_ROTATION_TURNAROUND:
+        elif self.rotation == SW_ROTATION.TURNAROUND:
             rotstr = _('Turn Around')
         
         orderstr = _('Rows then columns')
@@ -272,18 +274,18 @@ class PageTiler:
         print('    ' + _('Page order') + ': {}, {}, {}'.format(orderstr, lrstr, btstr))
         
         # swap the trim order
-        if self.rotation == SW_ROTATION_NONE:
+        if self.rotation == SW_ROTATION.NONE:
             # default: left,right,top,bottom
             order = [0,1,2,3]
-        if self.rotation == SW_ROTATION_CLOCKWISE:
+        if self.rotation == SW_ROTATION.CLOCKWISE:
             order = [3,2,0,1]
-        if self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
+        if self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
             order = [2,3,1,0]
-        if self.rotation == SW_ROTATION_TURNAROUND:
+        if self.rotation == SW_ROTATION.TURNAROUND:
             order = [1,0,3,2]
         trim = [trim[o] for o in order]
         
-        if (self.rotation == SW_ROTATION_CLOCKWISE) or (self.rotation == SW_ROTATION_COUNTERCLOCKWISE):
+        if (self.rotation == SW_ROTATION.CLOCKWISE) or (self.rotation == SW_ROTATION.COUNTERCLOCKWISE):
             # swap width and height of pages
             ph, pw = pw, ph
         
@@ -372,11 +374,11 @@ class PageTiler:
                 shift_right = round((page_box_width-scaled_width)/2)
                 shift_up = round((page_box_height-scaled_height)/2)
                 # invert shift if we are rotating
-                if self.rotation == SW_ROTATION_CLOCKWISE:
+                if self.rotation == SW_ROTATION.CLOCKWISE:
                     shift_up *= -1
-                elif self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
+                elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
                     shift_right *= -1
-                elif self.rotation == SW_ROTATION_TURNAROUND:
+                elif self.rotation == SW_ROTATION.TURNAROUND:
                     shift_right *= -1
                     shift_up *= -1
                 x0 += shift_right
@@ -388,25 +390,25 @@ class PageTiler:
             # We need to account for the shift in origin if page rotation is applied
             o_shift = [0,0]
             
-            if self.rotation == SW_ROTATION_NONE:
+            if self.rotation == SW_ROTATION.NONE:
                 # define the media box with the final grid + margins
                 # run through the width/height combos to find the maximum required
                 # R is the rotation matrix (default to identity)
                 R = [1,0,0,1]
             else:
-                if self.rotation == SW_ROTATION_CLOCKWISE:
+                if self.rotation == SW_ROTATION.CLOCKWISE:
                     R = [0,-1,1,0]
                     if page_box_defined:
                         o_shift = [0,page_box_height]
                     else:
                         o_shift = [0,ph[i]]
-                elif self.rotation == SW_ROTATION_COUNTERCLOCKWISE:
+                elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
                     if page_box_defined:
                         o_shift = [page_box_width,0]
                     else:
                         o_shift = [pw[i],0]
                     R = [0,1,-1,0]
-                elif self.rotation == SW_ROTATION_TURNAROUND:
+                elif self.rotation == SW_ROTATION.TURNAROUND:
                     R = [-1,0,0,-1]
                     if page_box_defined:
                         o_shift = [page_box_width,page_box_height]
