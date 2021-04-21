@@ -17,7 +17,6 @@
 
 import pikepdf
 from pikepdf import _cpphelpers
-import subprocess
 import argparse
 import sys
 import math
@@ -500,6 +499,9 @@ def parse_arguments():
 
 
 if __name__ == "__main__":
+    
+    import subprocess
+    
     args = parse_arguments()
     new_doc, success = main(args)
 
