@@ -253,15 +253,14 @@ msgstr "Remise a zéro"
 
 #: pdfstitcher.py:303
 msgid "Apply to checked"
-msgstr ""
-
+msgstr "Appliquez a la selection
 #: pdfstitcher.py:305
 msgid "Reset checked"
-msgstr ""
+msgstr "RAZ de la selection"
 
 #: pdfstitcher.py:415
 msgid "Apply to"
-msgstr ""
+msgstr "appliquez"
 
 #: pdfstitcher.py:421
 msgid "No layers found in input document."
