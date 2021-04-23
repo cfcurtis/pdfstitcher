@@ -22,7 +22,6 @@ import sys
 import math
 import copy
 import utils
-from gettext import gettext as _
 
 class PageTiler:
     def __init__(
@@ -325,6 +324,9 @@ class PageTiler:
         return new_doc
 
 def main(args):
+    # setup locale so _() doesn't break
+    utils.setup_locale()
+
     # first try opening the document
     try:
         in_doc = pikepdf.Pdf.open(args.input)

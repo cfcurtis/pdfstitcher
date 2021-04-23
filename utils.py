@@ -22,8 +22,7 @@ import pikepdf
 import gettext
 import locale
 
-version_string = 'v0.4'
-
+version_string = 'v0.4.1'
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
