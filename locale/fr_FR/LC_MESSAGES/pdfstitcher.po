@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-04-03 09:10-0600\n"
-"PO-Revision-Date: 2021-04-22 18:54+0200\n"
+"PO-Revision-Date: 2021-04-23 17:56+0200\n"
 "Last-Translator: mara004 <geisserml@gmail.com>\n"
 "Language: fr_FR\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -192,11 +192,11 @@ msgstr "Ouvrir un PDF pour voir les calques"
 
 #: pdfstitcher.py:237
 msgid "Include non-optional content"
-msgstr "Inclure un contenu non-optionnel"
+msgstr "Inclure le contenu non-optionnel"
 
 #: pdfstitcher.py:241 pdfstitcher.py:446
 msgid "Deselect all"
-msgstr "Tout deselectionner"
+msgstr "Tout désélectionner"
 
 #: pdfstitcher.py:248
 msgid "Layer Name"
@@ -204,11 +204,11 @@ msgstr "Nom du calque"
 
 #: pdfstitcher.py:249
 msgid "Line Properties"
-msgstr "Proprietés de la ligne"
+msgstr "Propriétés de la ligne"
 
 #: pdfstitcher.py:260
 msgid "Select line properties to modify"
-msgstr "Choisir les proprietés de la ligne a modifier"
+msgstr "Choisir les propriétés de la ligne à modifier"
 
 #: pdfstitcher.py:262
 msgid "Line Colour"
@@ -272,11 +272,11 @@ msgstr "Pas de calques trouvés dans le document"
 
 #: pdfstitcher.py:432
 msgid "Select layers to include in output document."
-msgstr "Selectionnez les calques à inclure dans le document"
+msgstr "Sélectionnez les calques à inclure dans le document"
 
 #: pdfstitcher.py:448
 msgid "Select all"
-msgstr "Selectionnez tout"
+msgstr "Sélectionnez tout"
 
 #: pdfstitcher.py:476 tile_pages.py:240
 msgid "Options"
@@ -297,7 +297,7 @@ msgstr "Générer PDF"
 #: pdfstitcher.py:536
 msgid "No page range specified, defaulting to all"
 msgstr ""
-"Pas d'intervalle de page selectionné - par defaut, elles seront toutes"
+"Pas d'intervalle de page sélectionné - par defaut, elles seront toutes"
 " traitées"
 
 #: pdfstitcher.py:592
@@ -348,7 +348,7 @@ msgstr "Vous n'avez pas choisi de fichier source"
 
 #: tile_pages.py:126
 msgid "Only {} pages in document, skipping {}"
-msgstr "Il n'y a que {} pages dans le document, ignorer"
+msgstr "Il n'y a que {} pages dans le document, ignorer {}"
 
 #: tile_pages.py:164
 msgid ""
@@ -380,14 +380,14 @@ msgstr "Rotation"
 #: tile_pages.py:282
 msgid "Warning! Output is larger than 508 cm, may not open correctly."
 msgstr ""
-"Attention, le resultat depasse 508 cm, le fichier pourrait ne pas s'ouvrir"
-" correctement"
+"Attention, le resultat dépasse 508 cm, le fichier pourrait ne pas s'ouvrir"
+" correctement."
 
 #: tile_pages.py:284
 msgid "Warning! Output is larger than 200 in, may not open correctly."
 msgstr ""
-"Attention, le resultat depasse 200 pouces, le fichier pourrait ne pas"
-" s'ouvrir correctement"
+"Attention, le resultat dépasse 200 pouces, le fichier pourrait ne pas"
+" s'ouvrir correctement."
 
 #: tile_pages.py:286
 msgid "Output size:"
