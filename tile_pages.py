@@ -23,7 +23,6 @@ import math
 import copy
 import types
 import utils
-from gettext import gettext as _
 
 SW_UNITS = types.SimpleNamespace()
 SW_UNITS.INCHES = 0
@@ -56,6 +55,8 @@ class PageTiler:
             target_height = None,
             center_content = None,
         ):
+        
+        utils.setup_locale()
         
         self.in_doc = in_doc
         
@@ -440,6 +441,9 @@ class PageTiler:
 
 
 def main(args):
+    
+    utils.setup_locale()
+    
     # first try opening the document
     try:
         in_doc = pikepdf.Pdf.open(args.input)
