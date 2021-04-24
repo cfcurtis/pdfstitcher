@@ -147,7 +147,7 @@ msgstr "Maßeinheit"
 
 #: pdfstitcher.py:175
 msgid "Set TrimBox to MediaBox"
-msgstr "Stelle die Zuschneidebox auf Medienbox um"
+msgstr "Zuschnitts-Einstellungen des Quelldokuments ignorieren"
 
 #: pdfstitcher.py:176
 msgid "May help fix things when output is not as expected"
@@ -159,7 +159,7 @@ msgstr "Zusätzlicher Projektionsrand"
 
 #: pdfstitcher.py:188
 msgid "Amount to trim from each page"
-msgstr "Angabe Randbeschneidung"
+msgstr "Ränder zuschneiden"
 
 #: pdfstitcher.py:189
 msgid "Overlap"
@@ -187,7 +187,7 @@ msgstr "Unten"
 
 #: pdfstitcher.py:227
 msgid "Load PDF to view layers."
-msgstr "Eine PDF-Datei laden, um die Ebenen anzuzeigen"
+msgstr "Eine PDF-Datei laden, um die Ebenen anzuzeigen."
 
 #: pdfstitcher.py:237
 msgid "Include non-optional content"
@@ -255,11 +255,11 @@ msgstr "Zurücksetzen"
 
 #: pdfstitcher.py:303
 msgid "Apply to checked"
-msgstr "Andwenden geprüft"
+msgstr "Auf Auswahl anwenden"
 
 #: pdfstitcher.py:305
 msgid "Reset checked"
-msgstr "Zurücksetzen geprüft"
+msgstr "Rückgängig"
 
 #: pdfstitcher.py:415
 msgid "Apply to"
@@ -296,7 +296,7 @@ msgstr "PDF erstellen"
 
 #: pdfstitcher.py:536
 msgid "No page range specified, defaulting to all"
-msgstr "Kein Seitenbereich angegeben, standardmäßig alle"
+msgstr "Kein Seitenbereich angegeben, es werden alle Seiten übernommen"
 
 #: pdfstitcher.py:592
 msgid "Tiling successful"
@@ -326,7 +326,7 @@ msgstr ""
 
 #: pdfstitcher.py:662
 msgid "Opening"
-msgstr "Öffnen"
+msgstr "Wird geöffnen"
 
 #: pdfstitcher.py:676
 msgid "Cannot open file"
@@ -334,11 +334,11 @@ msgstr "Datei kann nicht geöffnet werden"
 
 #: pdfstitcher.py:691
 msgid "PDF Stitcher"
-msgstr "PDF Stitcher"
+msgstr "PDF-Klebetool"
 
 #: tile_pages.py:92
 msgid "Invalid trim value specified, ignoring"
-msgstr "Ungültiger Wert bei der Randbeschneidung, Werte ignoriert"
+msgstr "Ungültiger Zuschnitts-Wert wird übersprungen"
 
 #: tile_pages.py:103
 msgid "Input document not loaded"

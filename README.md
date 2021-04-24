@@ -3,12 +3,14 @@ This is a utility for stitching together many PDF pages from a single document i
 
 As of v0.4 alpha, layers can be also selected for inclusion/exclusion in the final output. Line properties (thickness, style, colour) can also be modified if the input PDF is compatible.
 
+For the most up-to-date information, check out https://www.pdfstitcher.org.
+
 ## Download the latest release
 * [Windows (64-bit Windows 7 or 10)](https://github.com/cfcurtis/sewingutils/releases/latest/download/pdfstitcher.exe)
-* [MacOs (High Sierra or higher)](https://github.com/cfcurtis/sewingutils/releases/latest/download/pdfstitcher.app.zip)
+* [MacOs (High Sierra or higher)](https://github.com/cfcurtis/sewingutils/releases/latest/download/PDFStitcher-Installer.dmg)
 
 **Translations:**
-The Windows version will detect system language settings and change language if supported. Mac versions for different languages can be downloaed from the [latest release page](https://github.com/cfcurtis/sewingutils/releases/latest).
+PDFStitcher will detect system language settings and change language if supported. 
 
 Previous versions can be found by clicking on the "releases" link to the right.
 
@@ -27,7 +29,7 @@ Most people probably want to just use the executable links above. However, if yo
 
 * [pikepdf](https://github.com/pikepdf/pikepdf) - can be installed by running `pip install pikepdf` **Note:** For macOS less than 10.15, pikepdf v2.8.0 is the latest supported version. Specify with `pip install pikepdf==2.8.0` or build it from source if you're feeling adventurous.
 
-* [wxPython](https://www.wxpython.org/) - can be installed by running `pip install wxpython`
+* [wxPython](https://www.wxpython.org/) - can be installed by running `pip install wxpython` **Note:** for Linux, installation of wxpython can be tricky. I recommend checking out the instructions [here](https://wxpython.org/pages/downloads/index.html).
 
 ## Usage
 <a href="url"><img src="resources/stitcher_screenshot.png" width="400" ></a>
