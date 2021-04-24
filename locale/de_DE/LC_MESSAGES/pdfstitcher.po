@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-04-03 09:10-0600\n"
-"PO-Revision-Date: 2021-04-22 20:45+0200\n"
+"PO-Revision-Date: 2021-04-23 17:09+0200\n"
 "Last-Translator: mara004 <geisserml@gmail.com>\n"
 "Language: de_DE\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -115,23 +115,23 @@ msgstr "Unten nach oben"
 
 #: pdfstitcher.py:137 tile_pages.py:244
 msgid "Page order"
-msgstr "Seitenbefehl"
+msgstr "Seiten-Reihenfolge"
 
 #: pdfstitcher.py:148 tile_pages.py:222
 msgid "Clockwise"
-msgstr "Im Uhrzeiger"
+msgstr "Im Uhrzeigersinn"
 
 #: pdfstitcher.py:148 tile_pages.py:225
 msgid "Counterclockwise"
-msgstr "Gegen den Uhrzeiger"
+msgstr "Gegen den Uhrzeigersinn"
 
 #: pdfstitcher.py:149
 msgid "Page Rotation"
-msgstr "Seitenausrichtung"
+msgstr "Drehung"
 
 #: pdfstitcher.py:165
 msgid "Optional Parameters"
-msgstr "Optionale Eingaben"
+msgstr "Optionale Einstellungen"
 
 #: pdfstitcher.py:170
 msgid "Inches"
@@ -163,7 +163,7 @@ msgstr "Ränder zuschneiden"
 
 #: pdfstitcher.py:189
 msgid "Overlap"
-msgstr "Überlappung"
+msgstr "Überlappen"
 
 #: pdfstitcher.py:189 tile_pages.py:242
 msgid "Trim"
@@ -187,11 +187,11 @@ msgstr "Unten"
 
 #: pdfstitcher.py:227
 msgid "Load PDF to view layers."
-msgstr "Eine PDF-Datei laden, um die Ebenen anzuzeigen."
+msgstr "Eine PDF-Datei laden, um die Ebenen anzuzeigen"
 
 #: pdfstitcher.py:237
 msgid "Include non-optional content"
-msgstr "Inhalte übernehmen, für die es keine auswählbare Ebene gibt"
+msgstr "Basis-Inhalte übernehmen"
 
 #: pdfstitcher.py:241 pdfstitcher.py:446
 msgid "Deselect all"
@@ -199,7 +199,7 @@ msgstr "Alles abwählen"
 
 #: pdfstitcher.py:248
 msgid "Layer Name"
-msgstr "Ebenenname"
+msgstr "Name der Ebene"
 
 #: pdfstitcher.py:249
 msgid "Line Properties"
@@ -251,7 +251,7 @@ msgstr "Anwenden"
 
 #: pdfstitcher.py:295 pdfstitcher.py:416
 msgid "Reset"
-msgstr "Zurücksetzen"
+msgstr "Rückgängig"
 
 #: pdfstitcher.py:303
 msgid "Apply to checked"
@@ -276,7 +276,7 @@ msgstr ""
 
 #: pdfstitcher.py:448
 msgid "Select all"
-msgstr "Alle auswählen"
+msgstr "Alles auswählen"
 
 #: pdfstitcher.py:476 tile_pages.py:240
 msgid "Options"
@@ -296,7 +296,7 @@ msgstr "PDF erstellen"
 
 #: pdfstitcher.py:536
 msgid "No page range specified, defaulting to all"
-msgstr "Kein Seitenbereich angegeben, es werden alle Seiten übernommen"
+msgstr "Kein Seitenbereich angegeben, also werden alle Seiten übernommen"
 
 #: pdfstitcher.py:592
 msgid "Tiling successful"
@@ -326,7 +326,7 @@ msgstr ""
 
 #: pdfstitcher.py:662
 msgid "Opening"
-msgstr "Wird geöffnen"
+msgstr "Wird geöffnet"
 
 #: pdfstitcher.py:676
 msgid "Cannot open file"
@@ -334,7 +334,7 @@ msgstr "Datei kann nicht geöffnet werden"
 
 #: pdfstitcher.py:691
 msgid "PDF Stitcher"
-msgstr "PDF-Klebetool"
+msgstr "PDF Stitcher"
 
 #: tile_pages.py:92
 msgid "Invalid trim value specified, ignoring"
@@ -373,7 +373,7 @@ msgstr "Ränder"
 
 #: tile_pages.py:243
 msgid "Rotation"
-msgstr "Rotation"
+msgstr "Drehung"
 
 #: tile_pages.py:282
 msgid "Warning! Output is larger than 508 cm, may not open correctly."
