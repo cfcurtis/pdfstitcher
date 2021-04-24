@@ -147,7 +147,7 @@ msgstr "Maßeinheit"
 
 #: pdfstitcher.py:175
 msgid "Set TrimBox to MediaBox"
-msgstr "Zuschnitts-Einstellungen des Quelldokuments ignorieren"
+msgstr "TrimBox auf MediaBox einstellen"
 
 #: pdfstitcher.py:176
 msgid "May help fix things when output is not as expected"
