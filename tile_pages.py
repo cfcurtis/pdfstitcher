@@ -23,7 +23,6 @@ import math
 import copy
 import types
 import utils
-from gettext import gettext as _
 
 SW_UNITS = types.SimpleNamespace()
 SW_UNITS.INCHES = 0
@@ -56,6 +55,8 @@ class PageTiler:
             target_height = None,
             center_content = None,
         ):
+        
+        utils.setup_locale()
         
         self.in_doc = in_doc
         
@@ -152,15 +153,17 @@ class PageTiler:
         page_size_ref = 0
         
         page_count = len(self.in_doc.pages)
-        nzeros = 0
         trim = [self.units_to_px(t) for t in self.trim]
         
         # initialize the width/height indices based on page rotation
         page_rot = 0
         
         if '/Rotate' in self.in_doc.Root.Pages.keys():
-            page_rot = self.in_doc.Root.Pages.Rotate   
+            page_rot = self.in_doc.Root.Pages.Rotate
         
+        ref_p = next((p for p in self.page_range if p), None)
+        refmbox = self.in_doc.pages[ref_p-1].MediaBox
+
         for p in self.page_range:
             if p > page_count:
                 print(_('Only {} pages in document, skipping {}').format(page_count,p))
@@ -209,22 +212,21 @@ class PageTiler:
                 pw.append(float(pagembox[2]))
                 ph.append(float(pagembox[3]))
                 page_names.append(pagekey)
+
+                if abs(pagembox[2] - refmbox[2]) > 1 or abs(pagembox[3] - refmbox[3]) > 1:
+                    print(_('Warning: page {} is a different size from {}, output may be unpredictable').format(p, ref_p))
+
+                refmbox = pagembox
+                ref_p = p
             else:
                 page_names.append(None)
-                pw.append(0)
-                ph.append(0)
-                nzeros += 1
-        
-        # replace the zero pages with the average height/width
-        if nzeros > 0:
-            mean_width = sum(pw)/(len(pw) - nzeros)
-            mean_height = sum(ph)/(len(ph) - nzeros)
-            pw = [w if w > 0 else mean_width for w in pw]
-            ph = [h if h > 0 else mean_height for h in ph]
+                pw.append(float(refmbox[2]))
+                ph.append(float(refmbox[3]))
+
+        n_tiles = len(page_names)
         
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
         # figure out how big it needs to be based on requested columns/rows
-        n_tiles = len(page_names)
         if self.cols == 0 and self.rows == 0:
             # try for square
             self.cols = math.ceil(math.sqrt(n_tiles))
@@ -240,7 +242,7 @@ class PageTiler:
             self.cols = math.ceil(n_tiles/self.rows)
         
         # convert the margin and trim options into pixels
-        unitstr = 'cm' if self.units == SW_UNITS.CENTIMETERS else 'in'
+        unitstr = _('cm') if self.units == SW_UNITS.CENTIMETERS else _('in')
         margin = self.units_to_px(self.margin)
         trim = [self.units_to_px(t) for t in self.trim]
 
@@ -303,6 +305,7 @@ class PageTiler:
             for r in range(self.rows):
                 width = max(width,sum(pw[r*self.cols:r*self.cols+self.cols]))
                 row_height[r] = max(ph[r*self.cols:r*self.cols+self.cols])
+            
             width -= (trim[0] + trim[1])*self.cols
             height = sum(row_height) - (trim[2] + trim[3])*self.rows
             page_box_defined = False
@@ -414,7 +417,9 @@ class PageTiler:
                     else:
                         o_shift = [pw[i],ph[i]]
             
-            R = [R[i]*scale_factor for i in range(len(R))]
+            if performed_scale:
+                # not quite matrix multiplication but works for a scalar scale factor
+                R = [R[i]*scale_factor for i in range(len(R))]
             
             # scale, shift and rotate
             # first shift to origin, then rotate, then shift to final destination
@@ -436,6 +441,9 @@ class PageTiler:
 
 
 def main(args):
+    
+    utils.setup_locale()
+    
     # first try opening the document
     try:
         in_doc = pikepdf.Pdf.open(args.input)
