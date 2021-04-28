@@ -161,9 +161,14 @@ class PageTiler:
         if '/Rotate' in self.in_doc.Root.Pages.keys():
             page_rot = self.in_doc.Root.Pages.Rotate
         
-        ref_p = next((p for p in self.page_range if p), None)
+        for p in self.page_range:
+            if p > 0:
+                ref_p = p
+                break
         refmbox = self.in_doc.pages[ref_p-1].MediaBox
-
+        
+        different_size = set()
+        
         for p in self.page_range:
             if p > page_count:
                 print(_('Only {} pages in document, skipping {}').format(page_count,p))
@@ -214,15 +219,19 @@ class PageTiler:
                 page_names.append(pagekey)
 
                 if abs(pagembox[2] - refmbox[2]) > 1 or abs(pagembox[3] - refmbox[3]) > 1:
-                    print(_('Warning: page {} is a different size from {}, output may be unpredictable').format(p, ref_p))
-
+                    different_size.add(p)
+                
                 refmbox = pagembox
                 ref_p = p
+                
             else:
                 page_names.append(None)
                 pw.append(float(refmbox[2]))
                 ph.append(float(refmbox[3]))
-
+        
+        if len(different_size) > 0:
+            print(_('Warning: The pages {} have a different size than the page before').format(different_size))
+        
         n_tiles = len(page_names)
         
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
