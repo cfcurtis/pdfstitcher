@@ -161,7 +161,10 @@ class PageTiler:
         if '/Rotate' in self.in_doc.Root.Pages.keys():
             page_rot = self.in_doc.Root.Pages.Rotate
         
-        ref_p = self.page_range[0]
+        for p in self.page_range:
+            if p > 0:
+                ref_p = p
+                break
         refmbox = self.in_doc.pages[ref_p-1].MediaBox
         
         different_size = set()
@@ -219,12 +222,14 @@ class PageTiler:
                     different_size.add(p)
                 
                 refmbox = pagembox
+                ref_p = p
+                
             else:
                 page_names.append(None)
                 pw.append(float(refmbox[2]))
                 ph.append(float(refmbox[3]))
         
-        print(_('Warning: The size of page(s) {} is different from {}').format(str(different_size)[1:-1], ref_p))
+        print(_('Warning: The pages {} have a different size than the page before').format(different_size))
         
         n_tiles = len(page_names)
         
