@@ -229,7 +229,8 @@ class PageTiler:
                 pw.append(float(refmbox[2]))
                 ph.append(float(refmbox[3]))
         
-        print(_('Warning: The pages {} have a different size than the page before').format(different_size))
+        if len(different_size) > 0:
+            print(_('Warning: The pages {} have a different size than the page before').format(different_size))
         
         n_tiles = len(page_names)
         
