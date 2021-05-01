@@ -22,7 +22,7 @@ import sys
 import math
 import copy
 import types
-from pdfstitcher import utils
+import utils
 
 SW_UNITS = types.SimpleNamespace()
 SW_UNITS.INCHES = 0
