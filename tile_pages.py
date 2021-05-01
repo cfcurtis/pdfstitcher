@@ -303,9 +303,10 @@ class PageTiler:
             # swap width and height of pages
             ph, pw = pw, ph
         
-        row_height = [0]*self.rows
         width = 0
         height = 0
+        col_width = [0]*self.cols
+        row_height = [0]*self.rows
         
         if self.target_width and self.target_height:
             # determine size of each page based on requested dimensions
@@ -315,17 +316,28 @@ class PageTiler:
             page_box_height = self.target_height / self.rows
             page_box_defined = True
         else:
-            # determine size of output based on size of each page (no scaling)
-            for r in range(self.rows):
-                # total width is the maximum of all the sums of the individual pages
-                # total height is the sum of the maximum height of each row.
-                # This has the potential to result in gaps between rows and ragged edges
-                # in the event of mixed page sizes.
-                width = max(width,sum(pw[r*self.cols:r*self.cols+self.cols]))
-                row_height[r] = max(ph[r*self.cols:r*self.cols+self.cols])
+            # Find the grid that contains the maximum page size for each row/col
+            if self.col_major:
+                for c in range(self.cols):
+                    col_width[c] = max(pw[c*self.rows:c*self.rows+self.rows]) - (trim[0] + trim[1])
+                
+                for r in range(self.rows):
+                    row_height[r] = max(ph[r:n_tiles:self.cols]) - (trim[2] + trim[3])
+            else: 
+                for r in range(self.rows):
+                    row_height[r] = max(ph[r*self.cols:r*self.cols+self.cols]) - (trim[2] + trim[3])
+                
+                for c in range(self.cols):
+                    col_width[c] = max(pw[c:n_tiles:self.rows]) - (trim[0] + trim[1])
+
+            if self.right_to_left:
+                col_width.reverse()
             
-            width -= (trim[0] + trim[1])*self.cols
-            height = sum(row_height) - (trim[2] + trim[3])*self.rows
+            if self.bottom_to_top:
+                row_height.reverse()
+
+            width = sum(col_width)
+            height = sum(row_height)
             page_box_defined = False
                 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
@@ -374,10 +386,10 @@ class PageTiler:
                 scalef_height = page_box_height / source_height
                 # take the smaller scaling factor so that the page will fit into its box
                 scale_factor = min(scalef_width, scalef_height)
-                cpos_x0 = c*page_box_width
-                cpos_y0 = (self.rows-r-1)*page_box_height
+                cpos_x0 = c*page_box_width - c*(trim[0] + trim[1])
+                cpos_y0 = (self.rows-r-1)*page_box_height - (self.rows-r-1)*(trim[2] + trim[3])
             else:
-                cpos_x0 = sum(pw[r*self.cols:r*self.cols + c])
+                cpos_x0 = sum(col_width[:c])
                 cpos_y0 = sum(row_height[r+1:])
 
                 # store the page box height/width for convenience if rotation is needed
@@ -385,8 +397,8 @@ class PageTiler:
                 page_box_width = pw[i]
             
             # define the xobject position with reference to the origin at bottom left of page.
-            x0 = margin - trim[0] + cpos_x0 - c*(trim[0] + trim[1])
-            y0 = margin - trim[3] + cpos_y0 - (self.rows-r-1)*(trim[2] + trim[3])
+            x0 = margin + cpos_x0 
+            y0 = margin + cpos_y0
             
             if self.center_content:
                 if page_box_defined:
@@ -406,7 +418,7 @@ class PageTiler:
                         shift_up *= -1
                 else:
                     shift_up = round((row_height[r]-ph[i])/2)
-                    shift_right = 0
+                    shift_right = round((col_width[c]-pw[i])/2)
                 
                 x0 += shift_right
                 y0 += shift_up
