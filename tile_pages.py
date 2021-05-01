@@ -117,6 +117,39 @@ class PageTiler:
             print(_('Invalid trim value specified, ignoring'))
             self.trim = [0,0,0,0]
 
+    def show_options(self):
+        # convert the margin and trim options into pixels
+        unitstr = _('cm') if self.units == SW_UNITS.CENTIMETERS else _('in')
+        rotstr = _('None')
+        
+        if self.rotation == SW_ROTATION.CLOCKWISE:
+            rotstr = _('Clockwise')
+        elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
+            rotstr = _('Counterclockwise')
+        elif self.rotation == SW_ROTATION.TURNAROUND:
+            rotstr = _('Turn Around')
+        
+        orderstr = _('Rows then columns')
+        if self.col_major:
+            orderstr = _('Columns then rows')
+        
+        lrstr = _('Left to right')
+        if self.right_to_left:
+            lrstr = _('Right to left')
+        
+        btstr = _('Top to bottom')
+        if self.bottom_to_top:
+            btstr = _('Bottom to top')
+
+        print(_('Tiling with {} rows and {} columns').format(self.rows,self.cols))
+        print(_('Options') + ':')
+        print('    ' + _('Margins') + ': {} {}'.format(self.margin,unitstr))
+        print('    ' + _('Trim') + ': {} {}'.format(self.trim,unitstr))
+        print('    ' + _('Rotation') + ': {}'.format(rotstr))
+        print('    ' + _('Page order') + ': {}, {}, {}'.format(orderstr, lrstr, btstr))
+
+        return unitstr
+
     def run(
             self,
             rows = None,
@@ -234,8 +267,7 @@ class PageTiler:
         
         n_tiles = len(page_names)
         
-        # create a new document with a page big enough to contain all the tiled pages, plus requested margin
-        # figure out how big it needs to be based on requested columns/rows
+        # figure out how big the output needs to be based on requested columns/rows
         if self.cols == 0 and self.rows == 0:
             # try for square
             self.cols = math.ceil(math.sqrt(n_tiles))
@@ -250,49 +282,21 @@ class PageTiler:
         else:
             self.cols = math.ceil(n_tiles/self.rows)
         
-        # convert the margin and trim options into pixels
-        unitstr = _('cm') if self.units == SW_UNITS.CENTIMETERS else _('in')
-        margin = self.units_to_px(self.margin)
-        trim = [self.units_to_px(t) for t in self.trim]
-
-        rotstr = _('None')
-        
-        if self.rotation == SW_ROTATION.CLOCKWISE:
-            rotstr = _('Clockwise')
-        elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
-            rotstr = _('Counterclockwise')
-        elif self.rotation == SW_ROTATION.TURNAROUND:
-            rotstr = _('Turn Around')
-        
-        orderstr = _('Rows then columns')
-        if self.col_major:
-            orderstr = _('Columns then rows')
-        
-        lrstr = _('Left to right')
-        if self.right_to_left:
-            lrstr = _('Right to left')
-        
-        btstr = _('Top to bottom')
-        if self.bottom_to_top:
-            btstr = _('Bottom to top')
-
-        print(_('Tiling with {} rows and {} columns').format(self.rows,self.cols))
-        print(_('Options') + ':')
-        print('    ' + _('Margins') + ': {} {}'.format(self.margin,unitstr))
-        print('    ' + _('Trim') + ': {} {}'.format(self.trim,unitstr))
-        print('    ' + _('Rotation') + ': {}'.format(rotstr))
-        print('    ' + _('Page order') + ': {}, {}, {}'.format(orderstr, lrstr, btstr))
+        # after calculating rows/cols but before reordering trim, show the user the selected options
+        unitstr = self.show_options()
         
         # swap the trim order
-        if self.rotation == SW_ROTATION.NONE:
-            # default: left,right,top,bottom
-            order = [0,1,2,3]
+        # default: left,right,top,bottom
+        order = [0,1,2,3]
+
         if self.rotation == SW_ROTATION.CLOCKWISE:
             order = [3,2,0,1]
         if self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
             order = [2,3,1,0]
         if self.rotation == SW_ROTATION.TURNAROUND:
             order = [1,0,3,2]
+
+        trim = [self.units_to_px(t) for t in self.trim]
         trim = [trim[o] for o in order]
         
         if (self.rotation == SW_ROTATION.CLOCKWISE) or (self.rotation == SW_ROTATION.COUNTERCLOCKWISE):
@@ -302,25 +306,33 @@ class PageTiler:
         row_height = [0]*self.rows
         width = 0
         height = 0
-                
+        
         if self.target_width and self.target_height:
+            # determine size of each page based on requested dimensions
             width = self.target_width
             height = self.target_height
-            row_height = [self.target_width for i in range(self.rows)]
             page_box_width = self.target_width / self.cols
             page_box_height = self.target_height / self.rows
             page_box_defined = True
         else:
+            # determine size of output based on size of each page (no scaling)
             for r in range(self.rows):
+                # total width is the maximum of all the sums of the individual pages
+                # total height is the sum of the maximum height of each row.
+                # This has the potential to result in gaps between rows and ragged edges
+                # in the event of mixed page sizes.
                 width = max(width,sum(pw[r*self.cols:r*self.cols+self.cols]))
                 row_height[r] = max(ph[r*self.cols:r*self.cols+self.cols])
             
             width -= (trim[0] + trim[1])*self.cols
             height = sum(row_height) - (trim[2] + trim[3])*self.rows
             page_box_defined = False
-        
+                
+        # create a new document with a page big enough to contain all the tiled pages, plus requested margin
+        margin = self.units_to_px(self.margin)
         media_box = [0,0,width + 2*margin,height + 2*margin]
         
+        # check if it exceeds Adobe's 200 inch maximum size
         max_size_px = 14400
         if media_box[2] > max_size_px or media_box[3] > max_size_px:
             print (62 * '*')
@@ -334,6 +346,7 @@ class PageTiler:
         content_txt = ''
         performed_scale = False
         
+        # loop through all the page xobjects and place the non-empty ones
         for i in range(n_tiles):
             if not page_names[i]:
                 continue
@@ -352,8 +365,6 @@ class PageTiler:
                 r = self.rows - r - 1
                         
             scale_factor = 1
-            scale_shift_right = 0
-            scale_shift_up = 0
             
             if page_box_defined:
                 # calculate scaling factors based on source page size
@@ -362,18 +373,18 @@ class PageTiler:
                 scalef_width = page_box_width / source_width
                 scalef_height = page_box_height / source_height
                 # take the smaller scaling factor so that the page will fit into its box
-                if scalef_width <= scalef_height:
-                    scale_factor = scalef_width
-                else:
-                    scale_factor = scalef_height
-            
-            if page_box_defined:
+                scale_factor = min(scalef_width, scalef_height)
                 cpos_x0 = c*page_box_width
                 cpos_y0 = (self.rows-r-1)*page_box_height
             else:
                 cpos_x0 = sum(pw[r*self.cols:r*self.cols + c])
                 cpos_y0 = sum(row_height[r+1:])
+
+                # store the page box height/width for convenience if rotation is needed
+                page_box_height = ph[i]
+                page_box_width = pw[i]
             
+            # define the xobject position with reference to the origin at bottom left of page.
             x0 = margin - trim[0] + cpos_x0 - c*(trim[0] + trim[1])
             y0 = margin - trim[3] + cpos_y0 - (self.rows-r-1)*(trim[2] + trim[3])
             
@@ -396,51 +407,39 @@ class PageTiler:
                 else:
                     shift_up = round((row_height[r]-ph[i])/2)
                     shift_right = 0
+                
                 x0 += shift_right
                 y0 += shift_up
             
-            if scale_factor != 1:
-                performed_scale = True
-            
-            # We need to account for the shift in origin if page rotation is applied
-            o_shift = [0,0]
-            
             if self.rotation == SW_ROTATION.NONE:
-                # define the media box with the final grid + margins
-                # run through the width/height combos to find the maximum required
                 # R is the rotation matrix (default to identity)
                 R = [1,0,0,1]
             else:
+                # We need to account for the shift in origin if page rotation is applied
                 if self.rotation == SW_ROTATION.CLOCKWISE:
                     R = [0,-1,1,0]
-                    if page_box_defined:
-                        o_shift = [0,page_box_height]
-                    else:
-                        o_shift = [0,ph[i]]
+                    y0 += page_box_height
                 elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
-                    if page_box_defined:
-                        o_shift = [page_box_width,0]
-                    else:
-                        o_shift = [pw[i],0]
                     R = [0,1,-1,0]
+                    x0 += page_box_width
                 elif self.rotation == SW_ROTATION.TURNAROUND:
                     R = [-1,0,0,-1]
-                    if page_box_defined:
-                        o_shift = [page_box_width,page_box_height]
-                    else:
-                        o_shift = [pw[i],ph[i]]
+                    x0 += page_box_width
+                    y0 += page_box_height
             
-            if performed_scale:
+            if scale_factor != 1:
+                # if we scale any of the pages, keep track of it so we can warn afterwards
+                performed_scale = True
                 # not quite matrix multiplication but works for a scalar scale factor
                 R = [R[i]*scale_factor for i in range(len(R))]
             
             # scale, shift and rotate
-            # first shift to origin, then rotate, then shift to final destination
-            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0+o_shift[0]} {y0+o_shift[1]} cm '
+            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0} {y0} cm '
             content_txt += f'{page_names[i]} Do Q '
         
         if performed_scale:
-            print(_("Warning: Some pages have been scaled because a target size was set. You should not see this warning if using the PDFStitcher GUI, since scaling is unsuitable for sewing patterns."))
+            print(_("Warning: Some pages have been scaled because a target size was set. "
+                    "You should not see this warning if using the PDFStitcher GUI."))
         
         newpage = pikepdf.Dictionary(
             Type=pikepdf.Name.Page, 
