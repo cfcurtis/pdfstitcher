@@ -161,9 +161,14 @@ class PageTiler:
         if '/Rotate' in self.in_doc.Root.Pages.keys():
             page_rot = self.in_doc.Root.Pages.Rotate
         
-        ref_p = next((p for p in self.page_range if p), None)
+        for p in self.page_range:
+            if p > 0:
+                ref_p = p
+                break
         refmbox = self.in_doc.pages[ref_p-1].MediaBox
-
+        
+        different_size = set()
+        
         for p in self.page_range:
             if p > page_count:
                 print(_('Only {} pages in document, skipping {}').format(page_count,p))
@@ -214,15 +219,19 @@ class PageTiler:
                 page_names.append(pagekey)
 
                 if abs(pagembox[2] - refmbox[2]) > 1 or abs(pagembox[3] - refmbox[3]) > 1:
-                    print(_('Warning: page {} is a different size from {}, output may be unpredictable').format(p, ref_p))
-
+                    different_size.add(p)
+                
                 refmbox = pagembox
                 ref_p = p
+                
             else:
                 page_names.append(None)
                 pw.append(float(refmbox[2]))
                 ph.append(float(refmbox[3]))
-
+        
+        if len(different_size) > 0:
+            print(_('Warning: The pages {} have a different size than the page before').format(different_size))
+        
         n_tiles = len(page_names)
         
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
@@ -368,21 +377,25 @@ class PageTiler:
             x0 = margin - trim[0] + cpos_x0 - c*(trim[0] + trim[1])
             y0 = margin - trim[3] + cpos_y0 - (self.rows-r-1)*(trim[2] + trim[3])
             
-            if page_box_defined and self.center_content:
-                # center pages in their box
-                scaled_width = pw[i] * scale_factor
-                scaled_height = ph[i] * scale_factor
-                # unless we are using round here, there is no content - for whatever reason
-                shift_right = round((page_box_width-scaled_width)/2)
-                shift_up = round((page_box_height-scaled_height)/2)
-                # invert shift if we are rotating
-                if self.rotation == SW_ROTATION.CLOCKWISE:
-                    shift_up *= -1
-                elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
-                    shift_right *= -1
-                elif self.rotation == SW_ROTATION.TURNAROUND:
-                    shift_right *= -1
-                    shift_up *= -1
+            if self.center_content:
+                if page_box_defined:
+                    # center pages in their box
+                    scaled_width = pw[i] * scale_factor
+                    scaled_height = ph[i] * scale_factor
+                    # unless we are using round here, there is no content - for whatever reason
+                    shift_right = round((page_box_width-scaled_width)/2)
+                    shift_up = round((page_box_height-scaled_height)/2)
+                    # invert shift if we are rotating
+                    if self.rotation == SW_ROTATION.CLOCKWISE:
+                        shift_up *= -1
+                    elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
+                        shift_right *= -1
+                    elif self.rotation == SW_ROTATION.TURNAROUND:
+                        shift_right *= -1
+                        shift_up *= -1
+                else:
+                    shift_up = round((row_height[r]-ph[i])/2)
+                    shift_right = 0
                 x0 += shift_right
                 y0 += shift_up
             
