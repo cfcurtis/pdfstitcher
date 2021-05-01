@@ -377,21 +377,25 @@ class PageTiler:
             x0 = margin - trim[0] + cpos_x0 - c*(trim[0] + trim[1])
             y0 = margin - trim[3] + cpos_y0 - (self.rows-r-1)*(trim[2] + trim[3])
             
-            if page_box_defined and self.center_content:
-                # center pages in their box
-                scaled_width = pw[i] * scale_factor
-                scaled_height = ph[i] * scale_factor
-                # unless we are using round here, there is no content - for whatever reason
-                shift_right = round((page_box_width-scaled_width)/2)
-                shift_up = round((page_box_height-scaled_height)/2)
-                # invert shift if we are rotating
-                if self.rotation == SW_ROTATION.CLOCKWISE:
-                    shift_up *= -1
-                elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
-                    shift_right *= -1
-                elif self.rotation == SW_ROTATION.TURNAROUND:
-                    shift_right *= -1
-                    shift_up *= -1
+            if self.center_content:
+                if page_box_defined:
+                    # center pages in their box
+                    scaled_width = pw[i] * scale_factor
+                    scaled_height = ph[i] * scale_factor
+                    # unless we are using round here, there is no content - for whatever reason
+                    shift_right = round((page_box_width-scaled_width)/2)
+                    shift_up = round((page_box_height-scaled_height)/2)
+                    # invert shift if we are rotating
+                    if self.rotation == SW_ROTATION.CLOCKWISE:
+                        shift_up *= -1
+                    elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
+                        shift_right *= -1
+                    elif self.rotation == SW_ROTATION.TURNAROUND:
+                        shift_right *= -1
+                        shift_up *= -1
+                else:
+                    shift_up = round((row_height[r]-ph[i])/2)
+                    shift_right = 0
                 x0 += shift_right
                 y0 += shift_up
             
