@@ -31,7 +31,7 @@ class LayerFilter():
         self.pdf = doc
         self.keep_ocs = 'all'
         self.keep_non_oc = True
-        self.delete_ocs = True
+        self.delete_ocgs = True
         self.page_range = []
 
         self.line_props = {}
@@ -269,7 +269,7 @@ class LayerFilter():
         # edit the OCG listing in the root
         OCGs = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]
         Off = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) not in self.keep_ocs]
-        if self.delete_ocs:
+        if self.delete_ocgs:
             output.Root.OCProperties.OCGs = OCGs
         else:
             output.Root.OCProperties.D.ON = OCGs
@@ -277,7 +277,7 @@ class LayerFilter():
 
         # by default, unlock all layers and show all OCGs
         output.Root.OCProperties.D.Locked = []
-        if self.delete_ocs:
+        if self.delete_ocgs:
             output.Root.OCProperties.D.Order = self.filter_ocg_order(output.Root.OCProperties.D.Order)
 
         output.remove_unreferenced_resources()

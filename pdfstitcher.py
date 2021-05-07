@@ -238,9 +238,9 @@ class LayersTab(scrolled.ScrolledPanel):
         self.include_nonoc.SetValue(1)
         layer_sizer.Add(self.include_nonoc,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=5)
 
-        self.delete_ocs = wx.CheckBox(layer_pane,label=_('Delete non-selected layers'))
-        self.delete_ocs.SetValue(1)
-        layer_sizer.Add(self.delete_ocs,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=5)
+        self.delete_ocgs = wx.CheckBox(layer_pane,label=_('Delete non-selected layers'))
+        self.delete_ocgs.SetValue(1)
+        layer_sizer.Add(self.delete_ocgs,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=5)
 
         self.select_all = wx.CheckBox(layer_pane,label=_('Deselect all'))
         self.select_all.Bind(wx.EVT_CHECKBOX, self.on_select_all)
@@ -547,7 +547,7 @@ class SewGUI(wx.Frame):
             self.layer_filter.keep_ocs = self.lt.get_selected_layers()
             self.layer_filter.line_props = self.lt.line_props
             self.layer_filter.keep_non_oc = bool(self.lt.include_nonoc.GetValue())
-            self.layer_filter.delete_ocs = bool(self.lt.delete_ocs.GetValue())
+            self.layer_filter.delete_ocgs = bool(self.lt.delete_ocgs.GetValue())
             self.layer_filter.page_range = page_range
 
         if do_tile:
