@@ -85,10 +85,15 @@ class LayerFilter():
     
     def find_page_keep(self,res):
         if '/Properties' in res.keys():
-            page_ocs = {key:str(val.Name) for key, val in res.Properties.items() if 
-                '/Type' in val.keys() 
-                and str(val.Type) == '/OCG'
-                and str(val.Name) in self.keep_ocs}
+            if self.delete_ocgs:
+                page_ocs = {key:str(val.Name) for key, val in res.Properties.items() if 
+                    '/Type' in val.keys() 
+                    and str(val.Type) == '/OCG'
+                    and str(val.Name) in self.keep_ocs}
+            else:
+                page_ocs = {key:str(val.Name) for key, val in res.Properties.items() if 
+                    '/Type' in val.keys() 
+                    and str(val.Type) == '/OCG'}
             return page_ocs
         else:
             return {}
