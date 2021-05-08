@@ -145,7 +145,7 @@ class TileTab(scrolled.ScrolledPanel):
         
         # rotation 
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        rotate_opts = [_('None'),_('Clockwise'),_('Counterclockwise')]
+        rotate_opts = [_('None'),_('Clockwise'),_('Counterclockwise'),_('Turn Around')]
         newline.Add(wx.StaticText(self, label=_('Page Rotation') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.rotate_combo = wx.ComboBox(self, choices=rotate_opts, value=rotate_opts[0], style=wx.CB_READONLY)
         newline.Add(self.rotate_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=5)
@@ -693,7 +693,7 @@ if __name__ == '__main__':
     disp_w = wx.Display().GetGeometry().GetWidth()
 
     h = min(int(disp_h*0.85),800)
-    w = min(int(disp_w*0.5),600)
+    w = min(int(disp_w*0.60),670)
 
     frm = SewGUI(None, title=_('PDF Stitcher') + ' ' + utils.version_string, size=(w,h))
 
