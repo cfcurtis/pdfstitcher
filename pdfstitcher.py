@@ -693,7 +693,7 @@ if __name__ == '__main__':
     disp_w = wx.Display().GetGeometry().GetWidth()
 
     h = min(int(disp_h*0.85),800)
-    w = min(int(disp_w*0.60),670)
+    w = min(int(disp_w*0.60),700)
 
     frm = SewGUI(None, title=_('PDF Stitcher') + ' ' + utils.version_string, size=(w,h))
 
