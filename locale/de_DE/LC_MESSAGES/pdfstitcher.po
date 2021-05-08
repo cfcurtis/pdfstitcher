@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-05-08 14:28+0200\n"
-"PO-Revision-Date: 2021-05-08 14:33+0200\n"
+"PO-Revision-Date: 2021-05-08 15:26+0200\n"
 "Last-Translator: mara004 <geisserml@gmail.com>\n"
 "Language: de_DE\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -120,15 +120,15 @@ msgstr "Seiten-Reihenfolge"
 
 #: pdfstitcher.py:148 tile_pages.py:126
 msgid "Clockwise"
-msgstr "Im Uhrzeigersinn"
+msgstr "Rechts"
 
 #: pdfstitcher.py:148 tile_pages.py:128
 msgid "Counterclockwise"
-msgstr "Gegen den Uhrzeigersinn"
+msgstr "Links"
 
 #: pdfstitcher.py:149
 msgid "Page Rotation"
-msgstr "Drehung"
+msgstr "Rotation"
 
 #: pdfstitcher.py:165
 msgid "Optional Parameters"
@@ -331,7 +331,7 @@ msgstr ""
 
 #: pdfstitcher.py:669
 msgid "Opening"
-msgstr "Wird geöffnet"
+msgstr "Wird geöffnet:"
 
 #: pdfstitcher.py:683
 msgid "Cannot open file"
@@ -347,7 +347,7 @@ msgstr "Ungültiger Zuschnitts-Wert wird übersprungen"
 
 #: tile_pages.py:130
 msgid "Turn Around"
-msgstr ""
+msgstr "Umdrehen"
 
 #: tile_pages.py:144
 msgid "Tiling with {} rows and {} columns"
@@ -359,7 +359,7 @@ msgstr "Ränder"
 
 #: tile_pages.py:148
 msgid "Rotation"
-msgstr "Drehung"
+msgstr "Rotation"
 
 #: tile_pages.py:176
 msgid "Input document not loaded"
@@ -370,11 +370,8 @@ msgid "Only {} pages in document, skipping {}"
 msgstr "Nur {} Seiten im Dokument, die Angaben {} werden übersprungen"
 
 #: tile_pages.py:266
-#, fuzzy
 msgid "Warning: The pages {} have a different size than the page before"
-msgstr ""
-"Warnung: Seite {} hat eine andere Größe als {}, das Ergebnis könnte "
-"unberechenbar sein"
+msgstr "Warnung: Die Seiten {} haben eine andere Größe als die Seite davor"
 
 #: tile_pages.py:281
 msgid ""
@@ -385,10 +382,9 @@ msgstr ""
 " für {}  Seiten benötigt"
 
 #: tile_pages.py:351
-#, fuzzy
 msgid "Warning! Output is larger than {} {}, may not open correctly."
 msgstr ""
-"Warnung! Die Ausgabe wird größer als 508 cm und kann vermutlich nicht "
+"Warnung! Die Ausgabe wird größer als {} {} und kann vermutlich nicht "
 "richtig geöffnet werden."
 
 #: tile_pages.py:354
@@ -400,6 +396,9 @@ msgid ""
 "Warning: Some pages have been scaled because a target size was set. You "
 "should not see this warning if using the PDFStitcher GUI."
 msgstr ""
+"Warnung: Einige Seiten wurden skaliert, weil eine Ziel-Größe angegeben war. "
+"Diese Warnung sollte nicht zu sehen sein, wenn die PDFStitcher GUI verwendet"
+" wurde."
 
 #: tile_pages.py:475
 msgid "Unable to open"
