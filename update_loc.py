@@ -9,7 +9,7 @@ if __name__ == '__main__':
     SourceTree = dirname(abspath(__file__))
     T = SourceTree + '/locale/'
     
-    run([f'pybabel extract -F babel.cfg -o ./locale/pdfstitcher.pot --copyright-holder="Charlotte Curtis" --project=pdfstitcher .'], shell=True, cwd=SourceTree)
+    run([f'pybabel extract -F babel.cfg -o {T}pdfstitcher.pot --copyright-holder="Charlotte Curtis" --project=pdfstitcher .'], shell=True, cwd=SourceTree)
 
     LOCALES = [lp for lp in listdir(T) if isdir(T+lp)]
     print(LOCALES)
