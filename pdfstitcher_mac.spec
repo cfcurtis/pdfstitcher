@@ -48,7 +48,7 @@ app = BUNDLE(exe,
              name=basename + '.app',
              icon='resources/stitcher-icon.icns',
              bundle_identifier='org.pdfstitcher',
-             version='4.0.1',
+             version='0.4.1',
              info_plist={
               'NSPrincipalClass': 'NSApplication',
               'NSAppleScriptEnabled': False,
