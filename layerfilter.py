@@ -82,7 +82,16 @@ class LayerFilter():
             return None 
 
         names = [str(oc.Name) for oc in self.pdf.Root.OCProperties.OCGs]
-        ordered_names = [str(o.Name) for o in self.pdf.Root.OCProperties.D.Order]
+        ordered_names = []
+        for o in self.pdf.Root.OCProperties.D.Order:
+            if '/Name' in o.keys():
+                if o.Name not in ordered_names:
+                    ordered_names.append(str(o.Name))
+            else:
+                for o2 in o:
+                    if '/Name' in o2.keys():
+                        if o2.Name not in ordered_names:
+                            ordered_names.append(str(o2.Name))
         for n in names:
             if n not in ordered_names:
                 ordered_names.append(n)
