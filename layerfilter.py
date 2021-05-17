@@ -81,7 +81,12 @@ class LayerFilter():
         if '/OCProperties' not in self.pdf.Root.keys():
             return None 
 
-        return [str(oc.Name) for oc in self.pdf.Root.OCProperties.OCGs]
+        names = [str(oc.Name) for oc in self.pdf.Root.OCProperties.OCGs]
+        ordered_names = [str(o.Name) for o in self.pdf.Root.OCProperties.D.Order]
+        for n in names:
+            if n not in ordered_names:
+                ordered_names.append(n)
+        return ordered_names
     
     def find_page_keep(self,res):
         if '/Properties' in res.keys():
