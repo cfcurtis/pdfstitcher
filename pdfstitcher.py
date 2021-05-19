@@ -426,8 +426,8 @@ class LayersTab(scrolled.ScrolledPanel):
             return
 
         self.layer_list.DeleteAllItems()
-        for l in layers:
-            self.layer_list.InsertItem(0,l)
+        for i, l in enumerate(layers):
+            self.layer_list.InsertItem(i,l)
 
         self.layer_list.SetColumnWidth(0,wx.LIST_AUTOSIZE_USEHEADER)
         self.layer_list.SetColumnWidth(1,wx.LIST_AUTOSIZE_USEHEADER)
