@@ -288,8 +288,13 @@ class LayerFilter():
         # edit the OCG listing in the root
         OCGs = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]
         Off = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) not in self.keep_ocs]
+        self.off_ocs = []
+        for o in Off:
+            self.off_ocs.append(o.Name)
         if self.delete_ocgs:
             output.Root.OCProperties.OCGs = OCGs
+            self.properties = self.get_properties(output.Root)
+            self.remove_ocgs_from_stream(output.Root)
         else:
             output.Root.OCProperties.D.ON = OCGs
             output.Root.OCProperties.D.OFF = Off
@@ -302,3 +307,67 @@ class LayerFilter():
         output.remove_unreferenced_resources()
 
         return output
+
+    def get_properties(self, ob, properties=None, depth = 0):
+        depth += 1
+        if depth > 5:
+            return None
+        if isinstance(ob, pikepdf.Array):
+            for i in range(len(ob)):
+                p = self.get_properties(ob[i], properties, depth)
+                if p != None:
+                    properties = p
+                    if p != None:
+                        return p
+
+        if isinstance(ob, pikepdf.Dictionary):
+            for o in ob.keys():
+                if o == '/Resources':
+                    r = ob[o]
+                    if '/Properties' in r.keys():
+                        p = r['/Properties']
+                        return p
+                if o != '/Parent':
+                    p = self.get_properties(ob[o], properties, depth)
+                    if p != None:
+                        properties = p
+                        return p
+        return properties
+
+      
+    def remove_ocgs_from_stream(self, ob, in_oc = False, keeping = True, depth = 0):
+        depth += 1
+        if depth > 5:
+            return None
+
+        if isinstance(ob, pikepdf.Array):
+            for i in range(len(ob)):
+                self.remove_ocgs_from_stream(ob[i], in_oc, keeping, depth)
+
+        if isinstance(ob, pikepdf.Dictionary):
+            for o in ob.keys():
+                if o != '/Parent':
+                    self.remove_ocgs_from_stream(ob[o], in_oc, keeping, depth)
+
+        if isinstance(ob, pikepdf.Stream):
+            commands = []
+            in_oc = False
+            try:
+                for operands, operator in pikepdf.parse_content_stream(ob):
+                    if str(operator) == "BDC" and len(operands) > 1 and str(operands[0]) == "/OC":
+                        in_oc = True
+                        keeping = True
+                        oc = str(operands[1])
+                        if self.properties != None:
+                            if oc in self.properties.keys():
+                                ocg = self.properties[oc]
+                                if ocg.Name in self.off_ocs:
+                                    keeping = False
+                    if str(operator) == 'EMC':
+                        in_oc = False
+                    if keeping or not in_oc:
+                        commands.append([operands, operator])
+                newstream = pikepdf.unparse_content_stream(commands)
+                ob.write(newstream)
+            except:
+                print("couldn't open stream")
