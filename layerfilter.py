@@ -363,10 +363,10 @@ class LayerFilter():
                                 ocg = self.properties[oc]
                                 if ocg.Name in self.off_ocs:
                                     keeping = False
-                    if str(operator) == 'EMC':
-                        in_oc = False
                     if keeping or not in_oc:
                         commands.append([operands, operator])
+                    if str(operator) == 'EMC':
+                        in_oc = False
                 newstream = pikepdf.unparse_content_stream(commands)
                 ob.write(newstream)
             except:
