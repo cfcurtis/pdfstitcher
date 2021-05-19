@@ -352,10 +352,15 @@ class LayerFilter():
         if isinstance(ob, pikepdf.Stream):
             commands = []
             in_oc = False
+            q_mismatch = False
             try:
+                qs = 0
+                Qs = 0
                 for operands, operator in pikepdf.parse_content_stream(ob):
                     if str(operator) == "BDC" and len(operands) > 1 and str(operands[0]) == "/OC":
                         in_oc = True
+                        qs = 0
+                        Qs = 0
                         keeping = True
                         oc = str(operands[1])
                         if self.properties != None:
@@ -363,11 +368,21 @@ class LayerFilter():
                                 ocg = self.properties[oc]
                                 if ocg.Name in self.off_ocs:
                                     keeping = False
+                    if in_oc:
+                        if str(operator) == 'q':
+                            qs += 1
+                        if str(operator) == 'Q':
+                            Qs += 1
                     if keeping or not in_oc:
                         commands.append([operands, operator])
                     if str(operator) == 'EMC':
                         in_oc = False
+                        if(qs != Qs):
+                            q_mismatch = True
                 newstream = pikepdf.unparse_content_stream(commands)
-                ob.write(newstream)
+                if not q_mismatch:
+                    ob.write(newstream)
+                else:
+                    print("q mismatch")
             except:
                 print("couldn't open stream")
