@@ -16,7 +16,6 @@
 
 from os import write
 import pikepdf
-from wx import Yield, ProgressDialog
 import pdf_operators as pdf_ops
 from decimal import Decimal
 import utils 
