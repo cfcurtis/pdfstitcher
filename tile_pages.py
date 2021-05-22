@@ -179,7 +179,12 @@ class PageTiler:
         # initialize a new document
         new_doc = utils.init_new_doc(self.in_doc)
 
-        content_dict = pikepdf.Dictionary({})
+        # define the dictionary to store xobjects, unless we're just trimming/adding margins to one page
+        if len(self.page_range) > 1:
+            content_dict = pikepdf.Dictionary({})
+        else:
+            content_dict = None
+
         page_names = []
         pw = []
         ph = []
@@ -211,7 +216,7 @@ class PageTiler:
                 pagekey = f'/Page{p}'
                 pagembox = self.in_doc.pages[p-1].MediaBox
                 
-                if pagekey not in content_dict.keys():
+                if content_dict is None or pagekey not in content_dict.keys():
                     # copy the page over as an xobject
                     # pikepdf.pages is zero indexed, so subtract one
                     localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
@@ -245,7 +250,8 @@ class PageTiler:
                             localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[2]
                             localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[0]
  
-                    content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
+                    if content_dict is not None:
+                        content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
 
                 pw.append(float(pagembox[2]))
                 ph.append(float(pagembox[3]))
@@ -446,21 +452,39 @@ class PageTiler:
                 R = [R[i]*scale_factor for i in range(len(R))]
             
             # scale, shift and rotate
-            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0} {y0} cm '
-            content_txt += f'{page_names[i]} Do Q '
+            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0} {y0} cm'
+
+            if content_dict is not None:
+                content_txt += f'{page_names[i]} Do Q'
+            else:
+                # just one page: redefine the coordinate system and wrap the contents in q/Q
+                localpage.page_contents_add(new_doc.make_stream(content_txt.encode()),prepend=True)
+                localpage.page_contents_add(new_doc.make_stream(b'Q'))
         
         if performed_scale:
             print(_("Warning: Some pages have been scaled because a target size was set. "
                     "You should not see this warning if using the PDFStitcher GUI."))
         
-        newpage = pikepdf.Dictionary(
-            Type=pikepdf.Name.Page, 
-            MediaBox=media_box,
-            Resources=pikepdf.Dictionary(XObject=content_dict),
-            Contents=pikepdf.Stream(new_doc,content_txt.encode())
-        )
-        
-        new_doc.pages.append(newpage)
+        if content_dict:
+            newpage = pikepdf.Dictionary(
+                Type=pikepdf.Name.Page, 
+                MediaBox=media_box,
+                Resources=pikepdf.Dictionary(XObject=content_dict),
+                Contents=pikepdf.Stream(new_doc,content_txt.encode())
+            )
+            new_doc.pages.append(newpage)
+        else:
+            localpage.MediaBox = media_box
+            # modify the other boxes to shift according to the desired margin
+            for box in ['/BleedBox','/CropBox','/TrimBox','/ArtBox']:
+                if box in localpage.keys():
+                    localpage[box][0] = float(localpage[box][0]) - margin
+                    localpage[box][1] = float(localpage[box][1]) - margin
+                    localpage[box][2] = float(localpage[box][2]) + 2*margin
+                    localpage[box][3] = float(localpage[box][3]) + 2*margin
+
+            new_doc.pages.append(localpage)
+            
         return new_doc
 
 
