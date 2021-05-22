@@ -426,8 +426,8 @@ class LayersTab(scrolled.ScrolledPanel):
             return
 
         self.layer_list.DeleteAllItems()
-        for l in layers:
-            self.layer_list.InsertItem(0,l)
+        for i, l in enumerate(layers):
+            self.layer_list.InsertItem(i,l)
 
         self.layer_list.SetColumnWidth(0,wx.LIST_AUTOSIZE_USEHEADER)
         self.layer_list.SetColumnWidth(1,wx.LIST_AUTOSIZE_USEHEADER)
@@ -514,6 +514,9 @@ class SewGUI(wx.Frame):
 
         if sys.platform == 'win32' or sys.platform == 'linux':
             self.SetIcon(wx.Icon(utils.resource_path('resources/stitcher-icon.ico')))
+            
+        if len(sys.argv) > 1:
+          self.load_file(sys.argv[1])
     
     def page_range_updated(self,event):
         if event.GetId() == self.io.page_range_txt.GetId():
