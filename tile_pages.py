@@ -452,10 +452,10 @@ class PageTiler:
                 R = [R[i]*scale_factor for i in range(len(R))]
             
             # scale, shift and rotate
-            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0} {y0} cm'
+            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0} {y0} cm '
 
             if content_dict is not None:
-                content_txt += f'{page_names[i]} Do Q'
+                content_txt += f'{page_names[i]} Do Q '
             else:
                 # just one page: redefine the coordinate system and wrap the contents in q/Q
                 localpage.page_contents_add(new_doc.make_stream(content_txt.encode()),prepend=True)
