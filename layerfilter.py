@@ -20,6 +20,7 @@ from wx import Yield, ProgressDialog
 import pdf_operators as pdf_ops
 from decimal import Decimal
 import utils 
+import sys
 
 # helper functions to dump page to file for debugging
 def write_page(fname,stream):
@@ -293,6 +294,7 @@ class LayerFilter():
             self.off_ocs.append(o.Name)
         if self.delete_ocgs:
             output.Root.OCProperties.OCGs = OCGs
+            output.Root.OCProperties.D.ON = OCGs
             self.properties = self.get_properties(output.Root)
             self.remove_ocgs_from_stream(output.Root)
         else:
@@ -336,6 +338,8 @@ class LayerFilter():
 
       
     def remove_ocgs_from_stream(self, ob, in_oc = False, keeping = True, depth = 0):
+        keep_operators = ['Tc', 'Tw', 'Tz', 'TL', 'Tf', 'Tr', 'Ts', 'Td', 'TD', 'Tm', 'd0', 'd1', 'CS', 'cs', 'SC', 'SCN', 'sc', 'scn',
+        'G', 'g', 'RG', 'rg', 'K', 'k', 'BX', 'EX']
         depth += 1
         if depth > 5:
             return None
@@ -357,6 +361,7 @@ class LayerFilter():
                 qs = 0
                 Qs = 0
                 for operands, operator in pikepdf.parse_content_stream(ob):
+                    #print(f"Op {operator}, operands {operands}")
                     if str(operator) == "BDC" and len(operands) > 1 and str(operands[0]) == "/OC":
                         in_oc = True
                         qs = 0
@@ -373,16 +378,23 @@ class LayerFilter():
                             qs += 1
                         if str(operator) == 'Q':
                             Qs += 1
-                    if keeping or not in_oc:
+                    if keeping or not in_oc or str(operator) in keep_operators:
                         commands.append([operands, operator])
                     if str(operator) == 'EMC':
                         in_oc = False
                         if(qs != Qs):
-                            q_mismatch = True
+                            #q_mismatch = True
+                            if qs > Qs:
+                                commands.append(['Q', []])
+                                commands.append(['', []])
+                            else:
+                                commands.append(['q', []])
+                                commands.append(['', []])
                 newstream = pikepdf.unparse_content_stream(commands)
-                if not q_mismatch:
-                    ob.write(newstream)
-                else:
-                    print("q mismatch")
+                #if not q_mismatch:
+                ob.write(newstream)
+                #else:
+                #    print("q mismatch")
             except:
+                #print("couldn't open stream ", sys.exc_info()[0] )
                 print("couldn't open stream")
