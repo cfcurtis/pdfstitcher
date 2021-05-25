@@ -384,12 +384,13 @@ class LayerFilter():
                         in_oc = False
                         if(qs != Qs):
                             #q_mismatch = True
-                            if qs > Qs:
-                                commands.append(['Q', []])
-                                commands.append(['', []])
-                            else:
-                                commands.append(['q', []])
-                                commands.append(['', []])
+                            if keeping:
+                                if qs > Qs:
+                                    commands.append(['Q', []])
+                                    commands.append(['', []])
+                                else:
+                                    commands.append(['q', []])
+                                    commands.append(['', []])
                 newstream = pikepdf.unparse_content_stream(commands)
                 #if not q_mismatch:
                 ob.write(newstream)
