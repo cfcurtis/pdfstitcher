@@ -16,7 +16,7 @@ for l in locales:
     locale_paths.append((f'locale/{l}/LC_MESSAGES/pdfstitcher.mo',f'locale/{l}/LC_MESSAGES'))
 
 a = Analysis(['pdfstitcher.py'],
-             pathex=['/Users/charlotte/Code/pdfstitcher'],
+             pathex=['.'],
              binaries=[],
              datas=locale_paths,
              hiddenimports=[],
@@ -46,4 +46,18 @@ exe = EXE(pyz,
 app = BUNDLE(exe,
              name=basename + '.app',
              icon='resources/stitcher-icon.icns',
-             bundle_identifier=None)
+             bundle_identifier='org.pdfstitcher',
+             version='0.4.1',
+             info_plist={
+              'NSPrincipalClass': 'NSApplication',
+              'NSAppleScriptEnabled': False,
+              'CFBundleDocumentTypes': [
+                  {
+                    'CFBundleTypeExtensions' : ['pdf'],
+                    'LSItemContentTypes': ['com.adobe.pdf'],
+                    'CFBundlerTypeRole' : 'Editor',
+                    'LSHandlerRank': 'Alternate'
+                  }
+              ]
+            },
+			 )
