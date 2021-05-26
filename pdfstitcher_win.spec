@@ -12,7 +12,7 @@ block_cipher = None
 
 
 a = Analysis(['pdfstitcher.py'],
-             pathex=['C:\\Users\\cfcur\\Documents\\Python\\sewingutils'],
+             pathex=['.'],
              binaries=[],
              datas=locale_paths + [('resources\\stitcher-icon.ico','resources')],
              hiddenimports=[],

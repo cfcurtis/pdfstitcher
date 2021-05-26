@@ -16,7 +16,6 @@ for l in locales:
     locale_paths.append((f'locale/{l}/LC_MESSAGES/pdfstitcher.mo',f'locale/{l}/LC_MESSAGES'))
 
 a = Analysis(['pdfstitcher.py'],
-             #pathex=['/Users/charlotte/Code/pdfstitcher'],
              pathex=['.'],
              binaries=[],
              datas=locale_paths,
