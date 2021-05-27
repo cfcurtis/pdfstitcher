@@ -16,19 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import wx
-import wx.lib.scrolledpanel as scrolled
-from tile_pages import PageTiler
-from layerfilter import LayerFilter
-from pagefilter import PageFilter
 import os
 import sys
 import pikepdf
 import utils
 
+from tile_pages import PageTiler
+from layerfilter_wx import WxLayerFilter
+from pagefilter import PageFilter
+
+import wx
+import wx.lib.scrolledpanel as scrolled
+
+
 class IOTab(scrolled.ScrolledPanel):
+    
     def __init__(self,parent,main_gui):
-        scrolled.ScrolledPanel.__init__(self, parent)
+        
+        super(IOTab, self).__init__(parent)
         
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -107,8 +112,10 @@ class IOTab(scrolled.ScrolledPanel):
     
 
 class TileTab(scrolled.ScrolledPanel):
+    
     def __init__(self,parent,main_gui):
-        scrolled.ScrolledPanel.__init__(self, parent, -1)
+        
+        super(TileTab, self).__init__(parent, -1)
 
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -218,8 +225,10 @@ class TileTab(scrolled.ScrolledPanel):
         self.SetBackgroundColour(parent.GetBackgroundColour())
 
 class LayersTab(scrolled.ScrolledPanel):
+    
     def __init__(self,parent):
-        scrolled.ScrolledPanel.__init__(self, parent)
+        
+        super(LayersTab, self).__init__(parent)
 
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -467,8 +476,9 @@ class LayersTab(scrolled.ScrolledPanel):
         return selected
 
 class SewGUI(wx.Frame):
+    
     def __init__(self, *args, **kw):
-        # ensure the parent's __init__ is called
+        
         super(SewGUI, self).__init__(*args, **kw)
 
         # split the bottom half from the notebook top
@@ -589,7 +599,7 @@ class SewGUI(wx.Frame):
             if do_layers:
                 progress = wx.ProgressDialog('Processing layers',
                     'Processing layers, please wait',style=wx.PD_CAN_ABORT)
-                filtered = self.layer_filter.run(progress)
+                filtered = self.layer_filter.wxrun(progress)
             else:
                 filtered = self.in_doc
 
@@ -674,7 +684,7 @@ class SewGUI(wx.Frame):
             self.io.load_new(self.in_doc)
 
             # create the processing objects
-            self.layer_filter = LayerFilter(self.in_doc)
+            self.layer_filter = WxLayerFilter(self.in_doc)
             self.lt.load_new(self.layer_filter.get_layer_names())
 
             self.tiler = PageTiler()
@@ -685,7 +695,9 @@ class SewGUI(wx.Frame):
         except IOError:
             wx.LogError(_('Cannot open file') + pathname)
 
+
 if __name__ == '__main__':
+    
     # When this module is run (not imported) then create the app, the
     # frame, show it, and start the event loop.
 
