@@ -21,7 +21,7 @@ class WxLayerFilter (AbstractLayerFilter):
         
         for x in self.run():
             
-            if progress_dlg.WasCancelled():
+            if progress_dlg.WasCancelled() or x is None:
                 # not perfect since it won't respond directly, only when we're through with one run of the loop
                 return None
             if x is True:
