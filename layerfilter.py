@@ -271,12 +271,10 @@ class LayerFilter():
                     stream_has_layers = True
 
                 if stream_has_layers or self.in_oc:
-                    print("-------")
                     previous_operator = ''
                     for operands, operator in pikepdf.parse_content_stream(ob):
                         op = str(operator)
                         if op == "BDC" and len(operands) > 1 and str(operands[0]) == "/OC":
-                            print("BDC")
                             
                             self.in_oc = True
                             self.keeping = True
@@ -289,9 +287,7 @@ class LayerFilter():
                                         self.keeping = False
                                     else:
                                         self.append_layer_properties(commands)
-                                else:
-                                    print("eep")
-                            print([oc, self.current_layer_name, self.keeping])
+                            #print([oc, self.current_layer_name, self.keeping])
                                 
                         if self.keeping or not self.in_oc or op in keep_operators:
                             if previous_operator == 'q' and operator == 'Q':
@@ -312,7 +308,7 @@ class LayerFilter():
                             #if(in_oc):
                             #print(f"Op {operator}, operands {operands}")
                         if str(operator) == 'EMC':
-                            print(["EMC", self.keeping])
+                            #print(["EMC", self.keeping])
                             self.in_oc = False
                             self.current_layer_name = ''
 
