@@ -39,6 +39,11 @@ class LayerFilter():
         self.colour_type = None
         self.properties = {}
 
+        # keep state of lines in streams we are keeping in if we are in a ocg. For some reason some pdfs have ocgs across streams
+        self.keeping = True 
+        self.in_oc = False
+        self.current_layer_name = ''
+
     
 
     def get_layer_names(self):
@@ -182,24 +187,24 @@ class LayerFilter():
             self.line_props[l] = lp
 
 
-    def append_layer_property(self, prop, commands, layer_name):
+    def append_layer_property(self, prop, commands):
         if prop == 'rgb':
             op = 'RG'
         elif prop == 'thickness':
             op = 'w'
         else:
             op = 'd'
-        if layer_name in self.line_props.keys():
-            lp = self.line_props[layer_name]
+        if self.current_layer_name in self.line_props.keys():
+            lp = self.line_props[self.current_layer_name]
             if prop in lp.keys():
                 commands.append([lp[prop], op])
 
-    def append_layer_properties(self, commands, layer_name):
-        self.append_layer_property('rgb', commands, layer_name)
-        self.append_layer_property('thickness', commands, layer_name)
-        self.append_layer_property('style', commands, layer_name)
+    def append_layer_properties(self, commands):
+        self.append_layer_property('rgb', commands)
+        self.append_layer_property('thickness', commands)
+        self.append_layer_property('style', commands)
       
-    def remove_ocgs_from_stream(self, ob, in_oc = False, keeping = True):
+    def remove_ocgs_from_stream(self, ob):
         # skip over anything we have already seen
         if not isinstance(ob, pikepdf.Object):
             return
@@ -216,36 +221,36 @@ class LayerFilter():
 
         if isinstance(ob, pikepdf.Array):
             for i in range(len(ob)):
-                self.remove_ocgs_from_stream(ob[i], in_oc, keeping)
+                self.remove_ocgs_from_stream(ob[i])
 
         if isinstance(ob, pikepdf.Dictionary):
             for o in ob.keys():
                 if o != '/Parent':
-                    self.remove_ocgs_from_stream(ob[o], in_oc, keeping)
+                    self.remove_ocgs_from_stream(ob[o])
 
         if isinstance(ob, pikepdf.Stream):
             commands = []
             # the whole stream is a layer
             if '/OC' in ob.keys():
-                layer_name = str(ob.OC.Name)
-                if layer_name in self.off_ocs:
+                self.current_layer_name = str(ob.OC.Name)
+                if self.current_layer_name in self.off_ocs:
                     empty = pikepdf.unparse_content_stream([])
                     ob.write(empty)
                     return
                 else:
                     try:
                         for operands, operator in pikepdf.parse_content_stream(ob):
-                            self.append_layer_properties(commands, layer_name)
+                            self.append_layer_properties(commands)
                             commands.append([operands, operator])
                             op = str(operator)
                             if op in ['Q', 'gs']:
-                                self.append_layer_properties(commands, layer_name)
+                                self.append_layer_properties(commands)
                             elif op == 'd':
-                                self.append_layer_property('style', commands, layer_name)
+                                self.append_layer_property('style', commands)
                             elif op in color_stroke_ops:
-                                self.append_layer_property('rgb', commands, layer_name)
+                                self.append_layer_property('rgb', commands)
                             elif op == 'w': # and operands[0] != 0:
-                                self.append_layer_property('thickness', commands, layer_name)
+                                self.append_layer_property('thickness', commands)
                         newstream = pikepdf.unparse_content_stream(commands)
                         ob.write(newstream)
                         return
@@ -260,67 +265,72 @@ class LayerFilter():
 
 
             # the layers may be in the stream
-            in_oc = False
             try:
                 stream_has_layers = False
                 for operands, operator in pikepdf.parse_content_stream(ob, "BDC"):
                     stream_has_layers = True
-                
-                if stream_has_layers:
+
+                if stream_has_layers or self.in_oc:
+                    print("-------")
                     previous_operator = ''
                     for operands, operator in pikepdf.parse_content_stream(ob):
                         op = str(operator)
                         if op == "BDC" and len(operands) > 1 and str(operands[0]) == "/OC":
+                            print("BDC")
                             
-                            in_oc = True
-                            keeping = True
+                            self.in_oc = True
+                            self.keeping = True
                             oc = str(operands[1])
-                            layer_name = ''
                             if self.properties != None:
                                 if oc in self.properties.keys():
                                     ocg = self.properties[oc]
-                                    layer_name = str(ocg.Name)
+                                    self.current_layer_name = str(ocg.Name)
                                     if ocg.Name in self.off_ocs:
-                                        keeping = False
+                                        self.keeping = False
                                     else:
-                                        self.append_layer_properties(commands, layer_name)
+                                        self.append_layer_properties(commands)
+                                else:
+                                    print("eep")
+                            print([oc, self.current_layer_name, self.keeping])
                                 
-                        if keeping or not in_oc or op in keep_operators:
+                        if self.keeping or not self.in_oc or op in keep_operators:
                             if previous_operator == 'q' and operator == 'Q':
                                 commands.pop()
                             else:
                                 commands.append([operands, operator])
-                            if in_oc and keeping:
+                            if self.in_oc and self.keeping:
                                 # turn into a switch statement when python starts supporting them - 3.10?
                                 if op in ['Q', 'gs']:
-                                    self.append_layer_properties(commands, layer_name)
+                                    self.append_layer_properties(commands)
                                 elif op == 'd':
-                                    self.append_layer_property('style', commands, layer_name)
+                                    self.append_layer_property('style', commands)
                                 elif op in color_stroke_ops:
-                                    self.append_layer_property('rgb', commands, layer_name)
+                                    self.append_layer_property('rgb', commands)
                                 elif op == 'w': # and operands[0] != 0:
-                                    self.append_layer_property('thickness', commands, layer_name)
+                                    self.append_layer_property('thickness', commands)
                             previous_operator = operator
                             #if(in_oc):
                             #print(f"Op {operator}, operands {operands}")
                         if str(operator) == 'EMC':
-                            in_oc = False
+                            print(["EMC", self.keeping])
+                            self.in_oc = False
+                            self.current_layer_name = ''
 
 
                     newstream = pikepdf.unparse_content_stream(commands)
                     ob.write(newstream)
 
             except AttributeError:
-                #traceback.print_exc()
+                traceback.print_exc()
                 ignore = 1
             except ValueError:
-                #traceback.print_exc()
+                traceback.print_exc()
                 ignore = 1
             except NameError:
-                #traceback.print_exc()
+                traceback.print_exc()
                 ignore = 1
             except:
-                #traceback.print_exc()
+                traceback.print_exc()
                 #print("couldn't open stream ", sys.exc_info()[0] )
                 #print("couldn't open stream")
                 #ignore - probably not a content stream. Print an error when debugging
