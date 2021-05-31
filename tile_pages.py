@@ -466,14 +466,7 @@ class PageTiler:
             new_doc.pages.append(newpage)
         else:
             localpage.MediaBox = media_box
-            # modify the other boxes to shift according to the desired margin
-            for box in ['/BleedBox','/CropBox','/TrimBox','/ArtBox']:
-                if box in localpage.keys():
-                    localpage[box][0] = float(localpage[box][0]) - margin
-                    localpage[box][1] = float(localpage[box][1]) - margin
-                    localpage[box][2] = float(localpage[box][2]) + 2*margin
-                    localpage[box][3] = float(localpage[box][3]) + 2*margin
-
+            localpage.CropBox = media_box
             new_doc.pages.append(localpage)
             
         return new_doc
