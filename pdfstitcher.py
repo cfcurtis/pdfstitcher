@@ -508,7 +508,11 @@ class SewGUI(wx.Frame):
             self.SetIcon(wx.Icon(utils.resource_path('resources/stitcher-icon.ico')))
             
         if len(sys.argv) > 1:
-          self.load_file(sys.argv[1])
+            self.load_file(sys.argv[1])
+        
+        if len(sys.argv) > 2:
+            self.out_doc_path = sys.argv[2]
+            self.io.output_fname_display.SetLabel(sys.argv[2])
     
     def page_range_updated(self,event):
         if event.GetId() == self.io.page_range_txt.GetId():
