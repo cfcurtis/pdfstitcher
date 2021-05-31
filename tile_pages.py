@@ -492,30 +492,43 @@ def main(args):
     tiler = PageTiler(in_doc)
 
     if args.pages is not None:
-        tiler.set_page_range(args.pages)
+        tiler.page_range = utils.parse_page_range(args.pages)
+    else:
+        tiler.page_range = [i+1 for i in range(len(in_doc.pages))]
 
-    if args.margins is not None:
+    if args.margin is not None:
         # all the docs/examples seem to assume 72 dpi all the time
-        margin = utils.txt_to_float(args.margins)
-        tiler.set_margin(margin)
+        tiler.margin = utils.txt_to_float(args.margin)
 
     if args.trim is not None:
         trim = [utils.txt_to_float(t) for t in args.trim.split(',')]
         tiler.set_trim(trim)
     
     if args.rotate is not None:
-        tiler.set_rotation(int(args.rotate))
+        failed = False
+        r = int(args.rotate)
+        if r == 0:
+            tiler.rotation = SW_ROTATION.NONE
+        elif r == 90:
+            tiler.rotation = SW_ROTATION.CLOCKWISE
+        elif r == 180:
+            tiler.rotation = SW_ROTATION.TURNAROUND
+        elif r == 270:
+            tiler.rotation = SW_ROTATION.COUNTERCLOCKWISE
+        else:
+            print(_("Invalid rotation value"))
+            sys.exit()
 
-    cols = 0
-    rows = 0
+    tiler.cols = 0
+    tiler.rows = 0
     if args.columns is not None:
-        cols = int(args.columns)
+        tiler.cols = int(args.columns)
 
     if args.rows is not None:
-        rows = int(args.rows)
+        tiler.rows = int(args.rows)
     
     # run it!
-    new_doc = tiler.run(rows,cols)
+    new_doc = tiler.run()
         
     try:
         new_doc.save(args.output)
@@ -527,28 +540,53 @@ def main(args):
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Tile pdf pages into one document.',
-                                 epilog='Note: If both rows and columns are specified, rows are ignored. ' + 
-                                        'To insert a blank page, include a zero in the page list.')
+    parser = argparse.ArgumentParser(
+        description = 'Tile PDF pages into one document.',
+        epilog = 'Note: If both rows and columns are specified, rows are ignored. ' + 
+                 'To insert a blank page, include a zero in the page list.'
+    )
 
-    parser.add_argument('input',help='Input filename (pdf)')
-    parser.add_argument('output',help='Output filename (pdf)')
-    parser.add_argument('-p','--pages',help='Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: entire document.')
-    parser.add_argument('-r','--rows',help='Number of rows in tiled grid.')
-    parser.add_argument('-c','--columns',help='Number of columns in tiled grid.')
-    parser.add_argument('-m','--margins',help='Margin size in inches.')
-    parser.add_argument('-t','--trim',help='Amount to trim from edges ' +
-                        'given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from left and top)')
-    parser.add_argument('-R','--rotate',help='Rotate pages (0 for none, 1 for clockwise, 2 for counterclockwise)')
+    parser.add_argument(
+        'input',
+        help = 'Input filename (pdf)',
+    )
+    parser.add_argument(
+        'output',
+        help = 'Output filename (pdf)',
+    )
+    parser.add_argument(
+        '-p', '--pages',
+        help = 'Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: entire document.',
+    )
+    parser.add_argument(
+        '-r', '--rows',
+        type = int,
+        help = 'Number of rows in tiled grid.',
+    )
+    parser.add_argument(
+        '-c', '--columns',
+        type = int,
+        help = 'Number of columns in tiled grid.',
+    )
+    parser.add_argument(
+        '-m', '--margin',
+        help = 'Margin size in inches.',
+    )
+    parser.add_argument(
+        '-t', '--trim',
+        help = 'Amount to trim from edges ' +
+            'given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from left and top)',
+    )
+    parser.add_argument(
+        '-R', '--rotate',
+        type = int,
+        help = 'Rotate pages (0 for none, 1 for clockwise, 2 for counterclockwise)',
+    )
 
     return parser.parse_args()
 
 
 if __name__ == "__main__":
-    
-    import subprocess
-    
+
     args = parse_arguments()
     new_doc, success = main(args)
-
-    subprocess.call(args.output,shell=True)
