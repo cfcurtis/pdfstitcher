@@ -43,7 +43,7 @@ class LayerFilter():
         self.in_oc = False
         self.current_layer_name = ''
 
-    
+
 
     def get_layer_names(self):
         # reads through the root to parse out the layers present in the file
@@ -174,7 +174,7 @@ class LayerFilter():
             w = 1
             lp = copy.copy(self.line_props[l])
             if 'thickness' in lp.keys():
-                w = round(Decimal(lp['thickness']), 3)
+                w = round(Decimal(lp['thickness']), 1)
                 lp['thickness'] = [w]
             if 'rgb' in lp.keys():
                 lp['rgb'] = [round(Decimal(rg), 3) for rg in lp['rgb']]
