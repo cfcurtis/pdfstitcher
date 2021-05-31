@@ -580,7 +580,7 @@ def parse_arguments():
     parser.add_argument(
         '-R', '--rotate',
         type = int,
-        help = 'Rotate pages (0 for none, 1 for clockwise, 2 for counterclockwise)',
+        help = 'Rotate pages (90, 180, or 270 degrees)',
     )
 
     return parser.parse_args()
