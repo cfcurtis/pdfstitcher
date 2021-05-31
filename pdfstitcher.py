@@ -3,18 +3,9 @@
 # PDFStitcher is a utility to work with PDF sewing patterns.
 # Copyright (C) 2021 Charlotte Curtis
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 import wx
 import wx.lib.scrolledpanel as scrolled
@@ -470,6 +461,7 @@ class SewGUI(wx.Frame):
     def __init__(self, *args, **kw):
         # ensure the parent's __init__ is called
         super(SewGUI, self).__init__(*args, **kw)
+        self.progress = None
 
         # split the bottom half from the notebook top
         splitter = wx.SplitterWindow(self,style=wx.SP_LIVE_UPDATE)
@@ -587,9 +579,9 @@ class SewGUI(wx.Frame):
         # do it
         try:
             if do_layers:
-                progress = wx.ProgressDialog('Processing layers',
+                self.progress = wx.ProgressDialog('Processing layers',
                     'Processing layers, please wait',style=wx.PD_CAN_ABORT)
-                filtered = self.layer_filter.run(progress)
+                filtered = self.layer_filter.run(self.progress_range, self.progress_update, self.progress_was_cancelled)
             else:
                 filtered = self.in_doc
 
@@ -617,6 +609,23 @@ class SewGUI(wx.Frame):
         except Exception as e:
             print(_('Something went wrong') + ', ' + _('unable to write to') + ' ' + self.out_doc_path)
             print(e)
+
+    def progress_was_cancelled(self):
+        if self.progress != None:
+            return self.progress.WasCancelled()
+
+    def progress_update(self, val):
+        if self.progress != None:
+            r = self.progress.GetRange()
+            if r:
+                if val == r:
+                    self.progress = None
+                else:
+                    self.progress.Update(val)
+
+    def progress_range(self, val):
+        if self.progress != None:
+            self.progress.SetRange(val)
 
     def make_menu_bar(self):
         # Make a file menu with load and exit items
