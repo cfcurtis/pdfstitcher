@@ -12,6 +12,7 @@ from decimal import Decimal
 import utils 
 import sys
 import traceback
+import copy
 
 # helper functions to dump page to file for debugging
 def write_page(fname,stream):
@@ -27,6 +28,7 @@ class LayerFilter():
         self.page_range = []
 
         self.line_props = {}
+        self.clean_line_props = {}
         self.colour_type = None
         self.properties = {}
 
@@ -164,7 +166,7 @@ class LayerFilter():
     def clean_line_options(self):
         for l in self.line_props:
             w = 1
-            lp = self.line_props[l]
+            lp = copy.copy(self.line_props[l])
             if 'thickness' in lp.keys():
                 w = round(Decimal(lp['thickness']), 1)
                 lp['thickness'] = [w]
@@ -175,7 +177,8 @@ class LayerFilter():
                 # list is needed to make sure this is a copy
                 # scale the line style
                 lp['style'][0] = [d*w for d in lp['style'][0]]
-            self.line_props[l] = lp
+            
+            self.clean_line_props[l] = lp
 
 
     def append_layer_property(self, prop, commands):
@@ -185,8 +188,8 @@ class LayerFilter():
             op = 'w'
         else:
             op = 'd'
-        if self.current_layer_name in self.line_props.keys():
-            lp = self.line_props[self.current_layer_name]
+        if self.current_layer_name in self.clean_line_props.keys():
+            lp = self.clean_line_props[self.current_layer_name]
             if prop in lp.keys():
                 commands.append([lp[prop], op])
 
@@ -259,7 +262,9 @@ class LayerFilter():
             try:
                 stream_has_layers = False
                 for operands, operator in pikepdf.parse_content_stream(ob, "BDC"):
-                    stream_has_layers = True
+                    if len(operands) > 1 and str(operands[0]) == "/OC":
+                        stream_has_layers = True
+                        break
 
                 if stream_has_layers or self.in_oc:
                     previous_operator = ''
