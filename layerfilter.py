@@ -15,9 +15,15 @@ import traceback
 import copy
 
 # helper functions to dump page to file for debugging
-def write_page(fname,stream):
+def write_page(fname,page):
     with open(fname,'w') as f:
-        f.write(stream.decode())
+        if isinstance(page.Contents,pikepdf.Array):
+            for s in page.Contents:
+                stream = s.read_bytes()
+                f.write(stream.decode())
+        elif isinstance(page.Contents,pikepdf.Stream):
+            stream = page.Contents.read_bytes()
+            f.write(stream.decode())
 
 class LayerFilter():
     def __init__(self,doc = None):
@@ -168,7 +174,7 @@ class LayerFilter():
             w = 1
             lp = copy.copy(self.line_props[l])
             if 'thickness' in lp.keys():
-                w = round(Decimal(lp['thickness']), 1)
+                w = round(Decimal(lp['thickness']), 3)
                 lp['thickness'] = [w]
             if 'rgb' in lp.keys():
                 lp['rgb'] = [round(Decimal(rg), 3) for rg in lp['rgb']]
@@ -226,36 +232,37 @@ class LayerFilter():
             commands = []
             # the whole stream is a layer
             if '/OC' in ob.keys():
-                self.current_layer_name = str(ob.OC.Name)
-                if self.current_layer_name in self.off_ocs:
-                    empty = pikepdf.unparse_content_stream([])
-                    ob.write(empty)
-                    return
-                else:
-                    try:
-                        for operands, operator in pikepdf.parse_content_stream(ob):
-                            self.append_layer_properties(commands)
-                            commands.append([operands, operator])
-                            op = str(operator)
-                            if op in ['Q', 'gs']:
+                if '/Name' in ob.OC.keys():
+                    self.current_layer_name = str(ob.OC.Name)
+                    if self.current_layer_name in self.off_ocs:
+                        empty = pikepdf.unparse_content_stream([])
+                        ob.write(empty)
+                        return
+                    else:
+                        try:
+                            for operands, operator in pikepdf.parse_content_stream(ob):
                                 self.append_layer_properties(commands)
-                            elif op == 'd':
-                                self.append_layer_property('style', commands)
-                            elif op in color_stroke_ops:
-                                self.append_layer_property('rgb', commands)
-                            elif op == 'w': # and operands[0] != 0:
-                                self.append_layer_property('thickness', commands)
-                        newstream = pikepdf.unparse_content_stream(commands)
-                        ob.write(newstream)
-                        return
+                                commands.append([operands, operator])
+                                op = str(operator)
+                                if op in ['Q', 'gs']:
+                                    self.append_layer_properties(commands)
+                                elif op == 'd':
+                                    self.append_layer_property('style', commands)
+                                elif op in color_stroke_ops:
+                                    self.append_layer_property('rgb', commands)
+                                elif op == 'w': # and operands[0] != 0:
+                                    self.append_layer_property('thickness', commands)
+                            newstream = pikepdf.unparse_content_stream(commands)
+                            ob.write(newstream)
+                            return
 
-                    except:
-                        #traceback.print_exc()
-                        #print("couldn't open stream ", sys.exc_info()[0] )
-                        #print("couldn't open stream")
-                        #ignore - probably not a content stream. Print an error when debugging
-                        ignore = 1
-                        return
+                        except:
+                            #traceback.print_exc()
+                            #print("couldn't open stream ", sys.exc_info()[0] )
+                            #print("couldn't open stream")
+                            #ignore - probably not a content stream. Print an error when debugging
+                            ignore = 1
+                            return
 
 
             # the layers may be in the stream
