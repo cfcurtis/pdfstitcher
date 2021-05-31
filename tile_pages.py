@@ -212,6 +212,9 @@ class PageTiler:
                     # pikepdf.pages is zero indexed, so subtract one
                     localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
                     
+                    if '/Rotate' in localpage.keys():
+                        page_rot = localpage.Rotate
+                    
                     if self.override_trim:
                         localpage.TrimBox = copy.copy(localpage.MediaBox)
                     
@@ -244,8 +247,13 @@ class PageTiler:
                     if content_dict is not None:
                         content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
 
-                pw.append(float(pagembox[2]))
-                ph.append(float(pagembox[3]))
+                if page_rot == 90 or page_rot == -90:
+                    pw.append(float(localpage.MediaBox[3]))
+                    ph.append(float(localpage.MediaBox[2]))
+                else:
+                    pw.append(float(localpage.MediaBox[2]))
+                    ph.append(float(localpage.MediaBox[3]))
+                
                 page_names.append(pagekey)
 
                 if abs(pagembox[2] - refmbox[2]) > 1 or abs(pagembox[3] - refmbox[3]) > 1:
@@ -256,8 +264,13 @@ class PageTiler:
                 
             else:
                 page_names.append(None)
-                pw.append(float(refmbox[2]))
-                ph.append(float(refmbox[3]))
+                
+                if page_rot == 90 or page_rot == -90:
+                    pw.append(float(refmbox[3]))
+                    ph.append(float(refmbox[2]))
+                else:
+                    pw.append(float(refmbox[2]))
+                    ph.append(float(refmbox[3]))
         
         if len(different_size) > 0:
             print(_('Warning: The pages {} have a different size than the page before').format(different_size))
