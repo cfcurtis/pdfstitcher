@@ -552,5 +552,3 @@ if __name__ == "__main__":
     new_doc, success = main(args)
 
     subprocess.call(args.output,shell=True)
-
-# [END]  /AUTO-DEPLOY
