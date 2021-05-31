@@ -5,7 +5,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-
 import pikepdf
 from pikepdf import _cpphelpers
 import argparse
@@ -227,22 +226,16 @@ class PageTiler:
                         # trim: left, right, top, bottom as defined visually
                         # trimbox: left, bottom, width, height
                         if page_rot == 0:
-                            localpage.TrimBox[0] = float(localpage.TrimBox[0]) + trim[0]
-                            localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[3]
-                            localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[1]
-                            localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[2]
-
+                            rtrim = [trim[0], trim[3], trim[1], trim[2]]
                         elif page_rot == 90:
-                            localpage.TrimBox[0] = float(localpage.TrimBox[0]) + trim[2]
-                            localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[0]
-                            localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[3]
-                            localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[1]
-
+                            rtrim = [trim[2], trim[0], trim[3], trim[1]]
                         elif page_rot == -90:
-                            localpage.TrimBox[0] = float(localpage.TrimBox[0]) + trim[3]
-                            localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[1]
-                            localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[2]
-                            localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[0]
+                            rtrim = [trim[3], trim[1], trim[2], trim[0]]
+                        
+                        localpage.TrimBox[0] = float(localpage.TrimBox[0]) + rtrim[0]
+                        localpage.TrimBox[1] = float(localpage.TrimBox[1]) + rtrim[1]
+                        localpage.TrimBox[2] = float(localpage.TrimBox[2]) - rtrim[2]
+                        localpage.TrimBox[3] = float(localpage.TrimBox[3]) - rtrim[3]
  
                     if content_dict is not None:
                         content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
