@@ -461,6 +461,7 @@ class SewGUI(wx.Frame):
     def __init__(self, *args, **kw):
         # ensure the parent's __init__ is called
         super(SewGUI, self).__init__(*args, **kw)
+        self.progress = None
 
         # split the bottom half from the notebook top
         splitter = wx.SplitterWindow(self,style=wx.SP_LIVE_UPDATE)
@@ -578,9 +579,9 @@ class SewGUI(wx.Frame):
         # do it
         try:
             if do_layers:
-                progress = wx.ProgressDialog('Processing layers',
+                self.progress = wx.ProgressDialog('Processing layers',
                     'Processing layers, please wait',style=wx.PD_CAN_ABORT)
-                filtered = self.layer_filter.run(progress)
+                filtered = self.layer_filter.run(self.progress_range, self.progress_update, self.progress_was_cancelled)
             else:
                 filtered = self.in_doc
 
@@ -608,6 +609,23 @@ class SewGUI(wx.Frame):
         except Exception as e:
             print(_('Something went wrong') + ', ' + _('unable to write to') + ' ' + self.out_doc_path)
             print(e)
+
+    def progress_was_cancelled(self):
+        if self.progress != None:
+            return self.progress.WasCancelled()
+
+    def progress_update(self, val):
+        if self.progress != None:
+            r = self.progress.GetRange()
+            if r:
+                if val == r:
+                    self.progress = None
+                else:
+                    self.progress.Update(val)
+
+    def progress_range(self, val):
+        if self.progress != None:
+            self.progress.SetRange(val)
 
     def make_menu_bar(self):
         # Make a file menu with load and exit items
