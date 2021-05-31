@@ -5,7 +5,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-
 import pikepdf
 from pikepdf import _cpphelpers
 import argparse
@@ -212,6 +211,9 @@ class PageTiler:
                     # pikepdf.pages is zero indexed, so subtract one
                     localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
                     
+                    if '/Rotate' in localpage.keys():
+                        page_rot = localpage.Rotate
+                    
                     if self.override_trim:
                         localpage.TrimBox = copy.copy(localpage.MediaBox)
                     
@@ -224,28 +226,27 @@ class PageTiler:
                         # trim: left, right, top, bottom as defined visually
                         # trimbox: left, bottom, width, height
                         if page_rot == 0:
-                            localpage.TrimBox[0] = float(localpage.TrimBox[0]) + trim[0]
-                            localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[3]
-                            localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[1]
-                            localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[2]
-
+                            rtrim = [trim[0], trim[3], trim[1], trim[2]]
                         elif page_rot == 90:
-                            localpage.TrimBox[0] = float(localpage.TrimBox[0]) + trim[2]
-                            localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[0]
-                            localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[3]
-                            localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[1]
-
+                            rtrim = [trim[2], trim[0], trim[3], trim[1]]
                         elif page_rot == -90:
-                            localpage.TrimBox[0] = float(localpage.TrimBox[0]) + trim[3]
-                            localpage.TrimBox[1] = float(localpage.TrimBox[1]) + trim[1]
-                            localpage.TrimBox[2] = float(localpage.TrimBox[2]) - trim[2]
-                            localpage.TrimBox[3] = float(localpage.TrimBox[3]) - trim[0]
+                            rtrim = [trim[3], trim[1], trim[2], trim[0]]
+                        
+                        localpage.TrimBox[0] = float(localpage.TrimBox[0]) + rtrim[0]
+                        localpage.TrimBox[1] = float(localpage.TrimBox[1]) + rtrim[1]
+                        localpage.TrimBox[2] = float(localpage.TrimBox[2]) - rtrim[2]
+                        localpage.TrimBox[3] = float(localpage.TrimBox[3]) - rtrim[3]
  
                     if content_dict is not None:
                         content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
 
-                pw.append(float(pagembox[2]))
-                ph.append(float(pagembox[3]))
+                if page_rot == 90 or page_rot == -90:
+                    pw.append(float(localpage.MediaBox[3]))
+                    ph.append(float(localpage.MediaBox[2]))
+                else:
+                    pw.append(float(localpage.MediaBox[2]))
+                    ph.append(float(localpage.MediaBox[3]))
+                
                 page_names.append(pagekey)
 
                 if abs(pagembox[2] - refmbox[2]) > 1 or abs(pagembox[3] - refmbox[3]) > 1:
@@ -256,8 +257,13 @@ class PageTiler:
                 
             else:
                 page_names.append(None)
-                pw.append(float(refmbox[2]))
-                ph.append(float(refmbox[3]))
+                
+                if page_rot == 90 or page_rot == -90:
+                    pw.append(float(refmbox[3]))
+                    ph.append(float(refmbox[2]))
+                else:
+                    pw.append(float(refmbox[2]))
+                    ph.append(float(refmbox[3]))
         
         if len(different_size) > 0:
             print(_('Warning: The pages {} have a different size than the page before').format(different_size))
@@ -386,8 +392,8 @@ class PageTiler:
                 cpos_x0 = c*page_box_width - c*(trim[0] + trim[1])
                 cpos_y0 = (self.rows-r-1)*page_box_height - (self.rows-r-1)*(trim[2] + trim[3])
             else:
-                cpos_x0 = sum(col_width[:c])
-                cpos_y0 = sum(row_height[r+1:])
+                cpos_x0 = sum(col_width[:c]) - trim[0]
+                cpos_y0 = sum(row_height[r+1:]) - trim[3]
 
                 # store the page box height/width for convenience if rotation is needed
                 page_box_height = ph[i]
@@ -466,14 +472,7 @@ class PageTiler:
             new_doc.pages.append(newpage)
         else:
             localpage.MediaBox = media_box
-            # modify the other boxes to shift according to the desired margin
-            for box in ['/BleedBox','/CropBox','/TrimBox','/ArtBox']:
-                if box in localpage.keys():
-                    localpage[box][0] = float(localpage[box][0]) - margin
-                    localpage[box][1] = float(localpage[box][1]) - margin
-                    localpage[box][2] = float(localpage[box][2]) + 2*margin
-                    localpage[box][3] = float(localpage[box][3]) + 2*margin
-
+            localpage.CropBox = media_box
             new_doc.pages.append(localpage)
             
         return new_doc
@@ -553,3 +552,5 @@ if __name__ == "__main__":
     new_doc, success = main(args)
 
     subprocess.call(args.output,shell=True)
+
+# [END]  /AUTO-DEPLOY
