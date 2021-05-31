@@ -386,8 +386,8 @@ class PageTiler:
                 cpos_x0 = c*page_box_width - c*(trim[0] + trim[1])
                 cpos_y0 = (self.rows-r-1)*page_box_height - (self.rows-r-1)*(trim[2] + trim[3])
             else:
-                cpos_x0 = sum(col_width[:c])
-                cpos_y0 = sum(row_height[r+1:])
+                cpos_x0 = sum(col_width[:c]) - trim[0]
+                cpos_y0 = sum(row_height[r+1:]) - trim[3]
 
                 # store the page box height/width for convenience if rotation is needed
                 page_box_height = ph[i]
