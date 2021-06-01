@@ -177,6 +177,7 @@ class LayerFilter():
                 w = round(Decimal(lp['thickness']), 1)
                 lp['thickness'] = [w]
             if 'rgb' in lp.keys():
+                lp['cmyk'] = [round(Decimal(k),3) for k in pdf_ops.rgb_to_cmyk(lp['rgb'])]
                 lp['rgb'] = [round(Decimal(rg), 3) for rg in lp['rgb']]
             if 'style' in lp.keys():
                 lp['style'] = list(pdf_ops.line_style_arr[lp['style']])
@@ -190,6 +191,8 @@ class LayerFilter():
     def append_layer_property(self, prop, commands):
         if prop == 'rgb':
             op = 'RG'
+        elif prop == 'cmyk':
+            op = 'K'
         elif prop == 'thickness':
             op = 'w'
         else:
@@ -249,7 +252,11 @@ class LayerFilter():
                                 elif op == 'd':
                                     self.append_layer_property('style', commands)
                                 elif op in color_stroke_ops:
-                                    self.append_layer_property('rgb', commands)
+                                    commands.pop()
+                                    if op == 'K':
+                                        self.append_layer_property('cmyk', commands)
+                                    else:
+                                        self.append_layer_property('rgb', commands)
                                 elif op == 'w': # and operands[0] != 0:
                                     self.append_layer_property('thickness', commands)
                             newstream = pikepdf.unparse_content_stream(commands)
@@ -267,6 +274,10 @@ class LayerFilter():
 
             # the layers may be in the stream
             try:
+                if '/Filter' in ob.keys():
+                    #don't parse jpeg-type streams
+                    if ob.Filter == '/DCTDecode':
+                        return
                 stream_has_layers = False
                 for operands, operator in pikepdf.parse_content_stream(ob, "BDC"):
                     if len(operands) > 1 and str(operands[0]) == "/OC":
@@ -331,6 +342,6 @@ class LayerFilter():
             except:
                 traceback.print_exc()
                 #print("couldn't open stream ", sys.exc_info()[0] )
-                #print("couldn't open stream")
+                print("couldn't open stream")
                 #ignore - probably not a content stream. Print an error when debugging
                 ignore = 1
