@@ -13,6 +13,7 @@ import utils
 import sys
 import traceback
 import copy
+import datetime
 
 # helper functions to dump page to file for debugging
 def write_page(fname,page):
@@ -124,6 +125,7 @@ class LayerFilter():
             output.Root.OCProperties.OCGs = OCGs
             output.Root.OCProperties.D.ON = OCGs
             self.clean_line_options()
+            t1 = datetime.datetime.now()
             for p in page_range:
                 self.get_properties(output.pages[p-1])
                 self.remove_ocgs_from_stream(output.pages[p-1])
@@ -132,6 +134,8 @@ class LayerFilter():
                     return None
             progress_update and progress_update(n_page)
             output.Root.OCProperties.D.Order = self.filter_ocg_order(output.Root.OCProperties.D.Order)
+            t2 = datetime.datetime.now()
+            print(t2 - t1)
         else:
             output.Root.OCProperties.D.ON = OCGs
             output.Root.OCProperties.D.OFF = Off
