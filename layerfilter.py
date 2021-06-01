@@ -126,7 +126,8 @@ class LayerFilter():
             self.clean_line_options()
             for p in page_range:
                 self.get_properties(output.pages[p-1])
-                self.remove_ocgs_from_stream(output.pages[p-1])
+                if self.properties:
+                    self.remove_ocgs_from_stream(output.pages[p-1])
                 progress_update and progress_update(page_range.index(p))
                 if progress_was_cancelled and progress_was_cancelled():
                     return None
@@ -143,31 +144,12 @@ class LayerFilter():
 
         return output
 
-    def get_properties(self, ob, properties=None, depth = 0):
-        if not isinstance(ob, pikepdf.Object):
-            return
-
-        #skip over anything we have already seen
-        obid = ob.unparse()
-        if obid in self.property_search_objects:
-            return
-        else:
-            self.property_search_objects.add(obid)
-
-        if isinstance(ob, pikepdf.Array):
-            for i in range(len(ob)):
-                p = self.get_properties(ob[i], properties, depth)
-
-        if isinstance(ob, pikepdf.Dictionary):
-            for o in ob.keys():
-                if o == '/Resources':
-                    r = ob[o]
-                    if '/Properties' in r.keys():
-                        p = r['/Properties']
-                        for k in p.keys():
-                            self.properties[k] = p[k]
-                if o != '/Parent':
-                    p = self.get_properties(ob[o], properties, depth)
+    def get_properties(self, page, properties=None, depth = 0):
+        self.properties = {}
+        if '/Resources' in page.keys():
+            r = page.Resources
+            if '/Properties' in r.keys():
+                self.properties = r.Properties
 
     def clean_line_options(self):
         for l in self.line_props:
