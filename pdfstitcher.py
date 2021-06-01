@@ -19,7 +19,7 @@ import utils
 
 class IOTab(scrolled.ScrolledPanel):
     def __init__(self,parent,main_gui):
-        scrolled.ScrolledPanel.__init__(self, parent)
+        super(IOTab, self).__init__(parent)
         
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -99,7 +99,7 @@ class IOTab(scrolled.ScrolledPanel):
 
 class TileTab(scrolled.ScrolledPanel):
     def __init__(self,parent,main_gui):
-        scrolled.ScrolledPanel.__init__(self, parent, -1)
+        super(TileTab, self).__init__(parent, -1)
 
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -210,7 +210,7 @@ class TileTab(scrolled.ScrolledPanel):
 
 class LayersTab(scrolled.ScrolledPanel):
     def __init__(self,parent):
-        scrolled.ScrolledPanel.__init__(self, parent)
+        super(LayersTab, self).__init__(parent)
 
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
 
