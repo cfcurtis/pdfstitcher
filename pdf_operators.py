@@ -25,7 +25,7 @@ ops = {
     'd': ('state','stroke'), # Set line dash pattern
     'd0': ('state','text'), # Set glyph width in Type 3 font
     'd1': ('state','text'), # Set glyph width and bounding box in Type 3 font
-    'Do': ('state','all'), # Invoke named XObject
+    'Do': ('show','all'), # Invoke named XObject
     'DP': ('point','markedcontent'), # (PDF 1.2) Define marked-content point with property list
     'EI': ('end','image'), # End inline image object
     'EMC': ('end','markedcontent'), # (PDF 1.2) End marked-content sequence

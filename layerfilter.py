@@ -13,6 +13,8 @@ import utils
 import sys
 import traceback
 import copy
+        
+STATE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'state'] 
 
 # helper functions to dump page to file for debugging
 def write_page(fname,page):
@@ -200,8 +202,8 @@ class LayerFilter():
         else:
             self.found_objects.add(obid)
 
-        keep_operators = ['Tc', 'Tw', 'Tz', 'TL', 'Tf', 'Tr', 'Ts', 'Td', 'TD', 'Tm', 'd0', 'd1', 'CS', 'cs', 'SC', 'SCN', 'sc', 'scn',
-        'G', 'g', 'RG', 'rg', 'K', 'k', 'BX', 'EX', 'q', 'Q']
+        # keep_operators = ['Tc', 'Tw', 'Tz', 'TL', 'Tf', 'Tr', 'Ts', 'Td', 'TD', 'Tm', 'd0', 'd1', 'CS', 'cs', 'SC', 'SCN', 'sc', 'scn',
+        # 'G', 'g', 'RG', 'rg', 'K', 'k', 'BX', 'EX', 'q', 'Q']
         color_stroke_ops = ['CS', 'RG', 'SC', 'SCN', 'K']
 
         if isinstance(ob, pikepdf.Array):
@@ -285,7 +287,7 @@ class LayerFilter():
                                         self.append_layer_properties(commands)
                             #print([oc, self.current_layer_name, self.keeping])
                                 
-                        if self.keeping or not self.in_oc or op in keep_operators:
+                        if self.keeping or not self.in_oc or op in STATE_OPS:
                             if previous_operator == 'q' and operator == 'Q':
                                 commands.pop()
                             else:
@@ -326,4 +328,4 @@ class LayerFilter():
                 #print("couldn't open stream ", sys.exc_info()[0] )
                 print("couldn't open stream")
                 #ignore - probably not a content stream. Print an error when debugging
-                ignore = 1
+                # ignore = 1
