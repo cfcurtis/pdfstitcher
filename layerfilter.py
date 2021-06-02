@@ -14,7 +14,8 @@ import sys
 import traceback
 import copy
         
-STATE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'state'] 
+STATE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'state']
+SKIP_TYPES = ['/Font','/ExtGState']
 
 # helper functions to dump page to file for debugging
 def write_page(fname,page):
@@ -120,21 +121,29 @@ class LayerFilter():
         OCGs = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]
         Off = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) not in self.keep_ocs]
         self.off_ocs = []
+
         for o in Off:
             self.off_ocs.append(o.Name)
+
         if self.delete_ocgs:
             output.Root.OCProperties.OCGs = OCGs
             output.Root.OCProperties.D.ON = OCGs
             self.clean_line_options()
+
             for p in page_range:
                 self.get_properties(output.pages[p-1])
                 if self.properties:
-                    self.remove_ocgs_from_stream(output.pages[p-1])
+                    page_stream = self.remove_ocgs_from_stream(output.pages[p-1])
+                    if page_stream:
+                        output.pages[p-1].Contents = output.make_stream(page_stream)
+                
                 progress_update and progress_update(page_range.index(p))
                 if progress_was_cancelled and progress_was_cancelled():
                     return None
+
             progress_update and progress_update(n_page)
             output.Root.OCProperties.D.Order = self.filter_ocg_order(output.Root.OCProperties.D.Order)
+
         else:
             output.Root.OCProperties.D.ON = OCGs
             output.Root.OCProperties.D.OFF = Off
@@ -202,29 +211,47 @@ class LayerFilter():
         else:
             self.found_objects.add(obid)
 
-        # keep_operators = ['Tc', 'Tw', 'Tz', 'TL', 'Tf', 'Tr', 'Ts', 'Td', 'TD', 'Tm', 'd0', 'd1', 'CS', 'cs', 'SC', 'SCN', 'sc', 'scn',
-        # 'G', 'g', 'RG', 'rg', 'K', 'k', 'BX', 'EX', 'q', 'Q']
         color_stroke_ops = ['CS', 'RG', 'SC', 'SCN', 'K']
 
         if isinstance(ob, pikepdf.Array):
             for i in range(len(ob)):
-                self.remove_ocgs_from_stream(ob[i])
+                newstream = self.remove_ocgs_from_stream(ob[i])
+                if newstream:
+                    ob[i].write(newstream)
 
+        is_page = False
         if isinstance(ob, pikepdf.Dictionary):
+            if '/Type' in ob.keys():
+                ob_type = str(ob.Type)
+                if ob_type == '/Page':
+                    is_page = True
+                
+                elif ob_type in SKIP_TYPES:
+                    return None
+            
             for o in ob.keys():
-                if o != '/Parent':
-                    self.remove_ocgs_from_stream(ob[o])
+                if o != '/Parent' and not (is_page and o == '/Contents'):
+                    newstream = self.remove_ocgs_from_stream(ob[o])
+                    if newstream:
+                        ob[0].write(newstream)
 
-        if isinstance(ob, pikepdf.Stream):
+        if isinstance(ob, pikepdf.Stream) or is_page:
+            if '/Subtype' in ob.keys():
+                if ob.Subtype == '/Image':
+                    return None
+            
+            if '/Filter' in ob.keys():
+                #don't parse jpeg-type streams
+                if ob.Filter == '/DCTDecode':
+                    return None
+
             commands = []
             # the whole stream is a layer
             if '/OC' in ob.keys():
                 if '/Name' in ob.OC.keys():
                     self.current_layer_name = str(ob.OC.Name)
                     if self.current_layer_name in self.off_ocs:
-                        empty = pikepdf.unparse_content_stream([])
-                        ob.write(empty)
-                        return
+                        return b''
                     else:
                         try:
                             for operands, operator in pikepdf.parse_content_stream(ob):
@@ -243,9 +270,7 @@ class LayerFilter():
                                         self.append_layer_property('rgb', commands)
                                 elif op == 'w': # and operands[0] != 0:
                                     self.append_layer_property('thickness', commands)
-                            newstream = pikepdf.unparse_content_stream(commands)
-                            ob.write(newstream)
-                            return
+                            return pikepdf.unparse_content_stream(commands)
 
                         except:
                             #traceback.print_exc()
@@ -253,15 +278,12 @@ class LayerFilter():
                             #print("couldn't open stream")
                             #ignore - probably not a content stream. Print an error when debugging
                             ignore = 1
-                            return
+                            return None
 
 
             # the layers may be in the stream
             try:
-                if '/Filter' in ob.keys():
-                    #don't parse jpeg-type streams
-                    if ob.Filter == '/DCTDecode':
-                        return
+
                 stream_has_layers = False
                 for operands, operator in pikepdf.parse_content_stream(ob, "BDC"):
                     if len(operands) > 1 and str(operands[0]) == "/OC":
@@ -311,8 +333,7 @@ class LayerFilter():
                             self.current_layer_name = ''
 
 
-                    newstream = pikepdf.unparse_content_stream(commands)
-                    ob.write(newstream)
+                    return pikepdf.unparse_content_stream(commands)
 
             except AttributeError:
                 traceback.print_exc()
