@@ -288,7 +288,7 @@ class LayerFilter():
                             #print([oc, self.current_layer_name, self.keeping])
                                 
                         if self.keeping or not self.in_oc or op in STATE_OPS:
-                            if previous_operator == 'q' and operator == 'Q':
+                            if previous_operator == 'q' and op == 'Q':
                                 commands.pop()
                             else:
                                 commands.append([operands, operator])
