@@ -13,7 +13,7 @@ import utils
 import sys
 import traceback
 import copy
-        
+
 STATE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'state'] 
 
 # helper functions to dump page to file for debugging
@@ -27,15 +27,24 @@ def write_page(fname,page):
             stream = page.Contents.read_bytes()
             f.write(stream.decode())
 
-class LayerFilter():
-    def __init__(self,doc = None):
+class LayerFilter:
+    def __init__(
+            self,
+            doc = None,
+            keep_ocs = 'all',
+            keep_non_oc = True,
+            delete_ocgs = True,
+            page_range = [],
+            line_props = {},
+        ):
+        
         self.pdf = doc
-        self.keep_ocs = 'all'
-        self.keep_non_oc = True
-        self.delete_ocgs = True
-        self.page_range = []
+        self.keep_ocs = keep_ocs
+        self.keep_non_oc = keep_non_oc
+        self.delete_ocgs = delete_ocgs
+        self.page_range = page_range
 
-        self.line_props = {}
+        self.line_props = line_props
         self.clean_line_props = {}
         self.colour_type = None
         self.properties = {}
@@ -44,7 +53,6 @@ class LayerFilter():
         self.keeping = True 
         self.in_oc = False
         self.current_layer_name = ''
-
 
 
     def get_layer_names(self):
