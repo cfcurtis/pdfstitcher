@@ -16,6 +16,7 @@ import copy
         
 STATE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'state']
 SKIP_TYPES = ['/Font','/ExtGState']
+SKIP_KEYS = ['/Parent','/Thumb']
 
 # helper functions to dump page to file for debugging
 def write_page(fname,page):
@@ -230,7 +231,7 @@ class LayerFilter():
                     return None
             
             for o in ob.keys():
-                if o != '/Parent' and not (is_page and o == '/Contents'):
+                if o not in SKIP_KEYS and not (is_page and o == '/Contents'):
                     newstream = self.remove_ocgs_from_stream(ob[o])
                     if newstream:
                         ob[0].write(newstream)
