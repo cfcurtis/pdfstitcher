@@ -50,8 +50,10 @@ class PageTiler:
         
         self.in_doc = in_doc
         
-        if page_range:
+        if isinstance(page_range, str):
             self.page_range = utils.parse_page_range(page_range)
+        elif isinstance(page_range, list):
+            self.page_range = page_range
         else:
             self.page_range = []
         
