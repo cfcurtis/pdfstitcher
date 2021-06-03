@@ -52,7 +52,7 @@ class PageTiler:
         
         if isinstance(page_range, str):
             self.page_range = utils.parse_page_range(page_range)
-        elif isinstance(page_range, list):
+        elif isinstance(page_range, list) or isinstance(page_range, tuple):
             self.page_range = page_range
         else:
             self.page_range = []
