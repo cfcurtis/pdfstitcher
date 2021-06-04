@@ -110,6 +110,7 @@ class LayerFilter:
     def run(self,progress_range = None, progress_update = None, progress_was_cancelled = None):
         self.found_objects = set()
         self.property_search_objects = set()
+        self.off_ocs = []
         
         # open a new copy of the input
         output = pikepdf.Pdf.open(self.pdf.filename)
@@ -132,23 +133,30 @@ class LayerFilter:
         n_page = len(page_range)
         progress_range and progress_range(n_page) # don't run if the callback is None
         
-        self.off_ocs = []
+        parse_streams = False
         if self.keep_ocs != 'all':
             # edit the OCG listing in the root
-            OCGs = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]
+            On = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]
             Off = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) not in self.keep_ocs]
 
-            for o in Off:
-                self.off_ocs.append(o.Name)
-        else:
-            OCGs = output.Root.OCProperties.OCGs
-
-        if self.delete_ocgs or self.line_props != {}:
-            output.Root.OCProperties.OCGs = OCGs
-            output.Root.OCProperties.D.ON = OCGs
+            if self.delete_ocgs:
+                parse_streams = True
+                for o in Off:
+                    self.off_ocs.append(o.Name)
+                output.Root.OCProperties.OCGs = On
+                output.Root.OCProperties.D.ON = On
+                output.Root.OCProperties.D.Order = self.filter_ocg_order(output.Root.OCProperties.D.Order)
+            else:
+                output.Root.OCProperties.D.ON = On
+                output.Root.OCProperties.D.OFF = Off
+        
+        if self.line_props != {}:
             self.convert_layer_props()
+            # TODO: actually detect colour space
             self.colour_type = 'RG' 
+            parse_streams = True
 
+        if parse_streams:
             for p in page_range:
                 self.get_properties(output.pages[p-1])
                 if self.properties:
@@ -164,15 +172,9 @@ class LayerFilter:
                     return None
 
             progress_update and progress_update(n_page)
-            output.Root.OCProperties.D.Order = self.filter_ocg_order(output.Root.OCProperties.D.Order)
 
-        else:
-            output.Root.OCProperties.D.ON = OCGs
-            output.Root.OCProperties.D.OFF = Off
-
-        # by default, unlock all layers and show all OCGs
+        # by default, unlock all layers
         output.Root.OCProperties.D.Locked = []
-
         output.remove_unreferenced_resources()
 
         return output
