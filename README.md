@@ -6,8 +6,8 @@ Since version 0.4, it is also possible to select layers for inclusion/exclusion 
 For up-to-date information, also check out https://www.pdfstitcher.org.
 
 ## Download the latest release
-* [Windows (7 or 10, 64-bit)](https://github.com/cfcurtis/sewingutils/releases/latest/download/pdfstitcher.exe)
-* [macOS (High Sierra or higher)](https://github.com/cfcurtis/sewingutils/releases/latest/download/PDFStitcher-Installer.dmg)
+* [Windows (7 or 10, 64-bit)](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/pdfstitcher.exe)
+* [macOS (High Sierra or higher)](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/PDFStitcher-Installer.dmg)
 
 **Translations:**
 PDFStitcher will detect system language settings and change localisation if supported. 
