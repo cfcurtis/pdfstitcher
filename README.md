@@ -1,35 +1,37 @@
 # PDFStitcher
-This is a utility for stitching together many PDF pages from a single document into one single page. This is also called "N-Up" or page imposition. This utility was created in order to convert sewing patterns into a convenient format for projecting, though it could be used to stitch together any PDF.
+This is a utility for stitching together many PDF pages from one document into a single page. This is also called "N-Up" or page imposition. This program was created in order to convert sewing patterns into a convenient format for projecting, though it could be used to stitch together any PDF.
 
-As of v0.4 alpha, layers can be also selected for inclusion/exclusion in the final output. Line properties (thickness, style, colour) can also be modified if the input PDF is compatible.
+Since version 0.4, it is also possible to select layers for inclusion/exclusion in the final output. Additionally, line properties can be modified for each layer if the input PDF is compatible.
 
-For the most up-to-date information, check out https://www.pdfstitcher.org.
+For up-to-date information, also check out https://www.pdfstitcher.org.
 
 ## Download the latest release
-* [Windows (64-bit Windows 7 or 10)](https://github.com/cfcurtis/sewingutils/releases/latest/download/pdfstitcher.exe)
-* [MacOs (High Sierra or higher)](https://github.com/cfcurtis/sewingutils/releases/latest/download/PDFStitcher-Installer.dmg)
+* [Windows (7 or 10, 64-bit)](https://github.com/cfcurtis/sewingutils/releases/latest/download/pdfstitcher.exe)
+* [macOS (High Sierra or higher)](https://github.com/cfcurtis/sewingutils/releases/latest/download/PDFStitcher-Installer.dmg)
 
 **Translations:**
-PDFStitcher will detect system language settings and change language if supported. 
+PDFStitcher will detect system language settings and change localisation if supported. 
 
 Previous versions can be found by clicking on the "releases" link to the right.
 
 ## Features
-* Stitch together pages in any order with specified number of rows or columns
-* Layers are automatically preserved if present in the source document
-* Rotate pages before stitching
-* Add blank pages by including zeros in the page list (e.g. 1-5,0,6-10)
-* Add margins around the final output
+* Stitch together pages in any order with specified number of rows/columns
+* Rotate pages for stitching
+* Add a margin around the final output
 * Trim or overlap the edges of each page by a specified amount
+* Add blank pages by including zeros in the page list (e.g. 1-5,0,6-10)
+* Layers are automatically preserved if present in the source document
+* Exclude layers (either deactivate or remove)
+* Modify line properties (colour, thickness, style (solid, dashed, dotted))
 
-## Installation
-Most people probably want to just use the executable links above. However, if you want to run the script directly, you'll need the following:
+## Development Installation
+Most people probably want to just use the executable links above. However, if you intend to run the program from source, you'll need the following:
 
 * [Python 3.6+](https://www.python.org/downloads/) and `pip`. Testing was done with 64-bit Python 3.8.5 provided by [Anaconda](https://www.anaconda.com/) on Windows 10 and Python 3.9.1 provided by [homebrew](https://brew.sh/) on macOS High Sierra 10.13.6.
 
-* [pikepdf](https://github.com/pikepdf/pikepdf) - can be installed by running `pip install pikepdf` **Note:** For macOS less than 10.15, pikepdf v2.8.0 is the latest supported version. Specify with `pip install pikepdf==2.8.0` or build it from source if you're feeling adventurous.
+* [pikepdf](https://github.com/pikepdf/pikepdf) can be installed by running `pip install pikepdf` **Note:** For macOS less than 10.15, pikepdf v2.8.0 is the latest supported version. Specify with `pip install pikepdf==2.8.0` or [build it from source](https://pikepdf.readthedocs.io/en/latest/installation.html#building-from-source) if you're feeling adventurous.
 
-* [wxPython](https://www.wxpython.org/) - can be installed by running `pip install wxpython` **Note:** for Linux, installation of wxpython can be tricky. I recommend checking out the instructions [here](https://wxpython.org/pages/downloads/index.html).
+* [wxPython 4.1+](https://www.wxpython.org/) can be installed by running `pip install wxpython` **Note:** For Linux, the installtion of wxPython can be tricky if your distribution does not provide a recent enough version. I recommend checking out the instructions [here](https://wxpython.org/pages/downloads/index.html).
 
 ## Usage
 <a href="url"><img src="resources/stitcher_screenshot.png" width="400" ></a>
@@ -53,11 +55,11 @@ Some PDFs require trimming pages, assembling with gaps, tiling with columns firs
 
 * Overlap or trim: By default, the pages are overlapped by the trim amount specified. In some cases (e.g. if the background is white instead of transparent) this results in gaps between pages, and selecting "trim" might give better results.
 
-## Not yet supported
+## Not supported yet
 * Different trim for each page
-* Mixed size or orientation of pages
+* Mixed orientation of pages
 
-At this time, the GUI does not display the input or output PDF. You will need to use an external PDF viewer such as Adobe Reader for this. Remember to close your output PDF if you want to re-generate with different options, otherwise it will be locked for writing.
+At this time, the GUI does not display the input or output PDF. You will need to use an external PDF viewer such as [Adobe Reader](https://get.adobe.com/uk/reader/otherversions/) or [Okular](https://okular.kde.org/) for this. **Note:** If you are using Windows, remember to close the output PDF if you want to re-generate it with different options, otherwise the file will be locked for writing.
 
 ## Help!
-Found a bug, or have an idea for a great new feature? Check out the [Issues](https://github.com/cfcurtis/sewingutils/issues) tab to see if it's an open issue, or submit a new one if it's not on the list.
+Found a bug, or have an idea for a great new feature? Check out the [Issues](https://github.com/cfcurtis/pdfstitcher/issues) tab to see if it's an open issue, or submit a new one if it's not on the list.
