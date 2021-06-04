@@ -5,14 +5,14 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-from os import write
 import pikepdf
 import pdf_operators as pdf_ops
 from decimal import Decimal
-import utils 
-import sys
 import traceback
 import copy
+# from os import write
+# import sys
+# import utils
         
 STATE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'state']
 STROKE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'show' and v[1] == 'stroke'] 
