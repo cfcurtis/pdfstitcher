@@ -15,6 +15,7 @@ import traceback
 import copy
         
 STATE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'state']
+STROKE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'show' and v[1] == 'stroke'] 
 SKIP_TYPES = ['/Font','/ExtGState']
 SKIP_KEYS = ['/Parent','/Thumb']
 
@@ -50,9 +51,17 @@ class LayerFilter:
         self.clean_line_props = {}
         self.colour_type = None
         self.properties = {}
-
         self.current_layer_name = ''
 
+        # maintain a running list of line state 
+        # defaults from PDF reference v1.4
+        self.current_state = [{
+            'w':  1.0,
+            'RG': [0,0,0],
+            'K': pdf_ops.rgb_to_cmyk([0,0,0]),
+            'd': pdf_ops.line_style_arr[0]
+        }]
+        self.q_depth = 0
 
     def get_layer_names(self):
         # reads through the root to parse out the layers present in the file
@@ -122,24 +131,28 @@ class LayerFilter:
 
         n_page = len(page_range)
         progress_range and progress_range(n_page) # don't run if the callback is None
-
-        # edit the OCG listing in the root
-        OCGs = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]
-        Off = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) not in self.keep_ocs]
+        
         self.off_ocs = []
+        if self.keep_ocs != 'all':
+            # edit the OCG listing in the root
+            OCGs = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]
+            Off = [oc for oc in output.Root.OCProperties.OCGs if str(oc.Name) not in self.keep_ocs]
 
-        for o in Off:
-            self.off_ocs.append(o.Name)
+            for o in Off:
+                self.off_ocs.append(o.Name)
+        else:
+            OCGs = output.Root.OCProperties.OCGs
 
-        if self.delete_ocgs:
+        if self.delete_ocgs or self.line_props != {}:
             output.Root.OCProperties.OCGs = OCGs
             output.Root.OCProperties.D.ON = OCGs
-            self.clean_line_options()
+            self.convert_layer_props()
+            self.colour_type = 'RG' 
 
             for p in page_range:
                 self.get_properties(output.pages[p-1])
                 if self.properties:
-                    page_stream = self.remove_ocgs_from_stream(output.pages[p-1])
+                    page_stream = self.filter_content(output.pages[p-1])
                     if page_stream:
                         output.pages[p-1].Contents = output.make_stream(page_stream)
                 elif not self.keep_non_oc:
@@ -171,45 +184,94 @@ class LayerFilter:
             if '/Properties' in r.keys():
                 self.properties = r.Properties
 
-    def clean_line_options(self):
-        for l in self.line_props:
+    def convert_layer_props(self):
+        # convert the line properties from the GUI to what the PDF needs
+        self.clean_line_props = {}
+        for layer,lp in self.line_props.items():
             w = 1
-            lp = copy.copy(self.line_props[l])
+            clp = {}
             if 'thickness' in lp.keys():
-                w = round(Decimal(lp['thickness']), 1)
-                lp['thickness'] = [w]
-            if 'rgb' in lp.keys():
-                lp['cmyk'] = [round(Decimal(k),3) for k in pdf_ops.rgb_to_cmyk(lp['rgb'])]
-                lp['rgb'] = [round(Decimal(rg), 3) for rg in lp['rgb']]
+                clp['w'] = [round(Decimal(lp['thickness']),1)]
+                w = clp['w'][0]
+            
             if 'style' in lp.keys():
-                lp['style'] = list(pdf_ops.line_style_arr[lp['style']])
+                clp['d'] = list(pdf_ops.line_style_arr[lp['style']])
                 # list is needed to make sure this is a copy
                 # scale the line style
-                lp['style'][0] = [d*w for d in lp['style'][0]]
+                clp['d'][0] = [d*w for d in clp['d'][0]]
+
+            # assign the colour for both cmyk and rgb
+            if 'rgb' in lp.keys():
+                clp['RG'] = [round(Decimal(rg),3) for rg in lp['rgb']]
+                clp['K'] = [round(Decimal(k),3) for k in pdf_ops.rgb_to_cmyk(lp['rgb'])]
             
-            self.clean_line_props[l] = lp
+            self.clean_line_props[layer] = clp
 
+    def append_layer_properties(self,commands):
+        for op,operands in self.clean_line_props[self.current_layer_name].items():
+            if self.current_state[-1][op] != operands:
+                commands.append([operands,pikepdf.Operator(op)])
+                self.current_state[-1][op] = operands
+    
+    def add_q_state(self):
+        self.current_state.append(copy.copy(self.current_state[-1]))
+        self.q_depth += 1
+    
+    def remove_q_state(self):
+        self.current_state.pop()
+        self.q_depth -= 1
+    
+    def restore_state(self,commands):
+        for op, operands in self.current_state[-1].items():
+            commands.append([operands,pikepdf.Operator(op)])
 
-    def append_layer_property(self, prop, commands):
-        if prop == 'rgb':
-            op = 'RG'
-        elif prop == 'cmyk':
-            op = 'K'
-        elif prop == 'thickness':
-            op = 'w'
-        else:
-            op = 'd'
-        if self.current_layer_name in self.clean_line_props.keys():
-            lp = self.clean_line_props[self.current_layer_name]
-            if prop in lp.keys():
-                commands.append([lp[prop], op])
+    def filter_stream(self,ob,in_oc):
+        previous_operator = ''
+        commands = []
+        # initialize copying with keep_non_oc
+        keeping = self.keep_non_oc or in_oc
+        for operands, operator in pikepdf.parse_content_stream(ob):
+            op = str(operator)
+            if op == "BDC" and len(operands) > 1 and str(operands[0]) == "/OC":
+                keeping = True
+                oc = str(operands[1])
+                if self.properties != None:
+                    if oc in self.properties.keys():
+                        ocg = self.properties[oc]
+                        self.current_layer_name = str(ocg.Name)
+                        if ocg.Name in self.off_ocs:
+                            keeping = False
+                    
+            if keeping or op in STATE_OPS:
+                if previous_operator == 'q' and op == 'Q':
+                    commands.pop()
 
-    def append_layer_properties(self, commands):
-        self.append_layer_property('rgb', commands)
-        self.append_layer_property('thickness', commands)
-        self.append_layer_property('style', commands)
+                if self.current_layer_name in self.clean_line_props:
+                    if op == 'gs' or op in STROKE_OPS:
+                        self.append_layer_properties(commands)
+                    # and check if the current operator is one we need to modify
+                    elif op in self.clean_line_props[self.current_layer_name].keys():
+                        operands = self.clean_line_props[self.current_layer_name][op]
+                
+                # no matter what, update the state
+                if op in self.current_state[-1].keys():
+                    self.current_state[-1][op] = commands[-1][0]
+                if op == 'q':
+                    self.add_q_state()
+                elif op == 'Q':
+                    self.remove_q_state()
+                
+                commands.append([operands,operator])
+                previous_operator = op
+                
+            if str(operator) == 'EMC':
+                keeping = self.keep_non_oc or in_oc
+                self.current_layer_name = ''
+                # self.restore_state(commands)
+
+        return commands
       
-    def remove_ocgs_from_stream(self, ob):
+    def filter_content(self, ob):
         # skip over anything we have already seen
         if not isinstance(ob, pikepdf.Object):
             return
@@ -220,11 +282,9 @@ class LayerFilter:
         else:
             self.found_objects.add(obid)
 
-        color_stroke_ops = ['CS', 'RG', 'SC', 'SCN', 'K']
-
         if isinstance(ob, pikepdf.Array):
             for i in range(len(ob)):
-                newstream = self.remove_ocgs_from_stream(ob[i])
+                newstream = self.filter_content(ob[i])
                 if newstream:
                     ob[i].write(newstream)
 
@@ -240,7 +300,7 @@ class LayerFilter:
             
             for o in ob.keys():
                 if o not in SKIP_KEYS and not (is_page and o == '/Contents'):
-                    newstream = self.remove_ocgs_from_stream(ob[o])
+                    newstream = self.filter_content(ob[o])
                     if newstream:
                         ob[0].write(newstream)
 
@@ -263,23 +323,7 @@ class LayerFilter:
                         return b''
                     else:
                         try:
-                            for operands, operator in pikepdf.parse_content_stream(ob):
-                                # self.append_layer_properties(commands)
-                                commands.append([operands, operator])
-                                if self.current_layer_name in self.clean_line_props:
-                                    op = str(operator)
-                                    if op in ['Q', 'gs']:
-                                        self.append_layer_properties(commands)
-                                    elif op == 'd':
-                                        self.append_layer_property('style', commands)
-                                    elif op in color_stroke_ops:
-                                        commands.pop()
-                                        if op == 'K':
-                                            self.append_layer_property('cmyk', commands)
-                                        else:
-                                            self.append_layer_property('rgb', commands)
-                                    elif op == 'w': # and operands[0] != 0:
-                                        self.append_layer_property('thickness', commands)
+                            commands = self.filter_stream(ob,in_oc = True)
                             return pikepdf.unparse_content_stream(commands)
 
                         except:
@@ -293,7 +337,6 @@ class LayerFilter:
 
             # the layers may be in the stream
             try:
-
                 stream_has_layers = False
                 for operands, operator in pikepdf.parse_content_stream(ob, "BDC"):
                     if len(operands) > 1 and str(operands[0]) == "/OC":
@@ -301,46 +344,7 @@ class LayerFilter:
                         break
 
                 if stream_has_layers:
-                    previous_operator = ''
-                    # initialize copying with keep_non_oc
-                    keeping = self.keep_non_oc
-                    for operands, operator in pikepdf.parse_content_stream(ob):
-                        op = str(operator)
-                        if op == "BDC" and len(operands) > 1 and str(operands[0]) == "/OC":
-                            keeping = True
-                            oc = str(operands[1])
-                            if self.properties != None:
-                                if oc in self.properties.keys():
-                                    ocg = self.properties[oc]
-                                    self.current_layer_name = str(ocg.Name)
-                                    if ocg.Name in self.off_ocs:
-                                        keeping = False
-                                    else:
-                                        self.append_layer_properties(commands)
-                                
-                        if keeping or op in STATE_OPS:
-                            if previous_operator == 'q' and op == 'Q':
-                                commands.pop()
-                            else:
-                                commands.append([operands, operator])
-                            
-                            if self.current_layer_name in self.clean_line_props:
-                                # turn into a switch statement when python starts supporting them - 3.10?
-                                if op in ['Q', 'gs']:
-                                    self.append_layer_properties(commands)
-                                elif op == 'd':
-                                    self.append_layer_property('style', commands)
-                                elif op in color_stroke_ops:
-                                    self.append_layer_property('rgb', commands)
-                                elif op == 'w': # and operands[0] != 0:
-                                    self.append_layer_property('thickness', commands)
-                            previous_operator = op
-                            
-                        if str(operator) == 'EMC':
-                            keeping = self.keep_non_oc
-                            self.current_layer_name = ''
-
-
+                    commands = self.filter_stream(ob,in_oc = False)
                     return pikepdf.unparse_content_stream(commands)
                 
                 elif not self.keep_non_oc:
