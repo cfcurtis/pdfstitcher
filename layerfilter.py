@@ -17,7 +17,8 @@ import copy
 STATE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'state']
 STROKE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'show' and v[1] == 'stroke'] 
 SKIP_TYPES = ['/Font','/ExtGState']
-SKIP_KEYS = ['/Parent','/Thumb']
+SKIP_KEYS = ['/Parent','/Thumb','/PieceInfo']
+DEBUG = False
 
 # helper functions to dump page to file for debugging
 def write_page(fname,page):
@@ -62,6 +63,7 @@ class LayerFilter:
             'd': pdf_ops.line_style_arr[0]
         }]
         self.q_depth = 0
+        self.debug_depth = 0
 
     def get_layer_names(self):
         # reads through the root to parse out the layers present in the file
@@ -160,7 +162,7 @@ class LayerFilter:
             for p in page_range:
                 self.get_properties(output.pages[p-1])
                 if self.properties:
-                    page_stream = self.filter_content(output.pages[p-1])
+                    page_stream = self.filter_content(output.pages[p-1],f'page[{p}]')
                     if page_stream:
                         output.pages[p-1].Contents = output.make_stream(page_stream)
                 elif not self.keep_non_oc:
@@ -257,7 +259,7 @@ class LayerFilter:
                 
                 # no matter what, update the state
                 if op in self.current_state[-1].keys():
-                    self.current_state[-1][op] = commands[-1][0]
+                    self.current_state[-1][op] = operands
                 if op == 'q':
                     self.add_q_state()
                 elif op == 'Q':
@@ -273,7 +275,7 @@ class LayerFilter:
 
         return commands
       
-    def filter_content(self, ob):
+    def filter_content(self, ob, ob_key):
         # skip over anything we have already seen
         if not isinstance(ob, pikepdf.Object):
             return
@@ -283,12 +285,18 @@ class LayerFilter:
             return
         else:
             self.found_objects.add(obid)
+        
+        if DEBUG:
+            print('\t'*self.debug_depth + ob_key)        
 
         if isinstance(ob, pikepdf.Array):
+            self.debug_depth += 1
             for i in range(len(ob)):
-                newstream = self.filter_content(ob[i])
+                newstream = self.filter_content(ob[i],f'{ob_key}[{i}]')
                 if newstream:
                     ob[i].write(newstream)
+            
+            self.debug_depth -= 1
 
         is_page = False
         if isinstance(ob, pikepdf.Dictionary):
@@ -299,12 +307,14 @@ class LayerFilter:
                 
                 elif ob_type in SKIP_TYPES:
                     return None
-            
+                    
+            self.debug_depth += 1
             for o in ob.keys():
                 if o not in SKIP_KEYS and not (is_page and o == '/Contents'):
-                    newstream = self.filter_content(ob[o])
+                    newstream = self.filter_content(ob[o],o)
                     if newstream:
                         ob[0].write(newstream)
+            self.debug_depth -= 1
 
         if isinstance(ob, pikepdf.Stream) or is_page:
             if '/Subtype' in ob.keys():
