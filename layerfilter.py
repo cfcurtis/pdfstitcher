@@ -163,7 +163,7 @@ class LayerFilter:
                 self.get_properties(output.pages[p-1])
                 if self.properties:
                     page_stream = self.filter_content(output.pages[p-1],f'page[{p}]')
-                    if page_stream:
+                    if page_stream is not None:
                         output.pages[p-1].Contents = output.make_stream(page_stream)
                 elif not self.keep_non_oc:
                     # no OCGs on the page and we don't want to keep non-optional content
@@ -293,7 +293,7 @@ class LayerFilter:
             self.debug_depth += 1
             for i in range(len(ob)):
                 newstream = self.filter_content(ob[i],f'{ob_key}[{i}]')
-                if newstream:
+                if newstream is not None:
                     ob[i].write(newstream)
             
             self.debug_depth -= 1
@@ -312,8 +312,8 @@ class LayerFilter:
             for o in ob.keys():
                 if o not in SKIP_KEYS and not (is_page and o == '/Contents'):
                     newstream = self.filter_content(ob[o],o)
-                    if newstream:
-                        ob[0].write(newstream)
+                    if newstream is not None:
+                        ob[o].write(newstream)
             self.debug_depth -= 1
 
         if isinstance(ob, pikepdf.Stream) or is_page:
@@ -327,6 +327,8 @@ class LayerFilter:
                     return None
 
             commands = []
+            if DEBUG:
+                print('\t'*self.debug_depth + 'Filtering stream')
             # the whole stream is a layer
             if '/OC' in ob.keys():
                 if '/Name' in ob.OC.keys():
