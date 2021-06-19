@@ -57,7 +57,7 @@ class LayerFilter:
         # maintain a running list of line state 
         # defaults from PDF reference v1.4
         self.current_state = [{
-            'w':  1.0,
+            'w':  [1.0],
             'RG': [0,0,0],
             'K': pdf_ops.rgb_to_cmyk([0,0,0]),
             'd': pdf_ops.line_style_arr[0]
@@ -271,7 +271,7 @@ class LayerFilter:
             if str(operator) == 'EMC':
                 keeping = self.keep_non_oc or in_oc
                 self.current_layer_name = ''
-                # self.restore_state(commands)
+                self.restore_state(commands)
 
         return commands
       
