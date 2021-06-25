@@ -163,7 +163,7 @@ class LayerFilter:
                 if progress_was_cancelled and progress_was_cancelled():
                     return None
 
-            progress_update and progress_update(n_page)
+        progress_update and progress_update(n_page)
 
         # by default, unlock all layers
         output.Root.OCProperties.D.Locked = []
