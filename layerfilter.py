@@ -15,6 +15,7 @@ import traceback
 import copy
         
 STATE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'state']
+STATE_OPS += [k for k,v in pdf_ops.ops.items() if v[0] in ['begin','end'] and v[1] != 'image']
 STROKE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'show' and v[1] == 'stroke'] 
 SKIP_TYPES = ['/Font','/ExtGState']
 SKIP_KEYS = ['/Parent','/Thumb','/PieceInfo']
@@ -23,13 +24,9 @@ DEBUG = False
 # helper functions to dump page to file for debugging
 def write_page(fname,page):
     with open(fname,'w') as f:
-        if isinstance(page.Contents,pikepdf.Array):
-            for s in page.Contents:
-                stream = s.read_bytes()
-                f.write(stream.decode())
-        elif isinstance(page.Contents,pikepdf.Stream):
-            stream = page.Contents.read_bytes()
-            f.write(stream.decode())
+        commands = pikepdf.parse_content_stream(page)
+        f.write(pikepdf.unparse_content_stream(commands).decode('pdfdoc'))
+
 
 class LayerFilter:
     def __init__(
@@ -53,16 +50,9 @@ class LayerFilter:
         self.colour_type = None
         self.properties = {}
         self.current_layer_name = ''
+        self.placed_forms = {}
 
-        # maintain a running list of line state 
-        # defaults from PDF reference v1.4
-        self.current_state = [{
-            'w':  [1.0],
-            'RG': [0,0,0],
-            'K': pdf_ops.rgb_to_cmyk([0,0,0]),
-            'd': pdf_ops.line_style_arr[0]
-        }]
-        self.q_depth = 0
+        self.initialize_state()
         self.debug_depth = 0
 
     def get_layer_names(self):
@@ -162,13 +152,13 @@ class LayerFilter:
             for p in page_range:
                 self.get_properties(output.pages[p-1])
                 if self.properties:
-                    page_stream = self.filter_content(output.pages[p-1],f'page[{p}]')
+                    page_stream = self.filter_content(output.pages[p-1])
                     if page_stream is not None:
                         output.pages[p-1].Contents = output.make_stream(page_stream)
                 elif not self.keep_non_oc:
                     # no OCGs on the page and we don't want to keep non-optional content
                     output.pages[p-1].Contents = output.make_stream(b'')
-                
+
                 progress_update and progress_update(page_range.index(p))
                 if progress_was_cancelled and progress_was_cancelled():
                     return None
@@ -217,15 +207,26 @@ class LayerFilter:
                 commands.append([operands,pikepdf.Operator(op)])
                 self.current_state[-1][op] = operands
     
+    def initialize_state(self):
+        # maintain a running list of line state 
+        # defaults from PDF reference v1.4
+        self.current_state = [{
+            'w':  [1.0],
+            'RG': [0,0,0],
+            'K': pdf_ops.rgb_to_cmyk([0,0,0]),
+            'd': pdf_ops.line_style_arr[0]
+        }]
+
     def add_q_state(self):
         self.current_state.append(copy.copy(self.current_state[-1]))
-        self.q_depth += 1
     
     def remove_q_state(self):
         self.current_state.pop()
-        self.q_depth -= 1
-    
+        if not self.current_state:
+            self.initialize_state()
+            
     def restore_state(self,commands):
+        self.remove_q_state()
         for op, operands in self.current_state[-1].items():
             commands.append([operands,pikepdf.Operator(op)])
 
@@ -249,133 +250,84 @@ class LayerFilter:
             if keeping or op in STATE_OPS:
                 if previous_operator == 'q' and op == 'Q':
                     commands.pop()
+                else:
+                    if self.current_layer_name in self.clean_line_props:
+                        if op == 'gs' or op in STROKE_OPS:
+                            self.append_layer_properties(commands)
+                        # and check if the current operator is one we need to modify
+                        elif op in self.clean_line_props[self.current_layer_name].keys():
+                            operands = self.clean_line_props[self.current_layer_name][op]
+                    
+                    # no matter what, update the state
+                    if op in self.current_state[-1].keys():
+                        self.current_state[-1][op] = operands
+                    if op == 'q':
+                        self.add_q_state()
+                    elif op == 'Q':
+                        self.remove_q_state()
+                    
+                    commands.append([operands,operator])
+                    previous_operator = op
 
-                if self.current_layer_name in self.clean_line_props:
-                    if op == 'gs' or op in STROKE_OPS:
-                        self.append_layer_properties(commands)
-                    # and check if the current operator is one we need to modify
-                    elif op in self.clean_line_props[self.current_layer_name].keys():
-                        operands = self.clean_line_props[self.current_layer_name][op]
+                    if op == 'Do':
+                        self.placed_forms[str(operands[0])] = [
+                            self.current_layer_name,
+                            copy.copy(self.current_state)
+                        ]
                 
-                # no matter what, update the state
-                if op in self.current_state[-1].keys():
-                    self.current_state[-1][op] = operands
-                if op == 'q':
-                    self.add_q_state()
-                elif op == 'Q':
-                    self.remove_q_state()
-                
-                commands.append([operands,operator])
-                previous_operator = op
-                
-            if str(operator) == 'EMC':
+            if op == 'EMC':
                 keeping = self.keep_non_oc or in_oc
                 self.current_layer_name = ''
                 self.restore_state(commands)
 
         return commands
-      
-    def filter_content(self, ob, ob_key):
-        # skip over anything we have already seen
-        if not isinstance(ob, pikepdf.Object):
-            return
+    
+    def filter_content(self,page):
+        try:
+            # new pages are always independent of previous
+            self.initialize_state()
+            stream_has_layers = False
+            self.placed_forms = {}
+            for operands, operator in pikepdf.parse_content_stream(page, "BDC"):
+                if len(operands) > 1 and str(operands[0]) == "/OC":
+                    stream_has_layers = True
+                    break
 
-        obid = ob.unparse()
-        if obid in self.found_objects:
-            return
-        else:
-            self.found_objects.add(obid)
-        
-        if DEBUG:
-            print('\t'*self.debug_depth + ob_key)        
-
-        if isinstance(ob, pikepdf.Array):
-            self.debug_depth += 1
-            for i in range(len(ob)):
-                newstream = self.filter_content(ob[i],f'{ob_key}[{i}]')
-                if newstream is not None:
-                    ob[i].write(newstream)
+            if stream_has_layers:
+                commands = self.filter_stream(page,in_oc = False)
+                newstream = pikepdf.unparse_content_stream(commands)
+            elif not self.keep_non_oc:
+                newstream = b''
             
-            self.debug_depth -= 1
-
-        is_page = False
-        if isinstance(ob, pikepdf.Dictionary):
-            if '/Type' in ob.keys():
-                ob_type = str(ob.Type)
-                if ob_type == '/Page':
-                    is_page = True
-                
-                elif ob_type in SKIP_TYPES:
-                    return None
-                    
-            self.debug_depth += 1
-            for o in ob.keys():
-                if o not in SKIP_KEYS and not (is_page and o == '/Contents'):
-                    newstream = self.filter_content(ob[o],o)
-                    if newstream is not None:
-                        ob[o].write(newstream)
-            self.debug_depth -= 1
-
-        if isinstance(ob, pikepdf.Stream) or is_page:
-            if '/Subtype' in ob.keys():
-                if ob.Subtype == '/Image':
-                    return None
-            
-            if '/Filter' in ob.keys():
-                #don't parse jpeg-type streams
-                if ob.Filter == '/DCTDecode':
-                    return None
-
-            commands = []
-            if DEBUG:
-                print('\t'*self.debug_depth + 'Filtering stream')
-            # the whole stream is a layer
-            if '/OC' in ob.keys():
-                if '/Name' in ob.OC.keys():
-                    self.current_layer_name = str(ob.OC.Name)
-                    if self.current_layer_name in self.off_ocs:
-                        return b''
+            # loop through the form xobjects and delete or filter as needed
+            if '/XObject' in page.Resources:
+                for key,ob in page.Resources.XObject.items():
+                    if key in self.placed_forms.keys():
+                        if '/Subtype' in ob.keys() and ob.Subtype == '/Form':
+                            self.current_layer_name = self.placed_forms[key][0]
+                            self.current_state = self.placed_forms[key][1]
+                            form_stream = self.filter_stream(ob,in_oc=True)
+                            ob.write(pikepdf.unparse_content_stream(form_stream))
+                        elif '/Subtype' in ob.keys() and ob.Subtype == '/PS':
+                            print('Postscript XObject detected, not currently handled.')
                     else:
-                        try:
-                            commands = self.filter_stream(ob,in_oc = True)
-                            return pikepdf.unparse_content_stream(commands)
+                        del page.Resources.XObject[key]
+            self.placed_forms = {}
 
-                        except:
-                            #traceback.print_exc()
-                            #print("couldn't open stream ", sys.exc_info()[0] )
-                            #print("couldn't open stream")
-                            #ignore - probably not a content stream. Print an error when debugging
-                            ignore = 1
-                            return None
+            return newstream
 
-
-            # the layers may be in the stream
-            try:
-                stream_has_layers = False
-                for operands, operator in pikepdf.parse_content_stream(ob, "BDC"):
-                    if len(operands) > 1 and str(operands[0]) == "/OC":
-                        stream_has_layers = True
-                        break
-
-                if stream_has_layers:
-                    commands = self.filter_stream(ob,in_oc = False)
-                    return pikepdf.unparse_content_stream(commands)
-                
-                elif not self.keep_non_oc:
-                    return b''
-
-            except AttributeError:
-                traceback.print_exc()
-                ignore = 1
-            except ValueError:
-                traceback.print_exc()
-                ignore = 1
-            except NameError:
-                traceback.print_exc()
-                ignore = 1
-            except:
-                traceback.print_exc()
-                #print("couldn't open stream ", sys.exc_info()[0] )
-                print("couldn't open stream")
-                #ignore - probably not a content stream. Print an error when debugging
-                # ignore = 1
+        except AttributeError:
+            traceback.print_exc()
+            ignore = 1
+        except ValueError:
+            traceback.print_exc()
+            ignore = 1
+        except NameError:
+            traceback.print_exc()
+            ignore = 1
+        except:
+            traceback.print_exc()
+            #print("couldn't open stream ", sys.exc_info()[0] )
+            print("couldn't open stream")
+            #ignore - probably not a content stream. Print an error when debugging
+            # ignore = 1
