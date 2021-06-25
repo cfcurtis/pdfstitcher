@@ -276,10 +276,10 @@ class PageTiler:
         if self.cols == 0 and self.rows == 0:
             # try for square
             self.cols = math.ceil(math.sqrt(n_tiles))
-            self.rows = self.cols
+            self.rows = math.ceil(n_tiles/self.cols)
         
         # columns take priority if both are specified
-        if self.cols > 0:
+        if self.cols is not None and self.cols > 0:
             rrows = self.rows
             self.rows = math.ceil(n_tiles/self.cols)
             if rrows != self.rows and rrows != 0:
