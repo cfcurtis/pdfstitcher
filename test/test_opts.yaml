@@ -1,0 +1,102 @@
+- name: Jalie
+  input: 'C:\Users\cfcur\Google Drive\Sewing\Jalie\jalie_2679_veste_sport_jacket_pieces.pdf'
+  page_range: 1-23
+  layer_filter:
+    keep_ocs: all
+    line_props:
+      R:
+        thickness: 10.0
+        style: 0
+        rgb: [0,0,0]
+      S:
+        thickness: 8
+        style: 0
+  page_tiler:
+    rows: 5
+- name: Puperita
+  input: 'C:\Users\cfcur\Google Drive\Sewing\Puperita\PUPERITAmodel1181MYNESTSleepSack.pdf'
+  page_range: '33-44,0,0,45-51'
+  layer_filter:
+    keep_ocs: ['size L','size S','always checked']
+    line_props:
+      size L:
+        thickness: 10.0
+        style: 0
+        rgb: [0,0.5,0]
+      size S:
+        thickness: 5
+        style: 1
+  page_tiler:
+    cols: 7
+- name: Sinclair
+  input: 'C:\Users\cfcur\Google Drive\Sewing\Sinclair\Letter_SINCLAIR_S1065_PETITE-EI_Harper_knit_cardigan_and_duster_US0-US30_RL519.pdf'
+  page_range: '1-44'
+  layer_filter:
+    keep_ocs: ['PETITE US04-S','PETITE US06-S']
+    line_props:
+      PETITE US04-S:
+        thickness: 5.0
+        style: 0
+        rgb: [0,0,0]
+  page_tiler:
+    rows: 4
+    trim: [0,.59,0,.89]
+- name: Sinclair-reprocess
+  input: 'Sinclair-with-non-oc.pdf'
+  page_range: '1'
+  layer_filter:
+    keep_ocs: ['PETITE US04-S']
+    line_props:
+      PETITE US04-S:
+        thickness: 10.0
+        style: 0
+        rgb: [0.5,0,0.5]
+  page_tiler:
+    margin: 12
+    rows: 1
+- name: George & Ginger
+  input: 'C:\Users\cfcur\Google Drive\Sewing\George&Ginger\GG_40K_Sway_Top_Projector_Color.pdf'
+  page_range: '1'
+  layer_filter:
+    keep_ocs: ['Size 4 - S','BORDERS (do not turn off)']
+- name: SUAT
+  input: 'C:\Users\cfcur\Google Drive\Sewing\SUAT\SUAT Midnight Slipper Pattern.pdf'
+  page_range: '16-18'
+  layer_filter: 
+    keep_ocs: ['5/6','KEEP ON']
+    line_props: {'5/6': {'thickness': 10.0, 'style': 0, 'rgb': [0,0,0]}}
+  page_tiler:
+    cols: 2
+    trim: [0.5,0.5,0.5,0.5]
+    margin: 12
+- name: P4P
+  input: 'C:\Users\cfcur\Google Drive\Sewing\P4P\Wee-Lap-Tee-by-P4P-US-Letter.pdf'
+  page_range: 13-16
+  layer_filter:
+    keep_ocs: ['9 Month','12 Month','All Sizes']
+    line_props:
+      9 Month:
+        thickness: 10.0
+  page_tiler:
+    rows: 2
+    trim: [0,1,0,1]
+    margin: 8
+- name: PatternNiche
+  input: 'C:\Users\cfcur\Google Drive\Sewing\PatternNiche\Tami-Revolution-Hoodie-Womens-Projector-File.pdf'
+  page_range: '1'
+  layer_filter:
+    keep_ocs: ['26','text']
+    line_props:
+      '26':
+        style: 0
+        rgb: [1,0,0]
+- name: BlueDot
+  input: 'C:\Users\cfcur\Google Drive\Sewing\BlueDot\georgiacowlexpansionpackfinal.pdf'
+  page_range: 2-7
+  layer_filter:
+    keep_ocs: ['Cowl']
+    line_props:
+      Cowl:
+        thickness: 5.0
+  page_tiler:
+    rows: 2
