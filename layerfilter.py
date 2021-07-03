@@ -48,12 +48,9 @@ class LayerFilter:
         self.line_props = line_props
         self.clean_line_props = {}
         self.colour_type = None
-        self.properties = {}
         self.current_layer_name = ''
-        self.placed_forms = {}
 
         self.initialize_state()
-        self.debug_depth = 0
 
     def get_layer_names(self):
         # reads through the root to parse out the layers present in the file
@@ -151,15 +148,10 @@ class LayerFilter:
 
         if parse_streams:
             for p in page_range:
-                self.get_properties(output.pages[p-1])
-                if self.properties:
-                    page_stream = self.filter_content(output.pages[p-1])
-                    if page_stream is not None:
-                        output.pages[p-1].Contents = output.make_stream(page_stream)
-                elif not self.keep_non_oc:
-                    # no OCGs on the page and we don't want to keep non-optional content
-                    output.pages[p-1].Contents = output.make_stream(b'')
-
+                page_stream = self.filter_content(output.pages[p-1])
+                if page_stream is not None:
+                    output.pages[p-1].Contents = output.make_stream(page_stream)
+                    
                 progress_update and progress_update(page_range.index(p))
                 if progress_was_cancelled and progress_was_cancelled():
                     return None
@@ -171,13 +163,6 @@ class LayerFilter:
         output.remove_unreferenced_resources()
 
         return output
-
-    def get_properties(self, page, properties=None, depth = 0):
-        self.properties = {}
-        if '/Resources' in page.keys():
-            r = page.Resources
-            if '/Properties' in r.keys():
-                self.properties = r.Properties
 
     def convert_layer_props(self):
         # convert the line properties from the GUI to what the PDF needs
@@ -231,9 +216,10 @@ class LayerFilter:
         for op, operands in self.current_state[-1].items():
             commands.append([operands,pikepdf.Operator(op)])
 
-    def filter_stream(self,ob,in_oc):
+    def filter_stream(self,ob,page_props,oc_forms,in_oc):
         previous_operator = ''
         commands = []
+        placed_forms = {}
         # initialize copying with keep_non_oc
         keeping = self.keep_non_oc or in_oc
         for operands, operator in pikepdf.parse_content_stream(ob):
@@ -241,16 +227,39 @@ class LayerFilter:
             if op == "BDC" and len(operands) > 1 and str(operands[0]) == "/OC":
                 keeping = True
                 oc = str(operands[1])
-                if self.properties != None:
-                    if oc in self.properties.keys():
-                        ocg = self.properties[oc]
+                if page_props is not None:
+                    if oc in page_props.keys():
+                        ocg = page_props[oc]
                         self.current_layer_name = str(ocg.Name)
                         if ocg.Name in self.off_ocs:
                             keeping = False
-                    
+
+            if op == 'Do':
+                # Special case where we need to place a form even if it's not defined
+                # with the standard /OC BDC block
+                ob_name = str(operands[0])
+                if ob_name in oc_forms.keys() and not oc_forms[ob_name]['keep']:
+                    continue
+
+                if ob_name in oc_forms.keys() and oc_forms[ob_name]['keep']:
+                    placed_forms[ob_name] = {
+                        'layer': oc_forms[ob_name]['layer'],
+                        'state': copy.copy(self.current_state)
+                    }
+                    commands.append([operands,operator])
+                    previous_operator = op
+                    continue
+
+                elif keeping:
+                    placed_forms[ob_name] = {
+                        'layer': self.current_layer_name,
+                        'state': copy.copy(self.current_state)
+                    }
+
             if keeping or op in STATE_OPS:
                 if previous_operator == 'q' and op == 'Q':
                     commands.pop()
+                    self.remove_q_state()
                 else:
                     if self.current_layer_name in self.clean_line_props:
                         if op == 'gs' or op in STROKE_OPS:
@@ -270,52 +279,79 @@ class LayerFilter:
                     commands.append([operands,operator])
                     previous_operator = op
 
-                    if op == 'Do':
-                        self.placed_forms[str(operands[0])] = [
-                            self.current_layer_name,
-                            copy.copy(self.current_state)
-                        ]
-                
             if op == 'EMC':
                 keeping = self.keep_non_oc or in_oc
                 self.current_layer_name = ''
                 self.restore_state(commands)
-
-        return commands
+        
+        return commands, placed_forms
     
-    def filter_content(self,page):
-        try:
-            # new pages are always independent of previous
-            self.initialize_state()
-            stream_has_layers = False
-            self.placed_forms = {}
-            for operands, operator in pikepdf.parse_content_stream(page, "BDC"):
-                if len(operands) > 1 and str(operands[0]) == "/OC":
-                    stream_has_layers = True
-                    break
+    def filter_content(self,page,in_oc=False):
+        self.initialize_state()
+        page_props = {}
+        oc_forms = {}
+        placed_forms = {}
+        other_forms = []
+        if '/Resources' in page.keys():
+            r = page.Resources
+            if '/Properties' in r.keys():
+                page_props = r.Properties
+            elif '/XObject' in r.keys():
+                for key,ob in r.XObject.items():
+                    if '/Subtype' in ob.keys() and ob.Subtype == '/Form':
+                        if '/OC' in ob.keys():
+                            oc_name = str(ob.OC.Name)
+                            oc_forms[key] = {
+                                'layer': oc_name,
+                                'keep': oc_name not in self.off_ocs
+                            }
+                        else:
+                            other_forms.append(ob)
+        
+        if not in_oc and not page_props and not oc_forms:
+            # try going through the list of other forms and processing those.
+            # Useful for the situation where someone is re-running PDFStitcher.
+            for ob in other_forms:
+                form_stream = self.filter_content(ob)
+                ob.write(form_stream)
 
-            if stream_has_layers:
-                commands = self.filter_stream(page,in_oc = False)
-                newstream = pikepdf.unparse_content_stream(commands)
+            return None
+            
+        try:
+            if oc_forms is None:
+                do_filter = False
+                for operands, _ in pikepdf.parse_content_stream(page, "BDC"):
+                    if len(operands) > 1 and str(operands[0]) == "/OC":
+                        do_filter = True
+                        break
+            else:
+                do_filter = True
+
+            if do_filter:
+                commands,placed_forms = self.filter_stream(page,page_props,oc_forms,in_oc)
+                if commands:
+                    page_stream = pikepdf.unparse_content_stream(commands)
             elif not self.keep_non_oc:
-                newstream = b''
+                page_stream = b''
             
             # loop through the form xobjects and delete or filter as needed
             if '/XObject' in page.Resources:
                 for key,ob in page.Resources.XObject.items():
-                    if key in self.placed_forms.keys():
+                    if key in placed_forms.keys():
                         if '/Subtype' in ob.keys() and ob.Subtype == '/Form':
-                            self.current_layer_name = self.placed_forms[key][0]
-                            self.current_state = self.placed_forms[key][1]
-                            form_stream = self.filter_stream(ob,in_oc=True)
-                            ob.write(pikepdf.unparse_content_stream(form_stream))
+                            self.current_layer_name = placed_forms[key]['layer']
+                            saved_state = copy.copy(self.current_state)
+                            self.current_state = placed_forms[key]['state']
+                            form_stream = self.filter_content(ob,in_oc=True)
+                            ob.write(form_stream)
+                            self.current_state = saved_state
+                            self.current_layer_name = ''
                         elif '/Subtype' in ob.keys() and ob.Subtype == '/PS':
                             print('Postscript XObject detected, not currently handled.')
                     else:
                         del page.Resources.XObject[key]
-            self.placed_forms = {}
 
-            return newstream
+            return page_stream
 
         except AttributeError:
             traceback.print_exc()
