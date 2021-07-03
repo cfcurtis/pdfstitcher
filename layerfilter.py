@@ -100,20 +100,21 @@ class LayerFilter:
             return input
 
     def run(self,progress_range = None, progress_update = None, progress_was_cancelled = None):
-        self.found_objects = set()
-        self.property_search_objects = set()
+        if '/OCProperties' not in self.pdf.Root.keys():
+            return self.pdf
+
+        if self.keep_ocs == 'all' and len(self.line_props) == 0:
+            return self.pdf
+
+        if self.keep_ocs is None and self.keep_non_oc == False:
+            print(_('No layers selected, generated PDF would be blank.'))
+            return self.pdf
+        
         self.off_ocs = []
         
         # open a new copy of the input
         output = pikepdf.Pdf.open(self.pdf.filename)
         self.colour_type = None
-
-        if self.keep_ocs == 'all' and len(self.line_props) == 0:
-            return output
-        
-        if self.keep_ocs is None and self.keep_non_oc == False:
-            print(_('No layers selected, generated PDF would be blank.'))
-            return None
 
         if len(self.page_range) == 0:
             # human input page range is 1-indexed
