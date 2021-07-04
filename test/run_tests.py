@@ -24,6 +24,7 @@ if __name__ == "__main__":
     with open('test_opts.yaml','r') as f:
         test_opts = yaml.safe_load(f)
     
+    total_start = time.time()
     for t in test_opts:
         for keep_non_oc in [True,False]:
             non_oc_str = 'with-non-oc' if keep_non_oc else 'without-non-oc'
@@ -52,3 +53,6 @@ if __name__ == "__main__":
                 out_doc = time_and_test(page_filter,t['name'] + ' PageFilter')
             
             out_doc.save(f"{t['name']}-{non_oc_str}.pdf",normalize_content=True)
+    
+    print('...\n...\n...')
+    print(f'Total processing time: {time.time() - total_start}')

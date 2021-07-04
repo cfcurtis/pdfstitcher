@@ -97,6 +97,8 @@ class LayerFilter:
             return input
 
     def run(self,progress_range = None, progress_update = None, progress_was_cancelled = None):
+        self.found_objects = set()
+
         if '/OCProperties' not in self.pdf.Root.keys():
             return self.pdf
 
@@ -287,6 +289,12 @@ class LayerFilter:
         return commands, placed_forms
     
     def filter_content(self,page,in_oc=False):
+        obid = page.unparse()
+        if obid in self.found_objects:
+            return
+        else:
+            self.found_objects.add(obid)
+
         self.initialize_state()
         page_props = {}
         oc_forms = {}
@@ -313,7 +321,8 @@ class LayerFilter:
             # Useful for the situation where someone is re-running PDFStitcher.
             for ob in other_forms:
                 form_stream = self.filter_content(ob)
-                ob.write(form_stream)
+                if form_stream is not None:
+                    ob.write(form_stream)
 
             return None
             
@@ -343,7 +352,8 @@ class LayerFilter:
                             saved_state = copy.copy(self.current_state)
                             self.current_state = placed_forms[key]['state']
                             form_stream = self.filter_content(ob,in_oc=True)
-                            ob.write(form_stream)
+                            if form_stream is not None:
+                                ob.write(form_stream)
                             self.current_state = saved_state
                             self.current_layer_name = ''
                         elif '/Subtype' in ob.keys() and ob.Subtype == '/PS':
