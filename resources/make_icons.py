@@ -26,14 +26,16 @@ def parse_arguments():
         help = "Alternative path to the ImageMagick binary. Will be determined automatically if not set.",
     )
     parser.add_argument(
-        '--windows', '-win',
+        '--nowindows', '-nw',
         help = "Create icons for Windows.",
-        default = True,
+        action = "store_false",
+        dest = "windows",
     )
     parser.add_argument(
-        '--macos', '-mac',
+        '--nomacos', '-nm',
         help = "Create icons for macOS.",
-        default = True,
+        action = "store_false",
+        dest = "macos",
     )
     return parser.parse_args()
 
@@ -74,6 +76,14 @@ def get_magick_binary(args):
     return convert
 
 
+def generate_icons_windows(convert_cmd):
+    
+    output = ICONS_PATH + 'stitcher-icon.ico'
+    command = f'{convert_cmd} -background none {input_file} -define icon:auto-resize {output}'
+    print(command)
+    subprocess.run([command], **sp_args)
+
+
 def generate_icons_macos(inkscape_cmd):
     
     # create the different sized PNGs for mac
@@ -97,13 +107,6 @@ def generate_icons_macos(inkscape_cmd):
         bundle_command = f'{iconutil_cmd} -c icns {out_directory}'
         print(bundle_command)
         subprocess.run([bundle_command], **sp_args)
-
-
-def generate_icons_windows(convert_cmd):
-    output = ICONS_PATH + 'stitcher-icon.ico'
-    command = f'{convert_cmd} -background none {input_file} -define icon:auto-resize {output}'
-    print(command)
-    subprocess.run([command], **sp_args)
 
 
 def main():
