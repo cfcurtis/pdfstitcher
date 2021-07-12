@@ -319,15 +319,15 @@ class LayerFilter:
                             }
                         else:
                             other_forms.append(ob)
+
+        # try going through the list of other forms and processing those.
+        # Useful for the situation where someone is re-running PDFStitcher.
+        for ob in other_forms:
+            form_stream = self.filter_content(ob)
+            if form_stream is not None:
+                ob.write(form_stream)
         
         if not in_oc and not page_props and not oc_forms:
-            # try going through the list of other forms and processing those.
-            # Useful for the situation where someone is re-running PDFStitcher.
-            for ob in other_forms:
-                form_stream = self.filter_content(ob)
-                if form_stream is not None:
-                    ob.write(form_stream)
-
             return None
             
         try:
