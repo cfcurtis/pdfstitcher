@@ -224,14 +224,15 @@ class LayersTab(scrolled.ScrolledPanel):
         layer_sizer = wx.BoxSizer(wx.VERTICAL)
         layer_pane.SetSizer(layer_sizer)
 
+        # delete or hide deselected layers
+        self.delete_ocgs = wx.RadioBox(layer_pane,label=_('Deselected layers:'),
+            choices=[_('Delete'),_('Hide')])
+        layer_sizer.Add(self.delete_ocgs,flag=wx.LEFT|wx.RIGHT|wx.BOTTOM,border=5)
+
         # check all, background, etc
         self.include_nonoc = wx.CheckBox(layer_pane,label=_('Include non-optional content'))
         self.include_nonoc.SetValue(1)
         layer_sizer.Add(self.include_nonoc,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=5)
-
-        self.delete_ocgs = wx.CheckBox(layer_pane,label=_('Delete non-selected layers'))
-        self.delete_ocgs.SetValue(1)
-        layer_sizer.Add(self.delete_ocgs,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=5)
 
         self.select_all = wx.CheckBox(layer_pane,label=_('Deselect all'))
         self.select_all.Bind(wx.EVT_CHECKBOX, self.on_select_all)
@@ -252,6 +253,7 @@ class LayersTab(scrolled.ScrolledPanel):
         
         # line properties
         # colour
+        layer_opt_sizer.AddSpacer(100)
         layer_opt_sizer.Add(wx.StaticText(layer_opt_pane,label=_('Select line properties to modify')))
         newline = wx.BoxSizer(wx.HORIZONTAL)
         self.enable_colour = wx.CheckBox(layer_opt_pane,label=_('Line Colour') + ':')
@@ -259,7 +261,7 @@ class LayersTab(scrolled.ScrolledPanel):
         newline.Add(self.enable_colour,flag=wx.LEFT,border=10)
         self.line_colour_ctrl = wx.ColourPickerCtrl(layer_opt_pane)
         newline.Add(self.line_colour_ctrl,flag=wx.LEFT,border=5)
-        layer_opt_sizer.Add(newline,flag=wx.TOP,border=30)        
+        layer_opt_sizer.Add(newline,flag=wx.TOP,border=10)        
         
         # thickness
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -546,7 +548,7 @@ class SewGUI(wx.Frame):
             self.layer_filter.keep_ocs = self.lt.get_selected_layers()
             self.layer_filter.line_props = self.lt.line_props
             self.layer_filter.keep_non_oc = bool(self.lt.include_nonoc.GetValue())
-            self.layer_filter.delete_ocgs = bool(self.lt.delete_ocgs.GetValue())
+            self.layer_filter.delete_ocgs = bool(self.lt.delete_ocgs.GetSelection() == 0)
             self.layer_filter.page_range = page_range
 
         if do_tile:
