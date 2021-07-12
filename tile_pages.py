@@ -7,22 +7,23 @@
 
 import pikepdf
 from pikepdf import _cpphelpers
+from enum import IntEnum
 import argparse
 import sys
 import math
 import copy
-import types
 import utils
 
-SW_UNITS = types.SimpleNamespace()
-SW_UNITS.INCHES = 0
-SW_UNITS.CENTIMETERS = 1
 
-SW_ROTATION = types.SimpleNamespace()
-SW_ROTATION.NONE = 0
-SW_ROTATION.CLOCKWISE = 1
-SW_ROTATION.COUNTERCLOCKWISE = 2
-SW_ROTATION.TURNAROUND = 3
+class SW_UNITS (IntEnum):
+    INCHES = 0
+    CENTIMETERS = 1
+
+class SW_ROTATION (IntEnum):
+    NONE = 0
+    CLOCKWISE = 1
+    COUNTERCLOCKWISE = 2
+    TURNAROUND = 3
 
 
 class PageTiler:
