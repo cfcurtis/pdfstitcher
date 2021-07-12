@@ -100,3 +100,37 @@
         thickness: 5.0
   page_tiler:
     rows: 2
+- name: PSCO
+  input: 'C:\Users\cfcur\Google Drive\Sewing\PetiteStitchery\PSCO_AdultYogger_Projector.pdf'
+  page_range: '1-2'
+  layer_filter:
+    keep_ocs: ['S']
+    line_props:
+      S:
+        thickness: 5.0
+        style: 0
+        rgb: [0,0,0]
+  page_tiler:
+    rows: 2
+- name: LLK
+  input: 'C:\Users\cfcur\Google Drive\Sewing\LittleLizardKing\LLK_Galena_Girl_A0_Projector_Final.pdf'
+  page_range: '1-2'
+  layer_filter:
+    keep_ocs: ['2']
+    line_props:
+      '2':
+        thickness: 5.0
+        style: 0
+        rgb: [0,0,0]
+- name: SoSewEasy
+  input: 'C:\Users\cfcur\Google Drive\Sewing\SoSewEasy\menspajamashortsfinal_aiid2146907.pdf'
+  page_range: '18-37'
+  layer_filter:
+    keep_ocs: ['Size 32','Markings']
+    line_props:
+      'Size 32':
+        thickness: 5.0
+        style: 0
+        rgb: [0,0,0]
+  page_tiler:
+    cols: 8
