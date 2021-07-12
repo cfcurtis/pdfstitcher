@@ -590,7 +590,7 @@ class SewGUI(wx.Frame):
                 filtered = self.in_doc
 
             if self.progress:
-                self.progress_update(self.progress.GetRange)
+                self.progress_update(self.progress.GetRange())
             
             if filtered is None:
                 return
