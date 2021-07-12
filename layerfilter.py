@@ -186,6 +186,8 @@ class LayerFilter:
             if 'rgb' in lp.keys():
                 clp['RG'] = [round(Decimal(rg),3) for rg in lp['rgb']]
                 clp['K'] = [round(Decimal(k),3) for k in pdf_ops.rgb_to_cmyk(lp['rgb'])]
+                clp['rg'] = clp['RG']
+                clp['k'] = clp['K']
             
             self.clean_line_props[layer] = clp
 
@@ -201,7 +203,9 @@ class LayerFilter:
         self.current_state = [{
             'w':  [1.0],
             'RG': [0,0,0],
+            'rg': [0,0,0],
             'K': pdf_ops.rgb_to_cmyk([0,0,0]),
+            'k': pdf_ops.rgb_to_cmyk([0,0,0]),
             'd': pdf_ops.line_style_arr[0]
         }]
 
