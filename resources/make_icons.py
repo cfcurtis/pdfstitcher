@@ -8,8 +8,8 @@ import subprocess
 
 from os.path import dirname, abspath
 
-ICONS_PATH = dirname(abspath(__file__)) + '/'
-input_file = ICONS_PATH + 'stitcher-icon.svg'
+ICONS_PATH = dirname(abspath(__file__))
+input_file = os.path.join(ICONS_PATH,'stitcher-icon.svg')
 sp_args = dict(shell=True, cwd=ICONS_PATH, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 
@@ -63,34 +63,44 @@ def get_magick_binary(args):
         convert = args.magick + ' convert'
     else:
         if sys.platform.startswith('win32'):
-            convert = str(shutil.which('magick')) + ' convert'
+            magick = shutil.which('magick')
+            if magick is None: 
+                print("ImageMagick binary not found.", file=sys.stderr)
+                sys.exit()
+            else:
+                convert = magick + ' convert'
         else:
             # on Linux (Ubuntu 20.04), the convert command is only available directly
             # not sure what applies to macOS
             convert = shutil.which('convert')
     
-    if not os.path.exists(convert):
-        print("ImageMagick binary not found.", file=sys.stderr)
-        sys.exit()
+            if not os.path.exists(convert):
+                print("ImageMagick binary not found.", file=sys.stderr)
+                sys.exit()
     
     return convert
 
 
 def generate_icons_windows(convert_cmd):
     
-    output = ICONS_PATH + 'stitcher-icon.ico'
+    output = os.path.join(ICONS_PATH,'stitcher-icon.ico')
     command = f'{convert_cmd} -background none {input_file} -define icon:auto-resize {output}'
     print(command)
-    subprocess.run([command], **sp_args)
+    if sys.platform.startswith('win32'):
+        subprocess.run(command)
+    else:
+        subprocess.run([command], **sp_args)
 
 
 def generate_icons_macos(inkscape_cmd):
     
     # create the different sized PNGs for mac
     
-    out_directory = ICONS_PATH + 'stitcher-icon.iconset/'
-    prefix = out_directory + 'icon'
-    sizes = (16, 32, 64, 128, 256, 512, 1024)
+    out_directory = os.path.join(ICONS_PATH,'stitcher-icon.iconset')
+    prefix = os.path.join(out_directory,'icon')
+
+    # complete set of icons defined at https://developer.apple.com/library/archive/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Optimizing/Optimizing.html
+    sizes = (16, 32, 128, 256, 512)
     
     for i, size in enumerate(sizes):
         if i%2 == 0:
@@ -99,7 +109,10 @@ def generate_icons_macos(inkscape_cmd):
             output = f'{prefix}_{sizes[i-1]}x{sizes[i-1]}@2x.png'
         icon_command = f'{inkscape_cmd} -o {output} -w {size} -h {size} {input_file}'
         print(icon_command)
-        subprocess.run([icon_command], **sp_args)
+        if sys.platform.startswith('win32'):
+            subprocess.run(icon_command)
+        else:
+            subprocess.run([icon_command], **sp_args)
         
     if sys.platform.startswith('darwin'):
         # if on macOS, bundle the icon set
