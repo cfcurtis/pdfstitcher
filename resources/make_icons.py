@@ -6,10 +6,10 @@ import shutil
 import argparse
 import subprocess
 
-from os.path import dirname, abspath
+from os.path import dirname, abspath, join
 
 ICONS_PATH = dirname(abspath(__file__))
-input_file = os.path.join(ICONS_PATH,'stitcher-icon.svg')
+input_file = join(ICONS_PATH,'stitcher-icon.svg')
 sp_args = dict(shell=True, cwd=ICONS_PATH, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 
@@ -27,13 +27,13 @@ def parse_arguments():
     )
     parser.add_argument(
         '--nowindows', '-nw',
-        help = "Create icons for Windows.",
+        help = "Skip creating icons for Windows.",
         action = "store_false",
         dest = "windows",
     )
     parser.add_argument(
         '--nomacos', '-nm',
-        help = "Create icons for macOS.",
+        help = "Skip creating icons for macOS.",
         action = "store_false",
         dest = "macos",
     )
@@ -60,45 +60,42 @@ def get_inkscape_binary(args):
 def get_magick_binary(args):
     
     if args.magick is not None:
-        convert = args.magick + ' convert'
+        binary = args.magick
     else:
         if sys.platform.startswith('win32'):
-            magick = shutil.which('magick')
-            if magick is None: 
-                print("ImageMagick binary not found.", file=sys.stderr)
-                sys.exit()
-            else:
-                convert = magick + ' convert'
+            binary = shutil.which('magick')
         else:
             # on Linux (Ubuntu 20.04), the convert command is only available directly
             # not sure what applies to macOS
-            convert = shutil.which('convert')
+            binary = shutil.which('convert')
     
-            if not os.path.exists(convert):
-                print("ImageMagick binary not found.", file=sys.stderr)
-                sys.exit()
+    if not os.path.exists(binary):
+        print("ImageMagick binary not found.", file=sys.stderr)
+        sys.exit()
     
-    return convert
+    if sys.platform.startswith('win32'):
+        command = binary + ' convert'
+    else:
+        command = binary
+    
+    return command
 
 
 def generate_icons_windows(convert_cmd):
     
-    output = os.path.join(ICONS_PATH,'stitcher-icon.ico')
+    output = join(ICONS_PATH,'stitcher-icon.ico')
     command = f'{convert_cmd} -background none {input_file} -define icon:auto-resize {output}'
     print(command)
-    if sys.platform.startswith('win32'):
-        subprocess.run(command)
-    else:
-        subprocess.run([command], **sp_args)
+    subprocess.run(command, **sp_args)
 
 
 def generate_icons_macos(inkscape_cmd):
     
     # create the different sized PNGs for mac
     
-    out_directory = os.path.join(ICONS_PATH,'stitcher-icon.iconset')
-    prefix = os.path.join(out_directory,'icon')
-
+    out_directory = join(ICONS_PATH,'stitcher-icon.iconset')
+    prefix = join(out_directory,'icon')
+    
     # complete set of icons defined at https://developer.apple.com/library/archive/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Optimizing/Optimizing.html
     sizes = (16, 32, 128, 256, 512)
     
@@ -109,17 +106,14 @@ def generate_icons_macos(inkscape_cmd):
             output = f'{prefix}_{sizes[i-1]}x{sizes[i-1]}@2x.png'
         icon_command = f'{inkscape_cmd} -o {output} -w {size} -h {size} {input_file}'
         print(icon_command)
-        if sys.platform.startswith('win32'):
-            subprocess.run(icon_command)
-        else:
-            subprocess.run([icon_command], **sp_args)
+        subprocess.run(icon_command, **sp_args)
         
     if sys.platform.startswith('darwin'):
         # if on macOS, bundle the icon set
         iconutil_cmd = shutil.which('iconutil')
         bundle_command = f'{iconutil_cmd} -c icns {out_directory}'
         print(bundle_command)
-        subprocess.run([bundle_command], **sp_args)
+        subprocess.run(bundle_command, **sp_args)
 
 
 def main():
