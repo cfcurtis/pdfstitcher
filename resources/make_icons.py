@@ -40,7 +40,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def get_inkscape_binary(args):
+def get_inkscape_command(args):
 
     if args.inkscape is not None:
         inkscape = args.inkscape
@@ -57,7 +57,7 @@ def get_inkscape_binary(args):
     return inkscape
 
 
-def get_magick_binary(args):
+def get_convert_command(args):
     
     if args.magick is not None:
         binary = args.magick
@@ -121,11 +121,11 @@ def main():
     args = parse_arguments()
     
     if args.windows:
-        convert_cmd = get_magick_binary(args)
+        convert_cmd = get_convert_command(args)
         generate_icons_windows(convert_cmd)
     
     if args.macos:
-        inkscape_cmd = get_inkscape_binary(args)
+        inkscape_cmd = get_inkscape_command(args)
         generate_icons_macos(inkscape_cmd)
 
 
