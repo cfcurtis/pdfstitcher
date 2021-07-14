@@ -26,7 +26,12 @@ if __name__ == "__main__":
     
     total_start = time.time()
     for t in test_opts:
-        for keep_non_oc in [True,False]:
+        if 'layer_filter' in t.keys():
+            keep_non_oc_opts = [True,False]
+        else:
+            keep_non_oc_opts = [True]
+        
+        for keep_non_oc in keep_non_oc_opts:
             non_oc_str = 'with-non-oc' if keep_non_oc else 'without-non-oc'
             print(f"Testing {t['name']} {non_oc_str}")
             in_doc = pikepdf.Pdf.open(t['input'])

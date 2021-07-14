@@ -9,3 +9,4 @@ build/*
 *.mo
 venv/*
 test/*.pdf
+!test/userunit*.pdf
