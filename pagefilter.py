@@ -29,6 +29,9 @@ class PageFilter():
             if p == 0:
                 mbox = self.pdf.pages[-1].MediaBox
                 new_doc.add_blank_page(page_size=(mbox[2],mbox[3]))
+
+                if '/UserUnit' in self.pdf.pages[-1].keys():
+                    new_doc.pages[-1].UserUnit = self.pdf.pages[-1].UserUnit
             else:
                 new_doc.pages.extend([self.pdf.pages[p-1]])
 

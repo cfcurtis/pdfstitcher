@@ -181,7 +181,6 @@ class PageTiler:
         page_names = []
         pw = []
         ph = []
-        page_size_ref = 0
         
         page_count = len(self.in_doc.pages)
         trim = [self.units_to_px(t) for t in self.trim]
@@ -197,6 +196,10 @@ class PageTiler:
                 ref_p = p
                 break
         refmbox = self.in_doc.pages[ref_p-1].MediaBox
+
+        user_unit = 1
+        if '/UserUnit' in self.in_doc.pages[ref_p-1].keys():
+            user_unit = float(self.in_doc.pages[ref_p-1].UserUnit)
         
         different_size = set()
         
@@ -302,7 +305,7 @@ class PageTiler:
         if self.rotation == SW_ROTATION.TURNAROUND:
             order = [1,0,3,2]
 
-        trim = [self.units_to_px(t) for t in self.trim]
+        trim = [self.units_to_px(t/user_unit) for t in self.trim]
         trim = [trim[o] for o in order]
         
         if (self.rotation == SW_ROTATION.CLOCKWISE) or (self.rotation == SW_ROTATION.COUNTERCLOCKWISE):
@@ -347,7 +350,7 @@ class PageTiler:
             page_box_defined = False
                 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
-        margin = self.units_to_px(self.margin)
+        margin = self.units_to_px(self.margin/user_unit)
         media_box = [0,0,width + 2*margin,height + 2*margin]
         
         # check if it exceeds Adobe's 200 inch maximum size
@@ -357,8 +360,8 @@ class PageTiler:
             print(_('Warning! Output is larger than {} {}, may not open correctly.').format(round(self.px_to_units(max_size_px)), unitstr))
             print (62 * '*')
         
-        print(_('Output size:') + ' {:0.2f} x {:0.2f} {}'.format(self.px_to_units(width + 2*margin), 
-            self.px_to_units(height + 2*margin),unitstr))
+        print(_('Output size:') + ' {:0.2f} x {:0.2f} {}'.format(user_unit*self.px_to_units(width + 2*margin), 
+            user_unit*self.px_to_units(height + 2*margin),unitstr))
         
         i = 0
         content_txt = ''
@@ -472,6 +475,9 @@ class PageTiler:
                 Resources=pikepdf.Dictionary(XObject=content_dict),
                 Contents=pikepdf.Stream(new_doc,content_txt.encode())
             )
+            if user_unit != 1:
+                newpage.UserUnit = user_unit
+
             new_doc.pages.append(newpage)
         else:
             localpage.MediaBox = media_box
