@@ -24,6 +24,9 @@ if __name__ == "__main__":
     with open('test_opts.yaml','r') as f:
         test_opts = yaml.safe_load(f)
     
+    if len(sys.argv) > 1:
+        test_opts = [t for t in test_opts if t['name'] in sys.argv]
+    
     total_start = time.time()
     for t in test_opts:
         if 'layer_filter' in t.keys():
