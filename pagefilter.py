@@ -12,6 +12,7 @@ class PageFilter():
     def __init__(self,doc = None):
         self.pdf = doc
         self.page_range = []
+        self.margins = None
     
     def run(self):
         # not sure what this means, so just return the pdf as is
@@ -29,10 +30,10 @@ class PageFilter():
             if p == 0:
                 mbox = self.pdf.pages[-1].MediaBox
                 new_doc.add_blank_page(page_size=(mbox[2],mbox[3]))
-
-                if '/UserUnit' in self.pdf.pages[-1].keys():
-                    new_doc.pages[-1].UserUnit = self.pdf.pages[-1].UserUnit
             else:
                 new_doc.pages.extend([self.pdf.pages[p-1]])
 
+            if '/UserUnit' in self.pdf.pages[-1].keys():
+                new_doc.pages[-1].UserUnit = self.pdf.pages[-1].UserUnit
+                
         return new_doc
