@@ -56,6 +56,14 @@ class IOTab(scrolled.ScrolledPanel):
         newline.Add(self.page_range_txt,proportion=1,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         vert_sizer.Add(newline,flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT,border=10)
         
+        # Margin, duplicated from TileTab
+        newline = wx.BoxSizer(wx.HORIZONTAL)
+        newline.Add(wx.StaticText(self, label=_('Margin to add to final output') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL)
+        self.margin_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
+        newline.Add(self.margin_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        
         # checklist of features to enable/disable
         self.do_layers = wx.CheckBox(self,label=_('Process Layers'))
         self.do_layers.SetValue(1)
@@ -171,6 +179,7 @@ class TileTab(scrolled.ScrolledPanel):
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(self, label=_('Margin to add to final output') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL)
         self.margin_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
         newline.Add(self.margin_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
@@ -521,6 +530,12 @@ class SewGUI(wx.Frame):
             self.tt.page_range_txt.ChangeValue(self.io.page_range_txt.GetValue())
         elif event.GetId() == self.tt.page_range_txt.GetId():
             self.io.page_range_txt.ChangeValue(self.tt.page_range_txt.GetValue())
+    
+    def margin_updated(self,event):
+        if event.GetId() == self.io.margin_txt.GetId():
+            self.tt.margin_txt.ChangeValue(self.io.margin_txt.GetValue())
+        elif event.GetId() == self.tt.margin_txt.GetId():
+            self.io.margin_txt.ChangeValue(self.tt.margin_txt.GetValue())
 
     def on_go_pressed(self,event):
         # retrieve the selected options
