@@ -351,7 +351,11 @@ class PageTiler:
                 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
         margin = self.units_to_px(self.margin/user_unit)
-        media_box = [0,0,width + 2*margin,height + 2*margin]
+
+        if content_dict is None:
+            media_box = [-(margin - trim[0]),-(margin - trim[3]), width + margin, height + margin]
+        else:
+            media_box = [0,0,width + 2*margin,height + 2*margin]
         
         # check if it exceeds Adobe's 200 inch maximum size
         max_size_px = 14400
@@ -362,6 +366,13 @@ class PageTiler:
         
         print(_('Output size:') + ' {:0.2f} x {:0.2f} {}'.format(user_unit*self.px_to_units(width + 2*margin), 
             user_unit*self.px_to_units(height + 2*margin),unitstr))
+
+        if content_dict is None:
+            localpage.MediaBox = media_box
+            localpage.CropBox = media_box
+            new_doc.pages.append(localpage)
+
+            return new_doc
         
         i = 0
         content_txt = ''
@@ -456,33 +467,22 @@ class PageTiler:
             
             # scale, shift and rotate
             content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0} {y0} cm '
-
-            if content_dict is not None:
-                content_txt += f'{page_names[i]} Do Q '
-            else:
-                # just one page: redefine the coordinate system and wrap the contents in q/Q
-                localpage.page_contents_add(new_doc.make_stream(content_txt.encode()),prepend=True)
-                localpage.page_contents_add(new_doc.make_stream(b'Q'))
+            content_txt += f'{page_names[i]} Do Q '
         
         if performed_scale:
             print(_("Warning: Some pages have been scaled because a target size was set. "
                     "You should not see this warning if using the PDFStitcher GUI."))
         
-        if content_dict:
-            newpage = pikepdf.Dictionary(
-                Type=pikepdf.Name.Page, 
-                MediaBox=media_box,
-                Resources=pikepdf.Dictionary(XObject=content_dict),
-                Contents=pikepdf.Stream(new_doc,content_txt.encode())
-            )
-            if user_unit != 1:
-                newpage.UserUnit = user_unit
+        newpage = pikepdf.Dictionary(
+            Type=pikepdf.Name.Page, 
+            MediaBox=media_box,
+            Resources=pikepdf.Dictionary(XObject=content_dict),
+            Contents=pikepdf.Stream(new_doc,content_txt.encode())
+        )
+        if user_unit != 1:
+            newpage.UserUnit = user_unit
 
-            new_doc.pages.append(newpage)
-        else:
-            localpage.MediaBox = media_box
-            localpage.CropBox = media_box
-            new_doc.pages.append(localpage)
+        new_doc.pages.append(newpage)
             
         return new_doc
 
