@@ -29,6 +29,12 @@ if __name__ == "__main__":
     
     total_start = time.time()
     for t in test_opts:
+
+        if sys.platform.startswith('darwin'):
+            gdrive = '/Users/cfcurtis/Google Drive'
+            t['input'] = t['input'].replace(r'C:\Users\cfcur\Google Drive',gdrive)
+            t['input'] = t['input'].replace('\\','/')
+
         if 'layer_filter' in t.keys():
             keep_non_oc_opts = [True,False]
         else:
