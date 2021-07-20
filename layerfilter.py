@@ -380,5 +380,5 @@ class LayerFilter:
             traceback.print_exc()
             #print("couldn't open stream ", sys.exc_info()[0] )
             print("couldn't open stream")
-            #ignore - probably not a content stream. Print an error when debugging
-            # ignore = 1
+            # ignore - probably not a content stream. Print an error when debugging
+            #ignore = 1
