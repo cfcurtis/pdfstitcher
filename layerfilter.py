@@ -68,25 +68,13 @@ class LayerFilter:
                 LayerFilter._search_names(ordered_names, o, depth=depth+1)
     
     @staticmethod
-    def _has_nested_key(obj, keys):
-        ok = True
-        to_check = obj
-        for key in keys:
-            if key in to_check.keys():
-                to_check = to_check[key]
-            else:
-                ok = False
-                break
-        return ok
-    
-    @staticmethod
     def get_layer_names(doc):
         # reads through the root to parse out the layers present in the file
         if '/OCProperties' not in doc.Root.keys():
             return None
         names = [str(oc.Name) for oc in doc.Root.OCProperties.OCGs]
         ordered_names = []
-        if LayerFilter._has_nested_key(doc.Root.OCProperties, ['/D', '/Order']):
+        if '/D' in doc.Root.OCProperties.keys():
             LayerFilter._search_names(ordered_names, doc.Root.OCProperties.D.Order)
         for n in names:
             real_n = LayerFilter._fix_utf16(n)
