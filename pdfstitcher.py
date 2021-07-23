@@ -708,7 +708,7 @@ class SewGUI(wx.Frame):
 
             # create the processing objects
             self.layer_filter = LayerFilter(self.in_doc)
-            self.lt.load_new(self.layer_filter.get_layer_names())
+            self.lt.load_new(self.layer_filter.get_layer_names(self.layer_filter.pdf))
 
             self.tiler = PageTiler()
             
