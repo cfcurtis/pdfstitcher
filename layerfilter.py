@@ -31,7 +31,7 @@ def write_page(fname,page):
 class LayerFilter:
     def __init__(
             self,
-            doc = None,
+            pdf = None,
             keep_ocs = 'all',
             keep_non_oc = True,
             delete_ocgs = True,
@@ -39,7 +39,7 @@ class LayerFilter:
             line_props = {},
         ):
         
-        self.pdf = doc
+        self.pdf = pdf
         self.keep_ocs = keep_ocs
         self.keep_non_oc = keep_non_oc
         self.delete_ocgs = delete_ocgs
@@ -51,29 +51,49 @@ class LayerFilter:
         self.current_layer_name = ''
 
         self.initialize_state()
-
-    def get_layer_names(self):
-        # reads through the root to parse out the layers present in the file
-        if '/OCProperties' not in self.pdf.Root.keys():
-            return None 
-
-        names = [str(oc.Name) for oc in self.pdf.Root.OCProperties.OCGs]
-        ordered_names = []
-        for o in self.pdf.Root.OCProperties.D.Order:
+    
+    @staticmethod
+    def _fix_utf16(string):
+        return string.replace('\x00', '').replace('ÿþ', '')
+    
+    @staticmethod
+    def _search_names(ordered_names, name_object, depth=0):
+        if depth > 1:
+            return
+        for o in name_object:
             if '/Name' in o.keys():
-                if o.Name not in ordered_names:
-                    ordered_names.append(str(o.Name))
+                if str(o.Name) not in ordered_names:
+                    ordered_names.append(LayerFilter._fix_utf16(str(o.Name)))
             else:
-                for o2 in o:
-                    if '/Name' in o2.keys():
-                        if o2.Name not in ordered_names:
-                            ordered_names.append(str(o2.Name))
+                LayerFilter._search_names(ordered_names, o, depth=depth+1)
+    
+    @staticmethod
+    def _has_nested_key(obj, keys):
+        ok = True
+        to_check = obj
+        for key in keys:
+            if key in to_check.keys():
+                to_check = to_check[key]
+            else:
+                ok = False
+                break
+        return ok
+    
+    @staticmethod
+    def get_layer_names(doc):
+        # reads through the root to parse out the layers present in the file
+        if '/OCProperties' not in doc.Root.keys():
+            return None
+        names = [str(oc.Name) for oc in doc.Root.OCProperties.OCGs]
+        ordered_names = []
+        if LayerFilter._has_nested_key(doc.Root.OCProperties, ['/D', '/Order']):
+            LayerFilter._search_names(ordered_names, doc.Root.OCProperties.D.Order)
         for n in names:
-            if n not in ordered_names:
-                ordered_names.append(n)
+            real_n = LayerFilter._fix_utf16(n)
+            if real_n not in ordered_names:
+                ordered_names.append(real_n)
         return ordered_names
     
-
     def filter_ocg_order(self,input):
         if input._type_name == 'array':
             # create a copy of the array and filter the items
@@ -380,5 +400,5 @@ class LayerFilter:
             traceback.print_exc()
             #print("couldn't open stream ", sys.exc_info()[0] )
             print("couldn't open stream")
-            # ignore - probably not a content stream. Print an error when debugging
-            #ignore = 1
+            #ignore - probably not a content stream. Print an error when debugging
+            # ignore = 1
