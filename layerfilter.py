@@ -65,8 +65,9 @@ class LayerFilter:
             return
         for o in name_object:
             if '/Name' in o.keys():
-                if str(o.Name) not in ordered_names:
-                    ordered_names.append(LayerFilter._fix_utf16(str(o.Name)))
+                name = LayerFilter._fix_utf16(str(o.Name))
+                if name not in ordered_names:
+                    ordered_names.append(name)
             else:
                 LayerFilter._search_names(ordered_names, o, depth=depth+1)
     
