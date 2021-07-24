@@ -76,10 +76,11 @@ class LayerFilter:
         # reads through the root to parse out the layers present in the file
         if '/OCProperties' not in doc.Root.keys():
             return None
-        names = [str(oc.Name) for oc in doc.Root.OCProperties.OCGs]
+        ocp = doc.Root.OCProperties
+        names = [str(oc.Name) for oc in ocp.OCGs]
         ordered_names = []
-        if '/D' in doc.Root.OCProperties.keys():
-            LayerFilter._search_names(ordered_names, doc.Root.OCProperties.D.Order)
+        if '/D' in ocp.keys() and '/Order' in ocp.D.keys():
+            LayerFilter._search_names(ordered_names, ocp.D.Order)
         for n in names:
             real_n = LayerFilter._fix_utf16(n)
             if real_n not in ordered_names:
