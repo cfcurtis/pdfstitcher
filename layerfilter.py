@@ -54,7 +54,10 @@ class LayerFilter:
     
     @staticmethod
     def _fix_utf16(string):
-        return string.replace('\x00', '').replace('ÿþ', '')
+        new_string = string.replace('\x00', '')
+        if new_string.startswith('ÿþ'):
+            new_string = new_string[2:]
+        return new_string
     
     @staticmethod
     def _search_names(ordered_names, name_object, depth=0):
