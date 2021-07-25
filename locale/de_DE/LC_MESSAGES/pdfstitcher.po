@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-07-18 13:54-0600\n"
-"PO-Revision-Date: 2021-05-08 15:26+0200\n"
+"POT-Creation-Date: 2021-07-25 12:10+0200\n"
+"PO-Revision-Date: 2021-07-25 12:10+0200\n"
 "Last-Translator: mara004 <geisserml@gmail.com>\n"
 "Language: de_DE\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: layerfilter.py:109
+#: layerfilter.py:121
 msgid "No layers selected, generated PDF would be blank."
 msgstr "Keine Ebene ausgewählt, neue Datei würde leer sein."
 
@@ -194,17 +194,16 @@ msgid "Load PDF to view layers."
 msgstr "Eine PDF-Datei laden, um die Ebenen anzuzeigen"
 
 #: pdfstitcher.py:237
-#, fuzzy
 msgid "Deselected layers:"
-msgstr "Nicht ausgewählte Ebenen entfernen"
+msgstr "Abgewählte Ebenen:"
 
 #: pdfstitcher.py:238
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #: pdfstitcher.py:238
 msgid "Hide"
-msgstr ""
+msgstr "Verstecken"
 
 #: pdfstitcher.py:242
 msgid "Include non-optional content"
@@ -413,7 +412,7 @@ msgstr "Öffnen nicht möglich"
 
 #: tile_pages.py:528
 msgid "Invalid rotation value"
-msgstr ""
+msgstr "Falscher Rotationswert"
 
 #: utils.py:73
 msgid "Invalid input"
