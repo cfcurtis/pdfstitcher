@@ -31,7 +31,7 @@ def write_page(fname,page):
 class LayerFilter:
     def __init__(
             self,
-            doc = None,
+            pdf = None,
             keep_ocs = 'all',
             keep_non_oc = True,
             delete_ocgs = True,
@@ -39,7 +39,7 @@ class LayerFilter:
             line_props = {},
         ):
         
-        self.pdf = doc
+        self.pdf = pdf
         self.keep_ocs = keep_ocs
         self.keep_non_oc = keep_non_oc
         self.delete_ocgs = delete_ocgs
@@ -51,29 +51,42 @@ class LayerFilter:
         self.current_layer_name = ''
 
         self.initialize_state()
-
-    def get_layer_names(self):
-        # reads through the root to parse out the layers present in the file
-        if '/OCProperties' not in self.pdf.Root.keys():
-            return None 
-
-        names = [str(oc.Name) for oc in self.pdf.Root.OCProperties.OCGs]
-        ordered_names = []
-        for o in self.pdf.Root.OCProperties.D.Order:
+    
+    @staticmethod
+    def _fix_utf16(string):
+        new_string = string.replace('\x00', '')
+        if new_string.startswith('ÿþ'):
+            new_string = new_string[2:]
+        return new_string
+    
+    @staticmethod
+    def _search_names(ordered_names, name_object, depth=0):
+        if depth > 1:
+            return
+        for o in name_object:
             if '/Name' in o.keys():
-                if o.Name not in ordered_names:
-                    ordered_names.append(str(o.Name))
+                name = LayerFilter._fix_utf16(str(o.Name))
+                if name not in ordered_names:
+                    ordered_names.append(name)
             else:
-                for o2 in o:
-                    if '/Name' in o2.keys():
-                        if o2.Name not in ordered_names:
-                            ordered_names.append(str(o2.Name))
+                LayerFilter._search_names(ordered_names, o, depth=depth+1)
+    
+    @staticmethod
+    def get_layer_names(doc):
+        # reads through the root to parse out the layers present in the file
+        if '/OCProperties' not in doc.Root.keys():
+            return None
+        ocp = doc.Root.OCProperties
+        names = [str(oc.Name) for oc in ocp.OCGs]
+        ordered_names = []
+        if '/D' in ocp.keys() and '/Order' in ocp.D.keys():
+            LayerFilter._search_names(ordered_names, ocp.D.Order)
         for n in names:
-            if n not in ordered_names:
-                ordered_names.append(n)
+            real_n = LayerFilter._fix_utf16(n)
+            if real_n not in ordered_names:
+                ordered_names.append(real_n)
         return ordered_names
     
-
     def filter_ocg_order(self,input):
         if input._type_name == 'array':
             # create a copy of the array and filter the items
