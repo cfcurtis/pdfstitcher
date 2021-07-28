@@ -13,7 +13,7 @@ import copy
 #from os import write
 #import sys
 #import utils
-        
+
 STATE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'state']
 STATE_OPS += [k for k,v in pdf_ops.ops.items() if v[0] in ['begin','end'] and v[1] != 'image']
 STROKE_OPS = [k for k,v in pdf_ops.ops.items() if v[0] == 'show' and v[1] == 'stroke'] 
@@ -207,7 +207,7 @@ class LayerFilter:
     def append_layer_properties(self,commands):
         for op,operands in self.clean_line_props[self.current_layer_name].items():
             if self.current_state[-1][op] != operands:
-                commands.append([operands,pikepdf.Operator(op)])
+                commands.append( (operands,pikepdf.Operator(op)) )
                 self.current_state[-1][op] = operands
     
     def initialize_state(self):
@@ -233,7 +233,7 @@ class LayerFilter:
     def restore_state(self,commands):
         self.remove_q_state()
         for op, operands in self.current_state[-1].items():
-            commands.append([operands,pikepdf.Operator(op)])
+            commands.append( (operands,pikepdf.Operator(op)) )
 
     def filter_stream(self,ob,page_props,oc_forms,in_oc):
         previous_operator = ''
@@ -265,7 +265,7 @@ class LayerFilter:
                         'layer': oc_forms[ob_name]['layer'],
                         'state': copy.copy(self.current_state)
                     }
-                    commands.append([operands,operator])
+                    commands.append( (operands,operator) )
                     previous_operator = op
                     continue
 
@@ -295,7 +295,7 @@ class LayerFilter:
                     elif op == 'Q':
                         self.remove_q_state()
                     
-                    commands.append([operands,operator])
+                    commands.append( (operands,operator) )
                     previous_operator = op
 
             if op == 'EMC':
