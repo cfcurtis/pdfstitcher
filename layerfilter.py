@@ -124,6 +124,7 @@ class LayerFilter:
         
         self.off_ocs = []
         
+        # open a new copy of the input
         output = pikepdf.Pdf.open(self.pdf.filename)
         self.colour_type = None
 
