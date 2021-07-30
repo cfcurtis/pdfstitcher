@@ -628,7 +628,7 @@ class SewGUI(wx.Frame):
             print(e)
         
         try:
-            new_doc.save(self.out_doc_path,normalize_content=True)
+            new_doc.save(self.out_doc_path)
             print(_('Successfully written to') + ' ' + self.out_doc_path)
         except Exception as e:
             print(_('Something went wrong') + ', ' + _('unable to write to') + ' ' + self.out_doc_path)
