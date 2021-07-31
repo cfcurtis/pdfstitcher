@@ -498,7 +498,7 @@ def main(args):
     try:
         in_doc = pikepdf.Pdf.open(args.input)
     except:
-        logging.critical(_('Unable to open') + ' ' + args.input)
+        logger.critical(_('Unable to open') + ' ' + args.input)
         sys.exit()
     
     tiler = PageTiler(in_doc)
