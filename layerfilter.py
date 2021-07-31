@@ -129,7 +129,6 @@ class LayerFilter:
         
         # open a new copy of the input
         output = pikepdf.Pdf.open(self.pdf.filename)
-        output = self.pdf
         self.colour_type = None
 
         if len(self.page_range) == 0:
