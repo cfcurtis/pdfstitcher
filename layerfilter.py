@@ -127,14 +127,9 @@ class LayerFilter:
         
         self.off_ocs = []
         
-# [BEGIN] Modification
-#       # open a new copy of the input
-        # No - don't do this for pdfnodegraph. The document we pass to LayerFilter does not have the filename attribute. A side effect (modifying the existing document rather than creating a new one) is tolerable in our case. If LayerFilter is modified in a way that a deep copy of the object is becoming mandatory, we could save the pikepdf.Pdf to a byte stream and re-open it.
-# [END]  /Modification
-# [BEGIN] Modification
-#       output = pikepdf.Pdf.open(self.pdf.filename)
+        # open a new copy of the input
+        output = pikepdf.Pdf.open(self.pdf.filename)
         output = self.pdf
-# [END]  /Modification
         self.colour_type = None
 
         if len(self.page_range) == 0:
