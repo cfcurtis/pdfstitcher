@@ -5,6 +5,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+import logging
+logger = logging.getLogger(__name__)
+
 import pikepdf
 import pdf_operators as pdf_ops
 from decimal import Decimal
@@ -119,13 +122,19 @@ class LayerFilter:
             return self.pdf
 
         if self.keep_ocs is None and self.keep_non_oc == False:
-            print(_('No layers selected, generated PDF would be blank.'))
+            logger.warning(_('No layers selected, generated PDF would be blank.'))
             return self.pdf
         
         self.off_ocs = []
         
-        # open a new copy of the input
-        output = pikepdf.Pdf.open(self.pdf.filename)
+# [BEGIN] Modification
+#       # open a new copy of the input
+        # No - don't do this for pdfnodegraph. The document we pass to LayerFilter does not have the filename attribute. A side effect (modifying the existing document rather than creating a new one) is tolerable in our case. If LayerFilter is modified in a way that a deep copy of the object is becoming mandatory, we could save the pikepdf.Pdf to a byte stream and re-open it.
+# [END]  /Modification
+# [BEGIN] Modification
+#       output = pikepdf.Pdf.open(self.pdf.filename)
+        output = self.pdf
+# [END]  /Modification
         self.colour_type = None
 
         if len(self.page_range) == 0:
@@ -374,7 +383,7 @@ class LayerFilter:
                             self.current_state = saved_state
                             self.current_layer_name = ''
                         elif '/Subtype' in ob.keys() and ob.Subtype == '/PS':
-                            print('Postscript XObject detected, not currently handled.')
+                            logger.info('Postscript XObject detected, not currently handled.')
                     else:
                         del page.Resources.XObject[key]
 
@@ -391,7 +400,7 @@ class LayerFilter:
             ignore = 1
         except:
             traceback.print_exc()
-            #print("couldn't open stream ", sys.exc_info()[0] )
-            print("couldn't open stream")
+            #logger.error("couldn't open stream ", sys.exc_info()[0] )
+            logger.error("couldn't open stream")
             # ignore - probably not a content stream. Print an error when debugging
             #ignore = 1

@@ -5,6 +5,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+import logging
+logger = logging.getLogger(__name__)
+
 import pikepdf
 from pikepdf import _cpphelpers
 from enum import IntEnum
@@ -107,7 +110,7 @@ class PageTiler:
             self.trim = trim
         
         else:
-            print(_('Invalid trim value specified, ignoring'))
+            logger.warning(_('Invalid trim value specified, ignoring'))
             self.trim = [0,0,0,0]
 
     def show_options(self):
@@ -134,12 +137,12 @@ class PageTiler:
         if self.bottom_to_top:
             btstr = _('Bottom to top')
 
-        print(_('Tiling with {} rows and {} columns').format(self.rows,self.cols))
-        print(_('Options') + ':')
-        print('    ' + _('Margins') + ': {} {}'.format(self.margin,unitstr))
-        print('    ' + _('Trim') + ': {} {}'.format(self.trim,unitstr))
-        print('    ' + _('Rotation') + ': {}'.format(rotstr))
-        print('    ' + _('Page order') + ': {}, {}, {}'.format(orderstr, lrstr, btstr))
+        logger.info(_('Tiling with {} rows and {} columns').format(self.rows,self.cols))
+        logger.info(_('Options') + ':')
+        logger.info('    ' + _('Margins') + ': {} {}'.format(self.margin,unitstr))
+        logger.info('    ' + _('Trim') + ': {} {}'.format(self.trim,unitstr))
+        logger.info('    ' + _('Rotation') + ': {}'.format(rotstr))
+        logger.info('    ' + _('Page order') + ': {}, {}, {}'.format(orderstr, lrstr, btstr))
 
         return unitstr
 
@@ -166,7 +169,7 @@ class PageTiler:
             self.center_content = center_content
         
         if self.in_doc is None:
-            print(_('Input document not loaded'))
+            logger.error(_('Input document not loaded'))
             return
         
         # initialize a new document
@@ -205,7 +208,7 @@ class PageTiler:
         
         for p in self.page_range:
             if p > page_count:
-                print(_('Only {} pages in document, skipping {}').format(page_count,p))
+                logger.warning(_('Only {} pages in document, skipping {}').format(page_count,p))
                 continue
             
             if p > 0:
@@ -272,7 +275,7 @@ class PageTiler:
                     ph.append(float(refmbox[3]))
         
         if len(different_size) > 0:
-            print(_('Warning: The pages {} have a different size than the page before').format(different_size))
+            logger.warning(_('The pages {} have a different size than the page before').format(different_size))
         
         n_tiles = len(page_names)
         
@@ -287,7 +290,7 @@ class PageTiler:
             rrows = self.rows
             self.rows = math.ceil(n_tiles/self.cols)
             if rrows != self.rows and rrows != 0:
-                print(_('Warning: requested {} columns and {} rows, but {} rows are needed with {} pages').format(self.cols,rrows,self.rows,n_tiles))
+                logger.warning(_('Requested {} columns and {} rows, but {} rows are needed with {} pages').format(self.cols,rrows,self.rows,n_tiles))
         else:
             self.cols = math.ceil(n_tiles/self.rows)
         
@@ -360,11 +363,11 @@ class PageTiler:
         # check if it exceeds Adobe's 200 inch maximum size
         max_size_px = 14400
         if media_box[2] > max_size_px or media_box[3] > max_size_px:
-            print (62 * '*')
-            print(_('Warning! Output is larger than {} {}, may not open correctly.').format(round(self.px_to_units(max_size_px)), unitstr))
-            print (62 * '*')
+            logger.warning(62 * '*')
+            logger.warning(_('Output is larger than {} {}, may not open correctly.').format(round(self.px_to_units(max_size_px)), unitstr))
+            logger.warning(62 * '*')
         
-        print(_('Output size:') + ' {:0.2f} x {:0.2f} {}'.format(user_unit*self.px_to_units(width + 2*margin), 
+        logger.info(_('Output size:') + ' {:0.2f} x {:0.2f} {}'.format(user_unit*self.px_to_units(width + 2*margin), 
             user_unit*self.px_to_units(height + 2*margin),unitstr))
 
         if content_dict is None:
@@ -470,7 +473,7 @@ class PageTiler:
             content_txt += f'{page_names[i]} Do Q '
         
         if performed_scale:
-            print(_("Warning: Some pages have been scaled because a target size was set. "
+            logger.warning(_("Some pages have been scaled because a target size was set. "
                     "You should not see this warning if using the PDFStitcher GUI."))
         
         newpage = pikepdf.Dictionary(
@@ -495,7 +498,7 @@ def main(args):
     try:
         in_doc = pikepdf.Pdf.open(args.input)
     except:
-        print(_('Unable to open') + ' ' + args.input)
+        logging.critical(_('Unable to open') + ' ' + args.input)
         sys.exit()
     
     tiler = PageTiler(in_doc)
@@ -525,9 +528,9 @@ def main(args):
         elif r == 270:
             tiler.rotation = SW_ROTATION.COUNTERCLOCKWISE
         else:
-            print(_("Invalid rotation value"))
+            logger.critical(_("Invalid rotation value"))
             sys.exit()
-
+    
     tiler.cols = 0
     tiler.rows = 0
     if args.columns is not None:

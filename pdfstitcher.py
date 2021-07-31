@@ -17,6 +17,39 @@ import sys
 import pikepdf
 import utils
 
+import logging
+logging.basicConfig(stream=sys.stdout)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+
+class LogFormatter (logging.Formatter):
+    
+    warning_format = 'Warning:'+' %(message)s'
+    error_format = 'ERROR:'+' %(message)s'
+    critical_format = 'CRITICAL:'+' %(message)s'
+    
+    def __init__(self, fmt='%(message)s', datefmt=None, style='%'):
+        super(LogFormatter, self).__init__(fmt, datefmt, style)
+    
+    def format(self, record):
+        original_format = self._style._fmt
+        if record.levelno == logging.WARNING:
+            self._style._fmt = LogFormatter.warning_format
+        elif record.levelno == logging.ERROR:
+            self._style._fmt = LogFormatter.error_format
+        elif record.levelno == logging.CRITICAL:
+            self._style._fmt = LogFormatter.critical_format
+        result = logging.Formatter.format(self, record)
+        self._style._fmt = original_format
+        return result
+
+loghandler = logging.StreamHandler(sys.stdout)
+logformatter = LogFormatter()
+loghandler.setFormatter(logformatter)
+logger.addHandler(loghandler)
+
+
 class IOTab(scrolled.ScrolledPanel):
     def __init__(self,parent,main_gui):
         super(IOTab, self).__init__(parent)
