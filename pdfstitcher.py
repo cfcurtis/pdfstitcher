@@ -18,7 +18,6 @@ import pikepdf
 import utils
 
 import logging
-logging.basicConfig(stream=sys.stdout)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -44,7 +43,7 @@ class LogFormatter (logging.Formatter):
         self._style._fmt = original_format
         return result
 
-loghandler = logging.StreamHandler(sys.stdout)
+loghandler = logging.StreamHandler()
 logformatter = LogFormatter()
 loghandler.setFormatter(logformatter)
 logger.addHandler(loghandler)
