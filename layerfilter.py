@@ -389,7 +389,7 @@ class LayerFilter:
         except NameError:
             traceback.print_exc()
             ignore = 1
-        except:
+        except Exception:
             traceback.print_exc()
             #print("couldn't open stream ", sys.exc_info()[0] )
             print("couldn't open stream")
