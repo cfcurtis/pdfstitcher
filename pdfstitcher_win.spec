@@ -1,9 +1,12 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+# Note: this isn't working for some reason
+# from utils import locales_full
+
 block_cipher = None
-locales = ['de_DE','es_ES','fr_FR','nl_NL']
 locale_paths = []
-for l in locales:
+locales_full = ('de_DE','es_ES','fr_FR','nl_NL','cs_CZ')
+for l in locales_full:
     locale_paths.append((f'locale\\{l}\\LC_MESSAGES\\pdfstitcher.mo',f'locale\\{l}\\LC_MESSAGES'))
 
 # -*- mode: python ; coding: utf-8 -*-
