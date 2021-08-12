@@ -47,8 +47,6 @@ class PageTiler:
             center_content = None,
         ):
         
-        utils.setup_locale()
-        
         self.in_doc = in_doc
         
         if isinstance(page_range, str):
