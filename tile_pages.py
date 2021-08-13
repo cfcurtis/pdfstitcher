@@ -340,7 +340,7 @@ class PageTiler:
         trim = [self.units_to_px(t/user_unit) for t in self.trim]
         trim = [trim[o] for o in order]
         
-        if (self.rotation == SW_ROTATION.CLOCKWISE) or (self.rotation == SW_ROTATION.COUNTERCLOCKWISE):
+        if self.rotation in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
             # swap width and height of pages
             ph, pw = pw, ph
         
