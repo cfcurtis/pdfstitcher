@@ -463,14 +463,13 @@ class PageTiler:
                 horizontal_space = col_width[c] - pw[i]
                 vertical_space = row_height[r] - ph[i]
             
-            # calculate right shift
+            # calculate shift
             if self.horizontal_align is SW_ALIGN_H.LEFT:
                 shift_right = 0
             elif self.horizontal_align is SW_ALIGN_H.MID:
                 shift_right = round(horizontal_space/2)
             elif self.horizontal_align is SW_ALIGN_H.RIGHT:
                 shift_right = round(horizontal_space)
-            # calculate left shift
             if self.vertical_align is SW_ALIGN_V.BOTTOM:
                 shift_up = 0
             elif self.vertical_align is SW_ALIGN_V.MID:
