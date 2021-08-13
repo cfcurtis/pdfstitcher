@@ -233,6 +233,8 @@ class PageTiler:
                             rtrim = [trim[0], trim[3], trim[1], trim[2]]
                         elif page_rot == 90:
                             rtrim = [trim[2], trim[0], trim[3], trim[1]]
+                        elif page_rot == 180:
+                            rtrim = [trim[3], trim[0], trim[2], trim[1]]
                         elif page_rot == -90:
                             rtrim = [trim[3], trim[1], trim[2], trim[0]]
                         
