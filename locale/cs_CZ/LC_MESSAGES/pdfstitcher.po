@@ -20,216 +20,216 @@ msgstr ""
 "Generated-By: Babel 2.9.1\n"
 
 #: layerfilter.py:109
-msgid "No layers selected, generated PDF would be blank."
+msgid "Nebyly vybrány žádné vrstvy, vygenerované PDF bude prázdné."
 msgstr ""
 
 #: pdfstitcher.py:29 pdfstitcher.py:690
-msgid "Select input PDF"
+msgid "Vybrat vstupní PDF"
 msgstr ""
 
 #: pdfstitcher.py:32 pdfstitcher.py:40 pdfstitcher.py:88 pdfstitcher.py:147
 #: tile_pages.py:116
-msgid "None"
+msgid "Žádné"
 msgstr ""
 
 #: pdfstitcher.py:37 pdfstitcher.py:671
-msgid "Save output as"
+msgid "Uložit výstupní PDF jako"
 msgstr ""
 
 #: pdfstitcher.py:46
-msgid "Output Options"
+msgid "Možnosti výstupu"
 msgstr ""
 
 #: pdfstitcher.py:52 pdfstitcher.py:155
-msgid "Page Range"
+msgid "Rozsah stránek"
 msgstr ""
 
 #: pdfstitcher.py:54 pdfstitcher.py:157
-msgid "Pages assemble in specified order. 0 inserts a blank page."
+msgid "Stránky se sloučí v uvedeném pořadí. 0 vloží prázdnou stránku."
 msgstr ""
 
 #: pdfstitcher.py:61 pdfstitcher.py:180
-msgid "Margin to add to final output"
+msgid "Okraj přidaný k hotovému výstupnímu PDF"
 msgstr ""
 
 #: pdfstitcher.py:68
-msgid "Process Layers"
+msgid "Upravit vrstvy"
 msgstr ""
 
 #: pdfstitcher.py:71
-msgid "Tile pages"
+msgid "Spojit stránky"
 msgstr ""
 
 #: pdfstitcher.py:96
-msgid "Process layers then tile pages and save"
+msgid "Upravte vrstvy, pak spojte stránky a uložte"
 msgstr ""
 
 #: pdfstitcher.py:99
-msgid "Process layers and save without tiling pages"
+msgid "Upravte vrstvy a uložte bez spojení stránek"
 msgstr ""
 
 #: pdfstitcher.py:102
-msgid "Tile pages and save without processing layers"
+msgid "Spojte stránky a uložte bez úpravy stránek"
 msgstr ""
 
 #: pdfstitcher.py:105
-msgid "Open the PDF and save selected page range without modifying"
+msgid "Uložte vybrané stránky bez úprav."
 msgstr ""
 
 #: pdfstitcher.py:116
-msgid "Required Parameters"
+msgid "Povinné parametry"
 msgstr ""
 
 #: pdfstitcher.py:122
-msgid "Number of Columns"
+msgid "Počet sloupců"
 msgstr ""
 
 #: pdfstitcher.py:125
-msgid "Number of Rows"
+msgid "Počet řádků"
 msgstr ""
 
 #: pdfstitcher.py:132 tile_pages.py:125
-msgid "Rows then columns"
+msgid "Nejprve řádky, pak sloupce"
 msgstr ""
 
 #: pdfstitcher.py:132 tile_pages.py:127
-msgid "Columns then rows"
+msgid "Nejprve sloupce, pak řádky"
 msgstr ""
 
 #: pdfstitcher.py:133 tile_pages.py:129
-msgid "Left to right"
+msgid "Zleva doprava"
 msgstr ""
 
 #: pdfstitcher.py:133 tile_pages.py:131
-msgid "Right to left"
+msgid "Zprava doleva"
 msgstr ""
 
 #: pdfstitcher.py:134 tile_pages.py:133
-msgid "Top to bottom"
+msgid "Shora dolů"
 msgstr ""
 
 #: pdfstitcher.py:134 tile_pages.py:135
-msgid "Bottom to top"
+msgid "Zdola nahoru"
 msgstr ""
 
 #: pdfstitcher.py:136 tile_pages.py:142
-msgid "Page order"
+msgid "Pořadí stránek"
 msgstr ""
 
 #: pdfstitcher.py:147 tile_pages.py:119
-msgid "Clockwise"
+msgid "O 90° doprava"
 msgstr ""
 
 #: pdfstitcher.py:147 tile_pages.py:121
-msgid "Counterclockwise"
+msgid "O 90° doleva"
 msgstr ""
 
 #: pdfstitcher.py:147 tile_pages.py:123
-msgid "Turn Around"
+msgid "O 180°"
 msgstr ""
 
 #: pdfstitcher.py:148
-msgid "Page Rotation"
+msgid "Otočení stránek"
 msgstr ""
 
 #: pdfstitcher.py:164
-msgid "Optional Parameters"
+msgid "Volitelné parametry"
 msgstr ""
 
 #: pdfstitcher.py:169
-msgid "Inches"
+msgid "Palce"
 msgstr ""
 
 #: pdfstitcher.py:169
-msgid "Centimetres"
+msgid "Centimetry"
 msgstr ""
 
 #: pdfstitcher.py:170
-msgid "Units"
+msgid "Jednotky"
 msgstr ""
 
 #: pdfstitcher.py:174
-msgid "Set TrimBox to MediaBox"
+msgid "Nastavit TrimBox na MediaBox"
 msgstr ""
 
 #: pdfstitcher.py:175
-msgid "May help fix things when output is not as expected"
+msgid "Může pomoci opravit dokument, pokud výstupní pdf nevypadá podle očekávání"
 msgstr ""
 
 #: pdfstitcher.py:188
-msgid "Amount to trim from each page"
+msgid "Oříznutí z každé stránky"
 msgstr ""
 
 #: pdfstitcher.py:189
-msgid "Overlap"
+msgid "Překrytí"
 msgstr ""
 
 #: pdfstitcher.py:189 tile_pages.py:140
-msgid "Trim"
+msgid "Oříznutí"
 msgstr ""
 
 #: pdfstitcher.py:196
-msgid "Left"
+msgid "Vlevo"
 msgstr ""
 
 #: pdfstitcher.py:201
-msgid "Right"
+msgid "Vpravo"
 msgstr ""
 
 #: pdfstitcher.py:206
-msgid "Top"
+msgid "Nahoře"
 msgstr ""
 
 #: pdfstitcher.py:211
-msgid "Bottom"
+msgid "Dole"
 msgstr ""
 
 #: pdfstitcher.py:227
-msgid "Load PDF to view layers."
+msgid "Nahrajte PDF pro zobrazení vrstev."
 msgstr ""
 
 #: pdfstitcher.py:237
-msgid "Deselected layers:"
+msgid "Neoznačené vrstvy:"
 msgstr ""
 
 #: pdfstitcher.py:238
-msgid "Delete"
+msgid "Smazat"
 msgstr ""
 
 #: pdfstitcher.py:238
-msgid "Hide"
+msgid "Skrýt"
 msgstr ""
 
 #: pdfstitcher.py:242
-msgid "Include non-optional content"
+msgid "Zahrnout uzamknuté vrstvy"
 msgstr ""
 
 #: pdfstitcher.py:246 pdfstitcher.py:452
-msgid "Deselect all"
+msgid "Odoznačit vše"
 msgstr ""
 
 #: pdfstitcher.py:253
-msgid "Layer Name"
+msgid "Jméno vrstvy"
 msgstr ""
 
 #: pdfstitcher.py:254
-msgid "Line Properties"
+msgid "Vlastnosti čáry"
 msgstr ""
 
 #: pdfstitcher.py:266
-msgid "Select line properties to modify"
+msgid "Vyberte vlastnosti čáry, které chcete upravit."
 msgstr ""
 
 #: pdfstitcher.py:268
-msgid "Line Colour"
+msgid "Barva čáry"
 msgstr ""
 
 #: pdfstitcher.py:277
-msgid "Line Thickness"
+msgid "Tloušťka čáry"
 msgstr ""
 
 #: pdfstitcher.py:282 pdfstitcher.py:342
-msgid "pt"
+msgid "b"
 msgstr ""
 
 #: pdfstitcher.py:282 pdfstitcher.py:346 tile_pages.py:115
@@ -241,103 +241,103 @@ msgid "cm"
 msgstr ""
 
 #: pdfstitcher.py:289
-msgid "Line Style"
+msgid "Typ čáry"
 msgstr ""
 
 #: pdfstitcher.py:292
-msgid "Solid"
+msgid "Plná"
 msgstr ""
 
 #: pdfstitcher.py:292
-msgid "Dashed"
+msgid "Přerušovaná"
 msgstr ""
 
 #: pdfstitcher.py:292
-msgid "Dotted"
+msgid "Tečkovaná"
 msgstr ""
 
 #: pdfstitcher.py:299
-msgid "Apply"
+msgid "Použít"
 msgstr ""
 
 #: pdfstitcher.py:301 pdfstitcher.py:422
-msgid "Reset"
+msgid "Resetovat"
 msgstr ""
 
 #: pdfstitcher.py:309
-msgid "Apply to checked"
+msgid "Použít na označené"
 msgstr ""
 
 #: pdfstitcher.py:311
-msgid "Reset checked"
+msgid "Resetovat označené"
 msgstr ""
 
 #: pdfstitcher.py:421
-msgid "Apply to"
+msgid "Použít na"
 msgstr ""
 
 #: pdfstitcher.py:427
-msgid "No layers found in input document."
+msgid "Ve vstupním PDF nebyly nalezeny žádné vrstvy."
 msgstr ""
 
 #: pdfstitcher.py:438
-msgid "Select layers to include in output document."
+msgid "Vyberte vrstvy, které chcete zahrnout do výstupního PDF."
 msgstr ""
 
 #: pdfstitcher.py:454
-msgid "Select all"
+msgid "Označit vše"
 msgstr ""
 
 #: pdfstitcher.py:483 tile_pages.py:138
-msgid "Options"
+msgid "Možnosti"
 msgstr ""
 
 #: pdfstitcher.py:485
-msgid "Tile Pages"
+msgid "Spojit stránky"
 msgstr ""
 
 #: pdfstitcher.py:487
-msgid "Layers"
+msgid "Vrstvy"
 msgstr ""
 
 #: pdfstitcher.py:495
-msgid "Generate PDF"
+msgid "Vytvořit PDF"
 msgstr ""
 
 #: pdfstitcher.py:558
-msgid "No page range specified, defaulting to all"
+msgid "Nebyl vybrán rozsah stránek, byly použity všechny stránky. "
 msgstr ""
 
 #: pdfstitcher.py:618
-msgid "Tiling successful"
+msgid "Spojení stránek bylo úspěšné"
 msgstr ""
 
 #: pdfstitcher.py:626 pdfstitcher.py:634
-msgid "Something went wrong"
+msgid "Něco se pokazilo"
 msgstr ""
 
 #: pdfstitcher.py:627
-msgid "Exception"
+msgid "Výjimka"
 msgstr ""
 
 #: pdfstitcher.py:632
-msgid "Successfully written to"
+msgid "Úspěšně uloženo jako"
 msgstr ""
 
 #: pdfstitcher.py:634 pdfstitcher.py:687
-msgid "unable to write to"
+msgid "nebylo možné uložit jako"
 msgstr ""
 
 #: pdfstitcher.py:680
-msgid "Cant overwrite input file, please select a different file for output"
+msgid "Nelze přepsat vstupní PDF, prosím vyberte jiný soubor pro výstupní PDF."
 msgstr ""
 
 #: pdfstitcher.py:705
-msgid "Opening"
+msgid "Otevřeno"
 msgstr ""
 
 #: pdfstitcher.py:719
-msgid "Cannot open file"
+msgid "Nemůže otevřít soubor"
 msgstr ""
 
 #: pdfstitcher.py:734
@@ -345,70 +345,70 @@ msgid "PDF Stitcher"
 msgstr ""
 
 #: tile_pages.py:110
-msgid "Invalid trim value specified, ignoring"
+msgid "Byla zadána neplatná hodnota oříznutí, hodnota ignorována"
 msgstr ""
 
 #: tile_pages.py:137
-msgid "Tiling with {} rows and {} columns"
+msgid "Spojení {} řádků a {} sloupců"
 msgstr ""
 
 #: tile_pages.py:139
-msgid "Margins"
+msgid "Okraje"
 msgstr ""
 
 #: tile_pages.py:141
-msgid "Rotation"
+msgid "Otočení"
 msgstr ""
 
 #: tile_pages.py:169
-msgid "Input document not loaded"
+msgid "Vstupní PDF nebylo načteno"
 msgstr ""
 
 #: tile_pages.py:208
-msgid "Only {} pages in document, skipping {}"
+msgid "Jen {} stránek v dokumentu, vynechány {}"
 msgstr ""
 
 #: tile_pages.py:275
-msgid "Warning: The pages {} have a different size than the page before"
+msgid "Varování: Stránky {} mají jinou velikost než předchozí stránky"
 msgstr ""
 
 #: tile_pages.py:290
 msgid ""
-"Warning: requested {} columns and {} rows, but {} rows are needed with {}"
-" pages"
+"Varování: požadováno {} sloupců a {} řádků, ale je potřeba {} řádků s {}"
+" stránkami"
 msgstr ""
 
 #: tile_pages.py:364
-msgid "Warning! Output is larger than {} {}, may not open correctly."
+msgid "Varování! Výstupní PDF je větší než {} {}, a nemusí se otevřít správně."
 msgstr ""
 
 #: tile_pages.py:367
-msgid "Output size:"
+msgid "Velikost výstupního PDF:"
 msgstr ""
 
 #: tile_pages.py:473
 msgid ""
-"Warning: Some pages have been scaled because a target size was set. You "
-"should not see this warning if using the PDFStitcher GUI."
+"Varování: Některé stránky byly zmenšeny, protože byla nastavena cílová velikost. "
+"Pokud používáte GUI PDFStitcher, nemělo by se vám toto varování zobrazit."
 msgstr ""
 
 #: tile_pages.py:498
-msgid "Unable to open"
+msgid "Nelze otevřít"
 msgstr ""
 
 #: tile_pages.py:528
-msgid "Invalid rotation value"
+msgid "Neplatná hodnota otočení"
 msgstr ""
 
 #: utils.py:73
-msgid "Invalid input"
+msgid "Neplatný vstup"
 msgstr ""
 
 #: utils.py:73
-msgid "only numeric values allowed"
+msgid "jsou povoleny jen číselné znaky"
 msgstr ""
 
 #: utils.py:89
-msgid "Please specify a page range"
+msgid "Uveďte rozsah stránek"
 msgstr ""
 
