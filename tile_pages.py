@@ -646,6 +646,7 @@ def parse_arguments():
 
 
 if __name__ == "__main__":
-
+    
+    utils.setup_locale()
     args = parse_arguments()
     new_doc, success = main(args)
