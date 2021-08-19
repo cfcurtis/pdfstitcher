@@ -731,7 +731,7 @@ if __name__ == '__main__':
     h = min(int(disp_h*0.85),800)
     w = min(int(disp_w*0.60),700)
 
-    frm = SewGUI(None, title=_('PDF Stitcher') + ' ' + utils.version_string, size=(w,h))
+    frm = SewGUI(None, title='PDF Stitcher' + ' ' + utils.version_string, size=(w,h))
 
     if language_warning:
         print(language_warning)
