@@ -14,6 +14,8 @@ import gettext
 import locale
 
 version_string = 'v0.5-beta'
+locales_full = ('de_DE','es_ES','fr_FR','nl_NL','cs_CZ')
+locales_short = ('de','es','fr','nl','en','cs')
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -47,7 +49,7 @@ def setup_locale():
             lang = 'en'
             language_warning = 'Could not detect system language, defaulting to English'
 
-    if lang not in ('de','es','fr','nl','en'):
+    if lang not in locales_short:
         language_warning = 'System language code ' + lang + ' is not supported, defaulting to English.'
 
     try:

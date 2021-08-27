@@ -1,0 +1,413 @@
+# Czech (Czechia) translations for pdfstitcher.
+# Copyright (C) 2021 Charlotte Curtis
+# This file is distributed under the same license as the pdfstitcher
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pdfstitcher VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-07-18 13:54-0600\n"
+"PO-Revision-Date: 2021-08-19 10:40-0600\n"
+"Language: cs_CZ\n"
+"Language-Team: cs_CZ <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+"Last-Translator: \n"
+"X-Generator: Poedit 3.0\n"
+
+#: : layerfilter.py:109
+msgid "No layers selected, generated PDF would be blank."
+msgstr "Nebyly vybrány žádné vrstvy, vygenerované PDF bude prázdné."
+
+#: pdfstitcher.py:29 pdfstitcher.py:690
+msgid "Select input PDF"
+msgstr "Vybrat vstupní PDF"
+
+#: pdfstitcher.py:32 pdfstitcher.py:40 pdfstitcher.py:88 pdfstitcher.py:147
+#: tile_pages.py:116
+msgid "None"
+msgstr "Žádné"
+
+#: pdfstitcher.py:37 pdfstitcher.py:671
+msgid "Save output as"
+msgstr "Uložit výstupní PDF jako"
+
+#: pdfstitcher.py:46
+msgid "Output Options"
+msgstr "Možnosti výstupu"
+
+#: pdfstitcher.py:52 pdfstitcher.py:155
+msgid "Page Range"
+msgstr "Rozsah stránek"
+
+#: pdfstitcher.py:54 pdfstitcher.py:157
+msgid "Pages assemble in specified order. 0 inserts a blank page."
+msgstr "Stránky se sloučí v uvedeném pořadí. 0 vloží prázdnou stránku."
+
+#: pdfstitcher.py:61 pdfstitcher.py:180
+msgid "Margin to add to final output"
+msgstr "Okraj přidaný k hotovému výstupnímu PDF"
+
+#: pdfstitcher.py:68
+msgid "Process Layers"
+msgstr "Upravit vrstvy"
+
+#: pdfstitcher.py:71
+msgid "Tile pages"
+msgstr "Spojit stránky"
+
+#: pdfstitcher.py:96
+msgid "Process layers then tile pages and save"
+msgstr "Upravte vrstvy, pak spojte stránky a uložte"
+
+#: pdfstitcher.py:99
+msgid "Process layers and save without tiling pages"
+msgstr "Upravte vrstvy a uložte bez spojení stránek"
+
+#: pdfstitcher.py:102
+msgid "Tile pages and save without processing layers"
+msgstr "Spojte stránky a uložte bez úpravy stránek"
+
+#: pdfstitcher.py:105
+msgid "Open the PDF and save selected page range without modifying"
+msgstr "Uložte vybrané stránky bez úprav"
+
+#: pdfstitcher.py:116
+msgid "Required Parameters"
+msgstr "Povinné parametry"
+
+#: pdfstitcher.py:122
+msgid "Number of Columns"
+msgstr "Počet sloupců"
+
+#: pdfstitcher.py:125
+msgid "Number of Rows"
+msgstr "Počet řádků"
+
+#: pdfstitcher.py:132 tile_pages.py:125
+msgid "Rows then columns"
+msgstr "Nejprve řádky, pak sloupce"
+
+#: pdfstitcher.py:132 tile_pages.py:127
+msgid "Columns then rows"
+msgstr "Nejprve sloupce, pak řádky"
+
+#: pdfstitcher.py:133 tile_pages.py:129
+msgid "Left to right"
+msgstr "Zleva doprava"
+
+#: pdfstitcher.py:133 tile_pages.py:131
+msgid "Right to left"
+msgstr "Zprava doleva"
+
+#: pdfstitcher.py:134 tile_pages.py:133
+msgid "Top to bottom"
+msgstr "Shora dolů"
+
+#: pdfstitcher.py:134 tile_pages.py:135
+msgid "Bottom to top"
+msgstr "Zdola nahoru"
+
+#: pdfstitcher.py:136 tile_pages.py:142
+msgid "Page order"
+msgstr "Pořadí stránek"
+
+#: pdfstitcher.py:147 tile_pages.py:119
+msgid "Clockwise"
+msgstr "O 90° doprava"
+
+#: pdfstitcher.py:147 tile_pages.py:121
+msgid "Counterclockwise"
+msgstr "O 90° doleva"
+
+#: pdfstitcher.py:147 tile_pages.py:123
+msgid "Turn Around"
+msgstr "O 180°"
+
+#: pdfstitcher.py:148
+msgid "Page Rotation"
+msgstr "Otočení stránek"
+
+#: pdfstitcher.py:164
+msgid "Optional Parameters"
+msgstr "Volitelné parametry"
+
+#: pdfstitcher.py:169
+msgid "Inches"
+msgstr "Palce"
+
+#: pdfstitcher.py:169
+msgid "Centimetres"
+msgstr "Centimetry"
+
+#: pdfstitcher.py:170
+msgid "Units"
+msgstr "Jednotky"
+
+#: pdfstitcher.py:174
+msgid "Set TrimBox to MediaBox"
+msgstr "Nastavit TrimBox na MediaBox"
+
+#: pdfstitcher.py:175
+msgid "May help fix things when output is not as expected"
+msgstr "Může pomoci opravit dokument, pokud výstupní pdf nevypadá podle očekávání"
+
+#: pdfstitcher.py:188
+msgid "Amount to trim from each page"
+msgstr "Oříznutí z každé stránky"
+
+#: pdfstitcher.py:189
+msgid "Overlap"
+msgstr "Překrytí"
+
+#: pdfstitcher.py:189 tile_pages.py:140
+msgid "Trim"
+msgstr "Oříznutí"
+
+#: pdfstitcher.py:196
+msgid "Left"
+msgstr "Vlevo"
+
+#: pdfstitcher.py:201
+msgid "Right"
+msgstr "Vpravo"
+
+#: pdfstitcher.py:206
+msgid "Top"
+msgstr "Nahoře"
+
+#: pdfstitcher.py:211
+msgid "Bottom"
+msgstr "Dole"
+
+#: pdfstitcher.py:227
+msgid "Load PDF to view layers."
+msgstr "Nahrajte PDF pro zobrazení vrstev."
+
+#: pdfstitcher.py:237
+msgid "Deselected layers:"
+msgstr "Neoznačené vrstvy:"
+
+#: pdfstitcher.py:238
+msgid "Delete"
+msgstr "Smazat"
+
+#: pdfstitcher.py:238
+msgid "Hide"
+msgstr "Skrýt"
+
+#: pdfstitcher.py:242
+msgid "Include non-optional content"
+msgstr "Zahrnout uzamknuté vrstvy"
+
+#: pdfstitcher.py:246 pdfstitcher.py:452
+msgid "Deselect all"
+msgstr "Odoznačit vše"
+
+#: pdfstitcher.py:253
+msgid "Layer Name"
+msgstr "Jméno vrstvy"
+
+#: pdfstitcher.py:254
+msgid "Line Properties"
+msgstr "Vlastnosti čáry"
+
+#: pdfstitcher.py:266
+msgid "Select line properties to modify"
+msgstr "Vyberte vlastnosti čáry, které chcete upravit"
+
+#: pdfstitcher.py:268
+msgid "Line Colour"
+msgstr "Barva čáry"
+
+#: pdfstitcher.py:277
+msgid "Line Thickness"
+msgstr "Tloušťka čáry"
+
+#: pdfstitcher.py:282 pdfstitcher.py:342
+msgid "pt"
+msgstr "b"
+
+#: pdfstitcher.py:282 pdfstitcher.py:346 tile_pages.py:115
+msgid "cm"
+msgstr ""
+
+#: pdfstitcher.py:289
+msgid "Line Style"
+msgstr "Typ čáry"
+
+#: pdfstitcher.py:292
+msgid "Solid"
+msgstr "Plná"
+
+#: pdfstitcher.py:292
+msgid "Dashed"
+msgstr "Přerušovaná"
+
+#: pdfstitcher.py:292
+msgid "Dotted"
+msgstr "Tečkovaná"
+
+#: pdfstitcher.py:299
+msgid "Apply"
+msgstr "Použít"
+
+#: pdfstitcher.py:301 pdfstitcher.py:422
+msgid "Reset"
+msgstr "Resetovat"
+
+#: pdfstitcher.py:309
+msgid "Apply to checked"
+msgstr "Použít na označené"
+
+#: pdfstitcher.py:311
+msgid "Reset checked"
+msgstr "Resetovat označené"
+
+#: pdfstitcher.py:421
+msgid "Apply to"
+msgstr "Použít na"
+
+#: pdfstitcher.py:427
+msgid "No layers found in input document."
+msgstr "Ve vstupním PDF nebyly nalezeny žádné vrstvy."
+
+#: pdfstitcher.py:438
+msgid "Select layers to include in output document."
+msgstr "Vyberte vrstvy, které chcete zahrnout do výstupního PDF."
+
+#: pdfstitcher.py:454
+msgid "Select all"
+msgstr "Označit vše"
+
+#: pdfstitcher.py:483 tile_pages.py:138
+msgid "Options"
+msgstr "Možnosti"
+
+#: pdfstitcher.py:485
+msgid "Tile Pages"
+msgstr "Spojit stránky"
+
+#: pdfstitcher.py:487
+msgid "Layers"
+msgstr "Vrstvy"
+
+#: pdfstitcher.py:495
+msgid "Generate PDF"
+msgstr "Vytvořit PDF"
+
+#: pdfstitcher.py:558
+msgid "No page range specified, defaulting to all"
+msgstr "Nebyl vybrán rozsah stránek, byly použity všechny stránky"
+
+#: pdfstitcher.py:618
+msgid "Tiling successful"
+msgstr "Spojení stránek bylo úspěšné"
+
+#: pdfstitcher.py:626 pdfstitcher.py:634
+msgid "Something went wrong"
+msgstr "Něco se pokazilo"
+
+#: pdfstitcher.py:627
+msgid "Exception"
+msgstr "Výjimka"
+
+#: pdfstitcher.py:632
+msgid "Successfully written to"
+msgstr "Úspěšně uloženo jako"
+
+#: pdfstitcher.py:634 pdfstitcher.py:687
+msgid "unable to write to"
+msgstr "nebylo možné uložit jako"
+
+#: pdfstitcher.py:680
+msgid "Cant overwrite input file, please select a different file for output"
+msgstr "Nelze přepsat vstupní PDF, prosím vyberte jiný soubor pro výstupní PDF"
+
+#: pdfstitcher.py:705
+msgid "Opening"
+msgstr "Otevřeno"
+
+#: pdfstitcher.py:719
+msgid "Cannot open file"
+msgstr "Nemůže otevřít soubor"
+
+#: pdfstitcher.py:734
+msgid "PDF Stitcher"
+msgstr ""
+
+#: tile_pages.py:110
+msgid "Invalid trim value specified, ignoring"
+msgstr "Byla zadána neplatná hodnota oříznutí, hodnota ignorována"
+
+#: tile_pages.py:137
+msgid "Tiling with {} rows and {} columns"
+msgstr "Spojení {} řádků a {} sloupců"
+
+#: tile_pages.py:139
+msgid "Margins"
+msgstr "Okraje"
+
+#: tile_pages.py:141
+msgid "Rotation"
+msgstr "Otočení"
+
+#: tile_pages.py:169
+msgid "Input document not loaded"
+msgstr "Vstupní PDF nebylo načteno"
+
+#: tile_pages.py:208
+msgid "Only {} pages in document, skipping {}"
+msgstr "Jen {} stránek v dokumentu, vynechány {}"
+
+#: tile_pages.py:275
+msgid "Warning: The pages {} have a different size than the page before"
+msgstr "Varování: Stránky {} mají jinou velikost než předchozí stránky"
+
+#: tile_pages.py:290
+msgid ""
+"Warning: requested {} columns and {} rows, but {} rows are needed with {} pages"
+msgstr ""
+"Varování: požadováno {} sloupců a {} řádků, ale je potřeba {} řádků s {} "
+"stránkami"
+
+#: tile_pages.py:364
+msgid "Warning! Output is larger than {} {}, may not open correctly."
+msgstr "Varování! Výstupní PDF je větší než {} {}, a nemusí se otevřít správně."
+
+#: tile_pages.py:367
+msgid "Output size:"
+msgstr "Velikost výstupního PDF:"
+
+#: tile_pages.py:473
+msgid ""
+"Warning: Some pages have been scaled because a target size was set. You should "
+"not see this warning if using the PDFStitcher GUI."
+msgstr ""
+"Varování: Některé stránky byly zmenšeny, protože byla nastavena cílová velikost. "
+"Pokud používáte GUI PDFStitcher, nemělo by se vám toto varování zobrazit."
+
+#: tile_pages.py:498
+msgid "Unable to open"
+msgstr "Nelze otevřít"
+
+#: tile_pages.py:528
+msgid "Invalid rotation value"
+msgstr "Neplatná hodnota otočení"
+
+#: utils.py:73
+msgid "Invalid input"
+msgstr "Neplatný vstup"
+
+#: utils.py:73
+msgid "only numeric values allowed"
+msgstr "jsou povoleny jen číselné znaky"
+
+#: utils.py:89
+msgid "Please specify a page range"
+msgstr "Uveďte rozsah stránek"

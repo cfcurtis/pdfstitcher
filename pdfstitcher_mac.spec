@@ -1,18 +1,15 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+# from utils import locales_full
+
 block_cipher = None
 
 #locale = ''
 basename = 'pdfstitcher'
-#locale_paths = []
 
-#if locale != '':
-#    locale_paths = [(f'locale/{locale}/LC_MESSAGES/pdfstitcher.mo',f'locale/{locale}/LC_MESSAGES')]
-#    basename += '_' + locale[:2]
-
-locales = ['de_DE','es_ES','fr_FR','nl_NL']
 locale_paths = []
-for l in locales:
+locales_full = ('de_DE','es_ES','fr_FR','nl_NL','cs_CZ')
+for l in locales_full:
     locale_paths.append((f'locale/{l}/LC_MESSAGES/pdfstitcher.mo',f'locale/{l}/LC_MESSAGES'))
 
 a = Analysis(['pdfstitcher.py'],
