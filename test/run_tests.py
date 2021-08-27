@@ -27,6 +27,8 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         test_opts = [t for t in test_opts if t['name'] in sys.argv]
     
+    utils.setup_locale()
+
     total_start = time.time()
     for t in test_opts:
 
