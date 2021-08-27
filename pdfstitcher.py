@@ -117,13 +117,17 @@ class TileTab(scrolled.ScrolledPanel):
         lbl.SetFont(lbl.GetFont().Bold())
         vert_sizer.Add(lbl, flag=wx.TOP|wx.LEFT, border=5)
 
-        # Columns/Rows
+        # Number of columns 
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(self, label=_('Number of Columns') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.columns_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.columns_txt.Bind(wx.EVT_TEXT,self.on_col_row_entered)
         newline.Add(self.columns_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
-        newline.Add(wx.StaticText(self, label=_('Number of Rows') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
+
+        # OR number of rows
+        newline.Add(wx.StaticText(self, label=_('OR Number of Rows') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
         self.rows_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.rows_txt.Bind(wx.EVT_TEXT,self.on_col_row_entered)
         newline.Add(self.rows_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
@@ -216,6 +220,13 @@ class TileTab(scrolled.ScrolledPanel):
         self.SetSizer(vert_sizer)
         self.SetupScrolling()
         self.SetBackgroundColour(parent.GetBackgroundColour())
+
+    def on_col_row_entered(self,event):
+        # enforces just one of row or column entered
+        if event.GetId() == self.columns_txt.GetId():
+            self.rows_txt.ChangeValue("")
+        if event.GetId() == self.rows_txt.GetId():
+            self.columns_txt.ChangeValue("")
 
 class LayersTab(scrolled.ScrolledPanel):
     def __init__(self,parent):
