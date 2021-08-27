@@ -175,6 +175,7 @@ class TileTab(scrolled.ScrolledPanel):
         vert_sizer.Add(self.unit_box,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
 
         # override trimbox - sometimes needed for wonky PDFs
+        # translation_note: TrimBox and MediaBox are PDF elements, so they likely won't translate nicely.
         self.override_trim = wx.CheckBox(self,label=_('Set TrimBox to MediaBox'))
         self.override_trim.SetToolTip(wx.ToolTip(_('May help fix things when output is not as expected')))
         vert_sizer.Add(self.override_trim,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
@@ -290,6 +291,9 @@ class LayersTab(scrolled.ScrolledPanel):
         newline.Add(self.enable_thickness,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
         self.line_thick_ctrl = wx.TextCtrl(layer_opt_pane,size=(60,-1),value='1')
         newline.Add(self.line_thick_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
+        
+        # Extra note for pybabel to make translations make sense (particularly for inches)
+        # translation_note: pt = "points", in = "inches", cm = "centimeters"
         unit_choice = [_('pt'),_('in'),_('cm')]
         self.line_thick_units = wx.ComboBox(layer_opt_pane,value=unit_choice[0],choices=unit_choice)
         newline.Add(self.line_thick_units,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)

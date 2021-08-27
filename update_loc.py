@@ -36,7 +36,8 @@ def parse_args():
 
 def extract():
     print("**extract**")
-    run(f'pybabel extract -F babel.cfg -o {join(T,"pdfstitcher.pot")} --copyright-holder="Charlotte Curtis" --project=pdfstitcher .', shell=True)
+    run(f'pybabel extract -F babel.cfg -o {join(T,"pdfstitcher.pot")} --add-comments="translation_note" '
+        + '--copyright-holder="Charlotte Curtis" --project=pdfstitcher .', shell=True)
 
 
 def update():

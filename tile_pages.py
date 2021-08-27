@@ -124,6 +124,7 @@ class PageTiler:
 
     def show_options(self):
         # convert the margin and trim options into pixels
+        # translation_note: in = "inches", cm = "centimetres"
         unitstr = _('cm') if self.units == SW_UNITS.CENTIMETERS else _('in')
         rotstr = _('None')
         
@@ -132,6 +133,7 @@ class PageTiler:
         elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
             rotstr = _('Counterclockwise')
         elif self.rotation == SW_ROTATION.TURNAROUND:
+            # translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
             rotstr = _('Turn Around')
         
         orderstr = _('Rows then columns')
@@ -149,14 +151,14 @@ class PageTiler:
         if self.vertical_align is SW_ALIGN_V.BOTTOM:
             alvstr = _('Bottom')
         elif self.vertical_align is SW_ALIGN_V.MID:
-            alvstr = _('Mid')
+            alvstr = _('Middle')
         elif self.vertical_align is SW_ALIGN_V.TOP:
             alvstr = _('Top')
         
         if self.horizontal_align is SW_ALIGN_H.LEFT:
             alhstr = _('Left')
         elif self.horizontal_align is SW_ALIGN_H.MID:
-            alhstr = _('Mid')
+            alhstr = _('Middle')
         elif self.horizontal_align is SW_ALIGN_H.RIGHT:
             alhstr = _('Right')
         
