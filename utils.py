@@ -13,7 +13,7 @@ import pikepdf
 import gettext
 import locale
 
-version_string = 'v0.5-beta'
+version_string = 'v0.5'
 locales_full = ('de_DE','es_ES','fr_FR','nl_NL','cs_CZ')
 locales_short = ('de','es','fr','nl','en','cs')
 
