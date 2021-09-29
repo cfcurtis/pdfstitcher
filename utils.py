@@ -133,8 +133,6 @@ def get_page_dims(page,global_rotation=0):
     
     # swap height and width if there is rotation
     if rotation == 90 or rotation == -90:
-        tmp = page_height
-        page_height = page_width
-        page_width = tmp
+        page_width, page_height = page_height, page_width
     
     return page_width, page_height
