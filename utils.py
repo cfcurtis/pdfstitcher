@@ -111,3 +111,30 @@ def init_new_doc(pdf):
         meta['xmp:CreatorTool'] = 'PDFStitcher ' + version_string
     
     return new_doc
+
+def get_page_dims(page,global_rotation=0):
+    # Helper function to calculate the page dimensions
+    # Returns width, height as observed by the user 
+    # (taking rotation into account)
+
+    # The mediabox is typically specified as 
+    # [lower left x, lower left y, upper left x, upper left y],
+    # but per PDF reference any two opposite corners can be defined
+    mbox = page.MediaBox
+    page_width = float(abs(mbox[2] - mbox[0]))
+    page_height = float(abs(mbox[3] - mbox[1]))
+
+    # global_rotation is defined by the document root, but
+    # may be overridden on a specific page
+    if '/Rotate' in page.keys():
+        rotation = page.Rotate
+    else:
+        rotation = global_rotation
+    
+    # swap height and width if there is rotation
+    if rotation == 90 or rotation == -90:
+        tmp = page_height
+        page_height = page_width
+        page_width = tmp
+    
+    return page_width, page_height

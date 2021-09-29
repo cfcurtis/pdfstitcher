@@ -227,13 +227,15 @@ class PageTiler:
         
         for p in self.page_range:
             if p > 0:
-                ref_p = p
                 break
-        refmbox = self.in_doc.pages[ref_p-1].MediaBox
+
+        # get a pointer to the reference page and parse out the width and height
+        ref_page = self.in_doc.pages[p-1]
+        ref_width, ref_height = utils.get_page_dims(ref_page,page_rot)
 
         user_unit = 1
-        if '/UserUnit' in self.in_doc.pages[ref_p-1].keys():
-            user_unit = float(self.in_doc.pages[ref_p-1].UserUnit)
+        if '/UserUnit' in ref_page.keys():
+            user_unit = float(ref_page.UserUnit)
         
         different_size = set()
         
@@ -244,7 +246,6 @@ class PageTiler:
             
             if p > 0:
                 pagekey = f'/Page{p}'
-                pagembox = self.in_doc.pages[p-1].MediaBox
                 
                 if content_dict is None or pagekey not in content_dict.keys():
                     # copy the page over as an xobject
@@ -282,30 +283,25 @@ class PageTiler:
                     if content_dict is not None:
                         content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
 
-                if page_rot == 90 or page_rot == -90:
-                    pw.append(float(localpage.MediaBox[3]))
-                    ph.append(float(localpage.MediaBox[2]))
-                else:
-                    pw.append(float(localpage.MediaBox[2]))
-                    ph.append(float(localpage.MediaBox[3]))
-                
+                # get the local page height and width
+                p_width, p_height = utils.get_page_dims(localpage,page_rot)
+                pw.append(p_width)
+                ph.append(p_height)
                 page_names.append(pagekey)
 
-                if abs(pagembox[2] - refmbox[2]) > 1 or abs(pagembox[3] - refmbox[3]) > 1:
+                if abs(p_width - ref_width) > 1 or abs(p_height - ref_height) > 1:
                     different_size.add(p)
                 
-                refmbox = pagembox
-                ref_p = p
+                # update the reference handles to be the current page
+                ref_width = p_width
+                ref_height = p_height
+                ref_page = localpage
                 
             else:
+                # blank page, use the reference for sizes and such
                 page_names.append(None)
-                
-                if page_rot == 90 or page_rot == -90:
-                    pw.append(float(refmbox[3]))
-                    ph.append(float(refmbox[2]))
-                else:
-                    pw.append(float(refmbox[2]))
-                    ph.append(float(refmbox[3]))
+                pw.append(ref_width)
+                ph.append(ref_height)
         
         if len(different_size) > 0:
             print(_('Warning: The pages {} have a different size than the page before').format(different_size))
