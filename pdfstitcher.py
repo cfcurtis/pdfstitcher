@@ -648,6 +648,7 @@ class SewGUI(wx.Frame):
         except Exception as e:
             print(_('Something went wrong') + ', ' + _('unable to write to') + ' ' + self.out_doc_path)
             print(e)
+            print(_("Make sure " + self.out_doc_path + " isn't open in another program"))
 
     def progress_was_cancelled(self):
         if self.progress != None:
