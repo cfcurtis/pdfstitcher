@@ -312,21 +312,23 @@ class PageTiler:
         
         n_tiles = len(page_names)
         
-        # figure out how big the output needs to be based on requested columns/rows
-        if self.cols == 0 and self.rows == 0:
+        # check which one is specified
+        if self.cols is not None and self.cols > 0:
+            self.rows = math.ceil(n_tiles/self.cols)
+            if self.rows == 1 and self.cols > n_tiles:
+                print(_('Warning: requested {} columns, but there are only {} pages').format(self.cols,n_tiles))
+                self.cols = n_tiles
+                  
+        elif self.rows is not None and self.rows > 0:
+            self.cols = math.ceil(n_tiles/self.rows)
+            if self.cols == 1 and self.rows > n_tiles:
+                print(_('Warning: requested {} rows, but there are only {} pages').format(self.rows,n_tiles))
+                self.rows = n_tiles
+        else: 
             # try for square
             self.cols = math.ceil(math.sqrt(n_tiles))
             self.rows = math.ceil(n_tiles/self.cols)
-        
-        # columns take priority if both are specified
-        if self.cols is not None and self.cols > 0:
-            rrows = self.rows
-            self.rows = math.ceil(n_tiles/self.cols)
-            if rrows != self.rows and rrows != 0:
-                print(_('Warning: requested {} columns and {} rows, but {} rows are needed with {} pages').format(self.cols,rrows,self.rows,n_tiles))
-        else:
-            self.cols = math.ceil(n_tiles/self.rows)
-        
+
         # after calculating rows/cols but before reordering trim, show the user the selected options
         unitstr = self.show_options()
         

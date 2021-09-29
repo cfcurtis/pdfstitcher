@@ -608,9 +608,9 @@ class SewGUI(wx.Frame):
 
             # rows/cols
             cols = self.tt.columns_txt.GetValue().strip()
-            cols = int(cols) if cols else 0
+            cols = int(cols) if cols else None
             rows = self.tt.rows_txt.GetValue().strip()
-            rows = int(rows) if rows else 0
+            rows = int(rows) if rows else None
 
         # do it
         try:
