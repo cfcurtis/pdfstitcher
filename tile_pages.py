@@ -272,7 +272,7 @@ class PageTiler:
                             rtrim = [trim[2], trim[0], trim[3], trim[1]]
                         elif page_rot == 180:
                             rtrim = [trim[3], trim[0], trim[2], trim[1]]
-                        elif page_rot == -90 or page_rot == 270:
+                        elif page_rot in (-90,270):
                             rtrim = [trim[3], trim[1], trim[2], trim[0]]
                         
                         localpage.TrimBox[0] = float(localpage.TrimBox[0]) + rtrim[0]
