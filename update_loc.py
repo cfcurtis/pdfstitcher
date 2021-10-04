@@ -28,7 +28,7 @@ def parse_args():
         action = 'store_true',
     )
     parser.add_argument(
-        '-all', '-a',
+        '--all', '-a',
         action = 'store_true',
     )
     return parser.parse_args()
