@@ -16,6 +16,8 @@ import os
 import sys
 import pikepdf
 import utils
+import ctypes
+
 
 class IOTab(scrolled.ScrolledPanel):
     def __init__(self,parent,main_gui):
@@ -746,6 +748,13 @@ if __name__ == '__main__':
 
     h = min(int(disp_h*0.85),800)
     w = min(int(disp_w*0.60),700)
+
+    if sys.platform.startswith('win32'):
+        ctypes.windll.shcore.SetProcessDpiAwareness(True)
+        user32 = ctypes.windll.user32
+        screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+        h = int(screensize[1] * 0.85)
+        w = int(screensize[0] * 0.60)
 
     frm = SewGUI(None, title='PDF Stitcher' + ' ' + utils.version_string, size=(w,h))
 
