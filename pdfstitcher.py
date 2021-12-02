@@ -17,6 +17,7 @@ import sys
 import pikepdf
 import utils
 
+BORDER = 5
 class IOTab(scrolled.ScrolledPanel):
     def __init__(self,parent,main_gui):
         super(IOTab, self).__init__(parent)
@@ -30,22 +31,22 @@ class IOTab(scrolled.ScrolledPanel):
         in_doc_btn.Bind(wx.EVT_BUTTON,main_gui.on_open)
         newline.Add(in_doc_btn, flag=wx.ALIGN_CENTRE_VERTICAL)
         self.input_fname_display = wx.StaticText(self, label=_('None'))
-        newline.Add(self.input_fname_display, flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
-        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        newline.Add(self.input_fname_display, flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
                 
         newline = wx.BoxSizer(wx.HORIZONTAL)
         out_doc_btn = wx.Button(self, label=_('Save output as'))
         out_doc_btn.Bind(wx.EVT_BUTTON,main_gui.on_output)
         newline.Add(out_doc_btn, flag=wx.ALIGN_CENTRE_VERTICAL)
         self.output_fname_display = wx.StaticText(self, label=_('None'))
-        newline.Add(self.output_fname_display, flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
-        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        newline.Add(self.output_fname_display, flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         # Output options
-        vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)        
+        vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=self.FromDIP(BORDER))        
         lbl = wx.StaticText(self, label=_('Output Options'))
         lbl.SetFont(lbl.GetFont().Bold())
-        vert_sizer.Add(lbl, flag=wx.TOP|wx.LEFT, border=5)
+        vert_sizer.Add(lbl, flag=wx.TOP|wx.LEFT, border=self.FromDIP(BORDER))
         
         # Page Range
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -53,30 +54,30 @@ class IOTab(scrolled.ScrolledPanel):
         self.page_range_txt = wx.TextCtrl(self)
         self.page_range_txt.SetToolTip(wx.ToolTip(_('Pages assemble in specified order. 0 inserts a blank page.')))
         self.page_range_txt.Bind(wx.EVT_TEXT, main_gui.page_range_updated)
-        newline.Add(self.page_range_txt,proportion=1,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
-        vert_sizer.Add(newline,flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        newline.Add(self.page_range_txt,proportion=1,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
+        vert_sizer.Add(newline,flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
         
         # Margin, duplicated from TileTab
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(self, label=_('Margin to add to final output') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL)
         self.margin_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
         self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
-        newline.Add(self.margin_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
-        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        newline.Add(self.margin_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
         
         # checklist of features to enable/disable
         self.do_layers = wx.CheckBox(self,label=_('Process Layers'))
         self.do_layers.SetValue(1)
-        vert_sizer.Add(self.do_layers,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        vert_sizer.Add(self.do_layers,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
         self.do_tile = wx.CheckBox(self,label=_('Tile pages'))
         self.do_tile.SetValue(1)
         self.do_layers.Bind(wx.EVT_CHECKBOX,self.on_option_checked)
         self.do_tile.Bind(wx.EVT_CHECKBOX,self.on_option_checked)
-        vert_sizer.Add(self.do_tile,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        vert_sizer.Add(self.do_tile,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
         
         # describe what the options mean
         self.output_description = wx.StaticText(self, label='')
-        vert_sizer.Add(self.output_description,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        vert_sizer.Add(self.output_description,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
         self.on_option_checked(event=None)
 
         self.SetSizer(vert_sizer)
@@ -112,24 +113,24 @@ class TileTab(scrolled.ScrolledPanel):
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
 
         ## REQUIRED PARAMETERS
-        vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)
+        vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=self.FromDIP(BORDER))
         lbl = wx.StaticText(self, label=_('Required Parameters'))
         lbl.SetFont(lbl.GetFont().Bold())
-        vert_sizer.Add(lbl, flag=wx.TOP|wx.LEFT, border=5)
+        vert_sizer.Add(lbl, flag=wx.TOP|wx.LEFT, border=self.FromDIP(BORDER))
 
         # Number of columns 
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(self, label=_('Number of Columns') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.columns_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
         self.columns_txt.Bind(wx.EVT_TEXT,self.on_col_row_entered)
-        newline.Add(self.columns_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
+        newline.Add(self.columns_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
 
         # OR number of rows
-        newline.Add(wx.StaticText(self, label=_('OR Number of Rows') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
+        newline.Add(wx.StaticText(self, label=_('OR Number of Rows') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER*2))
         self.rows_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
         self.rows_txt.Bind(wx.EVT_TEXT,self.on_col_row_entered)
-        newline.Add(self.rows_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
-        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        newline.Add(self.rows_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         # page order
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -139,20 +140,20 @@ class TileTab(scrolled.ScrolledPanel):
 
         newline.Add(wx.StaticText(self, label=_('Page order') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.col_row_order_combo = wx.ComboBox(self, choices=col_row_order_opts, value=col_row_order_opts[0], style=wx.CB_READONLY)
-        newline.Add(self.col_row_order_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=5)
+        newline.Add(self.col_row_order_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=self.FromDIP(BORDER))
         self.left_right_combo = wx.ComboBox(self, choices=left_right_opts, value=left_right_opts[0], style=wx.CB_READONLY)
-        newline.Add(self.left_right_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=5)
+        newline.Add(self.left_right_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=self.FromDIP(BORDER))
         self.top_bottom_combo = wx.ComboBox(self, choices=top_bottom_opts, value=top_bottom_opts[0], style=wx.CB_READONLY)
-        newline.Add(self.top_bottom_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=5)
-        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        newline.Add(self.top_bottom_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=self.FromDIP(BORDER))
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
         
         # rotation 
         newline = wx.BoxSizer(wx.HORIZONTAL)
         rotate_opts = [_('None'),_('Clockwise'),_('Counterclockwise'),_('Turn Around')]
         newline.Add(wx.StaticText(self, label=_('Page Rotation') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
         self.rotate_combo = wx.ComboBox(self, choices=rotate_opts, value=rotate_opts[0], style=wx.CB_READONLY)
-        newline.Add(self.rotate_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=5)
-        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        newline.Add(self.rotate_combo, flag=wx.LEFT|wx.ALIGN_CENTRE_VERTICAL, border=self.FromDIP(BORDER))
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         # duplicate the page range textbox here
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -160,33 +161,33 @@ class TileTab(scrolled.ScrolledPanel):
         self.page_range_txt = wx.TextCtrl(self)
         self.page_range_txt.SetToolTip(wx.ToolTip(_('Pages assemble in specified order. 0 inserts a blank page.')))
         self.page_range_txt.Bind(wx.EVT_TEXT, main_gui.page_range_updated)
-        newline.Add(self.page_range_txt,proportion=1,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
-        vert_sizer.Add(newline,flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        newline.Add(self.page_range_txt,proportion=1,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
+        vert_sizer.Add(newline,flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         ## OPTIONAL PARAMETERS
-        vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=5)
+        vert_sizer.Add(wx.StaticLine(self, -1), flag=wx.EXPAND|wx.TOP|wx.BOTTOM, border=self.FromDIP(BORDER))
         lbl = wx.StaticText(self, label=_('Optional Parameters'))
         lbl.SetFont(lbl.GetFont().Bold())
-        vert_sizer.Add(lbl,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        vert_sizer.Add(lbl,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         # unit selection      
         unit_opts = [_('Inches'),_('Centimetres')]     
         self.unit_box = wx.RadioBox(self,label=_('Units'),choices=unit_opts,style=wx.RA_SPECIFY_COLS)
-        vert_sizer.Add(self.unit_box,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        vert_sizer.Add(self.unit_box,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         # override trimbox - sometimes needed for wonky PDFs
         # translation_note: TrimBox and MediaBox are PDF elements, so they likely won't translate nicely.
         self.override_trim = wx.CheckBox(self,label=_('Set TrimBox to MediaBox'))
         self.override_trim.SetToolTip(wx.ToolTip(_('May help fix things when output is not as expected')))
-        vert_sizer.Add(self.override_trim,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        vert_sizer.Add(self.override_trim,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         # Margin
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(self, label=_('Margin to add to final output') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL)
         self.margin_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
         self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
-        newline.Add(self.margin_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
-        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        newline.Add(self.margin_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         # Trim header
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -194,29 +195,29 @@ class TileTab(scrolled.ScrolledPanel):
         trim_overlap_opts = [_('Overlap'),_('Trim')]
         self.trim_overlap_combo = wx.ComboBox(self, choices=trim_overlap_opts, value=trim_overlap_opts[0], style=wx.CB_READONLY)
         newline.Add(self.trim_overlap_combo, flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=15)
-        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         # Left trim
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        newline.Add(wx.StaticText(self, label=_('Left') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
+        newline.Add(wx.StaticText(self, label=_('Left') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER*2))
         self.left_trim_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
-        newline.Add(self.left_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
+        newline.Add(self.left_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
 
         # Right trim
-        newline.Add(wx.StaticText(self, label=_('Right') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
+        newline.Add(wx.StaticText(self, label=_('Right') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER*2))
         self.right_trim_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
-        newline.Add(self.right_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
+        newline.Add(self.right_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
        
         # Top trim
-        newline.Add(wx.StaticText(self, label=_('Top') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
+        newline.Add(wx.StaticText(self, label=_('Top') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER*2))
         self.top_trim_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
-        newline.Add(self.top_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
+        newline.Add(self.top_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
 
         # Bottom trim
-        newline.Add(wx.StaticText(self, label=_('Bottom') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=10)
+        newline.Add(wx.StaticText(self, label=_('Bottom') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER*2))
         self.bottom_trim_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
-        newline.Add(self.bottom_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=5)
-        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        newline.Add(self.bottom_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
+        vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         self.SetSizer(vert_sizer)
         self.SetupScrolling()
@@ -237,7 +238,7 @@ class LayersTab(scrolled.ScrolledPanel):
 
         # Status text
         self.status_txt = wx.StaticText(self, label=_('Load PDF to view layers.'))
-        vert_sizer.Add(self.status_txt,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=10)
+        vert_sizer.Add(self.status_txt,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         # the main splitter for the layer stuff
         self.layer_splitter = wx.SplitterWindow(self,style=wx.SP_LIVE_UPDATE)
@@ -248,23 +249,23 @@ class LayersTab(scrolled.ScrolledPanel):
         # delete or hide deselected layers
         self.delete_ocgs = wx.RadioBox(layer_pane,label=_('Deselected layers:'),
             choices=[_('Delete'),_('Hide')])
-        layer_sizer.Add(self.delete_ocgs,flag=wx.LEFT|wx.RIGHT|wx.BOTTOM,border=5)
+        layer_sizer.Add(self.delete_ocgs,flag=wx.LEFT|wx.RIGHT|wx.BOTTOM,border=self.FromDIP(BORDER))
 
         # check all, background, etc
         self.include_nonoc = wx.CheckBox(layer_pane,label=_('Include non-optional content'))
         self.include_nonoc.SetValue(1)
-        layer_sizer.Add(self.include_nonoc,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=5)
+        layer_sizer.Add(self.include_nonoc,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER))
 
         self.select_all = wx.CheckBox(layer_pane,label=_('Deselect all'))
         self.select_all.Bind(wx.EVT_CHECKBOX, self.on_select_all)
-        layer_sizer.Add(self.select_all,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=5)
+        layer_sizer.Add(self.select_all,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER))
         
         # the main list box for layers
         self.layer_list = wx.ListCtrl(layer_pane,style=wx.LC_REPORT|wx.LC_SINGLE_SEL)
         self.layer_list.EnableCheckBoxes(True)
         self.layer_list.InsertColumn(0,_('Layer Name'))
         self.layer_list.InsertColumn(1,_('Line Properties'))
-        layer_sizer.Add(self.layer_list,proportion=1,flag=wx.EXPAND|wx.LEFT|wx.TOP, border=5)
+        layer_sizer.Add(self.layer_list,proportion=1,flag=wx.EXPAND|wx.LEFT|wx.TOP, border=self.FromDIP(BORDER))
         self.layer_list.Bind(wx.EVT_LIST_ITEM_SELECTED,self.on_layer_selected)
         
         # build the set of controls for layer options
@@ -279,35 +280,35 @@ class LayersTab(scrolled.ScrolledPanel):
         newline = wx.BoxSizer(wx.HORIZONTAL)
         self.enable_colour = wx.CheckBox(layer_opt_pane,label=_('Line Colour') + ':')
         self.enable_colour.SetValue(1)
-        newline.Add(self.enable_colour,flag=wx.LEFT,border=10)
+        newline.Add(self.enable_colour,flag=wx.LEFT,border=self.FromDIP(BORDER*2))
         self.line_colour_ctrl = wx.ColourPickerCtrl(layer_opt_pane)
-        newline.Add(self.line_colour_ctrl,flag=wx.LEFT,border=5)
-        layer_opt_sizer.Add(newline,flag=wx.TOP,border=10)        
+        newline.Add(self.line_colour_ctrl,flag=wx.LEFT,border=self.FromDIP(BORDER))
+        layer_opt_sizer.Add(newline,flag=wx.TOP,border=self.FromDIP(BORDER*2))        
         
         # thickness
         newline = wx.BoxSizer(wx.HORIZONTAL)
         self.enable_thickness = wx.CheckBox(layer_opt_pane,label=_('Line Thickness') + ':')
         self.enable_thickness.SetValue(1)
-        newline.Add(self.enable_thickness,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
+        newline.Add(self.enable_thickness,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=self.FromDIP(BORDER*2))
         self.line_thick_ctrl = wx.TextCtrl(layer_opt_pane,size=(60,-1),value='1')
-        newline.Add(self.line_thick_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
+        newline.Add(self.line_thick_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=self.FromDIP(BORDER))
         
         # Extra note for pybabel to make translations make sense (particularly for inches)
         # translation_note: pt = "points", in = "inches", cm = "centimeters"
         unit_choice = [_('pt'),_('in'),_('cm')]
         self.line_thick_units = wx.ComboBox(layer_opt_pane,value=unit_choice[0],choices=unit_choice)
-        newline.Add(self.line_thick_units,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
-        layer_opt_sizer.Add(newline,flag=wx.TOP,border=10)
+        newline.Add(self.line_thick_units,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=self.FromDIP(BORDER))
+        layer_opt_sizer.Add(newline,flag=wx.TOP,border=self.FromDIP(BORDER*2))
 
         # style
         newline = wx.BoxSizer(wx.HORIZONTAL)
         self.enable_style = wx.CheckBox(layer_opt_pane,label=_('Line Style') + ':')
         self.enable_style.SetValue(1)
-        newline.Add(self.enable_style,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=10)
+        newline.Add(self.enable_style,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=self.FromDIP(BORDER*2))
         self.style_names = (_('Solid'),_('Dashed'),_('Dotted'))
         self.line_style_ctrl = wx.ComboBox(layer_opt_pane,choices=self.style_names, value=self.style_names[0], style=wx.CB_READONLY)
-        newline.Add(self.line_style_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=5)
-        layer_opt_sizer.Add(newline,flag=wx.TOP,border=10)
+        newline.Add(self.line_style_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=self.FromDIP(BORDER))
+        layer_opt_sizer.Add(newline,flag=wx.TOP,border=self.FromDIP(BORDER*2))
 
         # apply/reset buttons
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -315,9 +316,9 @@ class LayersTab(scrolled.ScrolledPanel):
         self.apply_ls_btn.Bind(wx.EVT_BUTTON,self.apply_ls_pressed)
         self.reset_ls_btn = wx.Button(layer_opt_pane,label=_('Reset'))
         self.reset_ls_btn.Bind(wx.EVT_BUTTON,self.reset_ls_pressed)
-        newline.Add(self.apply_ls_btn,proportion=1,flag=wx.EXPAND|wx.LEFT,border=5)
-        newline.Add(self.reset_ls_btn,proportion=1,flag=wx.EXPAND|wx.LEFT,border=5)
-        layer_opt_sizer.Add(newline,flag=wx.TOP|wx.EXPAND,border=10)
+        newline.Add(self.apply_ls_btn,proportion=1,flag=wx.EXPAND|wx.LEFT,border=self.FromDIP(BORDER))
+        newline.Add(self.reset_ls_btn,proportion=1,flag=wx.EXPAND|wx.LEFT,border=self.FromDIP(BORDER))
+        layer_opt_sizer.Add(newline,flag=wx.TOP|wx.EXPAND,border=self.FromDIP(BORDER*2))
 
         # apply to checked
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -325,14 +326,14 @@ class LayersTab(scrolled.ScrolledPanel):
         self.apply_ls_all.Bind(wx.EVT_BUTTON,self.apply_all_pressed)
         self.reset_all = wx.Button(layer_opt_pane,label=_('Reset checked'))
         self.reset_all.Bind(wx.EVT_BUTTON,self.reset_all_pressed)
-        newline.Add(self.apply_ls_all,flag=wx.LEFT,border=5)
-        newline.Add(self.reset_all,flag=wx.LEFT,border=5)
-        layer_opt_sizer.Add(newline,flag=wx.TOP,border=5)
+        newline.Add(self.apply_ls_all,flag=wx.LEFT,border=self.FromDIP(BORDER))
+        newline.Add(self.reset_all,flag=wx.LEFT,border=self.FromDIP(BORDER))
+        layer_opt_sizer.Add(newline,flag=wx.TOP,border=self.FromDIP(BORDER))
 
         # Final assembly
         self.layer_splitter.SplitVertically(layer_pane,layer_opt_pane)
         self.layer_splitter.SetSashGravity(0.5)
-        vert_sizer.Add(self.layer_splitter,proportion=1,flag=wx.TOP|wx.LEFT|wx.RIGHT|wx.EXPAND,border=10)
+        vert_sizer.Add(self.layer_splitter,proportion=1,flag=wx.TOP|wx.LEFT|wx.RIGHT|wx.EXPAND,border=self.FromDIP(BORDER*2))
 
         # hide controls until a PDF with layers is loaded
         self.layer_splitter.Hide()
@@ -510,16 +511,17 @@ class SewGUI(wx.Frame):
         go_btn = wx.Button(pnl, label=_('Generate PDF'))
         go_btn.SetFont(go_btn.GetFont().Bold())
         go_btn.Bind(wx.EVT_BUTTON,self.on_go_pressed)
-        vert_sizer.Add(go_btn,flag=wx.ALL,border=5)
+        vert_sizer.Add(go_btn,flag=wx.ALL,border=self.FromDIP(BORDER))
         
         # create a log window and redirect console output
         self.log = wx.TextCtrl(pnl, style=wx.TE_MULTILINE|wx.TE_READONLY|wx.HSCROLL)
-        vert_sizer.Add(self.log,proportion=1,flag=wx.EXPAND|wx.ALL,border=5)
+        vert_sizer.Add(self.log,proportion=1,flag=wx.EXPAND|wx.ALL,border=self.FromDIP(BORDER))
         sys.stdout = self.log
         sys.stderr = self.log
 
         splitter.SplitHorizontally(nb,pnl)
-        splitter.SetSashPosition(int(kw['size'][1]*3/4))
+        app_size = self.FromDIP(self.Size)
+        splitter.SetSashPosition(int(app_size[1]*3/4))
         splitter.SetMinimumPaneSize(40)
 
         self.in_doc = None
@@ -741,13 +743,17 @@ if __name__ == '__main__':
     language_warning = utils.setup_locale()
 
     app = wx.App()
-    disp_h = wx.Display().GetGeometry().GetHeight()
-    disp_w = wx.Display().GetGeometry().GetWidth()
 
-    h = min(int(disp_h*0.85),800)
-    w = min(int(disp_w*0.60),700)
-
-    frm = SewGUI(None, title='PDF Stitcher' + ' ' + utils.version_string, size=(w,h))
+    # Fix the size for high-resolution displays
+    if sys.platform.startswith('win32'):
+        from ctypes import OleDLL
+        OleDLL('shcore').SetProcessDpiAwareness(1)
+    
+    disp_size = wx.DisplaySize()
+    app_size = wx.Size(min(int(disp_size[0])*.6, 700), min(int(disp_size[1])*.85, 800))
+    
+    frm = SewGUI(None, title='PDF Stitcher' + ' ' + utils.version_string, size=app_size)
+    frm.SetSize(frm.FromDIP(app_size))
 
     if language_warning:
         print(language_warning)
