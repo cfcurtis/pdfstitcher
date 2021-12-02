@@ -16,8 +16,12 @@ import os
 import sys
 import pikepdf
 import utils
+import ctypes
 
+# Constant widget sizes - used for all the different panels
 BORDER = 5
+TXT_ENTRY_SIZE = (40,-1)
+
 class IOTab(scrolled.ScrolledPanel):
     def __init__(self,parent,main_gui):
         super(IOTab, self).__init__(parent)
@@ -60,7 +64,7 @@ class IOTab(scrolled.ScrolledPanel):
         # Margin, duplicated from TileTab
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(self, label=_('Margin to add to final output') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL)
-        self.margin_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.margin_txt = wx.TextCtrl(self,size=self.FromDIP(TXT_ENTRY_SIZE),style=wx.TE_RIGHT)
         self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
         newline.Add(self.margin_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
@@ -121,13 +125,13 @@ class TileTab(scrolled.ScrolledPanel):
         # Number of columns 
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(self, label=_('Number of Columns') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
-        self.columns_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.columns_txt = wx.TextCtrl(self,size=self.FromDIP(TXT_ENTRY_SIZE),style=wx.TE_RIGHT)
         self.columns_txt.Bind(wx.EVT_TEXT,self.on_col_row_entered)
         newline.Add(self.columns_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
 
         # OR number of rows
         newline.Add(wx.StaticText(self, label=_('OR Number of Rows') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER*2))
-        self.rows_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.rows_txt = wx.TextCtrl(self,size=self.FromDIP(TXT_ENTRY_SIZE),style=wx.TE_RIGHT)
         self.rows_txt.Bind(wx.EVT_TEXT,self.on_col_row_entered)
         newline.Add(self.rows_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
@@ -184,7 +188,7 @@ class TileTab(scrolled.ScrolledPanel):
         # Margin
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(self, label=_('Margin to add to final output') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL)
-        self.margin_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.margin_txt = wx.TextCtrl(self,size=self.FromDIP(TXT_ENTRY_SIZE),style=wx.TE_RIGHT)
         self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
         newline.Add(self.margin_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
@@ -194,28 +198,28 @@ class TileTab(scrolled.ScrolledPanel):
         newline.Add(wx.StaticText(self, label=_('Amount to trim from each page') + ':'), flag=wx.ALIGN_CENTRE_VERTICAL)
         trim_overlap_opts = [_('Overlap'),_('Trim')]
         self.trim_overlap_combo = wx.ComboBox(self, choices=trim_overlap_opts, value=trim_overlap_opts[0], style=wx.CB_READONLY)
-        newline.Add(self.trim_overlap_combo, flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=15)
+        newline.Add(self.trim_overlap_combo, flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER*3))
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
         # Left trim
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(wx.StaticText(self, label=_('Left') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER*2))
-        self.left_trim_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.left_trim_txt = wx.TextCtrl(self,size=self.FromDIP(TXT_ENTRY_SIZE),style=wx.TE_RIGHT)
         newline.Add(self.left_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
 
         # Right trim
         newline.Add(wx.StaticText(self, label=_('Right') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER*2))
-        self.right_trim_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.right_trim_txt = wx.TextCtrl(self,size=self.FromDIP(TXT_ENTRY_SIZE),style=wx.TE_RIGHT)
         newline.Add(self.right_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
        
         # Top trim
         newline.Add(wx.StaticText(self, label=_('Top') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER*2))
-        self.top_trim_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.top_trim_txt = wx.TextCtrl(self,size=self.FromDIP(TXT_ENTRY_SIZE),style=wx.TE_RIGHT)
         newline.Add(self.top_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
 
         # Bottom trim
         newline.Add(wx.StaticText(self, label=_('Bottom') + ':'),flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER*2))
-        self.bottom_trim_txt = wx.TextCtrl(self,size=(40,-1),style=wx.TE_RIGHT)
+        self.bottom_trim_txt = wx.TextCtrl(self,size=self.FromDIP(TXT_ENTRY_SIZE),style=wx.TE_RIGHT)
         newline.Add(self.bottom_trim_txt,flag=wx.ALIGN_CENTRE_VERTICAL|wx.LEFT, border=self.FromDIP(BORDER))
         vert_sizer.Add(newline,flag=wx.TOP|wx.LEFT|wx.RIGHT,border=self.FromDIP(BORDER*2))
 
@@ -290,7 +294,7 @@ class LayersTab(scrolled.ScrolledPanel):
         self.enable_thickness = wx.CheckBox(layer_opt_pane,label=_('Line Thickness') + ':')
         self.enable_thickness.SetValue(1)
         newline.Add(self.enable_thickness,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=self.FromDIP(BORDER*2))
-        self.line_thick_ctrl = wx.TextCtrl(layer_opt_pane,size=(60,-1),value='1')
+        self.line_thick_ctrl = wx.TextCtrl(layer_opt_pane,size=self.FromDIP(TXT_ENTRY_SIZE),value='1')
         newline.Add(self.line_thick_ctrl,flag=wx.LEFT|wx.ALIGN_CENTER_VERTICAL,border=self.FromDIP(BORDER))
         
         # Extra note for pybabel to make translations make sense (particularly for inches)
@@ -491,10 +495,10 @@ class SewGUI(wx.Frame):
         self.progress = None
 
         # split the bottom half from the notebook top
-        splitter = wx.SplitterWindow(self,style=wx.SP_LIVE_UPDATE)
+        self.splitter = wx.SplitterWindow(self,style=wx.SP_LIVE_UPDATE)
 
         # create the notebook for the various tab panes
-        nb = wx.Notebook(splitter)
+        nb = wx.Notebook(self.splitter)
         self.io = IOTab(nb,self)
         nb.AddPage(self.io,_('Options'))
         self.tt = TileTab(nb,self)
@@ -503,7 +507,7 @@ class SewGUI(wx.Frame):
         nb.AddPage(self.lt,_('Layers'))
 
         # create a panel for the go button and log window
-        pnl = wx.Panel(splitter)
+        pnl = wx.Panel(self.splitter)
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
         pnl.SetSizer(vert_sizer)
 
@@ -519,10 +523,8 @@ class SewGUI(wx.Frame):
         sys.stdout = self.log
         sys.stderr = self.log
 
-        splitter.SplitHorizontally(nb,pnl)
-        app_size = self.FromDIP(self.Size)
-        splitter.SetSashPosition(int(app_size[1]*3/4))
-        splitter.SetMinimumPaneSize(40)
+        self.splitter.SplitHorizontally(nb,pnl)
+        self.splitter.SetMinimumPaneSize(40)
 
         self.in_doc = None
         self.out_doc_path = None
@@ -541,6 +543,11 @@ class SewGUI(wx.Frame):
         if len(sys.argv) > 2:
             self.out_doc_path = sys.argv[2]
             self.io.output_fname_display.SetLabel(sys.argv[2])
+    
+    def reset_sash_position(self):
+        # Sets the output panel to occupy just 1/4 of the height
+        # Needs to be called after construction for high DPI display.
+        self.splitter.SetSashPosition(int(self.Size[1]*3/4))
     
     def page_range_updated(self,event):
         if event.GetId() == self.io.page_range_txt.GetId():
@@ -744,16 +751,17 @@ if __name__ == '__main__':
 
     app = wx.App()
 
-    # Fix the size for high-resolution displays
+    # Fix the size for high-resolution displays on windows
     if sys.platform.startswith('win32'):
         from ctypes import OleDLL
         OleDLL('shcore').SetProcessDpiAwareness(1)
     
     disp_size = wx.DisplaySize()
-    app_size = wx.Size(min(int(disp_size[0])*.6, 700), min(int(disp_size[1])*.85, 800))
+    app_size = wx.Size(min(int(disp_size[0]*.6), 700), min(int(disp_size[1]*.85), 800))
     
     frm = SewGUI(None, title='PDF Stitcher' + ' ' + utils.version_string, size=app_size)
     frm.SetSize(frm.FromDIP(app_size))
+    frm.reset_sash_position()
 
     if language_warning:
         print(language_warning)
