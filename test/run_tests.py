@@ -1,5 +1,7 @@
 import sys
-sys.path.append('..')
+from pathlib import Path
+root = Path(__file__).parent.parent.absolute() 
+sys.path.append(str(root / 'pdfstitcher'))
 
 from layerfilter import LayerFilter
 from tile_pages import PageTiler
@@ -21,7 +23,7 @@ def time_and_test(process,name):
     return processed
 
 if __name__ == "__main__":
-    with open('test_opts.yaml','r') as f:
+    with open(str(root / 'test' / 'test_opts.yaml'),'r') as f:
         test_opts = yaml.safe_load(f)
     
     if len(sys.argv) > 1:
