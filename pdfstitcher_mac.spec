@@ -12,7 +12,7 @@ locales_full = ('de_DE','es_ES','fr_FR','nl_NL','cs_CZ')
 for l in locales_full:
     locale_paths.append((f'locale/{l}/LC_MESSAGES/pdfstitcher.mo',f'locale/{l}/LC_MESSAGES'))
 
-a = Analysis(['pdfstitcher.py'],
+a = Analysis(['pdfstitcher/pdfstitcher.py'],
              pathex=['.'],
              binaries=[],
              datas=locale_paths,

@@ -3,7 +3,7 @@ sewingutils.code-workspace
 .vscode/.ropeproject/config.py
 .vscode/.ropeproject/objectdb
 dist/*
-__pycache__/*
+__pycache__
 .vscode/*
 build/*
 *.mo

@@ -12,6 +12,7 @@ import pikepdf
 # localization stuff
 import gettext
 import locale
+from pathlib import Path
 
 version_string = 'v0.5'
 locales_full = ('de_DE','es_ES','fr_FR','nl_NL','cs_CZ')
@@ -23,7 +24,7 @@ def resource_path(relative_path):
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
     else:
-        base_path = os.path.abspath('.')
+        base_path = Path(__file__).parent.parent.absolute()
 
     return os.path.join(base_path, relative_path)
 

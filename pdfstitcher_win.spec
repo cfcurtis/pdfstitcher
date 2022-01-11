@@ -14,7 +14,7 @@ for l in locales_full:
 block_cipher = None
 
 
-a = Analysis(['pdfstitcher.py'],
+a = Analysis(['pdfstitcher/pdfstitcher.py'],
              pathex=['.'],
              binaries=[],
              datas=locale_paths + [('resources\\stitcher-icon.ico','resources')],
