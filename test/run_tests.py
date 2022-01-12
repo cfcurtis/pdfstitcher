@@ -33,10 +33,13 @@ if __name__ == "__main__":
 
     total_start = time.time()
     for t in test_opts:
-
-        if sys.platform.startswith('darwin'):
-            gdrive = '/Users/cfcurtis/Google Drive'
-            t['input'] = t['input'].replace(r'C:\Users\cfcur\Google Drive',gdrive)
+        if not sys.platform.startswith('win32'):
+            if sys.platform.startswith('darwin'):
+                gdrive = '/Users/cfcurtis/Google Drive'
+            elif sys.platform.startswith('linux'):
+                gdrive = '/home/charlotte/Documents'
+            
+            t['input'] = t['input'].replace(r'C:\Users\cfcur\My Drive (c.f.curtis@gmail.com)',gdrive)
             t['input'] = t['input'].replace('\\','/')
 
         if 'layer_filter' in t.keys():
