@@ -248,20 +248,19 @@ class PageTiler:
                 pagekey = f'/Page{p}'
                 
                 if content_dict is None or pagekey not in content_dict.keys():
-                    # copy the page over as an xobject
                     # pikepdf.pages is zero indexed, so subtract one
-                    localpage = new_doc.copy_foreign(self.in_doc.pages[p-1])
+                    input_page = self.in_doc.pages[p-1]
                     
-                    if '/Rotate' in localpage.keys():
-                        page_rot = localpage.Rotate
+                    if '/Rotate' in input_page.keys():
+                        page_rot = input_page.Rotate
                     
                     if self.override_trim:
-                        localpage.TrimBox = copy.copy(localpage.MediaBox)
+                        input_page.TrimBox = copy.copy(input_page.MediaBox)
                     
                     # set the trim box to cut off content if requested
                     if self.actually_trim:
-                        if '/TrimBox' not in localpage.keys():
-                            localpage.TrimBox = copy.copy(localpage.MediaBox)
+                        if '/TrimBox' not in input_page.keys():
+                            input_page.TrimBox = copy.copy(input_page.MediaBox)
 
                         # things get tricky if there's rotation, because the user sees top/bottom as right/left
                         # trim: left, right, top, bottom as defined visually
@@ -275,16 +274,16 @@ class PageTiler:
                         elif page_rot in (-90,270):
                             rtrim = [trim[3], trim[1], trim[2], trim[0]]
                         
-                        localpage.TrimBox[0] = float(localpage.TrimBox[0]) + rtrim[0]
-                        localpage.TrimBox[1] = float(localpage.TrimBox[1]) + rtrim[1]
-                        localpage.TrimBox[2] = float(localpage.TrimBox[2]) - rtrim[2]
-                        localpage.TrimBox[3] = float(localpage.TrimBox[3]) - rtrim[3]
+                        input_page.TrimBox[0] = float(input_page.TrimBox[0]) + rtrim[0]
+                        input_page.TrimBox[1] = float(input_page.TrimBox[1]) + rtrim[1]
+                        input_page.TrimBox[2] = float(input_page.TrimBox[2]) - rtrim[2]
+                        input_page.TrimBox[3] = float(input_page.TrimBox[3]) - rtrim[3]
  
                     if content_dict is not None:
-                        content_dict[pagekey] = pikepdf.Page(localpage).as_form_xobject()
+                        content_dict[pagekey] = new_doc.copy_foreign(input_page.as_form_xobject())
 
                 # get the local page height and width
-                p_width, p_height = utils.get_page_dims(localpage,page_rot)
+                p_width, p_height = utils.get_page_dims(input_page,page_rot)
                 pw.append(p_width)
                 ph.append(p_height)
                 page_names.append(pagekey)
@@ -295,7 +294,7 @@ class PageTiler:
                 # update the reference handles to be the current page
                 ref_width = p_width
                 ref_height = p_height
-                ref_page = localpage
+                ref_page = input_page
                 
             else:
                 # blank page, use the reference for sizes and such
@@ -402,9 +401,9 @@ class PageTiler:
             user_unit*self.px_to_units(height + 2*margin),unitstr))
 
         if content_dict is None:
-            localpage.MediaBox = media_box
-            localpage.CropBox = media_box
-            new_doc.pages.append(localpage)
+            input_page.MediaBox = media_box
+            input_page.CropBox = media_box
+            new_doc.pages.append(input_page)
 
             return new_doc
         
