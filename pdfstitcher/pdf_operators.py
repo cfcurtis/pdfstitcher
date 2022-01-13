@@ -6,7 +6,7 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 # Initial list copied from https://gitlab.freedesktop.org/poppler/poppler/-/blob/master/test/pdf-operators.c
-# Each operator has a tuple defining whether it is used to show stuff on the page, modify the state, 
+# Each operator has a tuple defining whether it is used to show stuff on the page, modify the state,
 # or begin/end a block. The second element of the tuple indicates what type of content is affected.
 ops = {
     'b': ('show','stroke'), # Close, fill, and stroke path using nonzero winding number rule
@@ -91,7 +91,7 @@ line_style_arr = [
 ]
 
 def rgb_to_cmyk(rgb):
-    if rgb == [0,0,0]:
+    if rgb == [0, 0, 0]:
         # black
         return [0, 0, 0, 1]
 
@@ -107,4 +107,3 @@ def rgb_to_cmyk(rgb):
     k = min_cmy
 
     return [c, m, y, k]
-
