@@ -14,7 +14,9 @@ import gettext
 import locale
 from pathlib import Path
 
-version_string = 'v0.5'
+from version import __version__
+
+version_string = 'v' + __version__
 locales_full = ('de_DE', 'es_ES', 'fr_FR', 'nl_NL', 'cs_CZ')
 locales_short = ('de', 'es', 'fr', 'nl', 'en', 'cs')
 
