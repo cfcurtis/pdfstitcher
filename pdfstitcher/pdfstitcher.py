@@ -1087,8 +1087,7 @@ class SewGUI(wx.Frame):
         except IOError:
             wx.LogError(_('Cannot open file') + pathname)
 
-
-if __name__ == '__main__':
+def main():
     # When this module is run (not imported) then create the app, the
     # frame, show it, and start the event loop.
     language_warning = utils.setup_locale()
@@ -1113,3 +1112,6 @@ if __name__ == '__main__':
 
     frm.Show()
     app.MainLoop()
+
+if __name__ == '__main__':
+    main()
