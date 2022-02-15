@@ -10,14 +10,16 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-10-04 11:04-0600\n"
-"PO-Revision-Date: 2021-07-25 12:10+0200\n"
-"Last-Translator: mara004 <geisserml@gmail.com>\n"
+"PO-Revision-Date: 2022-02-16 22:57+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/de/>\n"
 "Language: de_DE\n"
-"Language-Team: German <kde-i18n-de@kde.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.11-dev\n"
 "Generated-By: Babel 2.9.1\n"
 
 #: layerfilter.py:122
@@ -90,9 +92,8 @@ msgid "Number of Columns"
 msgstr "Anzahl der Spalten"
 
 #: pdfstitcher.py:128
-#, fuzzy
 msgid "OR Number of Rows"
-msgstr "Anzahl der Reihen"
+msgstr "ODER Anzahl der Reihen"
 
 #: pdfstitcher.py:136 tile_pages.py:139
 msgid "Rows then columns"
@@ -340,8 +341,9 @@ msgid "unable to write to"
 msgstr "Speichern nicht möglich unter"
 
 #: pdfstitcher.py:651
+#, fuzzy
 msgid "Make sure  isn't open in another program"
-msgstr ""
+msgstr "Stellen Sie sicher, dass  nicht in einem anderen Programm geöffnet ist"
 
 #: pdfstitcher.py:696
 msgid "Cant overwrite input file, please select a different file for output"
@@ -362,9 +364,8 @@ msgid "Invalid trim value specified, ignoring"
 msgstr "Ungültiger Zuschnitts-Wert wird übersprungen"
 
 #: tile_pages.py:154 tile_pages.py:161
-#, fuzzy
 msgid "Middle"
-msgstr "Verstecken"
+msgstr "Mitte"
 
 #: tile_pages.py:165
 msgid "Tiling with {} rows and {} columns"
@@ -380,11 +381,11 @@ msgstr "Rotation"
 
 #: tile_pages.py:171
 msgid "Vertical alignment"
-msgstr ""
+msgstr "Vertikale Ausrichtung"
 
 #: tile_pages.py:172
 msgid "Horizontal alignment"
-msgstr ""
+msgstr "Horizontale Ausrichtung"
 
 #: tile_pages.py:203
 msgid "Input document not loaded"
@@ -399,18 +400,12 @@ msgid "Warning: The pages {} have a different size than the page before"
 msgstr "Warnung: Die Seiten {} haben eine andere Größe als die Seite davor"
 
 #: tile_pages.py:315
-#, fuzzy
 msgid "Warning: requested {} columns, but there are only {} pages"
-msgstr ""
-"Warnung: {} Spalten und {} Reihen wurden angegeben, aber {} Reihen werden"
-" für {}  Seiten benötigt"
+msgstr "Warnung: Es wurden {} Spalten angefordert, aber es gibt nur {} Seiten"
 
 #: tile_pages.py:321
-#, fuzzy
 msgid "Warning: requested {} rows, but there are only {} pages"
-msgstr ""
-"Warnung: {} Spalten und {} Reihen wurden angegeben, aber {} Reihen werden"
-" für {}  Seiten benötigt"
+msgstr "Warnung: Es wurden {} Zeilen angefordert, aber es gibt nur {} Seiten"
 
 #: tile_pages.py:398
 msgid "Warning! Output is larger than {} {}, may not open correctly."
@@ -441,23 +436,26 @@ msgstr "Falscher Rotationswert"
 
 #: tile_pages.py:603
 msgid "Tile PDF pages into one document."
-msgstr ""
+msgstr "PDF-Seiten in einem Dokument anordnen."
 
 #: tile_pages.py:604
 msgid "Note: If both rows and columns are specified, rows are ignored."
 msgstr ""
+"Hinweis: Wenn sowohl Zeilen als auch Spalten angegeben werden, werden die "
+"Zeilen ignoriert."
 
 #: tile_pages.py:605
 msgid "To insert a blank page, include a zero in the page list."
 msgstr ""
+"Um eine leere Seite einzufügen, fügen Sie eine Null in die Seitenliste ein."
 
 #: tile_pages.py:610
 msgid "Input filename (pdf)"
-msgstr ""
+msgstr "Eingabe-Dateiname (pdf)"
 
 #: tile_pages.py:614
 msgid "Output filename (pdf)"
-msgstr ""
+msgstr "Ausgabe-Dateiname (pdf)"
 
 #: tile_pages.py:618
 msgid ""
@@ -467,31 +465,32 @@ msgstr ""
 
 #: tile_pages.py:623
 msgid "Number of rows in tiled grid."
-msgstr ""
+msgstr "Anzahl der Zeilen im Kachelgitter."
 
 #: tile_pages.py:628
-#, fuzzy
 msgid "Number of columns in tiled grid."
-msgstr "Anzahl der Spalten"
+msgstr "Anzahl der Spalten im Kachelgitter."
 
 #: tile_pages.py:632
 msgid "Margin size in inches."
-msgstr ""
+msgstr "Größe des Randes in Zoll."
 
 #: tile_pages.py:636
 #, fuzzy
 msgid "Amount to trim from edges"
-msgstr "Ränder zuschneiden"
+msgstr "Von den Rändern abzuschneidender Betrag"
 
 #: tile_pages.py:637
 msgid ""
 "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch "
 "from left and top)"
 msgstr ""
+"angegeben als links,rechts,oben,unten (z.B. 0,5 ,0 ,0,5 ,0 würde einen "
+"halben Zoll von links und oben abschneiden)"
 
 #: tile_pages.py:642
 msgid "Rotate pages (90, 180, or 270 degrees)"
-msgstr ""
+msgstr "Drehen von Seiten (90, 180 oder 270 Grad)"
 
 #: utils.py:75
 msgid "Invalid input"
@@ -513,4 +512,3 @@ msgstr "Bitte einen Seitenbereich angeben"
 
 #~ msgid "PDF Stitcher"
 #~ msgstr "PDF Stitcher"
-
