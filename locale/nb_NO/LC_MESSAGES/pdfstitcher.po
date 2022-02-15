@@ -9,231 +9,242 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-10-04 11:04-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-02-16 22:57+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
+"pdfstitcher/user-interface/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.11-dev\n"
 "Generated-By: Babel 2.9.1\n"
 
 #: layerfilter.py:122
 msgid "No layers selected, generated PDF would be blank."
-msgstr ""
+msgstr "Ingen lag er valgt. Generert PDF ville vært tom."
 
 #: pdfstitcher.py:29 pdfstitcher.py:706
 msgid "Select input PDF"
-msgstr ""
+msgstr "Velg kilde-PDF"
 
 #: pdfstitcher.py:32 pdfstitcher.py:40 pdfstitcher.py:88 pdfstitcher.py:151
 #: tile_pages.py:129
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #: pdfstitcher.py:37 pdfstitcher.py:687
 msgid "Save output as"
-msgstr ""
+msgstr "Lagre resultat som"
 
 #: pdfstitcher.py:46
 msgid "Output Options"
-msgstr ""
+msgstr "Resultatvalg"
 
 #: pdfstitcher.py:52 pdfstitcher.py:159
 msgid "Page Range"
-msgstr ""
+msgstr "Sidefølge"
 
 #: pdfstitcher.py:54 pdfstitcher.py:161
 msgid "Pages assemble in specified order. 0 inserts a blank page."
-msgstr ""
+msgstr "Sider legges i angitt rekkefølge. «0» setter inn en blank side."
 
 #: pdfstitcher.py:61 pdfstitcher.py:185
 msgid "Margin to add to final output"
-msgstr ""
+msgstr "Marg å legge til for sluttprodukt"
 
 #: pdfstitcher.py:68
 msgid "Process Layers"
-msgstr ""
+msgstr "Behandle lag"
 
 #: pdfstitcher.py:71
+#, fuzzy
 msgid "Tile pages"
-msgstr ""
+msgstr "Sett sammen sider"
 
 #: pdfstitcher.py:96
+#, fuzzy
 msgid "Process layers then tile pages and save"
-msgstr ""
+msgstr "Behandle lag, sett så sammen sider og lagre"
 
 #: pdfstitcher.py:99
+#, fuzzy
 msgid "Process layers and save without tiling pages"
-msgstr ""
+msgstr "Behandle lag og lagre, uten å sette sammen sider"
 
 #: pdfstitcher.py:102
+#, fuzzy
 msgid "Tile pages and save without processing layers"
-msgstr ""
+msgstr "Sett sammen sider og lagre, uten å behandle lag"
 
 #: pdfstitcher.py:105
+#, fuzzy
 msgid "Open the PDF and save selected page range without modifying"
-msgstr ""
+msgstr "Åpne PDF-en og lagre valgt sidefølge uten å endre"
 
 #: pdfstitcher.py:116
 msgid "Required Parameters"
-msgstr ""
+msgstr "Påkrevde parameter"
 
 #: pdfstitcher.py:122
 msgid "Number of Columns"
-msgstr ""
+msgstr "Antall kolonner"
 
 #: pdfstitcher.py:128
 msgid "OR Number of Rows"
-msgstr ""
+msgstr "ELLER antall rader"
 
 #: pdfstitcher.py:136 tile_pages.py:139
 msgid "Rows then columns"
-msgstr ""
+msgstr "Rader, så kolonner"
 
 #: pdfstitcher.py:136 tile_pages.py:141
 msgid "Columns then rows"
-msgstr ""
+msgstr "Kolonner, så rader"
 
 #: pdfstitcher.py:137 tile_pages.py:143
 msgid "Left to right"
-msgstr ""
+msgstr "Venstre til høyre"
 
 #: pdfstitcher.py:137 tile_pages.py:145
 msgid "Right to left"
-msgstr ""
+msgstr "Høyre til venstre"
 
 #: pdfstitcher.py:138 tile_pages.py:147
 msgid "Top to bottom"
-msgstr ""
+msgstr "Topp til bunn"
 
 #: pdfstitcher.py:138 tile_pages.py:149
 msgid "Bottom to top"
-msgstr ""
+msgstr "Bunn til topp"
 
 #: pdfstitcher.py:140 tile_pages.py:170
 msgid "Page order"
-msgstr ""
+msgstr "Side-rekkefølge"
 
 #: pdfstitcher.py:151 tile_pages.py:132
 msgid "Clockwise"
-msgstr ""
+msgstr "Med klokken"
 
 #: pdfstitcher.py:151 tile_pages.py:134
 msgid "Counterclockwise"
-msgstr ""
+msgstr "Mot klokken"
 
 #. translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
 #: pdfstitcher.py:151 tile_pages.py:137
+#, fuzzy
 msgid "Turn Around"
-msgstr ""
+msgstr "Snu rundt"
 
 #: pdfstitcher.py:152
 msgid "Page Rotation"
-msgstr ""
+msgstr "Siderotasjon"
 
 #: pdfstitcher.py:168
 msgid "Optional Parameters"
-msgstr ""
+msgstr "Valgfrie parameter"
 
 #: pdfstitcher.py:173
 msgid "Inches"
-msgstr ""
+msgstr "Tommer"
 
 #: pdfstitcher.py:173
 msgid "Centimetres"
-msgstr ""
+msgstr "Centimeter"
 
 #: pdfstitcher.py:174
 msgid "Units"
-msgstr ""
+msgstr "Enheter"
 
 #. translation_note: TrimBox and MediaBox are PDF elements, so they likely
 #. won't translate nicely.
 #: pdfstitcher.py:179
 msgid "Set TrimBox to MediaBox"
-msgstr ""
+msgstr "Sett TrimBox til MediaBox"
 
 #: pdfstitcher.py:180
 msgid "May help fix things when output is not as expected"
-msgstr ""
+msgstr "Kan fikse problemer når resultatet ikke svarer til forventningene"
 
 #: pdfstitcher.py:193
 msgid "Amount to trim from each page"
-msgstr ""
+msgstr "Mengde å beskjære fra hver side"
 
 #: pdfstitcher.py:194
 msgid "Overlap"
-msgstr ""
+msgstr "Overlapp"
 
 #: pdfstitcher.py:194 tile_pages.py:168
 msgid "Trim"
-msgstr ""
+msgstr "Beskjær"
 
 #: pdfstitcher.py:201 tile_pages.py:159
 msgid "Left"
-msgstr ""
+msgstr "Venstre"
 
 #: pdfstitcher.py:206 tile_pages.py:163
 msgid "Right"
-msgstr ""
+msgstr "Høyre"
 
 #: pdfstitcher.py:211 tile_pages.py:156
 msgid "Top"
-msgstr ""
+msgstr "Topp"
 
 #: pdfstitcher.py:216 tile_pages.py:152
 msgid "Bottom"
-msgstr ""
+msgstr "Bunn"
 
 #: pdfstitcher.py:239
 msgid "Load PDF to view layers."
-msgstr ""
+msgstr "Last inn PDF for å vise lag."
 
 #: pdfstitcher.py:249
 msgid "Deselected layers:"
-msgstr ""
+msgstr "Fravalgte lag:"
 
 #: pdfstitcher.py:250
 msgid "Delete"
-msgstr ""
+msgstr "Slett"
 
 #: pdfstitcher.py:250
 msgid "Hide"
-msgstr ""
+msgstr "Skjul"
 
 #: pdfstitcher.py:254
+#, fuzzy
 msgid "Include non-optional content"
-msgstr ""
+msgstr "Inkluder basis-innhold"
 
 #: pdfstitcher.py:258 pdfstitcher.py:467
 msgid "Deselect all"
-msgstr ""
+msgstr "Fravelg alt"
 
 #: pdfstitcher.py:265
 msgid "Layer Name"
-msgstr ""
+msgstr "Lagnavn"
 
 #: pdfstitcher.py:266
 msgid "Line Properties"
-msgstr ""
+msgstr "Linjeegenskaper"
 
 #: pdfstitcher.py:278
 msgid "Select line properties to modify"
-msgstr ""
+msgstr "Velg linjeegenskaper å endre"
 
 #: pdfstitcher.py:280
 msgid "Line Colour"
-msgstr ""
+msgstr "Linjefarge"
 
 #: pdfstitcher.py:289
 msgid "Line Thickness"
-msgstr ""
+msgstr "Linjetykkelse"
 
 #. translation_note: pt = "points", in = "inches", cm = "centimeters"
 #: pdfstitcher.py:297 pdfstitcher.py:357
+#, fuzzy
 msgid "pt"
-msgstr ""
+msgstr "pt"
 
 #: pdfstitcher.py:297 pdfstitcher.py:361 tile_pages.py:128
 msgid "in"
@@ -242,11 +253,11 @@ msgstr ""
 #. translation_note: in = "inches", cm = "centimetres"
 #: pdfstitcher.py:297 pdfstitcher.py:363 tile_pages.py:128
 msgid "cm"
-msgstr ""
+msgstr "cm"
 
 #: pdfstitcher.py:304
 msgid "Line Style"
-msgstr ""
+msgstr "Linjestil"
 
 #: pdfstitcher.py:307
 msgid "Solid"
@@ -262,11 +273,11 @@ msgstr ""
 
 #: pdfstitcher.py:314
 msgid "Apply"
-msgstr ""
+msgstr "Bruk"
 
 #: pdfstitcher.py:316 pdfstitcher.py:437
 msgid "Reset"
-msgstr ""
+msgstr "Tilbakestill"
 
 #: pdfstitcher.py:324
 msgid "Apply to checked"
@@ -282,7 +293,7 @@ msgstr ""
 
 #: pdfstitcher.py:442
 msgid "No layers found in input document."
-msgstr ""
+msgstr "Fant ingen lag i kildedokumentet"
 
 #: pdfstitcher.py:453
 msgid "Select layers to include in output document."
@@ -290,11 +301,11 @@ msgstr ""
 
 #: pdfstitcher.py:469
 msgid "Select all"
-msgstr ""
+msgstr "Velg alt"
 
 #: pdfstitcher.py:498 tile_pages.py:166
 msgid "Options"
-msgstr ""
+msgstr "Alternativer"
 
 #: pdfstitcher.py:500
 msgid "Tile Pages"
@@ -302,11 +313,11 @@ msgstr ""
 
 #: pdfstitcher.py:502
 msgid "Layers"
-msgstr ""
+msgstr "Lag"
 
 #: pdfstitcher.py:510
 msgid "Generate PDF"
-msgstr ""
+msgstr "Generer PDF"
 
 #: pdfstitcher.py:573
 msgid "No page range specified, defaulting to all"
@@ -318,11 +329,11 @@ msgstr ""
 
 #: pdfstitcher.py:641 pdfstitcher.py:649
 msgid "Something went wrong"
-msgstr ""
+msgstr "Noe gikk galt"
 
 #: pdfstitcher.py:642
 msgid "Exception"
-msgstr ""
+msgstr "Unntak"
 
 #: pdfstitcher.py:647
 msgid "Successfully written to"
@@ -330,15 +341,17 @@ msgstr ""
 
 #: pdfstitcher.py:649 pdfstitcher.py:703
 msgid "unable to write to"
-msgstr ""
+msgstr "kunne ikke skrive til"
 
 #: pdfstitcher.py:651
+#, fuzzy
 msgid "Make sure  isn't open in another program"
-msgstr ""
+msgstr "Forsikre deg om at  ikke er åpent i et annet program"
 
 #: pdfstitcher.py:696
+#, fuzzy
 msgid "Cant overwrite input file, please select a different file for output"
-msgstr ""
+msgstr "Kan ikke overskrive kildefil. Velg en annen fil som resulterende"
 
 #: pdfstitcher.py:721
 msgid "Opening"
@@ -346,15 +359,15 @@ msgstr ""
 
 #: pdfstitcher.py:735
 msgid "Cannot open file"
-msgstr ""
+msgstr "Kan ikke åpne fil"
 
 #: tile_pages.py:122
 msgid "Invalid trim value specified, ignoring"
-msgstr ""
+msgstr "Ser bort fra angitt ugyldig beskjæringsverdi"
 
 #: tile_pages.py:154 tile_pages.py:161
 msgid "Middle"
-msgstr ""
+msgstr "Midten"
 
 #: tile_pages.py:165
 msgid "Tiling with {} rows and {} columns"
@@ -362,27 +375,27 @@ msgstr ""
 
 #: tile_pages.py:167
 msgid "Margins"
-msgstr ""
+msgstr "Marger"
 
 #: tile_pages.py:169
 msgid "Rotation"
-msgstr ""
+msgstr "Rotasjon"
 
 #: tile_pages.py:171
 msgid "Vertical alignment"
-msgstr ""
+msgstr "Loddrett justering"
 
 #: tile_pages.py:172
 msgid "Horizontal alignment"
-msgstr ""
+msgstr "Vannrett justering"
 
 #: tile_pages.py:203
 msgid "Input document not loaded"
-msgstr ""
+msgstr "Kildedokument er ikke innlastet"
 
 #: tile_pages.py:244
 msgid "Only {} pages in document, skipping {}"
-msgstr ""
+msgstr "Kun {} sider i dokumentet. Hopper over {}"
 
 #: tile_pages.py:307
 msgid "Warning: The pages {} have a different size than the page before"
@@ -412,15 +425,16 @@ msgstr ""
 
 #: tile_pages.py:548
 msgid "Unable to open"
-msgstr ""
+msgstr "Kunne ikke åpne"
 
 #: tile_pages.py:578
 msgid "Invalid rotation value"
-msgstr ""
+msgstr "Ugyldig rotasjonsverdi"
 
 #: tile_pages.py:603
+#, fuzzy
 msgid "Tile PDF pages into one document."
-msgstr ""
+msgstr "Sett sammen PDF-sider i ett dokument"
 
 #: tile_pages.py:604
 msgid "Note: If both rows and columns are specified, rows are ignored."
@@ -431,12 +445,13 @@ msgid "To insert a blank page, include a zero in the page list."
 msgstr ""
 
 #: tile_pages.py:610
+#, fuzzy
 msgid "Input filename (pdf)"
-msgstr ""
+msgstr "Kildefilnavn (PDF)"
 
 #: tile_pages.py:614
 msgid "Output filename (pdf)"
-msgstr ""
+msgstr "Resulterende filnavn (PDF)"
 
 #: tile_pages.py:618
 msgid ""
@@ -458,7 +473,7 @@ msgstr ""
 
 #: tile_pages.py:636
 msgid "Amount to trim from edges"
-msgstr ""
+msgstr "Mengde å beskjære fra kanter"
 
 #: tile_pages.py:637
 msgid ""
@@ -480,4 +495,4 @@ msgstr ""
 
 #: utils.py:91
 msgid "Please specify a page range"
-msgstr ""
+msgstr "Angi et sidefølge"
