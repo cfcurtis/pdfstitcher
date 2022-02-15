@@ -10,14 +10,16 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-10-04 11:04-0600\n"
-"PO-Revision-Date: 2021-04-23 17:56+0200\n"
-"Last-Translator: mara004 <geisserml@gmail.com>\n"
+"PO-Revision-Date: 2022-02-15 17:19+0000\n"
+"Last-Translator: Charlotte Curtis <c.f.curtis@gmail.com>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/fr/>\n"
 "Language: fr_FR\n"
-"Language-Team: German <kde-i18n-de@kde.org>\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.11-dev\n"
 "Generated-By: Babel 2.9.1\n"
 
 #: layerfilter.py:122
@@ -198,9 +200,8 @@ msgid "Load PDF to view layers."
 msgstr "Ouvrir un PDF pour voir les calques"
 
 #: pdfstitcher.py:249
-#, fuzzy
 msgid "Deselected layers:"
-msgstr "Tout désélectionner"
+msgstr "Tout désélectionner:"
 
 #: pdfstitcher.py:250
 msgid "Delete"
@@ -350,7 +351,7 @@ msgstr ""
 msgid "Cant overwrite input file, please select a different file for output"
 msgstr ""
 "Impossible d'écrire sur le fichier source, choississez un autre nom de "
-"fichier pour la destination "
+"fichier pour la destination"
 
 #: pdfstitcher.py:721
 msgid "Opening"
@@ -516,4 +517,3 @@ msgstr "Merci de preciser un intervalle de page"
 
 #~ msgid "PDF Stitcher"
 #~ msgstr "PDF Stitcher"
-
