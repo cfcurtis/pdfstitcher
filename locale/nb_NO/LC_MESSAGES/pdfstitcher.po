@@ -1,0 +1,483 @@
+# Translations template for pdfstitcher.
+# Copyright (C) 2021 Charlotte Curtis
+# This file is distributed under the same license as the pdfstitcher
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pdfstitcher VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-10-04 11:04-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: layerfilter.py:122
+msgid "No layers selected, generated PDF would be blank."
+msgstr ""
+
+#: pdfstitcher.py:29 pdfstitcher.py:706
+msgid "Select input PDF"
+msgstr ""
+
+#: pdfstitcher.py:32 pdfstitcher.py:40 pdfstitcher.py:88 pdfstitcher.py:151
+#: tile_pages.py:129
+msgid "None"
+msgstr ""
+
+#: pdfstitcher.py:37 pdfstitcher.py:687
+msgid "Save output as"
+msgstr ""
+
+#: pdfstitcher.py:46
+msgid "Output Options"
+msgstr ""
+
+#: pdfstitcher.py:52 pdfstitcher.py:159
+msgid "Page Range"
+msgstr ""
+
+#: pdfstitcher.py:54 pdfstitcher.py:161
+msgid "Pages assemble in specified order. 0 inserts a blank page."
+msgstr ""
+
+#: pdfstitcher.py:61 pdfstitcher.py:185
+msgid "Margin to add to final output"
+msgstr ""
+
+#: pdfstitcher.py:68
+msgid "Process Layers"
+msgstr ""
+
+#: pdfstitcher.py:71
+msgid "Tile pages"
+msgstr ""
+
+#: pdfstitcher.py:96
+msgid "Process layers then tile pages and save"
+msgstr ""
+
+#: pdfstitcher.py:99
+msgid "Process layers and save without tiling pages"
+msgstr ""
+
+#: pdfstitcher.py:102
+msgid "Tile pages and save without processing layers"
+msgstr ""
+
+#: pdfstitcher.py:105
+msgid "Open the PDF and save selected page range without modifying"
+msgstr ""
+
+#: pdfstitcher.py:116
+msgid "Required Parameters"
+msgstr ""
+
+#: pdfstitcher.py:122
+msgid "Number of Columns"
+msgstr ""
+
+#: pdfstitcher.py:128
+msgid "OR Number of Rows"
+msgstr ""
+
+#: pdfstitcher.py:136 tile_pages.py:139
+msgid "Rows then columns"
+msgstr ""
+
+#: pdfstitcher.py:136 tile_pages.py:141
+msgid "Columns then rows"
+msgstr ""
+
+#: pdfstitcher.py:137 tile_pages.py:143
+msgid "Left to right"
+msgstr ""
+
+#: pdfstitcher.py:137 tile_pages.py:145
+msgid "Right to left"
+msgstr ""
+
+#: pdfstitcher.py:138 tile_pages.py:147
+msgid "Top to bottom"
+msgstr ""
+
+#: pdfstitcher.py:138 tile_pages.py:149
+msgid "Bottom to top"
+msgstr ""
+
+#: pdfstitcher.py:140 tile_pages.py:170
+msgid "Page order"
+msgstr ""
+
+#: pdfstitcher.py:151 tile_pages.py:132
+msgid "Clockwise"
+msgstr ""
+
+#: pdfstitcher.py:151 tile_pages.py:134
+msgid "Counterclockwise"
+msgstr ""
+
+#. translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
+#: pdfstitcher.py:151 tile_pages.py:137
+msgid "Turn Around"
+msgstr ""
+
+#: pdfstitcher.py:152
+msgid "Page Rotation"
+msgstr ""
+
+#: pdfstitcher.py:168
+msgid "Optional Parameters"
+msgstr ""
+
+#: pdfstitcher.py:173
+msgid "Inches"
+msgstr ""
+
+#: pdfstitcher.py:173
+msgid "Centimetres"
+msgstr ""
+
+#: pdfstitcher.py:174
+msgid "Units"
+msgstr ""
+
+#. translation_note: TrimBox and MediaBox are PDF elements, so they likely
+#. won't translate nicely.
+#: pdfstitcher.py:179
+msgid "Set TrimBox to MediaBox"
+msgstr ""
+
+#: pdfstitcher.py:180
+msgid "May help fix things when output is not as expected"
+msgstr ""
+
+#: pdfstitcher.py:193
+msgid "Amount to trim from each page"
+msgstr ""
+
+#: pdfstitcher.py:194
+msgid "Overlap"
+msgstr ""
+
+#: pdfstitcher.py:194 tile_pages.py:168
+msgid "Trim"
+msgstr ""
+
+#: pdfstitcher.py:201 tile_pages.py:159
+msgid "Left"
+msgstr ""
+
+#: pdfstitcher.py:206 tile_pages.py:163
+msgid "Right"
+msgstr ""
+
+#: pdfstitcher.py:211 tile_pages.py:156
+msgid "Top"
+msgstr ""
+
+#: pdfstitcher.py:216 tile_pages.py:152
+msgid "Bottom"
+msgstr ""
+
+#: pdfstitcher.py:239
+msgid "Load PDF to view layers."
+msgstr ""
+
+#: pdfstitcher.py:249
+msgid "Deselected layers:"
+msgstr ""
+
+#: pdfstitcher.py:250
+msgid "Delete"
+msgstr ""
+
+#: pdfstitcher.py:250
+msgid "Hide"
+msgstr ""
+
+#: pdfstitcher.py:254
+msgid "Include non-optional content"
+msgstr ""
+
+#: pdfstitcher.py:258 pdfstitcher.py:467
+msgid "Deselect all"
+msgstr ""
+
+#: pdfstitcher.py:265
+msgid "Layer Name"
+msgstr ""
+
+#: pdfstitcher.py:266
+msgid "Line Properties"
+msgstr ""
+
+#: pdfstitcher.py:278
+msgid "Select line properties to modify"
+msgstr ""
+
+#: pdfstitcher.py:280
+msgid "Line Colour"
+msgstr ""
+
+#: pdfstitcher.py:289
+msgid "Line Thickness"
+msgstr ""
+
+#. translation_note: pt = "points", in = "inches", cm = "centimeters"
+#: pdfstitcher.py:297 pdfstitcher.py:357
+msgid "pt"
+msgstr ""
+
+#: pdfstitcher.py:297 pdfstitcher.py:361 tile_pages.py:128
+msgid "in"
+msgstr ""
+
+#. translation_note: in = "inches", cm = "centimetres"
+#: pdfstitcher.py:297 pdfstitcher.py:363 tile_pages.py:128
+msgid "cm"
+msgstr ""
+
+#: pdfstitcher.py:304
+msgid "Line Style"
+msgstr ""
+
+#: pdfstitcher.py:307
+msgid "Solid"
+msgstr ""
+
+#: pdfstitcher.py:307
+msgid "Dashed"
+msgstr ""
+
+#: pdfstitcher.py:307
+msgid "Dotted"
+msgstr ""
+
+#: pdfstitcher.py:314
+msgid "Apply"
+msgstr ""
+
+#: pdfstitcher.py:316 pdfstitcher.py:437
+msgid "Reset"
+msgstr ""
+
+#: pdfstitcher.py:324
+msgid "Apply to checked"
+msgstr ""
+
+#: pdfstitcher.py:326
+msgid "Reset checked"
+msgstr ""
+
+#: pdfstitcher.py:436
+msgid "Apply to"
+msgstr ""
+
+#: pdfstitcher.py:442
+msgid "No layers found in input document."
+msgstr ""
+
+#: pdfstitcher.py:453
+msgid "Select layers to include in output document."
+msgstr ""
+
+#: pdfstitcher.py:469
+msgid "Select all"
+msgstr ""
+
+#: pdfstitcher.py:498 tile_pages.py:166
+msgid "Options"
+msgstr ""
+
+#: pdfstitcher.py:500
+msgid "Tile Pages"
+msgstr ""
+
+#: pdfstitcher.py:502
+msgid "Layers"
+msgstr ""
+
+#: pdfstitcher.py:510
+msgid "Generate PDF"
+msgstr ""
+
+#: pdfstitcher.py:573
+msgid "No page range specified, defaulting to all"
+msgstr ""
+
+#: pdfstitcher.py:633
+msgid "Tiling successful"
+msgstr ""
+
+#: pdfstitcher.py:641 pdfstitcher.py:649
+msgid "Something went wrong"
+msgstr ""
+
+#: pdfstitcher.py:642
+msgid "Exception"
+msgstr ""
+
+#: pdfstitcher.py:647
+msgid "Successfully written to"
+msgstr ""
+
+#: pdfstitcher.py:649 pdfstitcher.py:703
+msgid "unable to write to"
+msgstr ""
+
+#: pdfstitcher.py:651
+msgid "Make sure  isn't open in another program"
+msgstr ""
+
+#: pdfstitcher.py:696
+msgid "Cant overwrite input file, please select a different file for output"
+msgstr ""
+
+#: pdfstitcher.py:721
+msgid "Opening"
+msgstr ""
+
+#: pdfstitcher.py:735
+msgid "Cannot open file"
+msgstr ""
+
+#: tile_pages.py:122
+msgid "Invalid trim value specified, ignoring"
+msgstr ""
+
+#: tile_pages.py:154 tile_pages.py:161
+msgid "Middle"
+msgstr ""
+
+#: tile_pages.py:165
+msgid "Tiling with {} rows and {} columns"
+msgstr ""
+
+#: tile_pages.py:167
+msgid "Margins"
+msgstr ""
+
+#: tile_pages.py:169
+msgid "Rotation"
+msgstr ""
+
+#: tile_pages.py:171
+msgid "Vertical alignment"
+msgstr ""
+
+#: tile_pages.py:172
+msgid "Horizontal alignment"
+msgstr ""
+
+#: tile_pages.py:203
+msgid "Input document not loaded"
+msgstr ""
+
+#: tile_pages.py:244
+msgid "Only {} pages in document, skipping {}"
+msgstr ""
+
+#: tile_pages.py:307
+msgid "Warning: The pages {} have a different size than the page before"
+msgstr ""
+
+#: tile_pages.py:315
+msgid "Warning: requested {} columns, but there are only {} pages"
+msgstr ""
+
+#: tile_pages.py:321
+msgid "Warning: requested {} rows, but there are only {} pages"
+msgstr ""
+
+#: tile_pages.py:398
+msgid "Warning! Output is larger than {} {}, may not open correctly."
+msgstr ""
+
+#: tile_pages.py:401
+msgid "Output size:"
+msgstr ""
+
+#: tile_pages.py:523
+msgid ""
+"Warning: Some pages have been scaled because a target size was set. You "
+"should not see this warning if using the PDFStitcher GUI."
+msgstr ""
+
+#: tile_pages.py:548
+msgid "Unable to open"
+msgstr ""
+
+#: tile_pages.py:578
+msgid "Invalid rotation value"
+msgstr ""
+
+#: tile_pages.py:603
+msgid "Tile PDF pages into one document."
+msgstr ""
+
+#: tile_pages.py:604
+msgid "Note: If both rows and columns are specified, rows are ignored."
+msgstr ""
+
+#: tile_pages.py:605
+msgid "To insert a blank page, include a zero in the page list."
+msgstr ""
+
+#: tile_pages.py:610
+msgid "Input filename (pdf)"
+msgstr ""
+
+#: tile_pages.py:614
+msgid "Output filename (pdf)"
+msgstr ""
+
+#: tile_pages.py:618
+msgid ""
+"Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: "
+"entire document."
+msgstr ""
+
+#: tile_pages.py:623
+msgid "Number of rows in tiled grid."
+msgstr ""
+
+#: tile_pages.py:628
+msgid "Number of columns in tiled grid."
+msgstr ""
+
+#: tile_pages.py:632
+msgid "Margin size in inches."
+msgstr ""
+
+#: tile_pages.py:636
+msgid "Amount to trim from edges"
+msgstr ""
+
+#: tile_pages.py:637
+msgid ""
+"given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch "
+"from left and top)"
+msgstr ""
+
+#: tile_pages.py:642
+msgid "Rotate pages (90, 180, or 270 degrees)"
+msgstr ""
+
+#: utils.py:75
+msgid "Invalid input"
+msgstr ""
+
+#: utils.py:75
+msgid "only numeric values allowed"
+msgstr ""
+
+#: utils.py:91
+msgid "Please specify a page range"
+msgstr ""
