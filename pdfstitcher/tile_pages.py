@@ -241,7 +241,7 @@ class PageTiler:
 
         for p in self.page_range:
             if p > page_count:
-                print(_('Only {} pages in document, skipping {}').format(page_count, p))
+                print(_('Only {} pages in document. Skipping {}…').format(page_count, p))
                 continue
 
             if p > 0:
@@ -319,7 +319,7 @@ class PageTiler:
             if self.rows == 1 and self.cols > n_tiles:
                 print(
                     _(
-                        'Warning: requested {} columns, but there are only {} pages'
+                        'Warning: Requested {} columns, but there are only {} pages'
                     ).format(self.cols, n_tiles)
                 )
                 self.cols = n_tiles
@@ -328,7 +328,7 @@ class PageTiler:
             self.cols = math.ceil(n_tiles / self.rows)
             if self.cols == 1 and self.rows > n_tiles:
                 print(
-                    _('Warning: requested {} rows, but there are only {} pages').format(
+                    _('Warning: Requested {} rows, but there are only {} pages').format(
                         self.rows, n_tiles
                     )
                 )
@@ -423,7 +423,7 @@ class PageTiler:
             print(62 * '*')
             print(
                 _(
-                    'Warning! Output is larger than {} {}, may not open correctly.'
+                    'Warning! The output is larger than {} {} and may not open correctly.'
                 ).format(round(self.px_to_units(max_size_px)), unitstr)
             )
             print(62 * '*')
@@ -648,17 +648,17 @@ def parse_arguments():
 
     parser.add_argument(
         'input',
-        help=_('Input filename (pdf)'),
+        help=_('Input filename (PDF)'),
     )
     parser.add_argument(
         'output',
-        help=_('Output filename (pdf)'),
+        help=_('Output filename (PDF)'),
     )
     parser.add_argument(
         '-p',
         '--pages',
         help=_(
-            'Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: entire document.'
+            'Pages to tile. May be a range and/or list (e.g. 1-5 or 1,3,5-7, etc). Default: entire document.'
         ),
     )
     parser.add_argument(
@@ -684,7 +684,7 @@ def parse_arguments():
         help=_('Amount to trim from edges')
         + ' '
         + _(
-            'given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from left and top)'
+            'given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from the left and top)'
         ),
     )
     parser.add_argument(
