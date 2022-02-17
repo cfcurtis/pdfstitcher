@@ -10,10 +10,12 @@ For up-to-date information, also check out https://www.pdfstitcher.org.
 * [macOS (High Sierra or higher)](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/PDFStitcher-Installer.dmg)
 * <a href='https://flathub.org/apps/details/com.github.cfcurtis.pdfstitcher'><img width='120' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/></a>
 
-**Translations:**
+## Translations:
 PDFStitcher will detect system language settings and change localisation if supported. 
 
 Previous versions can be found by clicking on the "releases" link to the right.
+
+Want to contribute a translation? PDFStitcher is now on [weblate!](https://hosted.weblate.org/engage/pdfstitcher/).
 
 ## Features
 * Stitch together pages in any order with specified number of rows/columns
@@ -28,7 +30,7 @@ Previous versions can be found by clicking on the "releases" link to the right.
 ## Development Installation
 Most people probably want to just use the executable links above. However, if you intend to run the program from source, you'll need the following:
 
-* [Python 3.6+](https://www.python.org/downloads/) and `pip`. Testing was done with 64-bit Python 3.8.5 provided by [Anaconda](https://www.anaconda.com/) on Windows 10 and Python 3.9.1 provided by [homebrew](https://brew.sh/) on macOS High Sierra 10.13.6.
+* [Python 3.6-3.9](https://www.python.org/downloads/) and `pip`. Testing was done with 64-bit Python 3.8.5 provided by [Anaconda](https://www.anaconda.com/) on Windows 10 and Python 3.9.1 provided by [homebrew](https://brew.sh/) on macOS High Sierra 10.13.6. Python 3.10+ may work, but there at the time of writing there is no wheel for wxPython for 3.10.
 
 * [pikepdf](https://github.com/pikepdf/pikepdf) can be installed by running `pip install pikepdf` **Note:** For macOS less than 10.15, pikepdf v2.8.0 is the latest supported version. Specify with `pip install pikepdf==2.8.0` or [build it from source](https://pikepdf.readthedocs.io/en/latest/installation.html#building-from-source) if you're feeling adventurous.
 
