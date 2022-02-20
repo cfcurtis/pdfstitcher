@@ -17,9 +17,6 @@ from pathlib import Path
 from version import __version__
 
 version_string = 'v' + __version__
-locales_full = ('de_DE', 'es_ES', 'fr_FR', 'nl_NL', 'cs_CZ')
-locales_short = ('de', 'es', 'fr', 'nl', 'en', 'cs')
-
 
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller"""
@@ -36,9 +33,10 @@ def setup_locale():
     language_warning = None
 
     lc = locale.getdefaultlocale()
+    lc = ('da', 'UTF-8')
 
     try:
-        lang = lc[0][:2]
+        lang = lc[0]
     except:
         try:
             # try the Apple way
@@ -49,28 +47,29 @@ def setup_locale():
             languages = globalDomain.objectForKey_("AppleLanguages")
 
             # just take the first one
-            lang = languages[0][:2]
+            lang = languages[0]
         except:
-            lang = 'en'
             language_warning = 'Could not detect system language, defaulting to English'
-
-    if lang not in locales_short:
-        language_warning = (
-            'System language code ' + lang + ' is not supported, defaulting to English.'
-        )
 
     try:
         translate = gettext.translation(
-            'pdfstitcher', resource_path('locale'), languages=[lang], fallback=True
+            'pdfstitcher', resource_path('locale'), languages=[lang], fallback=False
         )
         translate.install()
-    except Exception as e:
-        global _
+    except:
+        # try just the first two letters
+        try:
+            translate = gettext.translation(
+                'pdfstitcher', resource_path('locale'), languages=[lang[:2]], fallback=True
+            )
+            translate.install()
+        except Exception as e:
+            global _
 
-        def _(text):
-            return text
+            def _(text):
+                return text
 
-        language_warning = e
+            language_warning = e
 
     return language_warning
 

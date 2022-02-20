@@ -1,14 +1,11 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-# from utils import locales_full
+import os
 
 block_cipher = None
 
-#locale = ''
-basename = 'pdfstitcher'
-
 locale_paths = []
-locales_full = ('de_DE','es_ES','fr_FR','nl_NL','cs_CZ')
+locales_full = next(os.walk('locale))[1]
 for l in locales_full:
     locale_paths.append((f'locale/{l}/LC_MESSAGES/pdfstitcher.mo',f'locale/{l}/LC_MESSAGES'))
 
@@ -32,7 +29,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name=basename,
+          name='pdfstitcher',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -41,7 +38,7 @@ exe = EXE(pyz,
           runtime_tmpdir=None,
           console=False )
 app = BUNDLE(exe,
-             name=basename + '.app',
+             name='pdfstitcher.app',
              icon='resources/stitcher-icon.icns',
              bundle_identifier='org.pdfstitcher',
              version='0.5',
