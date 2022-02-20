@@ -33,7 +33,6 @@ def setup_locale():
     language_warning = None
 
     lc = locale.getdefaultlocale()
-    lc = ('da', 'UTF-8')
 
     try:
         lang = lc[0]
