@@ -23,10 +23,11 @@ jobs:
       - run: pip install pikepdf wxPython Babel pyinstaller
       - run: python pdfstitcher/update_loc.py --compile
       - run: pyinstaller pdfstitcher_win.spec
+      - run: echo "VERSION_STRING=v`cat pdfstitcher/version.py | cut -d"'" -f 2`" >> $GITHUB_ENV
       
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.14
         with:
           files: dist/pdfstitcher.exe
           draft: ${{ github.event.inputs.draft }}
-          tag_name: v`cat pdfstitcher/version.py | cut -d"'" -f 2`
+          tag_name: ${{ env.VERSION_STRING }}
