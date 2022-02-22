@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-10-04 11:04-0600\n"
-"PO-Revision-Date: 2022-02-19 16:45+0000\n"
+"PO-Revision-Date: 2022-02-22 19:09+0000\n"
 "Last-Translator: Anne Lindholt <anneloppe@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/pdfstitcher/"
 "user-interface/da/>\n"
@@ -23,11 +23,11 @@ msgstr ""
 
 #: layerfilter.py:122
 msgid "No layers selected, generated PDF would be blank."
-msgstr "Ingen lag valgt, genereret PDF vil være tom."
+msgstr "Ingen lag valgt, genereret PDF vil blive tom."
 
 #: pdfstitcher.py:29 pdfstitcher.py:706
 msgid "Select input PDF"
-msgstr "Vælg input PDF"
+msgstr "Vælg input-PDF"
 
 #: pdfstitcher.py:32 pdfstitcher.py:40 pdfstitcher.py:88 pdfstitcher.py:151
 #: tile_pages.py:129
@@ -435,7 +435,7 @@ msgstr ""
 
 #: tile_pages.py:605
 msgid "To insert a blank page, include a zero in the page list."
-msgstr "Skriv et 0 i siderækkefølgen for at indsætte en tom side."
+msgstr "Skriv et 0 i siderækkefølgen for at indsætte en blank side."
 
 #: tile_pages.py:610
 msgid "Input filename (pdf)"
@@ -463,7 +463,7 @@ msgstr "Antal kolonner i gitteret."
 
 #: tile_pages.py:632
 msgid "Margin size in inches."
-msgstr "Margin i tommer."
+msgstr "Marginstørrelse/-bredde i tommer."
 
 #: tile_pages.py:636
 msgid "Amount to trim from edges"
