@@ -10,7 +10,10 @@ on:
 
 jobs:
   win-build:
-    runs-on: windows-latest
+    runs-on: windows-latest   
+    defaults:
+      run:
+        shell: bash
     
     steps:
       - name: Checkout
