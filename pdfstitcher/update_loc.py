@@ -63,7 +63,7 @@ def update():
 
 def compile():
     print("**compile**")
-    run(f'pybabel compile -D pdfstitcher -d locale', shell=True)
+    run(f'pybabel compile -D pdfstitcher -d {T}', shell=True)
 
 
 if __name__ == '__main__':

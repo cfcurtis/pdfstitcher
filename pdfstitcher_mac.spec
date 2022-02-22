@@ -3,14 +3,13 @@
 import os
 
 block_cipher = None
-
 locale_paths = []
-locales_full = next(os.walk('pdfstitcher/locale))[1]
+locales_full = next(os.walk('pdfstitcher/locale'))[1]
 for l in locales_full:
-    locale_paths.append((f'pdfstitcher/locale/{l}/LC_MESSAGES/pdfstitcher.mo',f'pdfstitcher/locale/{l}/LC_MESSAGES'))
+    locale_paths.append((f'pdfstitcher/locale/{l}/LC_MESSAGES/pdfstitcher.mo',f'locale/{l}/LC_MESSAGES'))
 
 a = Analysis(['pdfstitcher/pdfstitcher.py'],
-             pathex=['.'],
+             pathex=[],
              binaries=[],
              datas=locale_paths,
              hiddenimports=[],
