@@ -9,477 +9,494 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-10-04 11:04-0600\n"
-"PO-Revision-Date: 2022-02-15 09:44-0700\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: hu_HU\n"
+"PO-Revision-Date: 2022-02-22 21:29+0100\n"
+"Last-Translator: \n"
 "Language-Team: hu_HU <LL@li.org>\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Language: hu_HU\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.9.1\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: layerfilter.py:122
 msgid "No layers selected, generated PDF would be blank."
-msgstr ""
+msgstr "Nincs kijelölt réteg, a létrehozott PDF üres lesz."
 
 #: pdfstitcher.py:29 pdfstitcher.py:706
 msgid "Select input PDF"
-msgstr ""
+msgstr "Bemeneti PDF kiválasztása"
 
 #: pdfstitcher.py:32 pdfstitcher.py:40 pdfstitcher.py:88 pdfstitcher.py:151
 #: tile_pages.py:129
 msgid "None"
-msgstr ""
+msgstr "Egyik sem"
 
 #: pdfstitcher.py:37 pdfstitcher.py:687
 msgid "Save output as"
-msgstr ""
+msgstr "Kimenet mentése mint"
 
 #: pdfstitcher.py:46
 msgid "Output Options"
-msgstr ""
+msgstr "Kimeneti Opciók"
 
 #: pdfstitcher.py:52 pdfstitcher.py:159
 msgid "Page Range"
-msgstr ""
+msgstr "Oldaltartomány"
 
 #: pdfstitcher.py:54 pdfstitcher.py:161
 msgid "Pages assemble in specified order. 0 inserts a blank page."
 msgstr ""
+"Az oldalak összeállítása meghatározott sorrendben. Üres oldal "
+"hozzáadásához írjon nullát az oldalszámok közé."
 
 #: pdfstitcher.py:61 pdfstitcher.py:185
 msgid "Margin to add to final output"
-msgstr ""
+msgstr "A végső kimenethez hozzáadandó margó"
 
 #: pdfstitcher.py:68
 msgid "Process Layers"
-msgstr ""
+msgstr "Rétegek feldolgozása"
 
 #: pdfstitcher.py:71
 msgid "Tile pages"
-msgstr ""
+msgstr "Oldalak elrendezése"
 
 #: pdfstitcher.py:96
 msgid "Process layers then tile pages and save"
-msgstr ""
+msgstr "A rétegek feldolgozása majd oldalak elrendezése és mentés"
 
 #: pdfstitcher.py:99
 msgid "Process layers and save without tiling pages"
-msgstr ""
+msgstr "Rétegek feldolgozása, majd mentés az oldalak elrendezése nélkül"
 
 #: pdfstitcher.py:102
 msgid "Tile pages and save without processing layers"
-msgstr ""
+msgstr "Oldalak elrendezése és mentés a rétegek feldolgozása nélkül"
 
 #: pdfstitcher.py:105
 msgid "Open the PDF and save selected page range without modifying"
 msgstr ""
+"PDF megnyitása és a kiválasztott oldalak mentése változtatások nélkül"
 
 #: pdfstitcher.py:116
 msgid "Required Parameters"
-msgstr ""
+msgstr "Szükséges paraméterek"
 
 #: pdfstitcher.py:122
 msgid "Number of Columns"
-msgstr ""
+msgstr "Oszlopok száma"
 
 #: pdfstitcher.py:128
 msgid "OR Number of Rows"
-msgstr ""
+msgstr "VAGY Sorok száma"
 
 #: pdfstitcher.py:136 tile_pages.py:139
 msgid "Rows then columns"
-msgstr ""
+msgstr "Sorok majd oszlopok"
 
 #: pdfstitcher.py:136 tile_pages.py:141
 msgid "Columns then rows"
-msgstr ""
+msgstr "Oszlopok majd sorok"
 
 #: pdfstitcher.py:137 tile_pages.py:143
 msgid "Left to right"
-msgstr ""
+msgstr "Balról jobbra"
 
 #: pdfstitcher.py:137 tile_pages.py:145
 msgid "Right to left"
-msgstr ""
+msgstr "Jobbról balra"
 
 #: pdfstitcher.py:138 tile_pages.py:147
 msgid "Top to bottom"
-msgstr ""
+msgstr "Fentről lefelé"
 
 #: pdfstitcher.py:138 tile_pages.py:149
 msgid "Bottom to top"
-msgstr ""
+msgstr "Lentről felfelé"
 
 #: pdfstitcher.py:140 tile_pages.py:170
 msgid "Page order"
-msgstr ""
+msgstr "Oldalak sorrendje"
 
 #: pdfstitcher.py:151 tile_pages.py:132
 msgid "Clockwise"
-msgstr ""
+msgstr "Óramutató járásával megegyezően"
 
 #: pdfstitcher.py:151 tile_pages.py:134
 msgid "Counterclockwise"
-msgstr ""
+msgstr "Óramutató járásával ellentétesen"
 
 #. translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
 #: pdfstitcher.py:151 tile_pages.py:137
 msgid "Turn Around"
-msgstr ""
+msgstr "Fejjel lefelé"
 
 #: pdfstitcher.py:152
 msgid "Page Rotation"
-msgstr ""
+msgstr "Oldalak forgatása"
 
 #: pdfstitcher.py:168
 msgid "Optional Parameters"
-msgstr ""
+msgstr "Kiegészítő paraméterek"
 
 #: pdfstitcher.py:173
 msgid "Inches"
-msgstr ""
+msgstr "Hüvelyk"
 
 #: pdfstitcher.py:173
 msgid "Centimetres"
-msgstr ""
+msgstr "Centiméter"
 
 #: pdfstitcher.py:174
 msgid "Units"
-msgstr ""
+msgstr "Egység"
 
 #. translation_note: TrimBox and MediaBox are PDF elements, so they likely
 #. won't translate nicely.
 #: pdfstitcher.py:179
 msgid "Set TrimBox to MediaBox"
-msgstr ""
+msgstr "Állítsa a TrimBoxot MediaBoxra"
 
 #: pdfstitcher.py:180
 msgid "May help fix things when output is not as expected"
 msgstr ""
+"Segíthet megjavítani dolgokat, ha a kimenet nem a várakozásaink szerint "
+"alakul"
 
 #: pdfstitcher.py:193
 msgid "Amount to trim from each page"
-msgstr ""
+msgstr "Levágás nagysága minden lapból"
 
 #: pdfstitcher.py:194
 msgid "Overlap"
-msgstr ""
+msgstr "Átfedés"
 
 #: pdfstitcher.py:194 tile_pages.py:168
 msgid "Trim"
-msgstr ""
+msgstr "Levágás"
 
 #: pdfstitcher.py:201 tile_pages.py:159
 msgid "Left"
-msgstr ""
+msgstr "Bal"
 
 #: pdfstitcher.py:206 tile_pages.py:163
 msgid "Right"
-msgstr ""
+msgstr "Jobb"
 
 #: pdfstitcher.py:211 tile_pages.py:156
 msgid "Top"
-msgstr ""
+msgstr "Teteje"
 
 #: pdfstitcher.py:216 tile_pages.py:152
 msgid "Bottom"
-msgstr ""
+msgstr "Alja"
 
 #: pdfstitcher.py:239
 msgid "Load PDF to view layers."
-msgstr ""
+msgstr "PDF betöltése a rétegek megjelenítése miatt."
 
 #: pdfstitcher.py:249
 msgid "Deselected layers:"
-msgstr ""
+msgstr "Ki nem jelölt rétegek:"
 
 #: pdfstitcher.py:250
 msgid "Delete"
-msgstr ""
+msgstr "Törlése"
 
 #: pdfstitcher.py:250
 msgid "Hide"
-msgstr ""
+msgstr "Elrejtése"
 
 #: pdfstitcher.py:254
 msgid "Include non-optional content"
-msgstr ""
+msgstr "Kötelező tartalmakat beleértve"
 
 #: pdfstitcher.py:258 pdfstitcher.py:467
 msgid "Deselect all"
-msgstr ""
+msgstr "Összes kijelölés megszüntetése"
 
 #: pdfstitcher.py:265
 msgid "Layer Name"
-msgstr ""
+msgstr "Réteg neve"
 
 #: pdfstitcher.py:266
 msgid "Line Properties"
-msgstr ""
+msgstr "Vonaltulajdonságok"
 
 #: pdfstitcher.py:278
 msgid "Select line properties to modify"
-msgstr ""
+msgstr "Vonaltulajdonságok kiválasztása a módosításhoz"
 
 #: pdfstitcher.py:280
 msgid "Line Colour"
-msgstr ""
+msgstr "Vonalszín"
 
 #: pdfstitcher.py:289
 msgid "Line Thickness"
-msgstr ""
+msgstr "Vonalvastagság"
 
 #. translation_note: pt = "points", in = "inches", cm = "centimeters"
 #: pdfstitcher.py:297 pdfstitcher.py:357
 msgid "pt"
-msgstr ""
+msgstr "pt (képpont)"
 
 #: pdfstitcher.py:297 pdfstitcher.py:361 tile_pages.py:128
 msgid "in"
-msgstr ""
+msgstr "hüvelyk"
 
 #. translation_note: in = "inches", cm = "centimetres"
 #: pdfstitcher.py:297 pdfstitcher.py:363 tile_pages.py:128
 msgid "cm"
-msgstr ""
+msgstr "cm"
 
 #: pdfstitcher.py:304
 msgid "Line Style"
-msgstr ""
+msgstr "Vonalstílus"
 
 #: pdfstitcher.py:307
 msgid "Solid"
-msgstr ""
+msgstr "Folytonos"
 
 #: pdfstitcher.py:307
 msgid "Dashed"
-msgstr ""
+msgstr "Szaggatott"
 
 #: pdfstitcher.py:307
 msgid "Dotted"
-msgstr ""
+msgstr "Pontozott"
 
 #: pdfstitcher.py:314
 msgid "Apply"
-msgstr ""
+msgstr "Alkalmaz"
 
 #: pdfstitcher.py:316 pdfstitcher.py:437
 msgid "Reset"
-msgstr ""
+msgstr "Visszaállítás"
 
 #: pdfstitcher.py:324
 msgid "Apply to checked"
-msgstr ""
+msgstr "Alkalmazás a kijelöltekre"
 
 #: pdfstitcher.py:326
 msgid "Reset checked"
-msgstr ""
+msgstr "A kijelöltek visszaállítása"
 
 #: pdfstitcher.py:436
 msgid "Apply to"
-msgstr ""
+msgstr "Alkalmazza a"
 
 #: pdfstitcher.py:442
 msgid "No layers found in input document."
-msgstr ""
+msgstr "Nincsenek rétegek a kiválasztott dokumentumban."
 
 #: pdfstitcher.py:453
 msgid "Select layers to include in output document."
-msgstr ""
+msgstr "Válassza ki a rétegeket a kimeneti dokumentumhoz."
 
 #: pdfstitcher.py:469
 msgid "Select all"
-msgstr ""
+msgstr "Összes kiválasztása"
 
 #: pdfstitcher.py:498 tile_pages.py:166
 msgid "Options"
-msgstr ""
+msgstr "Lehetőségek"
 
 #: pdfstitcher.py:500
 msgid "Tile Pages"
-msgstr ""
+msgstr "Oldalak elrendezése"
 
 #: pdfstitcher.py:502
 msgid "Layers"
-msgstr ""
+msgstr "Rétegek"
 
 #: pdfstitcher.py:510
 msgid "Generate PDF"
-msgstr ""
+msgstr "PDF létrehozása"
 
 #: pdfstitcher.py:573
 msgid "No page range specified, defaulting to all"
-msgstr ""
+msgstr "Nincsenek kiválasztott oldalak, alaphelyzetben az összes hozzáadása"
 
 #: pdfstitcher.py:633
 msgid "Tiling successful"
-msgstr ""
+msgstr "Sikeres elrendezés"
 
 #: pdfstitcher.py:641 pdfstitcher.py:649
 msgid "Something went wrong"
-msgstr ""
+msgstr "Valami hiba történt"
 
 #: pdfstitcher.py:642
 msgid "Exception"
-msgstr ""
+msgstr "Kivéve"
 
 #: pdfstitcher.py:647
 msgid "Successfully written to"
-msgstr ""
+msgstr "Sikeres írás a"
 
 #: pdfstitcher.py:649 pdfstitcher.py:703
 msgid "unable to write to"
-msgstr ""
+msgstr "nem sikerült írni a"
 
 #: pdfstitcher.py:651
 msgid "Make sure  isn't open in another program"
-msgstr ""
+msgstr "Győződjön meg róla, hogy  nincs megnyitva egy másik programban"
 
 #: pdfstitcher.py:696
 msgid "Cant overwrite input file, please select a different file for output"
 msgstr ""
+"A bemeneti fájl nem írható fölül, válasszon másik fájlt a kimenethez"
 
 #: pdfstitcher.py:721
 msgid "Opening"
-msgstr ""
+msgstr "Megnyitás"
 
 #: pdfstitcher.py:735
 msgid "Cannot open file"
-msgstr ""
+msgstr "A kiválasztott fájlt nem lehet megnyitni"
 
 #: tile_pages.py:122
 msgid "Invalid trim value specified, ignoring"
-msgstr ""
+msgstr "Érvénytelen vágási mennyiség megadása, visszautasítva"
 
 #: tile_pages.py:154 tile_pages.py:161
 msgid "Middle"
-msgstr ""
+msgstr "Középső"
 
 #: tile_pages.py:165
 msgid "Tiling with {} rows and {} columns"
-msgstr ""
+msgstr "Oldalak elrendezése {} sorba és {} oszlopba"
 
 #: tile_pages.py:167
 msgid "Margins"
-msgstr ""
+msgstr "Margók"
 
 #: tile_pages.py:169
 msgid "Rotation"
-msgstr ""
+msgstr "Forgatás"
 
 #: tile_pages.py:171
 msgid "Vertical alignment"
-msgstr ""
+msgstr "Függőleges igazítás"
 
 #: tile_pages.py:172
 msgid "Horizontal alignment"
-msgstr ""
+msgstr "Vízszintes igazítás"
 
 #: tile_pages.py:203
 msgid "Input document not loaded"
-msgstr ""
+msgstr "Bemeneti dokumentum nem töltődött be"
 
 #: tile_pages.py:244
 msgid "Only {} pages in document, skipping {}"
-msgstr ""
+msgstr "Csak {} oldal a dokumentumban, {} átugrása"
 
 #: tile_pages.py:307
 msgid "Warning: The pages {} have a different size than the page before"
-msgstr ""
+msgstr "Figyelem: {} oldalak más méretűek, mint az előzőek"
 
 #: tile_pages.py:315
 msgid "Warning: requested {} columns, but there are only {} pages"
-msgstr ""
+msgstr "Figyelem: {} oszlopot kért, de csak {} oldal van"
 
 #: tile_pages.py:321
 msgid "Warning: requested {} rows, but there are only {} pages"
-msgstr ""
+msgstr "Figyelem: {} sort kért, de csak {} oldal van"
 
 #: tile_pages.py:398
 msgid "Warning! Output is larger than {} {}, may not open correctly."
 msgstr ""
+"Figyelem! A kimenet nagyobb, mint {} {}, lehetséges, hogy nem nyílik meg "
+"megfelelően."
 
 #: tile_pages.py:401
 msgid "Output size:"
-msgstr ""
+msgstr "Kimeneti méret:"
 
 #: tile_pages.py:523
 msgid ""
 "Warning: Some pages have been scaled because a target size was set. You "
 "should not see this warning if using the PDFStitcher GUI."
 msgstr ""
+"Figyelem: néhány oldal át lett méretezve, mert egy célméret van "
+"beállítva. Amennyiben a PDFStitcher GUI-t használod, nem kellene látnod "
+"ezt a figyelmeztetést."
 
 #: tile_pages.py:548
 msgid "Unable to open"
-msgstr ""
+msgstr "Nem lehet megnyitni"
 
 #: tile_pages.py:578
 msgid "Invalid rotation value"
-msgstr ""
+msgstr "Érvénytelen forgatási érték"
 
 #: tile_pages.py:603
 msgid "Tile PDF pages into one document."
-msgstr ""
+msgstr "Oldalak elrendezése egy dokumentumba."
 
 #: tile_pages.py:604
 msgid "Note: If both rows and columns are specified, rows are ignored."
 msgstr ""
+"Megjegyzés: amennyiben a sorok és az oszlopok is meghatározottak, a sorok "
+"figyelmen kívül hagyása."
 
 #: tile_pages.py:605
 msgid "To insert a blank page, include a zero in the page list."
-msgstr ""
+msgstr "Üres oldal hozzáadásához írjon nullát az oldalszámok közé."
 
 #: tile_pages.py:610
 msgid "Input filename (pdf)"
-msgstr ""
+msgstr "Bemeneti fájl neve (pdf)"
 
 #: tile_pages.py:614
 msgid "Output filename (pdf)"
-msgstr ""
+msgstr "Kimeneti fájl neve (pdf)"
 
 #: tile_pages.py:618
 msgid ""
 "Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: "
 "entire document."
 msgstr ""
+"Oldalak elrendezése. Lehet tartomány vagy lista (pl: 1-5 vagy 1,3,5-7, "
+"stb.) Alaphelyzet: az egész dokumentum."
 
 #: tile_pages.py:623
 msgid "Number of rows in tiled grid."
-msgstr ""
+msgstr "A sorok száma a rácsban."
 
 #: tile_pages.py:628
 msgid "Number of columns in tiled grid."
-msgstr ""
+msgstr "Az oszlopok száma a rácsban."
 
 #: tile_pages.py:632
 msgid "Margin size in inches."
-msgstr ""
+msgstr "Margó mérete hüvelykben."
 
 #: tile_pages.py:636
 msgid "Amount to trim from edges"
-msgstr ""
+msgstr "A szélekről levágandó mennyiség"
 
 #: tile_pages.py:637
 msgid ""
 "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch "
 "from left and top)"
 msgstr ""
+"megadva, mint bal, jobb, teteje, alja (pl. 0,5,0,0.5,0 le fog vágni fél "
+"hüvelyket a bal oldaláról és a tetejéből)"
 
 #: tile_pages.py:642
 msgid "Rotate pages (90, 180, or 270 degrees)"
-msgstr ""
+msgstr "Oldalak forgatása (90, 180 vagy 270 fokkal)"
 
 #: utils.py:75
 msgid "Invalid input"
-msgstr ""
+msgstr "Érvénytelen érték"
 
 #: utils.py:75
 msgid "only numeric values allowed"
-msgstr ""
+msgstr "csak számok megengedettek"
 
 #: utils.py:91
 msgid "Please specify a page range"
-msgstr ""
-
+msgstr "Kérem, adjon meg egy oldaltartományt"
