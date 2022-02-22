@@ -12,7 +12,7 @@ import argparse
 import sys
 import math
 import copy
-import utils
+import pdfstitcher.utils as utils
 
 
 class SW_UNITS(IntEnum):

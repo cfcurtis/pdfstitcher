@@ -14,7 +14,7 @@ import gettext
 import locale
 from pathlib import Path
 
-from version import __version__
+from pdfstitcher.version import __version__
 
 version_string = 'v' + __version__
 
@@ -24,7 +24,7 @@ def resource_path(relative_path):
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
     else:
-        base_path = Path(__file__).parent.parent.absolute()
+        base_path = Path(__file__).parent.absolute()
 
     return os.path.join(base_path, relative_path)
 

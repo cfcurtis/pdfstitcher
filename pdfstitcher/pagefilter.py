@@ -6,7 +6,7 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 import pikepdf
-import utils
+import pdfstitcher.utils as utils
 
 
 class PageFilter:

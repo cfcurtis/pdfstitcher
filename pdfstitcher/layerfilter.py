@@ -6,7 +6,7 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 import pikepdf
-import pdf_operators as pdf_ops
+import pdfstitcher.pdf_operators as pdf_ops
 from decimal import Decimal
 import traceback
 import copy

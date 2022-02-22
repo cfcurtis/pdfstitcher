@@ -9,13 +9,13 @@
 
 import wx
 import wx.lib.scrolledpanel as scrolled
-from tile_pages import PageTiler
-from layerfilter import LayerFilter
-from pagefilter import PageFilter
+from pdfstitcher.tile_pages import PageTiler
+from pdfstitcher.layerfilter import LayerFilter
+from pdfstitcher.pagefilter import PageFilter
 import os
 import sys
 import pikepdf
-import utils
+from pdfstitcher import utils
 import ctypes
 
 # Constant widget sizes - used for all the different panels
