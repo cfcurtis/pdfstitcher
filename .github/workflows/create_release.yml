@@ -14,10 +14,10 @@ jobs:
     
     steps:
       - name: Checkout
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       - name: Compile translation files and build exe
-      - uses: actions/setup-python@v2
+        uses: actions/setup-python@v2
         with:
           python-version: 3.9
       - run: pip install pikepdf wxPython Babel pyinstaller
@@ -25,7 +25,7 @@ jobs:
       - run: pyinstaller pdfstitcher_win.spec
       
       - name: GH Release
-      - uses: softprops/action-gh-release@v0.1.14
+        uses: softprops/action-gh-release@v0.1.14
         with:
           files: dist/pdfstitcher.exe
           draft: ${{ github.event.inputs.draft }}
