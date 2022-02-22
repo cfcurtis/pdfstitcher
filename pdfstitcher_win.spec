@@ -4,14 +4,14 @@ import os
 
 block_cipher = None
 locale_paths = []
-locales_full = next(os.walk('locale))[1]
+locales_full = next(os.walk('pdfstitcher\\locale))[1]
 for l in locales_full:
-    locale_paths.append((f'locale\\{l}\\LC_MESSAGES\\pdfstitcher.mo',f'locale\\{l}\\LC_MESSAGES'))
+    locale_paths.append((f'pdfstitcher\\locale\\{l}\\LC_MESSAGES\\pdfstitcher.mo',f'pdfstitcher\\locale\\{l}\\LC_MESSAGES'))
 
 a = Analysis(['pdfstitcher/pdfstitcher.py'],
              pathex=['.'],
              binaries=[],
-             datas=locale_paths + [('resources\\stitcher-icon.ico','resources')],
+             datas=locale_paths + [('pdfstitcher\\resources\\stitcher-icon.ico','resources')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -29,7 +29,7 @@ exe = EXE(pyz,
           a.datas,
           [],
           name='pdfstitcher',
-          icon='resources\\stitcher-icon.ico',
+          icon='pdfsticher\\resources\\stitcher-icon.ico',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
