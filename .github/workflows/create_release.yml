@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      draft:
+        description: 'Draft'
+        type: boolean
+        required: true
+
+jobs:
+  win-build:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v2
+
+      - name: Compile translation files and build exe
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - run: pip install pikepdf wxPython Babel pyinstaller
+      - run: python pdfstitcher/update_loc.py --compile
+      - run: pyinstaller pdfstitcher_win.spec
+      
+      - name: GH Release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          files: dist/pdfstitcher.exe
+          draft: ${{ github.event.inputs.draft }}
+          tag_name: v`cat pdfstitcher/version.py | cut -d"'" -f 2`
