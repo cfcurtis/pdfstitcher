@@ -9,6 +9,7 @@ For up-to-date information, also check out https://www.pdfstitcher.org.
 * [Windows (7 or 10, 64-bit)](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/pdfstitcher.exe)
 * [macOS (High Sierra or higher)](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/PDFStitcher-Installer.dmg)
 * <a href='https://flathub.org/apps/details/com.github.cfcurtis.pdfstitcher'><img width='120' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/></a>
+* Using pip: `pip install pdfstitcher`
 
 ## Translations:
 PDFStitcher will detect system language settings and change localisation if supported. 
@@ -28,14 +29,11 @@ Want to contribute a translation? PDFStitcher is now on [weblate!](https://hoste
 * Modify line properties (colour, thickness, style (solid, dashed, dotted))
 
 ## Development Installation
-Most people probably want to just use the executable links above. However, if you intend to run the program from source, you'll need the following:
+Most people probably want to just use the executable links above. However, to edit the code, clone this repo and install in editable mode using the command:
 
-* [Python 3.6-3.9](https://www.python.org/downloads/) and `pip`. Python 3.10+ may work, but as of February 2022 there is no wheel for wxPython for 3.10.
-
-* [pikepdf](https://github.com/pikepdf/pikepdf) can be installed by running `pip install pikepdf` **Note:** For macOS less than 10.15, pikepdf v2.8.0 is the latest supported version. Specify with `pip install pikepdf==2.8.0` or [build it from source](https://pikepdf.readthedocs.io/en/latest/installation.html#building-from-source) if you're feeling adventurous.
-
-* [wxPython 4.1+](https://www.wxpython.org/) can be installed by running `pip install wxpython` **Note:** For Linux, the installtion of wxPython can be tricky if your distribution does not provide a recent enough version. I recommend checking out the instructions [here](https://wxpython.org/pages/downloads/index.html).
-
+```console
+$ pip install -e .
+```
 
 ## Help!
 Found a bug, or have an idea for a great new feature? Check out the [Issues](https://github.com/cfcurtis/pdfstitcher/issues) tab to see if it's an open issue, or submit a new one if it's not on the list.
