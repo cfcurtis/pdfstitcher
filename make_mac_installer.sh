@@ -2,7 +2,7 @@
 
 create-dmg \
   --volname "PDFStitcher Installer" \
-  --background "resources/install_background.png" \
+  --background "pdfstitcher/resources/install_background.png" \
   --window-pos 200 120 \
   --window-size 800 400 \
   --icon-size 100 \

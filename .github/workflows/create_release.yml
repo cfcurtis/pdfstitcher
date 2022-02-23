@@ -10,7 +10,7 @@ on:
 
 jobs:
   win-build:
-    runs-on: windows-latest   
+    runs-on: windows-2019   
     defaults:
       run:
         shell: bash
@@ -32,5 +32,32 @@ jobs:
         uses: softprops/action-gh-release@v0.1.14
         with:
           files: dist/pdfstitcher.exe
+          draft: ${{ github.event.inputs.draft }}
+          tag_name: ${{ env.VERSION_STRING }}
+
+  mac-build:
+    runs-on: macos-10.15
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Compile translation files and build .app
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - run: pip install pikepdf wxPython Babel pyinstaller
+      - run: python pdfstitcher/update_loc.py --compile
+      - run: pyinstaller pdfstitcher_mac.spec
+      - run: echo "VERSION_STRING=v$(cat pdfstitcher/version.py | cut -d \' -f 2)" >> $GITHUB_ENV
+
+      - name: Create dmg
+      - run: brew install create-dmg
+      - run: chmod +x make_mac_installer.sh && ./make_mac_intaller.sh
+      
+      - name: GH Release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          files: PDFStitcher-Installer.dmg
           draft: ${{ github.event.inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
