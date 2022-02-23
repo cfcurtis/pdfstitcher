@@ -9,33 +9,33 @@ on:
         required: true
 
 jobs:
-  # win-build:
-  #   runs-on: windows-2019   
-  #   defaults:
-  #     run:
-  #       shell: bash
+  win-build:
+    runs-on: windows-2019   
+    defaults:
+      run:
+        shell: bash
     
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-  #     - name: Install Python
-  #       uses: actions/setup-python@v2
-  #       with:
-  #         python-version: 3.9
-  #     - name: Compile translation files and build .app
-  #       run: | 
-  #         pip install pikepdf wxPython Babel pyinstaller
-  #         python pdfstitcher/update_loc.py --compile
-  #         pyinstaller pdfstitcher_mac.spec
-  #         echo "VERSION_STRING=v$(cat pdfstitcher/version.py | cut -d \' -f 2)" >> $GITHUB_ENV
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Compile translation files and build .app
+        run: | 
+          pip install pikepdf wxPython Babel pyinstaller
+          python pdfstitcher/update_loc.py --compile
+          pyinstaller pdfstitcher_mac.spec
+          echo "VERSION_STRING=v$(cat pdfstitcher/version.py | cut -d \' -f 2)" >> $GITHUB_ENV
       
-  #     - name: GH Release
-  #       uses: softprops/action-gh-release@v0.1.14
-  #       with:
-  #         files: dist/pdfstitcher.exe
-  #         draft: ${{ github.event.inputs.draft }}
-  #         tag_name: ${{ env.VERSION_STRING }}
+      - name: GH Release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          files: dist/pdfstitcher.exe
+          draft: ${{ github.event.inputs.draft }}
+          tag_name: ${{ env.VERSION_STRING }}
 
   mac-build:
     runs-on: macos-10.15
@@ -58,7 +58,6 @@ jobs:
       - name: Create dmg
         run: |
           brew install create-dmg
-          ls -a
           chmod +x make_mac_installer.sh
           ./make_mac_installer.sh
       
