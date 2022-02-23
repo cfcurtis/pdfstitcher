@@ -32,9 +32,10 @@ def resource_path(relative_path):
 def setup_locale():
     language_warning = None
 
-    global _
-    def _(text):
-        return text
+    translate = gettext.translation(
+        'pdfstitcher', resource_path('locale'), languages=['en'], fallback=True
+    )
+    translate.install()
     
     language_warning = 'Temporarily disabling language detection'
     return language_warning
