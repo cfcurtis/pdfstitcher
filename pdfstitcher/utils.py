@@ -49,6 +49,7 @@ def setup_locale():
             lang = languages[0]
         except:
             language_warning = 'Could not detect system language, defaulting to English'
+            lang = 'en'
 
     try:
         translate = gettext.translation(
