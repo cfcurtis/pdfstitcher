@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-10-04 11:04-0600\n"
-"PO-Revision-Date: 2022-02-22 19:09+0000\n"
+"PO-Revision-Date: 2022-02-25 12:58+0000\n"
 "Last-Translator: Anne Lindholt <anneloppe@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/pdfstitcher/"
 "user-interface/da/>\n"
@@ -44,7 +44,7 @@ msgstr "Output-indstillinger"
 
 #: pdfstitcher.py:52 pdfstitcher.py:159
 msgid "Page Range"
-msgstr "Siderækkefølge"
+msgstr "Sideområde / valgte sider"
 
 #: pdfstitcher.py:54 pdfstitcher.py:161
 msgid "Pages assemble in specified order. 0 inserts a blank page."
@@ -52,7 +52,7 @@ msgstr "Siderne samles i angivet rækkefølge. 0 sætter en blank side ind."
 
 #: pdfstitcher.py:61 pdfstitcher.py:185
 msgid "Margin to add to final output"
-msgstr "Margin, der skal tilføjes output-filen"
+msgstr "Margin, der skal tilføjes i output-filen"
 
 #: pdfstitcher.py:68
 msgid "Process Layers"
@@ -60,7 +60,7 @@ msgstr "Behandle lag"
 
 #: pdfstitcher.py:71
 msgid "Tile pages"
-msgstr "Sæt sider sammen"
+msgstr "Sætte sider sammen"
 
 #: pdfstitcher.py:96
 msgid "Process layers then tile pages and save"
@@ -76,7 +76,7 @@ msgstr "Sætter sider sammen og gemmer uden at behandle lag"
 
 #: pdfstitcher.py:105
 msgid "Open the PDF and save selected page range without modifying"
-msgstr "Åbn PDF'en og gem valgte siderækkefølge uden at ændre"
+msgstr "Åbn PDF'en og gem valgte sider i output-PDF uden at ændre"
 
 #: pdfstitcher.py:116
 msgid "Required Parameters"
@@ -159,7 +159,7 @@ msgstr "Sæt TrimBox til MediaBox"
 
 #: pdfstitcher.py:180
 msgid "May help fix things when output is not as expected"
-msgstr "Kan fikse problemer, når output ikke blev som forventet"
+msgstr "Kan fikse problemer, hvis output ikke blev som forventet"
 
 #: pdfstitcher.py:193
 msgid "Amount to trim from each page"
@@ -313,7 +313,7 @@ msgstr "Generér PDF"
 
 #: pdfstitcher.py:573
 msgid "No page range specified, defaulting to all"
-msgstr "Siderækkefølge ikke specificeret, alle sider tages med"
+msgstr "Sideområde ikke specificeret, alle sider tages med"
 
 #: pdfstitcher.py:633
 msgid "Tiling successful"
@@ -435,7 +435,7 @@ msgstr ""
 
 #: tile_pages.py:605
 msgid "To insert a blank page, include a zero in the page list."
-msgstr "Skriv et 0 i siderækkefølgen for at indsætte en blank side."
+msgstr "Skriv et 0 i sideområde for at indsætte en blank side."
 
 #: tile_pages.py:610
 msgid "Input filename (pdf)"
@@ -491,4 +491,4 @@ msgstr "kun talværdier er tilladt"
 
 #: utils.py:91
 msgid "Please specify a page range"
-msgstr "Venligst angiv siderækkefølge"
+msgstr "Venligst angiv et sideområde"
