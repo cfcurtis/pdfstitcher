@@ -3,6 +3,7 @@
 .vscode/.ropeproject/objectdb
 dist/*
 __pycache__
+*/*.pyc
 .vscode/*
 build/*
 *.mo

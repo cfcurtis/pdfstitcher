@@ -1069,23 +1069,49 @@ class SewGUI(wx.Frame):
 
     def load_file(self, pathname):
         self.working_dir = os.path.dirname(pathname)
-        try:
-            # open the pdf
-            print(_('Opening') + ' ' + pathname)
-            self.in_doc = pikepdf.Pdf.open(pathname)
-            self.io.load_new(self.in_doc)
+        pdf_has_password = False
+        password = ""
 
-            # create the processing objects
-            self.layer_filter = LayerFilter(self.in_doc)
-            self.lt.load_new(self.layer_filter.get_layer_names(self.layer_filter.pdf))
+        while True:
+            try:
+                if pdf_has_password:
+                    password_dialog = wx.PasswordEntryDialog(
+                        self, _("Password"), _("PDF file is locked"), "")
+                    if password_dialog.ShowModal() == wx.ID_OK:
+                        password = password_dialog.GetValue()
+                        password_dialog.Destroy()
+                    else:
+                        wx.LogError(
+                            _("PDF will not open as you canceled the operation."))
+                        password_dialog.Destroy()
+                        break
 
-            self.tiler = PageTiler()
+                # open the pdf
+                print(_("Opening") + " " + pathname)
+                self.in_doc = pikepdf.Pdf.open(pathname, password=password)
+                self.io.load_new(self.in_doc)
 
-            # clear the output if it's already set
-            self.out_doc_path = None
+                # create the processing objects
+                self.layer_filter = LayerFilter(self.in_doc)
+                self.lt.load_new(
+                    self.layer_filter.get_layer_names(self.layer_filter.pdf)
+                )
 
-        except IOError:
-            wx.LogError(_('Cannot open file') + pathname)
+                self.tiler = PageTiler()
+
+                # clear the output if it's already set
+                self.out_doc_path = None
+
+            except pikepdf.PasswordError:
+                pdf_has_password = True
+                print(_("PDF locked! Enter the correct password."))
+
+            except IOError:
+                wx.LogError(_("Cannot open file") + pathname)
+
+            else:
+                print(_("PDF file loaded without errors."))
+                break
 
 def main():
     # When this module is run (not imported) then create the app, the
