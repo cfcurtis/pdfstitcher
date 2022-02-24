@@ -24,18 +24,20 @@ def resource_path(relative_path):
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
     else:
-        base_path = Path(__file__).parent.absolute()
+        base_path = str(Path(__file__).parent.absolute())
 
     return os.path.join(base_path, relative_path)
 
 
 def setup_locale():
     language_warning = None
-
-    lc = locale.getdefaultlocale()
+    lc = locale.getdefaultlocale()   
 
     try:
-        lang = lc[0]
+        if lc[0] is None:
+            lc = os.getenv('LANG')[:4]
+        else:
+            lang = lc[0]
     except:
         try:
             # try the Apple way
@@ -47,7 +49,7 @@ def setup_locale():
 
             # just take the first one
             lang = languages[0]
-        except:
+        except Exception as e:
             language_warning = 'Could not detect system language, defaulting to English'
             lang = 'en'
 
@@ -64,11 +66,6 @@ def setup_locale():
             )
             translate.install()
         except Exception as e:
-            global _
-
-            def _(text):
-                return text
-
             language_warning = e
 
     return language_warning
