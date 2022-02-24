@@ -9,6 +9,28 @@ on:
         required: true
 
 jobs:
+  pypi-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+          
+      - name: Build distribution
+        run: |
+          pip3 install build
+          python3 -m build
+      
+      - name: Publish to pypi
+        uses: pypa/gh-action-pypi-publish@v1.5.0
+        with:
+          password:  ${{ secrets.PYPI_TOKEN }}
+        
   win-build:
     runs-on: windows-2019   
     defaults:
@@ -23,11 +45,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Compile translation files and build .app
+        
+      - name: Compile translation files and build exe
         run: | 
           pip install pikepdf wxPython Babel pyinstaller
           python pdfstitcher/update_loc.py --compile
-          pyinstaller pdfstitcher_mac.spec
+          pyinstaller pdfstitcher_win.spec
           echo "VERSION_STRING=v$(cat pdfstitcher/version.py | cut -d \' -f 2)" >> $GITHUB_ENV
       
       - name: GH Release
@@ -48,10 +71,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+        
       - name: Compile translation files and build .app
         run: | 
-          pip install pikepdf wxPython Babel pyinstaller pyobjc
-          python pdfstitcher/update_loc.py --compile
+          pip3 install pikepdf wxPython Babel pyinstaller pyobjc
+          python3 pdfstitcher/update_loc.py --compile
           pyinstaller pdfstitcher_mac.spec
           echo "VERSION_STRING=v$(cat pdfstitcher/version.py | cut -d \' -f 2)" >> $GITHUB_ENV
 
