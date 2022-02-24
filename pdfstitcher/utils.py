@@ -24,62 +24,51 @@ def resource_path(relative_path):
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
     else:
-        base_path = Path(__file__).parent.absolute()
+        base_path = str(Path(__file__).parent.absolute())
 
     return os.path.join(base_path, relative_path)
 
 
 def setup_locale():
     language_warning = None
+    lc = locale.getdefaultlocale()   
 
-    translate = gettext.translation(
-        'pdfstitcher', resource_path('locale'), languages=['en'], fallback=True
-    )
-    translate.install()
-    
-    language_warning = 'Temporarily disabling language detection'
+    try:
+        if lc[0] is None:
+            lc = os.getenv('LANG')[:4]
+        else:
+            lang = lc[0]
+    except:
+        try:
+            # try the Apple way
+            from Foundation import NSUserDefaults
+
+            defaults = NSUserDefaults.standardUserDefaults()
+            globalDomain = defaults.persistentDomainForName_("NSGlobalDomain")
+            languages = globalDomain.objectForKey_("AppleLanguages")
+
+            # just take the first one
+            lang = languages[0]
+        except Exception as e:
+            language_warning = 'Could not detect system language, defaulting to English'
+            lang = 'en'
+
+    try:
+        translate = gettext.translation(
+            'pdfstitcher', resource_path('locale'), languages=[lang], fallback=False
+        )
+        translate.install()
+    except:
+        # try just the first two letters
+        try:
+            translate = gettext.translation(
+                'pdfstitcher', resource_path('locale'), languages=[lang[:2]], fallback=True
+            )
+            translate.install()
+        except Exception as e:
+            language_warning = e
+
     return language_warning
-
-    # lc = locale.getdefaultlocale()
-
-    # try:
-    #     lang = lc[0]
-    # except:
-    #     try:
-    #         # try the Apple way
-    #         from Foundation import NSUserDefaults
-
-    #         defaults = NSUserDefaults.standardUserDefaults()
-    #         globalDomain = defaults.persistentDomainForName_("NSGlobalDomain")
-    #         languages = globalDomain.objectForKey_("AppleLanguages")
-
-    #         # just take the first one
-    #         lang = languages[0]
-    #     except:
-    #         language_warning = 'Could not detect system language, defaulting to English'
-    #         lang = 'en'
-
-    # try:
-    #     translate = gettext.translation(
-    #         'pdfstitcher', resource_path('locale'), languages=[lang], fallback=False
-    #     )
-    #     translate.install()
-    # except:
-    #     # try just the first two letters
-    #     try:
-    #         translate = gettext.translation(
-    #             'pdfstitcher', resource_path('locale'), languages=[lang[:2]], fallback=True
-    #         )
-    #         translate.install()
-    #     except Exception as e:
-    #         global _
-
-    #         def _(text):
-    #             return text
-
-    #         language_warning = e
-
-    # return language_warning
 
 
 def txt_to_float(txt):
