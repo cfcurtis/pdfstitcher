@@ -1076,13 +1076,13 @@ class SewGUI(wx.Frame):
             try:
                 if pdf_has_password:
                     password_dialog = wx.PasswordEntryDialog(
-                        self, _("Password"), _("PDF file is locked!"), "")
+                        self, _("Password"), _("PDF file is locked"), "")
                     if password_dialog.ShowModal() == wx.ID_OK:
                         password = password_dialog.GetValue()
                         password_dialog.Destroy()
                     else:
                         wx.LogError(
-                            _("PDF will not open as you canceled the operation!"))
+                            _("PDF will not open as you canceled the operation."))
                         password_dialog.Destroy()
                         break
 
@@ -1095,6 +1095,7 @@ class SewGUI(wx.Frame):
                 self.layer_filter = LayerFilter(self.in_doc)
                 self.lt.load_new(
                     self.layer_filter.get_layer_names(self.layer_filter.pdf)
+                )
 
                 self.tiler = PageTiler()
 
@@ -1109,7 +1110,7 @@ class SewGUI(wx.Frame):
                 wx.LogError(_("Cannot open file") + pathname)
 
             else:
-                print(_("PDF file loaded without errors!"))
+                print(_("PDF file loaded without errors."))
                 break
 
 def main():
