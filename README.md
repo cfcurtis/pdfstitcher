@@ -12,6 +12,10 @@ For up-to-date information, also check out https://www.pdfstitcher.org.
 * Using pip: `pip install pdfstitcher` **Note: Requires Python <= 3.9.10**. As of February 2022, there is no wheel available for wxPython for 3.10.
 
 ## Translations:
+
+<a href="https://hosted.weblate.org/engage/pdfstitcher/">
+<img src="https://hosted.weblate.org/widgets/pdfstitcher/-/287x66-grey.png" alt="Translation status" /></a>
+
 PDFStitcher will detect system language settings and change localisation if supported. 
 
 Previous versions can be found by clicking on the "releases" link to the right.
