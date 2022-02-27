@@ -247,20 +247,30 @@ class PageTiler:
             if p > 0:
                 pagekey = f'/Page{p}'
 
+                # Check if it's already been copied (in case of duplicate page numbers)
                 if content_dict is None or pagekey not in content_dict.keys():
-                    # pikepdf.pages is zero indexed, so subtract one
-                    input_page = self.in_doc.pages[p - 1]
+                    # get a reference to the input document page. DO NOT MODIFY.
+                    in_doc_page = self.in_doc.pages[p - 1]
 
-                    if '/Rotate' in input_page.keys():
-                        page_rot = input_page.Rotate
+                    if content_dict is not None:
+                        content_dict[pagekey] = new_doc.copy_foreign(
+                            in_doc_page.as_form_xobject()
+                        )
+                        new_page = content_dict[pagekey]
+                    else:
+                        new_doc.pages.append(in_doc_page)
+                        new_page = new_doc.pages[-1]
+
+                    if '/Rotate' in in_doc_page.keys():
+                        page_rot = in_doc_page.Rotate
 
                     if self.override_trim:
-                        input_page.TrimBox = copy.copy(input_page.MediaBox)
+                        new_page.TrimBox = copy.copy(in_doc_page.MediaBox)
 
                     # set the trim box to cut off content if requested
                     if self.actually_trim:
-                        if '/TrimBox' not in input_page.keys():
-                            input_page.TrimBox = copy.copy(input_page.MediaBox)
+                        if '/TrimBox' not in new_page.keys():
+                            new_page.TrimBox = copy.copy(in_doc_page.MediaBox)
 
                         # things get tricky if there's rotation, because the user sees top/bottom as right/left
                         # trim: left, right, top, bottom as defined visually
@@ -274,18 +284,13 @@ class PageTiler:
                         elif page_rot in (-90, 270):
                             rtrim = [trim[3], trim[1], trim[2], trim[0]]
 
-                        input_page.TrimBox[0] = float(input_page.TrimBox[0]) + rtrim[0]
-                        input_page.TrimBox[1] = float(input_page.TrimBox[1]) + rtrim[1]
-                        input_page.TrimBox[2] = float(input_page.TrimBox[2]) - rtrim[2]
-                        input_page.TrimBox[3] = float(input_page.TrimBox[3]) - rtrim[3]
+                        new_page.TrimBox[0] = float(in_doc_page.TrimBox[0]) + rtrim[0]
+                        new_page.TrimBox[1] = float(in_doc_page.TrimBox[1]) + rtrim[1]
+                        new_page.TrimBox[2] = float(in_doc_page.TrimBox[2]) - rtrim[2]
+                        new_page.TrimBox[3] = float(in_doc_page.TrimBox[3]) - rtrim[3]
 
-                    if content_dict is not None:
-                        content_dict[pagekey] = new_doc.copy_foreign(
-                            input_page.as_form_xobject()
-                        )
-
-                # get the local page height and width
-                p_width, p_height = utils.get_page_dims(input_page, page_rot)
+                # get the input page height and width
+                p_width, p_height = utils.get_page_dims(in_doc_page, page_rot)
                 pw.append(p_width)
                 ph.append(p_height)
                 page_names.append(pagekey)
@@ -296,7 +301,6 @@ class PageTiler:
                 # update the reference handles to be the current page
                 ref_width = p_width
                 ref_height = p_height
-                ref_page = input_page
 
             else:
                 # blank page, use the reference for sizes and such
@@ -438,10 +442,9 @@ class PageTiler:
         )
 
         if content_dict is None:
-            input_page.MediaBox = media_box
-            input_page.CropBox = media_box
-            new_doc.pages.append(input_page)
-
+            # just expand the margins and return
+            new_page.MediaBox = media_box
+            new_page.CropBox = media_box
             return new_doc
 
         i = 0
@@ -563,16 +566,16 @@ class PageTiler:
                 )
             )
 
-        newpage = pikepdf.Dictionary(
+        tiled_page = pikepdf.Dictionary(
             Type=pikepdf.Name.Page,
             MediaBox=media_box,
             Resources=pikepdf.Dictionary(XObject=content_dict),
             Contents=pikepdf.Stream(new_doc, content_txt.encode()),
         )
         if user_unit != 1:
-            newpage.UserUnit = user_unit
+            tiled_page.UserUnit = user_unit
 
-        new_doc.pages.append(newpage)
+        new_doc.pages.append(tiled_page)
 
         return new_doc
 
