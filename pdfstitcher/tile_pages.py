@@ -269,7 +269,8 @@ class PageTiler:
 
                     # set the trim box to cut off content if requested
                     if self.actually_trim:
-                        if '/TrimBox' not in new_page.keys():
+                        if '/TrimBox' not in in_doc_page.keys():
+                            in_doc_page.TrimBox = copy.copy(in_doc_page.MediaBox)
                             new_page.TrimBox = copy.copy(in_doc_page.MediaBox)
 
                         # things get tricky if there's rotation, because the user sees top/bottom as right/left
