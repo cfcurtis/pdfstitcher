@@ -16,7 +16,7 @@ import os
 import sys
 import pikepdf
 from pdfstitcher import utils
-import ctypes
+import traceback
 
 # Constant widget sizes - used for all the different panels
 BORDER = 5
@@ -857,9 +857,9 @@ class SewGUI(wx.Frame):
             self.io.output_fname_display.SetLabel(sys.argv[2])
 
     def reset_sash_position(self):
-        # Sets the output panel to occupy just 1/4 of the height
+        # Sets the output panel to occupy just 1/3 of the height
         # Needs to be called after construction for high DPI display.
-        self.splitter.SetSashPosition(self.Size[1] * 3 // 4)
+        self.splitter.SetSashPosition(self.Size[1] * 2 // 3)
 
     def page_range_updated(self, event):
         if event.GetId() == self.io.page_range_txt.GetId():
@@ -971,8 +971,8 @@ class SewGUI(wx.Frame):
 
         except Exception as e:
             print(_('Something went wrong'))
-            print(_('Exception') + ':')
-            print(e)
+            traceback.print_exc()
+            return
 
         try:
             new_doc.save(self.out_doc_path)
