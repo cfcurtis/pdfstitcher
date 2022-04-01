@@ -76,10 +76,20 @@ class LayerFilter:
 
     @staticmethod
     def get_layer_names(doc):
-        # reads through the root to parse out the layers present in the file
-        if '/OCProperties' not in doc.Root.keys():
+        """
+        reads through the root to parse out the layers present in the file.
+        
+        Args:
+            doc (pikepdf.Document): the document to parse
+        
+        Returns:
+            list: a list of layer names, or None if there are no layers
+        """
+        if '/OCProperties' in doc.Root.keys() and '/OCGs' in doc.Root.OCProperties.keys():
+            ocp = doc.Root.OCProperties
+        else:
             return None
-        ocp = doc.Root.OCProperties
+            
         names = [str(oc.Name) for oc in ocp.OCGs]
         ordered_names = []
         if '/D' in ocp.keys() and '/Order' in ocp.D.keys():

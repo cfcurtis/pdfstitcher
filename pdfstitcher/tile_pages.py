@@ -251,15 +251,7 @@ class PageTiler:
                 if content_dict is None or pagekey not in content_dict.keys():
                     # get a reference to the input document page. DO NOT MODIFY.
                     in_doc_page = self.in_doc.pages[p - 1]
-
-                    if content_dict is not None:
-                        content_dict[pagekey] = new_doc.copy_foreign(
-                            in_doc_page.as_form_xobject()
-                        )
-                        new_page = content_dict[pagekey]
-                    else:
-                        new_doc.pages.append(in_doc_page)
-                        new_page = new_doc.pages[-1]
+                    new_page = copy.copy(in_doc_page)
 
                     if '/Rotate' in in_doc_page.keys():
                         page_rot = in_doc_page.Rotate
@@ -269,9 +261,6 @@ class PageTiler:
 
                     # set the trim box to cut off content if requested
                     if self.actually_trim:
-                        if '/TrimBox' not in new_page.keys():
-                            new_page.TrimBox = copy.copy(in_doc_page.MediaBox)
-
                         # things get tricky if there's rotation, because the user sees top/bottom as right/left
                         # trim: left, right, top, bottom as defined visually
                         # trimbox: left, bottom, right, top (absolute coordinates)
@@ -283,12 +272,13 @@ class PageTiler:
                             rtrim = [trim[3], trim[0], trim[2], trim[1]]
                         elif page_rot in (-90, 270):
                             rtrim = [trim[3], trim[1], trim[2], trim[0]]
-
-                        new_page.TrimBox[0] = float(in_doc_page.TrimBox[0]) + rtrim[0]
-                        new_page.TrimBox[1] = float(in_doc_page.TrimBox[1]) + rtrim[1]
-                        new_page.TrimBox[2] = float(in_doc_page.TrimBox[2]) - rtrim[2]
-                        new_page.TrimBox[3] = float(in_doc_page.TrimBox[3]) - rtrim[3]
-
+                        
+                        # lowercase trimbox returns TrimBox if it exists, MediaBox otherwise
+                        in_trim = [float(t) for t in in_doc_page.trimbox]
+                        new_page.TrimBox = [in_trim[0] + rtrim[0],
+                                            in_trim[1] + rtrim[1],
+                                            in_trim[2] - rtrim[2],
+                                            in_trim[3] - rtrim[3]]
                 # get the input page height and width
                 p_width, p_height = utils.get_page_dims(in_doc_page, page_rot)
                 pw.append(p_width)
@@ -301,6 +291,14 @@ class PageTiler:
                 # update the reference handles to be the current page
                 ref_width = p_width
                 ref_height = p_height
+                
+                if content_dict is not None:
+                    content_dict[pagekey] = new_doc.copy_foreign(
+                        new_page.as_form_xobject()
+                    )
+                else:
+                    new_doc.pages.append(new_page)
+                    new_page = new_doc.pages[-1]
 
             else:
                 # blank page, use the reference for sizes and such
