@@ -1,12 +1,10 @@
 import sys
 from pathlib import Path
-root = Path(__file__).parent.parent.absolute() 
-sys.path.append(str(root / 'pdfstitcher'))
 
-from layerfilter import LayerFilter
-from tile_pages import PageTiler
-from pagefilter import PageFilter
-import utils
+from pdfstitcher.layerfilter import LayerFilter
+from pdfstitcher.tile_pages import PageTiler
+from pdfstitcher.pagefilter import PageFilter
+import pdfstitcher.utils as utils
 import pikepdf
 import time
 import yaml
@@ -38,16 +36,15 @@ if __name__ == "__main__":
 
     total_start = time.time()
     for t in test_opts:
-        if not sys.platform.startswith('win32'):
-            if sys.platform.startswith('darwin'):
-                gdrive = '/Users/cfcurtis/Google Drive'
-            elif sys.platform.startswith('linux'):
-                gdrive = '/home/charlotte/Documents'
+        if sys.platform.startswith('win32'):
+            gdrive = 'D:/My Drive/'
+        elif sys.platform.startswith('darwin'):
+            gdrive = '/Users/cfcurtis/Google Drive'
+        elif sys.platform.startswith('linux'):
+            gdrive = '/home/charlotte/Documents'
 
-            t['input'] = t['input'].replace(
-                r'C:\Users\cfcur\My Drive (c.f.curtis@gmail.com)', gdrive
-            )
-            t['input'] = t['input'].replace('\\', '/')
+        t['input'] = t['input'].replace('{gdrive}', gdrive)
+        t['input'] = t['input'].replace('\\', '/')
 
         if 'layer_filter' in t.keys():
             keep_non_oc_opts = [True, False]
