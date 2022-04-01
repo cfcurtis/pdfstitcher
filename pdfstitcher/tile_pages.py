@@ -15,6 +15,8 @@ import copy
 import pdfstitcher.utils as utils
 
 
+MAX_SIZE_PX = 14400
+
 class SW_UNITS(IntEnum):
     INCHES = 0
     CENTIMETERS = 1
@@ -409,24 +411,28 @@ class PageTiler:
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
         margin = self.units_to_px(self.margin / user_unit)
 
-        if content_dict is None:
+        if content_dict is None:        
             media_box = [
-                -(margin - trim[0]),
-                -(margin - trim[3]),
-                width + margin,
-                height + margin,
+                new_page.MediaBox[0] - (margin - trim[0]),
+                new_page.MediaBox[1] -(margin - trim[3]),
+                new_page.MediaBox[0] + width + margin,
+                new_page.MediaBox[1] + height + margin,
             ]
         else:
-            media_box = [0, 0, width + 2 * margin, height + 2 * margin]
+            media_box = [
+                new_page.MediaBox[0], 
+                new_page.MediaBox[1], 
+                width + 2 * margin, 
+                height + 2 * margin
+            ]
 
         # check if it exceeds Adobe's 200 inch maximum size
-        max_size_px = 14400
-        if media_box[2] > max_size_px or media_box[3] > max_size_px:
+        if media_box[2] > MAX_SIZE_PX or media_box[3] > MAX_SIZE_PX:
             print(62 * '*')
             print(
                 _(
                     'Warning! Output is larger than {} {}, may not open correctly.'
-                ).format(round(self.px_to_units(max_size_px)), unitstr)
+                ).format(round(self.px_to_units(MAX_SIZE_PX)), unitstr)
             )
             print(62 * '*')
 
