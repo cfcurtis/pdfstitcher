@@ -20,7 +20,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      
+        
+      - name: Update package index
+        run: sudo apt-get update
       - name: Install wxPython dependencies
         # list of packages from https://github.com/wxWidgets/Phoenix/
         run: |
