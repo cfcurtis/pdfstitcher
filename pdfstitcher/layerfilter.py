@@ -74,19 +74,15 @@ class LayerFilter:
             else:
                 LayerFilter._search_names(ordered_names, o, depth=depth + 1)
 
-    @staticmethod
-    def get_layer_names(doc):
+    def get_layer_names(self):
         """
         reads through the root to parse out the layers present in the file.
-        
-        Args:
-            doc (pikepdf.Document): the document to parse
-        
+
         Returns:
             list: a list of layer names, or None if there are no layers
         """
-        if '/OCProperties' in doc.Root.keys() and '/OCGs' in doc.Root.OCProperties.keys():
-            ocp = doc.Root.OCProperties
+        if '/OCProperties' in self.pdf.Root.keys() and '/OCGs' in self.pdf.Root.OCProperties.keys():
+            ocp = self.pdf.Root.OCProperties
         else:
             return None
             
@@ -100,32 +96,79 @@ class LayerFilter:
                 ordered_names.append(real_n)
         return ordered_names
 
-    def filter_ocg_order(self, input):
-        if input._type_name == 'array':
-            # create a copy of the array and filter the items
-            output = pikepdf.Array([])
-            for item in input:
-                f_item = self.filter_ocg_order(item)
-                if f_item is not None:
-                    output.append(f_item)
+    def filter_ocg_order(self, ocg_list=None):
+        """
+        Recursively filters the ocg list to only include those in the keep_ocs list.
+        """
+        if ocg_list is None:
+            ocg_list = self.out_pdf.Root.OCProperties.D.Order
+        
+        if ocg_list._type_name == 'array':
+            for item in ocg_list:
+                self.filter_ocg_order(item)
 
-            return output
-
-        elif input._type_name == 'dictionary':
-            if '/Type' in input.keys():
-                if input.Type == pikepdf.Name.OCG:
+        elif ocg_list._type_name == 'dictionary':
+            if '/Type' in ocg_list.keys():
+                if ocg_list.Type == pikepdf.Name.OCG and ocg_list.Name not in self.keep_ocs:
                     # found the OCG entry, delete it if it's not in our keep array
-                    if any([input.Name == oc for oc in self.keep_ocs]):
-                        return input
-                    else:
-                        return None
+                    del ocg_list
+
+    def update_ocs(self):
+        """
+        Updates the OCProperties dictionary to only include the layers we want.
+        """
+        if self.keep_ocs == 'all':
+            return
+
+        # edit the OCG listing in the root
+        On = [
+            oc
+            for oc in self.out_pdf.Root.OCProperties.OCGs
+            if str(oc.Name) in self.keep_ocs
+        ]
+        Off = [
+            oc
+            for oc in self.out_pdf.Root.OCProperties.OCGs
+            if str(oc.Name) not in self.keep_ocs
+        ]
+
+        # Delete requires parsing
+        if self.delete_ocgs:
+            for o in Off:
+                self.off_ocs.append(o.Name)
+            self.out_pdf.Root.OCProperties.OCGs = On
+            self.out_pdf.Root.OCProperties.D.ON = On
+            self.filter_ocg_order()
         else:
-            return input
+            # just switch them off
+            self.out_pdf.Root.OCProperties.D.ON = On
+            self.out_pdf.Root.OCProperties.D.OFF = Off
+        
+        # by default, unlock all layers
+        self.out_pdf.Root.OCProperties.D.Locked = []
+    
+    def process_page_range(self):
+        """
+        Convert the page range into a 1-indexed unique set.
+        Defaults to all pages if nothing entered.
+        """
+        if len(self.page_range) == 0:
+            return list(range(1, len(self.out_pdf.pages) + 1))
+        else:
+            # get rid of duplicates and zeros in the page range
+            return list(set([p for p in self.page_range if p > 0]))
+        
 
     def run(
-        self, progress_range=None, progress_update=None, progress_was_cancelled=None
+        self, set_progress_range=None, update_progress=None, progress_was_cancelled=None
     ):
-        self.found_objects = set()
+        """
+        The primary method to run the filter.
+        If called from pdfstitcher.py, the progress window will be updated.
+        Returns:
+            pikepdf.Pdf: the filtered PDF
+        """
+        self.processed_objects = set()
 
         if '/OCProperties' not in self.pdf.Root.keys():
             return self.pdf
@@ -133,76 +176,43 @@ class LayerFilter:
         if self.keep_ocs == 'all' and len(self.line_props) == 0:
             return self.pdf
 
-        if self.keep_ocs is None and self.keep_non_oc == False:
+        if len(self.keep_ocs) == 0 and self.keep_non_oc == False:
             print(_('No layers selected, generated PDF would be blank.'))
             return self.pdf
 
         self.off_ocs = []
 
         # open a new copy of the input
-        output = pikepdf.Pdf.open(self.pdf.filename)
-        self.colour_type = None
-
-        if len(self.page_range) == 0:
-            # human input page range is 1-indexed
-            page_range = range(1, len(output.pages) + 1)
-        else:
-            # get rid of duplicates and zeros in the page range
-            page_range = list(set([p for p in self.page_range if p > 0]))
-
+        self.out_pdf = pikepdf.Pdf.open(self.pdf.filename)
+        page_range = self.process_page_range()
         n_page = len(page_range)
-        progress_range and progress_range(n_page)  # don't run if the callback is None
 
-        parse_streams = False
-        if self.keep_ocs != 'all':
-            # edit the OCG listing in the root
-            On = [
-                oc
-                for oc in output.Root.OCProperties.OCGs
-                if str(oc.Name) in self.keep_ocs
-            ]
-            Off = [
-                oc
-                for oc in output.Root.OCProperties.OCGs
-                if str(oc.Name) not in self.keep_ocs
-            ]
+        # initialize the progress window
+        set_progress_range and set_progress_range(n_page)  # don't run if the callback is None
 
-            if self.delete_ocgs:
-                parse_streams = True
-                for o in Off:
-                    self.off_ocs.append(o.Name)
-                output.Root.OCProperties.OCGs = On
-                output.Root.OCProperties.D.ON = On
-                output.Root.OCProperties.D.Order = self.filter_ocg_order(
-                    output.Root.OCProperties.D.Order
-                )
-            else:
-                output.Root.OCProperties.D.ON = On
-                output.Root.OCProperties.D.OFF = Off
+        # update the OC dictionaries
+        self.update_ocs()
+        parse_streams = self.delete_ocgs and self.keep_ocs != 'all'
 
+        # TODO: actually detect colour space
+        self.colour_type = 'RG'
         if self.line_props != {}:
             self.convert_layer_props()
-            # TODO: actually detect colour space
-            self.colour_type = 'RG'
             parse_streams = True
 
+        # Either deleting content or modifying line properties requires parsing streams
         if parse_streams:
             for p in page_range:
-                page_stream = self.filter_content(output.pages[p - 1])
-                if page_stream is not None:
-                    output.pages[p - 1].Contents = output.make_stream(page_stream)
-
-                progress_update and progress_update(page_range.index(p))
+                self.filter_content(self.out_pdf.pages[p - 1])
+                # update the progress bar for each page, then check if user cancelled
+                update_progress and update_progress(page_range.index(p))
                 if progress_was_cancelled and progress_was_cancelled():
                     return None
 
-        progress_update and progress_update(n_page)
-
-        # by default, unlock all layers
-        output.Root.OCProperties.D.Locked = []
-        output.remove_unreferenced_resources()
-
-        return output
+        # done, update progress and strip out unused stuff
+        update_progress and update_progress(n_page)
+        self.out_pdf.remove_unreferenced_resources()
+        return self.out_pdf
 
     def convert_layer_props(self):
         # convert the line properties from the GUI to what the PDF needs
@@ -265,6 +275,18 @@ class LayerFilter:
             commands.append((operands, pikepdf.Operator(op)))
 
     def filter_stream(self, ob, page_props, oc_forms, in_oc):
+        """
+        Filters the stream itself (page or form)
+
+        Args:
+            ob (Pikepdf object): The object to filter
+            page_props (pikepdf dictionary): object property dictionary
+            oc_forms (_type_): _description_
+            in_oc (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         previous_operator = ''
         commands = []
         placed_forms = {}
@@ -339,11 +361,22 @@ class LayerFilter:
         return commands, placed_forms
 
     def filter_content(self, page, in_oc=False):
+        """
+        Perform the actual filtering of a page.
+
+        Args:
+            page (_type_): pdf page object
+            in_oc (bool, optional): True if we're currently "in" an optional content block. Defaults to False.
+
+        Returns:
+            bstr: The filtered page stream
+        """
+        # First check the id of the page and don't re-filter if we've seen it before
         obid = page.unparse()
-        if obid in self.found_objects:
+        if obid in self.processed_objects:
             return
         else:
-            self.found_objects.add(obid)
+            self.processed_objects.add(obid)
 
         self.initialize_state()
         page_props = {}
@@ -369,64 +402,51 @@ class LayerFilter:
         # try going through the list of other forms and processing those.
         # Useful for the situation where someone is re-running PDFStitcher.
         for ob in other_forms:
-            form_stream = self.filter_content(ob)
-            if form_stream is not None:
-                ob.write(form_stream)
+            self.filter_content(ob)
 
         if not in_oc and not page_props and not oc_forms:
-            return None
+            return
 
-        try:
-            if oc_forms is None:
-                do_filter = False
-                for operands, _ in pikepdf.parse_content_stream(page, "BDC"):
-                    if len(operands) > 1 and str(operands[0]) == "/OC":
-                        do_filter = True
-                        break
+        if oc_forms is None:
+            do_filter = False
+            for operands, _ in pikepdf.parse_content_stream(page, "BDC"):
+                if len(operands) > 1 and str(operands[0]) == "/OC":
+                    do_filter = True
+                    break
+        else:
+            do_filter = True
+            
+        # initialize empty stream, then try to filter
+        page_stream = None
+        if do_filter:
+            commands, placed_forms = self.filter_stream(
+                page, page_props, oc_forms, in_oc
+            )
+            if commands:
+                page_stream = pikepdf.unparse_content_stream(commands)
+        # if we're not filtering and not keeping non-optional content, obliterate the stream
+        elif not self.keep_non_oc:
+            page.write(b'')
+
+        # loop through the form xobjects and delete or filter as needed
+        if '/XObject' in page.Resources:
+            for key, ob in page.Resources.XObject.items():
+                if key in placed_forms.keys():
+                    if '/Subtype' in ob.keys() and ob.Subtype == '/Form':
+                        self.current_layer_name = placed_forms[key]['layer']
+                        saved_state = copy.copy(self.current_state)
+                        self.current_state = placed_forms[key]['state']
+                        self.filter_content(ob, in_oc=True)
+                        self.current_state = saved_state
+                        self.current_layer_name = ''
+                    elif '/Subtype' in ob.keys() and ob.Subtype == '/PS':
+                        print('Postscript XObject detected, not currently handled.')
+                else:
+                    del page.Resources.XObject[key]
+
+        # finally, write the stream
+        if page_stream is not None:
+            if isinstance(page, pikepdf.Page):
+                page.Contents = self.out_pdf.make_stream(page_stream)
             else:
-                do_filter = True
-
-            if do_filter:
-                commands, placed_forms = self.filter_stream(
-                    page, page_props, oc_forms, in_oc
-                )
-                if commands:
-                    page_stream = pikepdf.unparse_content_stream(commands)
-            elif not self.keep_non_oc:
-                page_stream = b''
-
-            # loop through the form xobjects and delete or filter as needed
-            if '/XObject' in page.Resources:
-                for key, ob in page.Resources.XObject.items():
-                    if key in placed_forms.keys():
-                        if '/Subtype' in ob.keys() and ob.Subtype == '/Form':
-                            self.current_layer_name = placed_forms[key]['layer']
-                            saved_state = copy.copy(self.current_state)
-                            self.current_state = placed_forms[key]['state']
-                            form_stream = self.filter_content(ob, in_oc=True)
-                            if form_stream is not None:
-                                ob.write(form_stream)
-                            self.current_state = saved_state
-                            self.current_layer_name = ''
-                        elif '/Subtype' in ob.keys() and ob.Subtype == '/PS':
-                            print('Postscript XObject detected, not currently handled.')
-                    else:
-                        del page.Resources.XObject[key]
-
-            return page_stream
-
-        except AttributeError:
-            traceback.print_exc()
-            ignore = 1
-        except ValueError:
-            traceback.print_exc()
-            ignore = 1
-        except NameError:
-            traceback.print_exc()
-            ignore = 1
-        except Exception:
-            traceback.print_exc()
-            # print("couldn't open stream ", sys.exc_info()[0] )
-            print("couldn't open stream")
-            # ignore - probably not a content stream. Print an error when debugging
-            # ignore = 1
+                page.write(page_stream)

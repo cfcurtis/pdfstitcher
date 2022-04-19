@@ -792,9 +792,6 @@ class LayersTab(scrolled.ScrolledPanel):
         if n_layers == len(selected) and len(self.line_props) == 0:
             return 'all'
 
-        if len(selected) == 0:
-            return None
-
         return selected
 
 
@@ -802,7 +799,7 @@ class SewGUI(wx.Frame):
     def __init__(self, *args, **kw):
         # ensure the parent's __init__ is called
         super(SewGUI, self).__init__(*args, **kw)
-        self.progress = None
+        self.progress_win = None
 
         # split the bottom half from the notebook top
         self.splitter = wx.SplitterWindow(self, style=wx.SP_LIVE_UPDATE)
@@ -940,21 +937,21 @@ class SewGUI(wx.Frame):
         # do it
         try:
             if do_layers:
-                self.progress = wx.ProgressDialog(
+                self.progress_win = wx.ProgressDialog(
                     'Processing layers',
                     'Processing layers, please wait',
                     style=wx.PD_CAN_ABORT,
                 )
                 filtered = self.layer_filter.run(
-                    self.progress_range,
-                    self.progress_update,
+                    self.set_progress_range,
+                    self.update_progress,
                     self.progress_was_cancelled,
                 )
             else:
                 filtered = self.in_doc
 
-            if self.progress:
-                self.progress_update(self.progress.GetRange())
+            if self.progress_win:
+                self.update_progress(self.progress_win.GetRange())
 
             if filtered is None:
                 return
@@ -989,21 +986,22 @@ class SewGUI(wx.Frame):
             )
 
     def progress_was_cancelled(self):
-        if self.progress != None:
-            return self.progress.WasCancelled()
+        if self.progress_win != None:
+            return self.progress_win.WasCancelled()
 
-    def progress_update(self, val):
-        if self.progress != None:
-            r = self.progress.GetRange()
-            if r:
-                if val == r:
-                    self.progress = None
+    def update_progress(self, val):
+        if self.progress_win != None:
+            p_range = self.progress_win.GetRange()
+            if p_range:
+                if val == p_range:
+                    # Hit the max, we're done
+                    self.progress_win = None
                 else:
-                    self.progress.Update(val)
+                    self.progress_win.Update(val)
 
-    def progress_range(self, val):
-        if self.progress != None:
-            self.progress.SetRange(val)
+    def set_progress_range(self, val):
+        if self.progress_win != None:
+            self.progress_win.SetRange(val)
 
     def make_menu_bar(self):
         # Make a file menu with load and exit items
