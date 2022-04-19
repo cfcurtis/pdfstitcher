@@ -413,10 +413,10 @@ class PageTiler:
 
         if content_dict is None:        
             media_box = [
-                new_page.MediaBox[0] - (margin - trim[0]),
-                new_page.MediaBox[1] -(margin - trim[3]),
-                new_page.MediaBox[0] + width + margin,
-                new_page.MediaBox[1] + height + margin,
+                float(new_page.MediaBox[0]) - (margin - trim[0]),
+                float(new_page.MediaBox[1]) - (margin - trim[3]),
+                float(new_page.MediaBox[0]) + width + margin,
+                float(new_page.MediaBox[1]) + height + margin,
             ]
         else:
             media_box = [
