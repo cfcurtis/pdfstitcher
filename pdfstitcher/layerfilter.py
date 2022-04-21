@@ -100,18 +100,29 @@ class LayerFilter:
         """
         Recursively filters the ocg list to only include those in the keep_ocs list.
         """
+
         if ocg_list is None:
             ocg_list = self.out_pdf.Root.OCProperties.D.Order
         
         if ocg_list._type_name == 'array':
-            for item in ocg_list:
-                self.filter_ocg_order(item)
+            to_delete = []
+            for i, item in enumerate(ocg_list):
+                if self.filter_ocg_order(item):
+                    to_delete.append(i)
+            
+            # delete the items in reverse order so we don't mess up the indices
+            for i in reversed(to_delete):
+                del ocg_list[i]
+            
+            return len(ocg_list) == 0
 
         elif ocg_list._type_name == 'dictionary':
             if '/Type' in ocg_list.keys():
                 if ocg_list.Type == pikepdf.Name.OCG and ocg_list.Name not in self.keep_ocs:
                     # found the OCG entry, delete it if it's not in our keep array
-                    del ocg_list
+                    return True
+        
+        return False
 
     def update_ocs(self):
         """
