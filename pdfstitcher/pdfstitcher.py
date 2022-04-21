@@ -1090,10 +1090,16 @@ class SewGUI(wx.Frame):
                     self.lt.Disable()
                     self.io.do_layers.SetValue(0)
                     self.io.do_layers.Disable()
+                else:
+                    self.io.do_layers.SetValue(1)
+                    self.io.do_layers.Enable()
 
                 # only enable tiling if there are more than one page
                 if len(self.in_doc.pages) > 1:
                     self.tiler = PageTiler()
+                    self.io.do_tile.SetValue(1)
+                    self.io.do_tile.Enable()
+                    self.tt.Enable()
                 else:
                     self.io.do_tile.SetValue(0)
                     self.io.do_tile.Disable()
