@@ -111,6 +111,17 @@ class IOTab(scrolled.ScrolledPanel):
             newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
         )
 
+        # Unit selection
+        unit_opts = [_('Inches'), _('Centimetres')]
+        self.unit_box = wx.RadioBox(
+            self, label=_('Units'), choices=unit_opts, style=wx.RA_SPECIFY_COLS
+        )
+        vert_sizer.Add(
+            self.unit_box,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(BORDER * 2),
+        )
+
         # checklist of features to enable/disable
         self.do_layers = wx.CheckBox(self, label=_('Process Layers'))
         self.do_layers.SetValue(1)
@@ -168,7 +179,8 @@ class IOTab(scrolled.ScrolledPanel):
 
         if not do_tile and not do_layers:
             self.output_description.SetLabel(
-                _('Open the PDF and save selected page range without modifying')
+                _('Open the PDF and save selected page range without modifying') +
+                '\n' + _('Optionally, add margins to each page')
             )
 
 
@@ -327,17 +339,6 @@ class TileTab(scrolled.ScrolledPanel):
         lbl.SetFont(lbl.GetFont().Bold())
         vert_sizer.Add(
             lbl, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
-        )
-
-        # unit selection
-        unit_opts = [_('Inches'), _('Centimetres')]
-        self.unit_box = wx.RadioBox(
-            self, label=_('Units'), choices=unit_opts, style=wx.RA_SPECIFY_COLS
-        )
-        vert_sizer.Add(
-            self.unit_box,
-            flag=wx.TOP | wx.LEFT | wx.RIGHT,
-            border=self.FromDIP(BORDER * 2),
         )
 
         # override trimbox - sometimes needed for wonky PDFs
@@ -746,7 +747,7 @@ class LayersTab(scrolled.ScrolledPanel):
         if not layers:
             self.layer_splitter.Hide()
             self.status_txt.SetLabel(_('No layers found in input document.'))
-            return
+            return False
 
         self.layer_list.DeleteAllItems()
         for i, l in enumerate(layers):
@@ -759,6 +760,7 @@ class LayersTab(scrolled.ScrolledPanel):
         self.status_txt.SetLabel(_('Select layers to include in output document.'))
         self.layer_splitter.Show()
         self.Layout()
+        return True
 
     def set_all_checked(self, select=True):
         self.select_all.SetValue(select)
@@ -880,6 +882,7 @@ class SewGUI(wx.Frame):
 
         # global options
         page_range = utils.parse_page_range(self.io.page_range_txt.GetValue())
+        utils.layout_units = utils.UNITS(self.io.unit_box.GetSelection())
 
         if page_range is None:
             print(_('No page range specified, defaulting to all'))
@@ -904,7 +907,6 @@ class SewGUI(wx.Frame):
             self.tiler.page_range = page_range
 
             # set the optional stuff
-            utils.layout_units = utils.UNITS(self.tt.unit_box.GetSelection())
             self.tiler.rotation = self.tt.rotate_combo.GetSelection()
 
             # margins
@@ -956,6 +958,7 @@ class SewGUI(wx.Frame):
                 # extract the requested pages
                 page_filter = PageFilter(filtered)
                 page_filter.page_range = page_range
+                page_filter.margin = utils.txt_to_float(self.io.margin_txt.GetValue())
                 new_doc = page_filter.run()
 
         except Exception as e:
@@ -1083,9 +1086,18 @@ class SewGUI(wx.Frame):
 
                 # create the processing objects
                 self.layer_filter = LayerFilter(self.in_doc)
-                self.lt.load_new(self.layer_filter.get_layer_names())
+                if not self.lt.load_new(self.layer_filter.get_layer_names()):
+                    self.lt.Disable()
+                    self.io.do_layers.SetValue(0)
+                    self.io.do_layers.Disable()
 
-                self.tiler = PageTiler()
+                # only enable tiling if there are more than one page
+                if len(self.in_doc.pages) > 1:
+                    self.tiler = PageTiler()
+                else:
+                    self.io.do_tile.SetValue(0)
+                    self.io.do_tile.Disable()
+                    self.tt.Disable()
 
                 # clear the output if it's already set
                 self.out_doc_path = None

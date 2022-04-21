@@ -186,11 +186,8 @@ class PageTiler:
         # initialize a new document
         new_doc = utils.init_new_doc(self.in_doc)
 
-        # define the dictionary to store xobjects, unless we're just trimming/adding margins to one page
-        if len(self.page_range) > 1:
-            content_dict = pikepdf.Dictionary({})
-        else:
-            content_dict = None
+        # define the dictionary to store xobjects
+        content_dict = pikepdf.Dictionary({})
 
         page_names = []
         pw = []
@@ -228,7 +225,7 @@ class PageTiler:
                 pagekey = f'/Page{p}'
 
                 # Check if it's already been copied (in case of duplicate page numbers)
-                if content_dict is None or pagekey not in content_dict.keys():
+                if pagekey not in content_dict.keys():
                     # get a reference to the input document page. DO NOT MODIFY.
                     in_doc_page = self.in_doc.pages[p - 1]
                     new_page = copy.copy(in_doc_page)
@@ -272,13 +269,9 @@ class PageTiler:
                 ref_width = p_width
                 ref_height = p_height
                 
-                if content_dict is not None:
-                    content_dict[pagekey] = new_doc.copy_foreign(
-                        new_page.as_form_xobject()
-                    )
-                else:
-                    new_doc.pages.append(new_page)
-                    new_page = new_doc.pages[-1]
+                content_dict[pagekey] = new_doc.copy_foreign(
+                    new_page.as_form_xobject()
+                )
 
             else:
                 # blank page, use the reference for sizes and such
@@ -388,29 +381,14 @@ class PageTiler:
 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
         margin = utils.layout_units.units_to_px(self.margin / user_unit)
-
-        if content_dict is None:        
-            media_box = [
-                float(new_page.MediaBox[0]) - (margin - trim[0]),
-                float(new_page.MediaBox[1]) - (margin - trim[3]),
-                float(new_page.MediaBox[0]) + width + margin,
-                float(new_page.MediaBox[1]) + height + margin,
-            ]
-        else:
-            media_box = [
-                new_page.MediaBox[0], 
-                new_page.MediaBox[1], 
-                width + 2 * margin, 
-                height + 2 * margin
-            ]
+        media_box = [
+            float(new_page.MediaBox[0]), 
+            float(new_page.MediaBox[1]), 
+            width + 2 * margin, 
+            height + 2 * margin
+        ]
 
         utils.print_media_box(media_box)
-
-        if content_dict is None:
-            # just expand the margins and return
-            new_page.MediaBox = media_box
-            new_page.CropBox = media_box
-            return new_doc
 
         i = 0
         content_txt = ''
