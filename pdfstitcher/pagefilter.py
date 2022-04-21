@@ -10,12 +10,18 @@ import pdfstitcher.utils as utils
 
 
 class PageFilter:
+    """
+    Simple class to pass through the selected pages
+    """
     def __init__(self, doc=None):
         self.pdf = doc
         self.page_range = []
         self.margins = None
 
     def run(self):
+        """
+        The main method to run the filter.
+        """
         # not sure what this means, so just return the pdf as is
         if len(self.page_range) == 0:
             return self.pdf

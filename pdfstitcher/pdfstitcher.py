@@ -562,7 +562,7 @@ class LayersTab(scrolled.ScrolledPanel):
             border=self.FromDIP(BORDER * 2),
         )
         self.line_thick_ctrl = wx.TextCtrl(
-            layer_opt_pane, size=self.FromDIP(TXT_ENTRY_SIZE), value='1'
+            layer_opt_pane, size=self.FromDIP(TXT_ENTRY_SIZE), value='4'
         )
         newline.Add(
             self.line_thick_ctrl,
@@ -572,10 +572,10 @@ class LayersTab(scrolled.ScrolledPanel):
 
         # Extra note for pybabel to make translations make sense (particularly for inches)
         # translation_note: pt = "points", in = "inches", cm = "centimeters"
-        unit_choice = [_('pt'), _('in'), _('cm')]
-        self.line_thick_units = wx.ComboBox(
-            layer_opt_pane, value=unit_choice[0], choices=unit_choice
-        )
+        unit_choice = [_('in'), _('cm'), _('pt')]
+        self.line_thick_units = wx.ComboBox(layer_opt_pane, choices=unit_choice)
+        self.line_thick_units.SetSelection(2)
+
         newline.Add(
             self.line_thick_units,
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
@@ -596,9 +596,9 @@ class LayersTab(scrolled.ScrolledPanel):
         self.line_style_ctrl = wx.ComboBox(
             layer_opt_pane,
             choices=self.style_names,
-            value=self.style_names[0],
             style=wx.CB_READONLY,
         )
+        self.line_style_ctrl.SetSelection(0)
         newline.Add(
             self.line_style_ctrl,
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
@@ -666,17 +666,9 @@ class LayersTab(scrolled.ScrolledPanel):
             if line_thick is None:
                 return '', None
 
-            units = self.line_thick_units.GetStringSelection()
-            if units == '':
-                units = _('pt')
-
-            line_str += f'{line_thick} {units} '
-
-            if units == _('in'):
-                line_thick = line_thick * 72
-            elif units == _('cm'):
-                line_thick = line_thick * 72 / 2.54
-
+            units = utils.UNITS(self.line_thick_units.GetSelection())
+            line_str += f'{line_thick} {units.str}'
+            line_thick = units.units_to_px(line_thick)
             self.line_props[layer]['thickness'] = line_thick
 
         if self.enable_style.IsChecked():
@@ -912,7 +904,7 @@ class SewGUI(wx.Frame):
             self.tiler.page_range = page_range
 
             # set the optional stuff
-            self.tiler.units = self.tt.unit_box.GetSelection()
+            utils.layout_units = utils.UNITS(self.tt.unit_box.GetSelection())
             self.tiler.rotation = self.tt.rotate_combo.GetSelection()
 
             # margins
@@ -1091,9 +1083,7 @@ class SewGUI(wx.Frame):
 
                 # create the processing objects
                 self.layer_filter = LayerFilter(self.in_doc)
-                self.lt.load_new(
-                    self.layer_filter.get_layer_names(self.layer_filter.pdf)
-                )
+                self.lt.load_new(self.layer_filter.get_layer_names())
 
                 self.tiler = PageTiler()
 
@@ -1127,7 +1117,7 @@ def main():
         min(int(disp_size[0] * 0.6), 700), min(int(disp_size[1] * 0.85), 800)
     )
 
-    frm = SewGUI(None, title='PDF Stitcher' + ' ' + utils.version_string, size=app_size)
+    frm = SewGUI(None, title='PDF Stitcher' + ' ' + utils.VERSION_STRING, size=app_size)
     frm.SetSize(frm.FromDIP(app_size))
     frm.reset_sash_position()
 

@@ -8,6 +8,7 @@
 import sys
 import os
 import pikepdf
+from enum import IntEnum
 
 # localization stuff
 import gettext
@@ -16,8 +17,41 @@ from pathlib import Path
 
 from pdfstitcher.version import __version__
 
-version_string = "v" + __version__
+VERSION_STRING = "v" + __version__
+MAX_SIZE_PX = 14400
 
+class UNITS(IntEnum):
+    INCHES = 0
+    CENTIMETERS = 1
+    POINTS = 2
+
+    @property
+    def str(self):
+        if self == UNITS.INCHES:
+            return _('in')
+        elif self == UNITS.CENTIMETERS:
+            return _('cm')
+        elif self == UNITS.POINTS:
+            return _('pt')
+    
+    def units_to_px(self, val):
+        if self == UNITS.INCHES:
+            return val * 72
+        elif self == UNITS.CENTIMETERS:
+            return val * 72 / 2.54
+        elif self == UNITS.POINTS:
+            return val
+    
+    def px_to_units(self, val):
+        if self == UNITS.INCHES:
+            return val / 72
+        elif self == UNITS.CENTIMETERS:
+            return val / 72 * 2.54
+        elif self == UNITS.POINTS:
+            return val
+
+# default to inches
+layout_units = UNITS.INCHES
 
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller"""
@@ -129,7 +163,7 @@ def init_new_doc(pdf):
 
     with new_doc.open_metadata() as meta:
         # update the creator info
-        meta["xmp:CreatorTool"] = "PDFStitcher " + version_string
+        meta["xmp:CreatorTool"] = "PDFStitcher " + VERSION_STRING
 
     return new_doc
 
@@ -159,3 +193,29 @@ def get_page_dims(page, global_rotation=0):
         page_width, page_height = page_height, page_width
 
     return page_width, page_height
+
+def print_media_box(media_box, user_unit=1):
+    """
+    Display the media box in the requested units.
+    Also checks to see if the size exceeds Adobe's max size.
+    """
+    width = abs(float(media_box[2]) - float(media_box[0]))
+    height = abs(float(media_box[3]) - float(media_box[1]))
+    if width > MAX_SIZE_PX or height > MAX_SIZE_PX:
+        # check if it exceeds Adobe's 200 inch maximum size
+        print(62 * '*')
+        print(
+            _(
+                'Warning! Output is larger than {} {}, may not open correctly.'
+            ).format(round(layout_units.px_to_units(MAX_SIZE_PX)), layout_units.str)
+        )
+        print(62 * '*')
+    # just print it out for info
+    print( 
+        _('Output size:')
+        + ' {:0.2f} x {:0.2f} {}'.format(
+            user_unit * layout_units.px_to_units(width),
+            user_unit * layout_units.px_to_units(height),
+            layout_units.str,
+        )
+    )

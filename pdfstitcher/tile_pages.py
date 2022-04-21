@@ -15,13 +15,6 @@ import copy
 import pdfstitcher.utils as utils
 
 
-MAX_SIZE_PX = 14400
-
-class SW_UNITS(IntEnum):
-    INCHES = 0
-    CENTIMETERS = 1
-
-
 class SW_ROTATION(IntEnum):
     NONE = 0
     CLOCKWISE = 1
@@ -46,7 +39,6 @@ class PageTiler:
         self,
         in_doc=None,
         page_range=None,
-        units=SW_UNITS.INCHES,
         trim=[0, 0, 0, 0],
         margin=0,
         rotation=SW_ROTATION.NONE,
@@ -72,7 +64,6 @@ class PageTiler:
         else:
             self.page_range = []
 
-        self.units = units
         self.set_trim(trim)
         self.margin = margin
         self.rotation = rotation
@@ -86,30 +77,18 @@ class PageTiler:
         self.rows = rows
         self.cols = cols
 
+        # Optional target width and height for scaling and placing pages
         self.target_height = target_height
         self.target_width = target_width
 
         if self.target_height:
-            self.target_height = self.units_to_px(self.target_height)
+            self.target_height = utils.layout_units.units_to_px(self.target_height)
         if self.target_width:
-            self.target_width = self.units_to_px(self.target_width)
+            self.target_width = utils.layout_units.units_to_px(self.target_width)
 
+        # Optional vertical and horizontal alignment in case pages are non-uniform in size
         self.vertical_align = vertical_align
         self.horizontal_align = horizontal_align
-
-    def units_to_px(self, val):
-        pxval = val * 72
-        if self.units == SW_UNITS.INCHES:
-            return pxval
-        else:
-            return pxval / 2.54
-
-    def px_to_units(self, val):
-        inch_val = val / 72
-        if self.units == SW_UNITS.INCHES:
-            return inch_val
-        else:
-            return inch_val * 2.54
 
     def set_trim(self, trim):
         if len(trim) == 1:
@@ -128,7 +107,6 @@ class PageTiler:
     def show_options(self):
         # convert the margin and trim options into pixels
         # translation_note: in = "inches", cm = "centimetres"
-        unitstr = _('cm') if self.units == SW_UNITS.CENTIMETERS else _('in')
         rotstr = _('None')
 
         if self.rotation == SW_ROTATION.CLOCKWISE:
@@ -167,14 +145,12 @@ class PageTiler:
 
         print(_('Tiling with {} rows and {} columns').format(self.rows, self.cols))
         print(_('Options') + ':')
-        print('    ' + _('Margins') + ': {} {}'.format(self.margin, unitstr))
-        print('    ' + _('Trim') + ': {} {}'.format(self.trim, unitstr))
+        print('    ' + _('Margins') + ': {} {}'.format(self.margin, utils.layout_units.str))
+        print('    ' + _('Trim') + ': {} {}'.format(self.trim, utils.layout_units.str))
         print('    ' + _('Rotation') + ': {}'.format(rotstr))
         print('    ' + _('Page order') + ': {}, {}, {}'.format(orderstr, lrstr, btstr))
         print('    ' + _('Vertical alignment') + ': {}'.format(alvstr))
         print('    ' + _('Horizontal alignment') + ': {}'.format(alhstr))
-
-        return unitstr
 
     def run(
         self,
@@ -185,16 +161,18 @@ class PageTiler:
         vertical_align=None,
         horizontal_align=None,
     ):
-
+        """
+        The main function for tiling pages.
+        """
         if rows is not None:
             self.rows = rows
         if cols is not None:
             self.cols = cols
 
         if target_width is not None:
-            self.target_width = self.units_to_px(target_width)
+            self.target_width = utils.layout_units.units_to_px(target_width)
         if target_height is not None:
-            self.target_height = self.units_to_px(target_height)
+            self.target_height = utils.layout_units.units_to_px(target_height)
 
         if vertical_align is not None:
             self.vertical_align = vertical_align
@@ -219,7 +197,7 @@ class PageTiler:
         ph = []
 
         page_count = len(self.in_doc.pages)
-        trim = [self.units_to_px(t) for t in self.trim]
+        trim = [utils.layout_units.units_to_px(t) for t in self.trim]
 
         # initialize the width/height indices based on page rotation
         page_rot = 0
@@ -343,7 +321,7 @@ class PageTiler:
             self.rows = math.ceil(n_tiles / self.cols)
 
         # after calculating rows/cols but before reordering trim, show the user the selected options
-        unitstr = self.show_options()
+        self.show_options()
 
         # swap the trim order
         # default: left,right,top,bottom
@@ -356,7 +334,7 @@ class PageTiler:
         if self.rotation == SW_ROTATION.TURNAROUND:
             order = [1, 0, 3, 2]
 
-        trim = [self.units_to_px(t / user_unit) for t in self.trim]
+        trim = [utils.layout_units.units_to_px(t / user_unit) for t in self.trim]
         trim = [trim[o] for o in order]
 
         if self.rotation in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
@@ -409,7 +387,7 @@ class PageTiler:
             page_box_defined = False
 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
-        margin = self.units_to_px(self.margin / user_unit)
+        margin = utils.layout_units.units_to_px(self.margin / user_unit)
 
         if content_dict is None:        
             media_box = [
@@ -426,24 +404,7 @@ class PageTiler:
                 height + 2 * margin
             ]
 
-        # check if it exceeds Adobe's 200 inch maximum size
-        if media_box[2] > MAX_SIZE_PX or media_box[3] > MAX_SIZE_PX:
-            print(62 * '*')
-            print(
-                _(
-                    'Warning! Output is larger than {} {}, may not open correctly.'
-                ).format(round(self.px_to_units(MAX_SIZE_PX)), unitstr)
-            )
-            print(62 * '*')
-
-        print(
-            _('Output size:')
-            + ' {:0.2f} x {:0.2f} {}'.format(
-                user_unit * self.px_to_units(width + 2 * margin),
-                user_unit * self.px_to_units(height + 2 * margin),
-                unitstr,
-            )
-        )
+        utils.print_media_box(media_box)
 
         if content_dict is None:
             # just expand the margins and return
