@@ -546,10 +546,16 @@ class LayersTab(scrolled.ScrolledPanel):
         newline = wx.BoxSizer(wx.HORIZONTAL)
         self.enable_colour = wx.CheckBox(layer_opt_pane, label=_('Line Colour') + ':')
         self.enable_colour.SetValue(1)
-        newline.Add(self.enable_colour, flag=wx.LEFT, border=self.FromDIP(BORDER * 2))
+        newline.Add(self.enable_colour, flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL, border=self.FromDIP(BORDER * 2))
         self.line_colour_ctrl = wx.ColourPickerCtrl(layer_opt_pane)
-        newline.Add(self.line_colour_ctrl, flag=wx.LEFT, border=self.FromDIP(BORDER))
+        newline.Add(self.line_colour_ctrl, flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL, border=self.FromDIP(BORDER))
         layer_opt_sizer.Add(newline, flag=wx.TOP, border=self.FromDIP(BORDER * 2))
+
+        # Fill colour
+        self.do_fill_colour = wx.CheckBox(layer_opt_pane, label=_('Also modify fill colour'))
+        self.do_fill_colour.SetValue(0)
+        layer_opt_sizer.AddSpacer(self.FromDIP(BORDER * 2))
+        layer_opt_sizer.Add(self.do_fill_colour, flag=wx.LEFT, border=self.FromDIP(BORDER * 5))
 
         # thickness
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -668,7 +674,7 @@ class LayersTab(scrolled.ScrolledPanel):
                 return '', None
 
             units = utils.UNITS(self.line_thick_units.GetSelection())
-            line_str += f'{line_thick} {units.str}'
+            line_str += f'{line_thick} {units.str} '
             line_thick = units.units_to_px(line_thick)
             self.line_props[layer]['thickness'] = line_thick
 
@@ -681,6 +687,7 @@ class LayersTab(scrolled.ScrolledPanel):
             # ignore alpha
             rgb = [val / 255 for val in colour.Get()[:3]]
             self.line_props[layer]['rgb'] = rgb
+            self.line_props[layer]['fill_colour'] = self.do_fill_colour.IsChecked()
         else:
             colour = None
 

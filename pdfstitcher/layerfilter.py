@@ -247,8 +247,10 @@ class LayerFilter:
                 clp['K'] = [
                     round(Decimal(k), 3) for k in pdf_ops.rgb_to_cmyk(lp['rgb'])
                 ]
-                clp['rg'] = clp['RG']
-                clp['k'] = clp['K']
+                # Modify the nonstroking colour if fill_colour is checked
+                if lp['fill_colour']:
+                    clp['rg'] = clp['RG']
+                    clp['k'] = clp['K']
 
             self.clean_line_props[layer] = clp
 
