@@ -55,7 +55,6 @@ class LayerFilter:
 
         self.line_props = line_props
         self.pdf_line_props = {}
-        self.colour_type = None
 
     @staticmethod
     def _fix_utf16(string):
@@ -93,6 +92,16 @@ class LayerFilter:
                 page_forms.append(ob)
         
         return page_forms
+
+    @staticmethod
+    def _is_transparency_group(obj):
+        """
+        Returns true if the object is a transparency group.
+        """
+        if '/Group' in obj.keys():
+            if obj.Group.S == '/Transparency':
+                return True
+        return False
 
     def get_layer_names(self):
         """
@@ -219,12 +228,15 @@ class LayerFilter:
 
             self.pdf_line_props[layer] = clp
 
-    def override_state(self, commands, line_props):
+    def override_state(self, commands, line_props, transparency=False):
         """
         Checks to see if the current state matches the desired line properties.
         If not, writes the state to the commands list and updates current state.
         """
         for op, operands in line_props.items():
+            if transparency and op in ('rg', 'k'):
+                # transparency messes up fill colour modification
+                continue
             if list(self.current_state[-1][op]) != operands:
                 commands.append((operands, pikepdf.Operator(op)))
                 self.current_state[-1][op] = operands
@@ -258,13 +270,6 @@ class LayerFilter:
                 if list(self.current_state[-1][op]) != list(operands):
                     self.current_state[-1][op] = operands
                     commands.append((operands, pikepdf.Operator(op)))
-    
-    def write_state(self, commands):
-        """
-        Writes the current state to the commands list.
-        """
-        for op, operands in self.current_state[-1].items():
-            commands.append((operands, pikepdf.Operator(op)))
     
     def is_oc_obj_to_keep(self, xobj):
         """
@@ -336,8 +341,6 @@ class LayerFilter:
         # update_ocs modifies the keep_ocs list if it was previously 'all'!
         self.update_ocs()
 
-        # TODO: actually detect colour space
-        self.colour_type = 'RG'
         if self.line_props != {}:
             self.convert_layer_props()
             parse_streams = True
@@ -373,6 +376,7 @@ class LayerFilter:
         commands = []
         placed_forms = {}
         oc_obs, other_obs = self.get_valid_obs(ob)
+        transparency = self._is_transparency_group(ob)
         current_layer_name = ''
         # initialize copying with keep_non_oc
         keeping = self.keep_non_oc or in_oc
@@ -417,7 +421,7 @@ class LayerFilter:
             if keeping and current_layer_name in self.pdf_line_props:
                 if op == 'gs' or op in STROKE_OPS:
                     # check to see if the state needs to be modified before drawing
-                    self.override_state(commands, self.pdf_line_props[current_layer_name])
+                    self.override_state(commands, self.pdf_line_props[current_layer_name], transparency)
                 elif op in self.pdf_line_props[current_layer_name].keys():
                     # and check if the current operator is one we need to modify
                     operands = self.pdf_line_props[current_layer_name][op]
@@ -503,10 +507,12 @@ class LayerFilter:
                 pass
             
             # get the dictionary of xobjects to process as well
-            for info in placed_xobjs.values():
+            for name, info in placed_xobjs.items():
                 if '/Subtype' in info['xobj'].keys() and info['xobj'].Subtype == '/Form':
                     self.initialize_state(info['state'])
-                    self.filter_content(info['xobj'], in_oc=True)
+                    # if 'Page' is in the name, we're probably reprocessing a PDF stitched file,
+                    # so we want to treat the xobj like a page. Probably.
+                    self.filter_content(info['xobj'], in_oc=not 'Page' in name)
         
         elif not self.keep_non_oc:
             # if we're not filtering and not keeping non-optional content, obliterate the stream
