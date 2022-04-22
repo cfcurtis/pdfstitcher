@@ -34,6 +34,7 @@
   page_range: '1-44'
   layer_filter:
     keep_ocs: ['PETITE US04-S','PETITE US06-S']
+    profile: True
     keep_non_oc_opts: [True, False]
     line_props:
       PETITE US04-S:
@@ -41,6 +42,7 @@
         style: 0
         rgb: [0,0,0]
   page_tiler:
+    profile: True
     rows: 4
     trim: [0,.59,0,.89]
 - name: Sinclair-reprocess
