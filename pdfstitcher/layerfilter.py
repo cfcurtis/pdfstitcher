@@ -8,12 +8,7 @@
 import pikepdf
 import pdfstitcher.pdf_operators as pdf_ops
 from decimal import Decimal
-import traceback
 import copy
-
-# from os import write
-# import sys
-# import utils
 
 STATE_OPS = [k for k, v in pdf_ops.ops.items() if v[0] == 'state']
 STATE_OPS += [
@@ -194,7 +189,7 @@ class LayerFilter:
             w = 1
             clp = {}
             if 'thickness' in lp.keys():
-                clp['w'] = [round(Decimal(lp['thickness']), 1)]
+                clp['w'] = [Decimal(lp['thickness'])]
                 w = clp['w'][0]
 
             if 'style' in lp.keys():
@@ -205,10 +200,8 @@ class LayerFilter:
 
             # assign the colour for both cmyk and rgb
             if 'rgb' in lp.keys():
-                clp['RG'] = [round(Decimal(rg), 3) for rg in lp['rgb']]
-                clp['K'] = [
-                    round(Decimal(k), 3) for k in pdf_ops.rgb_to_cmyk(lp['rgb'])
-                ]
+                clp['RG'] = [Decimal(rg) for rg in lp['rgb']]
+                clp['K'] = [Decimal(k) for k in pdf_ops.rgb_to_cmyk(lp['rgb'])]
                 # Modify the nonstroking colour if fill_colour is checked
                 if lp['fill_colour']:
                     clp['rg'] = clp['RG']
