@@ -704,7 +704,10 @@ class LayersTab(scrolled.ScrolledPanel):
         self.layer_list.SetItem(sel, 1, line_str)
 
         if colour is not None:
-            self.layer_list.SetItem(sel, 1, u'\u25A0 ' + line_str)
+            if self.do_fill_colour.IsChecked():
+                self.layer_list.SetItem(sel, 1, u'\u25A0 ' + line_str)
+            else:
+                self.layer_list.SetItem(sel, 1, u'\u25A1 ' + line_str)
             self.layer_list.SetItemTextColour(sel, colour)
 
     def apply_all_pressed(self, event):
