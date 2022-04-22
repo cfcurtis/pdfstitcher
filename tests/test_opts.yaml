@@ -3,6 +3,7 @@
   page_range: 1-23
   layer_filter:
     keep_ocs: all
+    keep_non_oc_opts: [False, True]
     line_props:
       R:
         thickness: 10.0
@@ -33,6 +34,7 @@
   page_range: '1-44'
   layer_filter:
     keep_ocs: ['PETITE US04-S','PETITE US06-S']
+    keep_non_oc_opts: [True, False]
     line_props:
       PETITE US04-S:
         thickness: 5.0
@@ -42,7 +44,7 @@
     rows: 4
     trim: [0,.59,0,.89]
 - name: Sinclair-reprocess
-  input: 'Sinclair-with-non-oc.pdf'
+  input: 'Sinclair-with-non-oc-with-fill.pdf'
   page_range: '1'
   layer_filter:
     keep_ocs: ['PETITE US04-S']
@@ -59,6 +61,8 @@
   page_range: '1'
   layer_filter:
     keep_ocs: ['Size 4 - S','BORDERS (do not turn off)']
+    do_fill: [True, False]
+    line_props: {'Size 4 - S': {'thickness': 10.0, 'style': 1, 'rgb': [0,0,1]}}
 - name: SUAT
   input: '{gdrive}\Sewing\SUAT\SUAT Midnight Slipper Pattern.pdf'
   page_range: '16-18'
@@ -148,3 +152,23 @@
     rows: 1
     trim: [50,0,0,0]
     margin: 50
+- name: MBJM
+  input: "/home/charlotte/Documents/Sewing/Waves&Wild/PickNMix/MBJM-Pick-n-Mix-T-Shirt.pdf"
+  page_range: '1,2,5,7,9,12,13,3,4,6,8,10,11'
+  layer_filter:
+    keep_ocs: ['Age 2','6-12m','Pattern Information']
+  page_tiler:
+    rows: 2
+    trim: [0, 0.45, 0.45, 0]
+- name: MBJM-Reprocess
+  input: "MBJM-with-non-oc-with-fill.pdf"
+  page_range: '1'
+  layer_filter:
+    keep_ocs: 'all'
+    do_fill: [True, False]
+    line_props:
+      'Age 2':
+        thickness: 10.0
+      'Pattern Information':
+        rgb: [0, 0.5, 0.5]
+
