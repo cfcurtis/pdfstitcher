@@ -69,6 +69,7 @@ if __name__ == "__main__":
                 except OSError as e:
                     print(e)
                     print('...Skipping')
+                    continue
                 
                 page_range = utils.parse_page_range(t['page_range'])
                 if 'layer_filter' in t.keys():
