@@ -18,6 +18,16 @@ STROKE_OPS = [k for k, v in pdf_ops.ops.items() if v[0] == 'show' and v[1] == 's
 SKIP_TYPES = ['/Font', '/ExtGState']
 SKIP_KEYS = ['/Parent', '/Thumb', '/PieceInfo']
 
+DEFAULT_STATE = {
+    # PDF defaults from v1.7 reference.
+    'w': [1.0],
+    'RG': [0, 0, 0],
+    'rg': [0, 0, 0],
+    'K': pdf_ops.rgb_to_cmyk([0, 0, 0]),
+    'k': pdf_ops.rgb_to_cmyk([0, 0, 0]),
+    'd': pdf_ops.line_style_arr[0],
+}
+
 # helper functions to dump page to file for debugging
 def write_page(fname, page):
     with open(fname, 'w') as f:
@@ -138,7 +148,9 @@ class LayerFilter:
         """
         Updates the OCProperties dictionary to only include the layers we want.
         """
+        # If the list was 'all', modify so it includes all the layers
         if self.keep_ocs == 'all':
+            self.keep_ocs = self.get_layer_names()
             return
 
         # edit the OCG listing in the root
@@ -155,8 +167,6 @@ class LayerFilter:
 
         # Delete requires parsing
         if self.delete_ocgs:
-            for o in Off:
-                self.off_ocs.append(o.Name)
             self.out_pdf.Root.OCProperties.OCGs = On
             self.out_pdf.Root.OCProperties.D.ON = On
             self.filter_ocg_order()
@@ -215,24 +225,15 @@ class LayerFilter:
         If not, writes the state to the commands list and updates current state.
         """
         for op, operands in line_props.items():
-            if self.current_state[-1][op] != operands:
+            if list(self.current_state[-1][op]) != operands:
                 commands.append((operands, pikepdf.Operator(op)))
                 self.current_state[-1][op] = operands
 
-    def initialize_state(self):
+    def initialize_state(self, state=DEFAULT_STATE):
         """
-        Initializes the list of relevant states with PDF defaults from v1.4 reference.
+        Initializes the list of relevant states.
         """
-        self.current_state = [
-            {
-                'w': [1.0],
-                'RG': [0, 0, 0],
-                'rg': [0, 0, 0],
-                'K': pdf_ops.rgb_to_cmyk([0, 0, 0]),
-                'k': pdf_ops.rgb_to_cmyk([0, 0, 0]),
-                'd': pdf_ops.line_style_arr[0],
-            }
-        ]
+        self.current_state = [state]
 
     def add_q_state(self):
         """
@@ -245,30 +246,61 @@ class LayerFilter:
         Pop the last state off the list.
         """
         self.current_state.pop()
-        if not self.current_state:
-            self.initialize_state()
-
-    def filter_xobj_list(self, page, placed_xobj):
+    
+    def reset_to_previous_state(self, commands):
         """
-        Checks the forms in the page XObject list.
-        If they were placed in an OCG to keep or have an OC key in 
-        the list of OCGs to keep, return them for filtering.
+        Reset the state to the previous state without a Q operation.
+        Writes any differences to the commands list.
         """
-        # loop through the form xobjects
-        if '/XObject' not in page.Resources or not placed_xobj:
-            return []
+        if len(self.current_state) > 1:
+            prev_state = copy.copy(self.current_state[-2])
+            for op, operands in prev_state.items():
+                if list(self.current_state[-1][op]) != list(operands):
+                    self.current_state[-1][op] = operands
+                    commands.append((operands, pikepdf.Operator(op)))
+    
+    def write_state(self, commands):
+        """
+        Writes the current state to the commands list.
+        """
+        for op, operands in self.current_state[-1].items():
+            commands.append((operands, pikepdf.Operator(op)))
+    
+    def is_oc_obj_to_keep(self, xobj):
+        """
+        Helper function to check if the xobj is an OC type to keep
+        """
+        if '/OC' in xobj.keys():
+            if '/Name' in xobj.OC.keys() and str(xobj.OC.Name) in self.keep_ocs:
+                return True
+        elif '/Type' in xobj.keys() and xobj.Type == '/OCMD':
+            # optional content membership dictionary, check the list of OCGs
+            for ocg in xobj.OCGs:
+                if str(ocg.Name) in self.keep_ocs:
+                    return True
 
-        filtered_list = []
-        for key, ob in page.Resources.XObject.items():
-            if (key in placed_xobj.keys() and placed_xobj[key]):
-                filtered_list.append(ob)
-            elif '/OC' in ob.keys() and '/Name' in ob.OC.keys():
-                oc_name = str(ob.OC.Name)
-                if oc_name not in self.off_ocs:
-                    filtered_list.append(ob)
-            elif '/Subtype' in ob.keys() and ob.Subtype == '/PS':
-                print('Postscript XObject detected, not currently handled.')
-        return filtered_list
+        return False
+
+    def get_valid_obs(self, page):
+        """
+        Loops through the XOBjects on the given page.
+        Checks if each is defined as an OC type.
+        If so, checks if the name or membership dictionary is in the keep list.
+        """
+        oc_obs = {}
+        other_obs = {}
+        try:
+            page_xobjs = page.Resources.XObject
+        except AttributeError:
+            return oc_obs, other_obs
+
+        for key, xobj in page_xobjs.items():
+            if self.is_oc_obj_to_keep(xobj):
+                oc_obs[key] = xobj
+            else:
+                other_obs[key] = xobj
+        
+        return oc_obs, other_obs
 
     def run(
         self, set_progress_range=None, update_progress=None, progress_was_cancelled=None
@@ -291,8 +323,6 @@ class LayerFilter:
             print(_('No layers selected, generated PDF would be blank.'))
             return self.pdf
 
-        self.off_ocs = []
-
         # open a new copy of the input
         self.out_pdf = pikepdf.Pdf.open(self.pdf.filename)
         page_range = self.process_page_range()
@@ -302,8 +332,9 @@ class LayerFilter:
         set_progress_range and set_progress_range(n_page)  # don't run if the callback is None
 
         # update the OC dictionaries
-        self.update_ocs()
         parse_streams = self.delete_ocgs and self.keep_ocs != 'all'
+        # update_ocs modifies the keep_ocs list if it was previously 'all'!
+        self.update_ocs()
 
         # TODO: actually detect colour space
         self.colour_type = 'RG'
@@ -341,9 +372,11 @@ class LayerFilter:
         op = ''
         commands = []
         placed_forms = {}
+        oc_obs, other_obs = self.get_valid_obs(ob)
         current_layer_name = ''
         # initialize copying with keep_non_oc
         keeping = self.keep_non_oc or in_oc
+        mc_list = []
 
         try:
             page_props = ob.Resources.Properties
@@ -359,22 +392,27 @@ class LayerFilter:
                 commands.pop()
                 self.remove_q_state()
                 continue
-            elif op == 'Do':
-                # Special case where we need to place a form even if it's not defined
-                # with the standard /OC BDC block
-                ob_name = str(operands[0])
-                placed_forms[ob_name] = keeping
 
-            # Check if we're entering a new layer (optional content group)
-            elif op == "BDC" and len(operands) > 1 and str(operands[0]) == "/OC":
-                oc_label = str(operands[1])
-                if page_props is not None and oc_label in page_props.keys():
-                    ocg = page_props[oc_label]
-                    current_layer_name = str(ocg.Name)
-                    if current_layer_name in self.off_ocs:
-                        keeping = False
-                    else:
-                        keeping = True
+            if op == 'Do':
+                # check if the object to be placed is defined as optional content,
+                # and if so, is it content we want to keep
+                ob_name = str(operands[0])
+                if ob_name in oc_obs.keys():
+                    placed_forms[ob_name] = {
+                        'state': copy.copy(self.current_state[-1]),
+                        'xobj': oc_obs[ob_name]
+                    }
+                elif keeping:
+                    # check to see if the object type is not OC
+                    if ob_name in other_obs.keys():
+                        placed_forms[ob_name] = {
+                            'state': copy.copy(self.current_state[-1]),
+                            'xobj': other_obs[ob_name]
+                        }
+                else:
+                    # don't execute the Do command if it's not optional content
+                    # and we're not in a keeping mood
+                    continue
             
             if keeping and current_layer_name in self.pdf_line_props:
                 if op == 'gs' or op in STROKE_OPS:
@@ -384,7 +422,7 @@ class LayerFilter:
                     # and check if the current operator is one we need to modify
                     operands = self.pdf_line_props[current_layer_name][op]
                 
-            if keeping or op in STATE_OPS:
+            if keeping or op in STATE_OPS or op == 'Do':
                 # if we're keeping this command, write it out
                 commands.append((operands, operator))
 
@@ -398,9 +436,29 @@ class LayerFilter:
                 elif op == 'Q':
                     self.remove_q_state()
 
+            if op == 'BDC' or op == 'BMC':
+                # add to the marked content list and indicate whether it's an OC block
+                if len(operands) > 1 and str(operands[0]) == "/OC":
+                    # we're entering a new layer (optional content group)
+                    oc_label = str(operands[1])
+                    if page_props is not None and oc_label in page_props.keys():
+                        ocg = page_props[oc_label]
+                        current_layer_name = str(ocg.Name)
+                        keeping = current_layer_name in self.keep_ocs
+                    
+                    mc_list.append(True)
+                else:
+                    # not an OC block, but still need to add to the marked content list
+                    mc_list.append(False)
+
             if op == 'EMC':
-                keeping = self.keep_non_oc or in_oc
-                current_layer_name = ''
+                # pop the marked content list
+                is_oc_end = mc_list.pop()
+                if is_oc_end:
+                    # end of a BDC/EMC block, reset the state
+                    self.reset_to_previous_state(commands)
+                    keeping = self.keep_non_oc
+                    current_layer_name = ''
 
         return commands, placed_forms
 
@@ -409,11 +467,11 @@ class LayerFilter:
         Perform the actual filtering of a page.
 
         Args:
-            page (pikepdf Page): pdf page object, or form xobjec
+            page (pikepdf Page): pdf page object, or form xobject
             in_oc (bool, optional): True if we're currently "in" an optional content block. Defaults to False.
         """
         # First check the id of the page and don't re-filter if we've seen it before
-        obid = id(page)
+        obid = page.unparse()
         if obid in self.processed_objects:
             return
         else:
@@ -428,22 +486,28 @@ class LayerFilter:
         else:
             bytestream = page.read_bytes()
         
-        # filter if there's OC blocks or placed forms
-        do_filter = b'/OC' in bytestream or b'Do' in bytestream
+        # filter if there's OC blocks or placed forms, or we're already
+        # in an optional content group
+        do_filter = b'/OC' in bytestream or b'Do' in bytestream or in_oc
             
         # initialize empty stream and placed forms, then try to filter
         page_stream = None
-        placed_xobjs = {}
         if do_filter:
             commands, placed_xobjs = self.filter_stream(page, in_oc)
-            if commands:
+            if len(self.current_state) != 1:
+                raise Exception('Unbalanced Q/q operators')
+            try:
                 page_stream = pikepdf.unparse_content_stream(commands)
+            except Exception as e:
+                print(e)
+                pass
             
-            # get the list of xobjects to filter as well
-            xobjects = self.filter_xobj_list(page, placed_xobjs)
-            for xobj in xobjects:
-                if '/Subtype' in xobj.keys() and xobj.Subtype == '/Form':
-                    self.filter_content(xobj, in_oc=True)
+            # get the dictionary of xobjects to process as well
+            for info in placed_xobjs.values():
+                if '/Subtype' in info['xobj'].keys() and info['xobj'].Subtype == '/Form':
+                    self.initialize_state(info['state'])
+                    self.filter_content(info['xobj'], in_oc=True)
+        
         elif not self.keep_non_oc:
             # if we're not filtering and not keeping non-optional content, obliterate the stream
             page_stream = b''
@@ -451,13 +515,16 @@ class LayerFilter:
         # Remove the oc info from the page properties
         if self.delete_ocgs and '/Properties' in page.keys():
             for key, val in page.Properties.items():
-                if '/Name' in val.keys() and val.Name in self.off_ocs:
+                if '/Name' in val.keys() and val.Name not in self.keep_ocs:
                     del page.Properties[key]
 
         # finally, write the stream
-        if page_stream is not None:
+        try:
             if is_page:
                 page.Contents = self.out_pdf.make_stream(page_stream)
             else:
                 # Probably a form xobject
                 page.write(page_stream)
+        except Exception as e:
+            print(e)
+            pass
