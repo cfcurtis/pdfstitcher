@@ -12,9 +12,7 @@ T = join(SourceTree, 'locale')
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Extract, update, or compile translations."
-    )
+    parser = argparse.ArgumentParser(description="Extract, update, or compile translations.")
     parser.add_argument(
         '--extract',
         '-e',

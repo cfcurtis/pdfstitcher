@@ -15,13 +15,6 @@ import copy
 import pdfstitcher.utils as utils
 
 
-MAX_SIZE_PX = 14400
-
-class SW_UNITS(IntEnum):
-    INCHES = 0
-    CENTIMETERS = 1
-
-
 class SW_ROTATION(IntEnum):
     NONE = 0
     CLOCKWISE = 1
@@ -46,7 +39,6 @@ class PageTiler:
         self,
         in_doc=None,
         page_range=None,
-        units=SW_UNITS.INCHES,
         trim=[0, 0, 0, 0],
         margin=0,
         rotation=SW_ROTATION.NONE,
@@ -72,7 +64,6 @@ class PageTiler:
         else:
             self.page_range = []
 
-        self.units = units
         self.set_trim(trim)
         self.margin = margin
         self.rotation = rotation
@@ -86,30 +77,18 @@ class PageTiler:
         self.rows = rows
         self.cols = cols
 
+        # Optional target width and height for scaling and placing pages
         self.target_height = target_height
         self.target_width = target_width
 
         if self.target_height:
-            self.target_height = self.units_to_px(self.target_height)
+            self.target_height = utils.layout_units.units_to_px(self.target_height)
         if self.target_width:
-            self.target_width = self.units_to_px(self.target_width)
+            self.target_width = utils.layout_units.units_to_px(self.target_width)
 
+        # Optional vertical and horizontal alignment in case pages are non-uniform in size
         self.vertical_align = vertical_align
         self.horizontal_align = horizontal_align
-
-    def units_to_px(self, val):
-        pxval = val * 72
-        if self.units == SW_UNITS.INCHES:
-            return pxval
-        else:
-            return pxval / 2.54
-
-    def px_to_units(self, val):
-        inch_val = val / 72
-        if self.units == SW_UNITS.INCHES:
-            return inch_val
-        else:
-            return inch_val * 2.54
 
     def set_trim(self, trim):
         if len(trim) == 1:
@@ -128,7 +107,6 @@ class PageTiler:
     def show_options(self):
         # convert the margin and trim options into pixels
         # translation_note: in = "inches", cm = "centimetres"
-        unitstr = _('cm') if self.units == SW_UNITS.CENTIMETERS else _('in')
         rotstr = _('None')
 
         if self.rotation == SW_ROTATION.CLOCKWISE:
@@ -167,14 +145,12 @@ class PageTiler:
 
         print(_('Tiling with {} rows and {} columns').format(self.rows, self.cols))
         print(_('Options') + ':')
-        print('    ' + _('Margins') + ': {} {}'.format(self.margin, unitstr))
-        print('    ' + _('Trim') + ': {} {}'.format(self.trim, unitstr))
+        print('    ' + _('Margins') + ': {} {}'.format(self.margin, utils.layout_units.str))
+        print('    ' + _('Trim') + ': {} {}'.format(self.trim, utils.layout_units.str))
         print('    ' + _('Rotation') + ': {}'.format(rotstr))
         print('    ' + _('Page order') + ': {}, {}, {}'.format(orderstr, lrstr, btstr))
         print('    ' + _('Vertical alignment') + ': {}'.format(alvstr))
         print('    ' + _('Horizontal alignment') + ': {}'.format(alhstr))
-
-        return unitstr
 
     def run(
         self,
@@ -185,16 +161,18 @@ class PageTiler:
         vertical_align=None,
         horizontal_align=None,
     ):
-
+        """
+        The main function for tiling pages.
+        """
         if rows is not None:
             self.rows = rows
         if cols is not None:
             self.cols = cols
 
         if target_width is not None:
-            self.target_width = self.units_to_px(target_width)
+            self.target_width = utils.layout_units.units_to_px(target_width)
         if target_height is not None:
-            self.target_height = self.units_to_px(target_height)
+            self.target_height = utils.layout_units.units_to_px(target_height)
 
         if vertical_align is not None:
             self.vertical_align = vertical_align
@@ -208,18 +186,15 @@ class PageTiler:
         # initialize a new document
         new_doc = utils.init_new_doc(self.in_doc)
 
-        # define the dictionary to store xobjects, unless we're just trimming/adding margins to one page
-        if len(self.page_range) > 1:
-            content_dict = pikepdf.Dictionary({})
-        else:
-            content_dict = None
+        # define the dictionary to store xobjects
+        content_dict = pikepdf.Dictionary({})
 
         page_names = []
         pw = []
         ph = []
 
         page_count = len(self.in_doc.pages)
-        trim = [self.units_to_px(t) for t in self.trim]
+        trim = [utils.layout_units.units_to_px(t) for t in self.trim]
 
         # initialize the width/height indices based on page rotation
         page_rot = 0
@@ -250,7 +225,7 @@ class PageTiler:
                 pagekey = f'/Page{p}'
 
                 # Check if it's already been copied (in case of duplicate page numbers)
-                if content_dict is None or pagekey not in content_dict.keys():
+                if pagekey not in content_dict.keys():
                     # get a reference to the input document page. DO NOT MODIFY.
                     in_doc_page = self.in_doc.pages[p - 1]
                     new_page = copy.copy(in_doc_page)
@@ -274,13 +249,15 @@ class PageTiler:
                             rtrim = [trim[3], trim[0], trim[2], trim[1]]
                         elif page_rot in (-90, 270):
                             rtrim = [trim[3], trim[1], trim[2], trim[0]]
-                        
+
                         # lowercase trimbox returns TrimBox if it exists, MediaBox otherwise
                         in_trim = [float(t) for t in in_doc_page.trimbox]
-                        new_page.TrimBox = [in_trim[0] + rtrim[0],
-                                            in_trim[1] + rtrim[1],
-                                            in_trim[2] - rtrim[2],
-                                            in_trim[3] - rtrim[3]]
+                        new_page.TrimBox = [
+                            in_trim[0] + rtrim[0],
+                            in_trim[1] + rtrim[1],
+                            in_trim[2] - rtrim[2],
+                            in_trim[3] - rtrim[3],
+                        ]
                 # get the input page height and width
                 p_width, p_height = utils.get_page_dims(in_doc_page, page_rot)
                 pw.append(p_width)
@@ -293,14 +270,8 @@ class PageTiler:
                 # update the reference handles to be the current page
                 ref_width = p_width
                 ref_height = p_height
-                
-                if content_dict is not None:
-                    content_dict[pagekey] = new_doc.copy_foreign(
-                        new_page.as_form_xobject()
-                    )
-                else:
-                    new_doc.pages.append(new_page)
-                    new_page = new_doc.pages[-1]
+
+                content_dict[pagekey] = new_doc.copy_foreign(new_page.as_form_xobject())
 
             else:
                 # blank page, use the reference for sizes and such
@@ -310,9 +281,9 @@ class PageTiler:
 
         if len(different_size) > 0:
             print(
-                _(
-                    'Warning: The pages {} have a different size than the page before'
-                ).format(different_size)
+                _('Warning: The pages {} have a different size than the page before').format(
+                    different_size
+                )
             )
 
         n_tiles = len(page_names)
@@ -322,9 +293,9 @@ class PageTiler:
             self.rows = math.ceil(n_tiles / self.cols)
             if self.rows == 1 and self.cols > n_tiles:
                 print(
-                    _(
-                        'Warning: requested {} columns, but there are only {} pages'
-                    ).format(self.cols, n_tiles)
+                    _('Warning: requested {} columns, but there are only {} pages').format(
+                        self.cols, n_tiles
+                    )
                 )
                 self.cols = n_tiles
 
@@ -343,7 +314,7 @@ class PageTiler:
             self.rows = math.ceil(n_tiles / self.cols)
 
         # after calculating rows/cols but before reordering trim, show the user the selected options
-        unitstr = self.show_options()
+        self.show_options()
 
         # swap the trim order
         # default: left,right,top,bottom
@@ -356,7 +327,7 @@ class PageTiler:
         if self.rotation == SW_ROTATION.TURNAROUND:
             order = [1, 0, 3, 2]
 
-        trim = [self.units_to_px(t / user_unit) for t in self.trim]
+        trim = [utils.layout_units.units_to_px(t / user_unit) for t in self.trim]
         trim = [trim[o] for o in order]
 
         if self.rotation in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
@@ -379,24 +350,20 @@ class PageTiler:
             # Find the grid that contains the maximum page size for each row/col
             if self.col_major:
                 for c in range(self.cols):
-                    col_width[c] = max(
-                        pw[c * self.rows : c * self.rows + self.rows]
-                    ) - (trim[0] + trim[1])
-
-                for r in range(self.rows):
-                    row_height[r] = max(ph[r : n_tiles : self.cols]) - (
-                        trim[2] + trim[3]
-                    )
-            else:
-                for r in range(self.rows):
-                    row_height[r] = max(
-                        ph[r * self.cols : r * self.cols + self.cols]
-                    ) - (trim[2] + trim[3])
-
-                for c in range(self.cols):
-                    col_width[c] = max(pw[c : n_tiles : self.rows]) - (
+                    col_width[c] = max(pw[c * self.rows : c * self.rows + self.rows]) - (
                         trim[0] + trim[1]
                     )
+
+                for r in range(self.rows):
+                    row_height[r] = max(ph[r : n_tiles : self.cols]) - (trim[2] + trim[3])
+            else:
+                for r in range(self.rows):
+                    row_height[r] = max(ph[r * self.cols : r * self.cols + self.cols]) - (
+                        trim[2] + trim[3]
+                    )
+
+                for c in range(self.cols):
+                    col_width[c] = max(pw[c : n_tiles : self.rows]) - (trim[0] + trim[1])
 
             if self.right_to_left:
                 col_width.reverse()
@@ -409,47 +376,15 @@ class PageTiler:
             page_box_defined = False
 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
-        margin = self.units_to_px(self.margin / user_unit)
+        margin = utils.layout_units.units_to_px(self.margin / user_unit)
+        media_box = [
+            float(new_page.MediaBox[0]),
+            float(new_page.MediaBox[1]),
+            width + 2 * margin,
+            height + 2 * margin,
+        ]
 
-        if content_dict is None:        
-            media_box = [
-                new_page.MediaBox[0] - (margin - trim[0]),
-                new_page.MediaBox[1] -(margin - trim[3]),
-                new_page.MediaBox[0] + width + margin,
-                new_page.MediaBox[1] + height + margin,
-            ]
-        else:
-            media_box = [
-                new_page.MediaBox[0], 
-                new_page.MediaBox[1], 
-                width + 2 * margin, 
-                height + 2 * margin
-            ]
-
-        # check if it exceeds Adobe's 200 inch maximum size
-        if media_box[2] > MAX_SIZE_PX or media_box[3] > MAX_SIZE_PX:
-            print(62 * '*')
-            print(
-                _(
-                    'Warning! Output is larger than {} {}, may not open correctly.'
-                ).format(round(self.px_to_units(MAX_SIZE_PX)), unitstr)
-            )
-            print(62 * '*')
-
-        print(
-            _('Output size:')
-            + ' {:0.2f} x {:0.2f} {}'.format(
-                user_unit * self.px_to_units(width + 2 * margin),
-                user_unit * self.px_to_units(height + 2 * margin),
-                unitstr,
-            )
-        )
-
-        if content_dict is None:
-            # just expand the margins and return
-            new_page.MediaBox = media_box
-            new_page.CropBox = media_box
-            return new_doc
+        utils.print_media_box(media_box)
 
         i = 0
         content_txt = ''
@@ -484,9 +419,9 @@ class PageTiler:
                 # take the smaller scaling factor so that the page will fit into its box
                 scale_factor = min(scalef_width, scalef_height)
                 cpos_x0 = c * page_box_width - c * (trim[0] + trim[1])
-                cpos_y0 = (self.rows - r - 1) * page_box_height - (
-                    self.rows - r - 1
-                ) * (trim[2] + trim[3])
+                cpos_y0 = (self.rows - r - 1) * page_box_height - (self.rows - r - 1) * (
+                    trim[2] + trim[3]
+                )
             else:
                 cpos_x0 = sum(col_width[:c]) - trim[0]
                 cpos_y0 = sum(row_height[r + 1 :]) - trim[3]

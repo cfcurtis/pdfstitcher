@@ -10,31 +10,51 @@ import pdfstitcher.utils as utils
 
 
 class PageFilter:
+    """
+    Simple class to pass through the selected pages
+    """
+
     def __init__(self, doc=None):
-        self.pdf = doc
+        self.in_doc = doc
         self.page_range = []
-        self.margins = None
+        self.margin = None
 
     def run(self):
+        """
+        The main method to run the filter.
+        """
         # not sure what this means, so just return the pdf as is
         if len(self.page_range) == 0:
-            return self.pdf
-
-        # if all of them are selected, we don't need to do anything
-        if self.page_range == list(range(1, len(self.pdf.pages) + 1)):
-            return self.pdf
+            return self.in_doc
 
         # otherwise, copy the selected pages to a new document
-        new_doc = utils.init_new_doc(self.pdf)
+        new_doc = utils.init_new_doc(self.in_doc)
 
         for p in self.page_range:
+            user_unit = 1
             if p == 0:
-                mbox = self.pdf.pages[-1].MediaBox
+                mbox = self.in_doc.pages[-1].MediaBox
                 new_doc.add_blank_page(page_size=(mbox[2], mbox[3]))
             else:
-                new_doc.pages.extend([self.pdf.pages[p - 1]])
+                new_doc.pages.extend([self.in_doc.pages[p - 1]])
 
-            if '/UserUnit' in self.pdf.pages[-1].keys():
-                new_doc.pages[-1].UserUnit = self.pdf.pages[-1].UserUnit
+            if '/UserUnit' in self.in_doc.pages[-1].keys():
+                new_doc.pages[-1].UserUnit = self.in_doc.pages[-1].UserUnit
+                user_unit = self.in_doc.pages[-1].UserUnit
+
+            if self.margin:
+                # if margins were added, expand the new page boxes
+                margin = utils.layout_units.units_to_px(self.margin / user_unit)
+                new_page = new_doc.pages[-1]
+                media_box = [
+                    float(new_page.MediaBox[0]) - margin,
+                    float(new_page.MediaBox[1]) - margin,
+                    float(new_page.MediaBox[2]) + margin,
+                    float(new_page.MediaBox[3]) + margin,
+                ]
+                utils.print_media_box(media_box)
+
+                new_page.MediaBox = media_box
+                new_page.CropBox = media_box
 
         return new_doc

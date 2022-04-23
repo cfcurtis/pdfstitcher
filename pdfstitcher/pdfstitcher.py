@@ -41,9 +41,7 @@ class IOTab(scrolled.ScrolledPanel):
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(BORDER),
         )
-        vert_sizer.Add(
-            newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
-        )
+        vert_sizer.Add(newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2))
 
         newline = wx.BoxSizer(wx.HORIZONTAL)
         out_doc_btn = wx.Button(self, label=_('Save output as'))
@@ -55,9 +53,7 @@ class IOTab(scrolled.ScrolledPanel):
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(BORDER),
         )
-        vert_sizer.Add(
-            newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
-        )
+        vert_sizer.Add(newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2))
 
         # Output options
         vert_sizer.Add(
@@ -98,17 +94,24 @@ class IOTab(scrolled.ScrolledPanel):
             wx.StaticText(self, label=_('Margin to add to final output') + ':'),
             flag=wx.ALIGN_CENTRE_VERTICAL,
         )
-        self.margin_txt = wx.TextCtrl(
-            self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT
-        )
+        self.margin_txt = wx.TextCtrl(self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT)
         self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
         newline.Add(
             self.margin_txt,
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(BORDER),
         )
+        vert_sizer.Add(newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2))
+
+        # Unit selection
+        unit_opts = [_('Inches'), _('Centimetres')]
+        self.unit_box = wx.RadioBox(
+            self, label=_('Units'), choices=unit_opts, style=wx.RA_SPECIFY_COLS
+        )
         vert_sizer.Add(
-            newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
+            self.unit_box,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(BORDER * 2),
         )
 
         # checklist of features to enable/disable
@@ -152,23 +155,19 @@ class IOTab(scrolled.ScrolledPanel):
         do_tile = bool(self.do_tile.GetValue())
 
         if do_layers and do_tile:
-            self.output_description.SetLabel(
-                _('Process layers then tile pages and save')
-            )
+            self.output_description.SetLabel(_('Process layers then tile pages and save'))
 
         if do_layers and not do_tile:
-            self.output_description.SetLabel(
-                _('Process layers and save without tiling pages')
-            )
+            self.output_description.SetLabel(_('Process layers and save without tiling pages'))
 
         if do_tile and not do_layers:
-            self.output_description.SetLabel(
-                _('Tile pages and save without processing layers')
-            )
+            self.output_description.SetLabel(_('Tile pages and save without processing layers'))
 
         if not do_tile and not do_layers:
             self.output_description.SetLabel(
                 _('Open the PDF and save selected page range without modifying')
+                + '\n'
+                + _('Optionally, add margins to each page')
             )
 
 
@@ -194,9 +193,7 @@ class TileTab(scrolled.ScrolledPanel):
             wx.StaticText(self, label=_('Number of Columns') + ':'),
             flag=wx.ALIGN_CENTRE_VERTICAL,
         )
-        self.columns_txt = wx.TextCtrl(
-            self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT
-        )
+        self.columns_txt = wx.TextCtrl(self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT)
         self.columns_txt.Bind(wx.EVT_TEXT, self.on_col_row_entered)
         newline.Add(
             self.columns_txt,
@@ -210,18 +207,14 @@ class TileTab(scrolled.ScrolledPanel):
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(BORDER * 2),
         )
-        self.rows_txt = wx.TextCtrl(
-            self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT
-        )
+        self.rows_txt = wx.TextCtrl(self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT)
         self.rows_txt.Bind(wx.EVT_TEXT, self.on_col_row_entered)
         newline.Add(
             self.rows_txt,
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(BORDER),
         )
-        vert_sizer.Add(
-            newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
-        )
+        vert_sizer.Add(newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2))
 
         # page order
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -266,9 +259,7 @@ class TileTab(scrolled.ScrolledPanel):
             flag=wx.LEFT | wx.ALIGN_CENTRE_VERTICAL,
             border=self.FromDIP(BORDER),
         )
-        vert_sizer.Add(
-            newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
-        )
+        vert_sizer.Add(newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2))
 
         # rotation
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -290,9 +281,7 @@ class TileTab(scrolled.ScrolledPanel):
             flag=wx.LEFT | wx.ALIGN_CENTRE_VERTICAL,
             border=self.FromDIP(BORDER),
         )
-        vert_sizer.Add(
-            newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
-        )
+        vert_sizer.Add(newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2))
 
         # duplicate the page range textbox here
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -325,20 +314,7 @@ class TileTab(scrolled.ScrolledPanel):
         )
         lbl = wx.StaticText(self, label=_('Optional Parameters'))
         lbl.SetFont(lbl.GetFont().Bold())
-        vert_sizer.Add(
-            lbl, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
-        )
-
-        # unit selection
-        unit_opts = [_('Inches'), _('Centimetres')]
-        self.unit_box = wx.RadioBox(
-            self, label=_('Units'), choices=unit_opts, style=wx.RA_SPECIFY_COLS
-        )
-        vert_sizer.Add(
-            self.unit_box,
-            flag=wx.TOP | wx.LEFT | wx.RIGHT,
-            border=self.FromDIP(BORDER * 2),
-        )
+        vert_sizer.Add(lbl, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2))
 
         # override trimbox - sometimes needed for wonky PDFs
         # translation_note: TrimBox and MediaBox are PDF elements, so they likely won't translate nicely.
@@ -358,18 +334,14 @@ class TileTab(scrolled.ScrolledPanel):
             wx.StaticText(self, label=_('Margin to add to final output') + ':'),
             flag=wx.ALIGN_CENTRE_VERTICAL,
         )
-        self.margin_txt = wx.TextCtrl(
-            self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT
-        )
+        self.margin_txt = wx.TextCtrl(self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT)
         self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
         newline.Add(
             self.margin_txt,
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(BORDER),
         )
-        vert_sizer.Add(
-            newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
-        )
+        vert_sizer.Add(newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2))
 
         # Trim header
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -389,9 +361,7 @@ class TileTab(scrolled.ScrolledPanel):
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(BORDER * 3),
         )
-        vert_sizer.Add(
-            newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
-        )
+        vert_sizer.Add(newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2))
 
         # Left trim
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -400,9 +370,7 @@ class TileTab(scrolled.ScrolledPanel):
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(BORDER * 2),
         )
-        self.left_trim_txt = wx.TextCtrl(
-            self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT
-        )
+        self.left_trim_txt = wx.TextCtrl(self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT)
         newline.Add(
             self.left_trim_txt,
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
@@ -430,9 +398,7 @@ class TileTab(scrolled.ScrolledPanel):
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(BORDER * 2),
         )
-        self.top_trim_txt = wx.TextCtrl(
-            self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT
-        )
+        self.top_trim_txt = wx.TextCtrl(self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT)
         newline.Add(
             self.top_trim_txt,
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
@@ -453,9 +419,7 @@ class TileTab(scrolled.ScrolledPanel):
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(BORDER),
         )
-        vert_sizer.Add(
-            newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2)
-        )
+        vert_sizer.Add(newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(BORDER * 2))
 
         self.SetSizer(vert_sizer)
         self.SetupScrolling()
@@ -500,9 +464,7 @@ class LayersTab(scrolled.ScrolledPanel):
         )
 
         # check all, background, etc
-        self.include_nonoc = wx.CheckBox(
-            layer_pane, label=_('Include non-optional content')
-        )
+        self.include_nonoc = wx.CheckBox(layer_pane, label=_('Include non-optional content'))
         self.include_nonoc.SetValue(1)
         layer_sizer.Add(
             self.include_nonoc,
@@ -545,16 +507,28 @@ class LayersTab(scrolled.ScrolledPanel):
         newline = wx.BoxSizer(wx.HORIZONTAL)
         self.enable_colour = wx.CheckBox(layer_opt_pane, label=_('Line Colour') + ':')
         self.enable_colour.SetValue(1)
-        newline.Add(self.enable_colour, flag=wx.LEFT, border=self.FromDIP(BORDER * 2))
+        newline.Add(
+            self.enable_colour,
+            flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
+            border=self.FromDIP(BORDER * 2),
+        )
         self.line_colour_ctrl = wx.ColourPickerCtrl(layer_opt_pane)
-        newline.Add(self.line_colour_ctrl, flag=wx.LEFT, border=self.FromDIP(BORDER))
+        newline.Add(
+            self.line_colour_ctrl,
+            flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
+            border=self.FromDIP(BORDER),
+        )
         layer_opt_sizer.Add(newline, flag=wx.TOP, border=self.FromDIP(BORDER * 2))
+
+        # Fill colour
+        self.do_fill_colour = wx.CheckBox(layer_opt_pane, label=_('Also modify fill colour'))
+        self.do_fill_colour.SetValue(0)
+        layer_opt_sizer.AddSpacer(self.FromDIP(BORDER * 2))
+        layer_opt_sizer.Add(self.do_fill_colour, flag=wx.LEFT, border=self.FromDIP(BORDER * 5))
 
         # thickness
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        self.enable_thickness = wx.CheckBox(
-            layer_opt_pane, label=_('Line Thickness') + ':'
-        )
+        self.enable_thickness = wx.CheckBox(layer_opt_pane, label=_('Line Thickness') + ':')
         self.enable_thickness.SetValue(1)
         newline.Add(
             self.enable_thickness,
@@ -562,7 +536,7 @@ class LayersTab(scrolled.ScrolledPanel):
             border=self.FromDIP(BORDER * 2),
         )
         self.line_thick_ctrl = wx.TextCtrl(
-            layer_opt_pane, size=self.FromDIP(TXT_ENTRY_SIZE), value='1'
+            layer_opt_pane, size=self.FromDIP(TXT_ENTRY_SIZE), value='4'
         )
         newline.Add(
             self.line_thick_ctrl,
@@ -572,10 +546,10 @@ class LayersTab(scrolled.ScrolledPanel):
 
         # Extra note for pybabel to make translations make sense (particularly for inches)
         # translation_note: pt = "points", in = "inches", cm = "centimeters"
-        unit_choice = [_('pt'), _('in'), _('cm')]
-        self.line_thick_units = wx.ComboBox(
-            layer_opt_pane, value=unit_choice[0], choices=unit_choice
-        )
+        unit_choice = [_('in'), _('cm'), _('pt')]
+        self.line_thick_units = wx.ComboBox(layer_opt_pane, choices=unit_choice)
+        self.line_thick_units.SetSelection(2)
+
         newline.Add(
             self.line_thick_units,
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
@@ -596,9 +570,9 @@ class LayersTab(scrolled.ScrolledPanel):
         self.line_style_ctrl = wx.ComboBox(
             layer_opt_pane,
             choices=self.style_names,
-            value=self.style_names[0],
             style=wx.CB_READONLY,
         )
+        self.line_style_ctrl.SetSelection(0)
         newline.Add(
             self.line_style_ctrl,
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
@@ -624,9 +598,7 @@ class LayersTab(scrolled.ScrolledPanel):
             flag=wx.EXPAND | wx.LEFT,
             border=self.FromDIP(BORDER),
         )
-        layer_opt_sizer.Add(
-            newline, flag=wx.TOP | wx.EXPAND, border=self.FromDIP(BORDER * 2)
-        )
+        layer_opt_sizer.Add(newline, flag=wx.TOP | wx.EXPAND, border=self.FromDIP(BORDER * 2))
 
         # apply to checked
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -666,17 +638,9 @@ class LayersTab(scrolled.ScrolledPanel):
             if line_thick is None:
                 return '', None
 
-            units = self.line_thick_units.GetStringSelection()
-            if units == '':
-                units = _('pt')
-
-            line_str += f'{line_thick} {units} '
-
-            if units == _('in'):
-                line_thick = line_thick * 72
-            elif units == _('cm'):
-                line_thick = line_thick * 72 / 2.54
-
+            units = utils.UNITS(self.line_thick_units.GetSelection())
+            line_str += f'{line_thick} {units.str} '
+            line_thick = units.units_to_px(line_thick)
             self.line_props[layer]['thickness'] = line_thick
 
         if self.enable_style.IsChecked():
@@ -688,6 +652,7 @@ class LayersTab(scrolled.ScrolledPanel):
             # ignore alpha
             rgb = [val / 255 for val in colour.Get()[:3]]
             self.line_props[layer]['rgb'] = rgb
+            self.line_props[layer]['fill_colour'] = self.do_fill_colour.IsChecked()
         else:
             colour = None
 
@@ -704,7 +669,10 @@ class LayersTab(scrolled.ScrolledPanel):
         self.layer_list.SetItem(sel, 1, line_str)
 
         if colour is not None:
-            self.layer_list.SetItem(sel, 1, u'\u25A0 ' + line_str)
+            if self.do_fill_colour.IsChecked():
+                self.layer_list.SetItem(sel, 1, u'\u25A0 ' + line_str)
+            else:
+                self.layer_list.SetItem(sel, 1, u'\u25A1 ' + line_str)
             self.layer_list.SetItemTextColour(sel, colour)
 
     def apply_all_pressed(self, event):
@@ -754,7 +722,7 @@ class LayersTab(scrolled.ScrolledPanel):
         if not layers:
             self.layer_splitter.Hide()
             self.status_txt.SetLabel(_('No layers found in input document.'))
-            return
+            return False
 
         self.layer_list.DeleteAllItems()
         for i, l in enumerate(layers):
@@ -767,6 +735,7 @@ class LayersTab(scrolled.ScrolledPanel):
         self.status_txt.SetLabel(_('Select layers to include in output document.'))
         self.layer_splitter.Show()
         self.Layout()
+        return True
 
     def set_all_checked(self, select=True):
         self.select_all.SetValue(select)
@@ -792,9 +761,6 @@ class LayersTab(scrolled.ScrolledPanel):
         if n_layers == len(selected) and len(self.line_props) == 0:
             return 'all'
 
-        if len(selected) == 0:
-            return None
-
         return selected
 
 
@@ -802,7 +768,7 @@ class SewGUI(wx.Frame):
     def __init__(self, *args, **kw):
         # ensure the parent's __init__ is called
         super(SewGUI, self).__init__(*args, **kw)
-        self.progress = None
+        self.progress_win = None
 
         # split the bottom half from the notebook top
         self.splitter = wx.SplitterWindow(self, style=wx.SP_LIVE_UPDATE)
@@ -829,9 +795,7 @@ class SewGUI(wx.Frame):
 
         # create a log window and redirect console output
         self.log = wx.TextCtrl(pnl, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL)
-        vert_sizer.Add(
-            self.log, proportion=1, flag=wx.EXPAND | wx.ALL, border=self.FromDIP(BORDER)
-        )
+        vert_sizer.Add(self.log, proportion=1, flag=wx.EXPAND | wx.ALL, border=self.FromDIP(BORDER))
         sys.stdout = self.log
         sys.stderr = self.log
 
@@ -878,9 +842,7 @@ class SewGUI(wx.Frame):
         do_tile = bool(self.io.do_tile.GetValue())
         do_layers = bool(self.io.do_layers.GetValue())
 
-        if (do_tile and self.tiler is None) or (
-            do_layers and self.layer_filter is None
-        ):
+        if (do_tile and self.tiler is None) or (do_layers and self.layer_filter is None):
             return
 
         if self.out_doc_path is None:
@@ -891,6 +853,7 @@ class SewGUI(wx.Frame):
 
         # global options
         page_range = utils.parse_page_range(self.io.page_range_txt.GetValue())
+        utils.layout_units = utils.UNITS(self.io.unit_box.GetSelection())
 
         if page_range is None:
             print(_('No page range specified, defaulting to all'))
@@ -901,9 +864,7 @@ class SewGUI(wx.Frame):
             self.layer_filter.keep_ocs = self.lt.get_selected_layers()
             self.layer_filter.line_props = self.lt.line_props
             self.layer_filter.keep_non_oc = bool(self.lt.include_nonoc.GetValue())
-            self.layer_filter.delete_ocgs = bool(
-                self.lt.delete_ocgs.GetSelection() == 0
-            )
+            self.layer_filter.delete_ocgs = bool(self.lt.delete_ocgs.GetSelection() == 0)
             self.layer_filter.page_range = page_range
 
         if do_tile:
@@ -915,7 +876,6 @@ class SewGUI(wx.Frame):
             self.tiler.page_range = page_range
 
             # set the optional stuff
-            self.tiler.units = self.tt.unit_box.GetSelection()
             self.tiler.rotation = self.tt.rotate_combo.GetSelection()
 
             # margins
@@ -940,21 +900,21 @@ class SewGUI(wx.Frame):
         # do it
         try:
             if do_layers:
-                self.progress = wx.ProgressDialog(
+                self.progress_win = wx.ProgressDialog(
                     'Processing layers',
                     'Processing layers, please wait',
                     style=wx.PD_CAN_ABORT,
                 )
                 filtered = self.layer_filter.run(
-                    self.progress_range,
-                    self.progress_update,
+                    self.set_progress_range,
+                    self.update_progress,
                     self.progress_was_cancelled,
                 )
             else:
                 filtered = self.in_doc
 
-            if self.progress:
-                self.progress_update(self.progress.GetRange())
+            if self.progress_win:
+                self.update_progress(self.progress_win.GetRange())
 
             if filtered is None:
                 return
@@ -967,6 +927,7 @@ class SewGUI(wx.Frame):
                 # extract the requested pages
                 page_filter = PageFilter(filtered)
                 page_filter.page_range = page_range
+                page_filter.margin = utils.txt_to_float(self.io.margin_txt.GetValue())
                 new_doc = page_filter.run()
 
         except Exception as e:
@@ -979,31 +940,28 @@ class SewGUI(wx.Frame):
             print(_('Successfully written to') + ' ' + self.out_doc_path)
         except Exception as e:
             print(
-                _('Something went wrong') + ', '
-                + _('unable to write to') + ' '
-                + self.out_doc_path
+                _('Something went wrong') + ', ' + _('unable to write to') + ' ' + self.out_doc_path
             )
             print(e)
-            print(
-                _("Make sure " + self.out_doc_path + " isn't open in another program")
-            )
+            print(_("Make sure " + self.out_doc_path + " isn't open in another program"))
 
     def progress_was_cancelled(self):
-        if self.progress != None:
-            return self.progress.WasCancelled()
+        if self.progress_win != None:
+            return self.progress_win.WasCancelled()
 
-    def progress_update(self, val):
-        if self.progress != None:
-            r = self.progress.GetRange()
-            if r:
-                if val == r:
-                    self.progress = None
+    def update_progress(self, val):
+        if self.progress_win != None:
+            p_range = self.progress_win.GetRange()
+            if p_range:
+                if val == p_range:
+                    # Hit the max, we're done
+                    self.progress_win = None
                 else:
-                    self.progress.Update(val)
+                    self.progress_win.Update(val)
 
-    def progress_range(self, val):
-        if self.progress != None:
-            self.progress.SetRange(val)
+    def set_progress_range(self, val):
+        if self.progress_win != None:
+            self.progress_win.SetRange(val)
 
     def make_menu_bar(self):
         # Make a file menu with load and exit items
@@ -1036,10 +994,7 @@ class SewGUI(wx.Frame):
             pathname = fileDialog.GetPath()
             if pathname == self.in_doc.filename:
                 wx.MessageBox(
-                    _(
-                        "Can't overwrite input file, " +
-                        "please select a different file for output"
-                    ),
+                    _("Can't overwrite input file, " + "please select a different file for output"),
                     'Error',
                     wx.OK | wx.ICON_ERROR,
                 )
@@ -1076,13 +1031,13 @@ class SewGUI(wx.Frame):
             try:
                 if pdf_has_password:
                     password_dialog = wx.PasswordEntryDialog(
-                        self, _("Password"), _("PDF file is locked"), "")
+                        self, _("Password"), _("PDF file is locked"), ""
+                    )
                     if password_dialog.ShowModal() == wx.ID_OK:
                         password = password_dialog.GetValue()
                         password_dialog.Destroy()
                     else:
-                        wx.LogError(
-                            _("PDF will not open as you canceled the operation."))
+                        wx.LogError(_("PDF will not open as you canceled the operation."))
                         password_dialog.Destroy()
                         break
 
@@ -1093,11 +1048,24 @@ class SewGUI(wx.Frame):
 
                 # create the processing objects
                 self.layer_filter = LayerFilter(self.in_doc)
-                self.lt.load_new(
-                    self.layer_filter.get_layer_names(self.layer_filter.pdf)
-                )
+                if not self.lt.load_new(self.layer_filter.get_layer_names()):
+                    self.lt.Disable()
+                    self.io.do_layers.SetValue(0)
+                    self.io.do_layers.Disable()
+                else:
+                    self.io.do_layers.SetValue(1)
+                    self.io.do_layers.Enable()
 
-                self.tiler = PageTiler()
+                # only enable tiling if there are more than one page
+                if len(self.in_doc.pages) > 1:
+                    self.tiler = PageTiler()
+                    self.io.do_tile.SetValue(1)
+                    self.io.do_tile.Enable()
+                    self.tt.Enable()
+                else:
+                    self.io.do_tile.SetValue(0)
+                    self.io.do_tile.Disable()
+                    self.tt.Disable()
 
                 # clear the output if it's already set
                 self.out_doc_path = None
@@ -1113,6 +1081,7 @@ class SewGUI(wx.Frame):
                 print(_("PDF file loaded without errors."))
                 break
 
+
 def main():
     # When this module is run (not imported) then create the app, the
     # frame, show it, and start the event loop.
@@ -1122,14 +1091,13 @@ def main():
     # Fix the size for high-resolution displays on windows
     if sys.platform.startswith('win32'):
         from ctypes import OleDLL
+
         OleDLL('shcore').SetProcessDpiAwareness(1)
 
     disp_size = wx.DisplaySize()
-    app_size = wx.Size(
-        min(int(disp_size[0] * 0.6), 700), min(int(disp_size[1] * 0.85), 800)
-    )
+    app_size = wx.Size(min(int(disp_size[0] * 0.6), 700), min(int(disp_size[1] * 0.85), 800))
 
-    frm = SewGUI(None, title='PDF Stitcher' + ' ' + utils.version_string, size=app_size)
+    frm = SewGUI(None, title='PDF Stitcher' + ' ' + utils.VERSION_STRING, size=app_size)
     frm.SetSize(frm.FromDIP(app_size))
     frm.reset_sash_position()
 
@@ -1138,6 +1106,7 @@ def main():
 
     frm.Show()
     app.MainLoop()
+
 
 if __name__ == '__main__':
     main()

@@ -9,8 +9,8 @@ __pycache__
 build/*
 *.mo
 venv/*
-test/*.pdf
-!test/userunit*.pdf
+tests/*.pdf
+!tests/userunit*.pdf
 
 # Distribution / packaging
 bin/
