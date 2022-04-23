@@ -97,7 +97,7 @@ jobs:
         
       - name: Compile translation files and build .app
         run: | 
-          pip3 install pikepdf wxPython Babel pyinstaller pyobjc
+          pip3 install pikepdf wxPython Babel pyinstaller==4.9 pyobjc
           python3 pdfstitcher/update_loc.py --compile
           pyinstaller pdfstitcher_mac.spec
           echo "VERSION_STRING=v$(cat pdfstitcher/version.py | cut -d \' -f 2)" >> $GITHUB_ENV
