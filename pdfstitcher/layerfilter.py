@@ -270,20 +270,19 @@ class LayerFilter:
                 if list(self.current_state[-1][op]) != list(operands):
                     self.current_state[-1][op] = operands
                     commands.append((operands, pikepdf.Operator(op)))
-    
-    def is_oc_obj_to_keep(self, xobj):
+
+    def keep_oc_obj(self, xobj):
         """
-        Helper function to check if the xobj is an OC type to keep
+        Check if we should keep an OC or OCMD object
         """
-        if '/OC' in xobj.keys():
-            if '/Name' in xobj.OC.keys() and str(xobj.OC.Name) in self.keep_ocs:
-                return True
-        elif '/Type' in xobj.keys() and xobj.Type == '/OCMD':
+        if '/Name' in xobj.OC.keys() and str(xobj.OC.Name) in self.keep_ocs:
+            return True
+        
+        if '/Type' in xobj.keys() and xobj.Type == '/OCMD':
             # optional content membership dictionary, check the list of OCGs
             for ocg in xobj.OCGs:
                 if str(ocg.Name) in self.keep_ocs:
                     return True
-
         return False
 
     def get_valid_obs(self, page):
@@ -294,14 +293,15 @@ class LayerFilter:
         """
         oc_obs = {}
         other_obs = {}
-        try:
+        if '/Resources' in page.keys() and '/XObject' in page.Resources.keys():
             page_xobjs = page.Resources.XObject
-        except AttributeError:
+        else:
             return oc_obs, other_obs
 
         for key, xobj in page_xobjs.items():
-            if self.is_oc_obj_to_keep(xobj):
-                oc_obs[key] = xobj
+            if '/OC' in xobj.keys() or '/Type' in xobj.keys() and xobj.Type == '/OCMD':
+                if self.keep_oc_obj(xobj):
+                    oc_obs[key] = xobj
             else:
                 other_obs[key] = xobj
         
@@ -382,9 +382,9 @@ class LayerFilter:
         keeping = self.keep_non_oc or in_oc
         mc_list = []
 
-        try:
+        if '/Resources' in ob.keys() and '/Properties' in ob.Resources.keys():
             page_props = ob.Resources.Properties
-        except AttributeError:
+        else:
             page_props = None
         
         for operands, operator in pikepdf.parse_content_stream(ob):
@@ -406,9 +406,8 @@ class LayerFilter:
                         'state': copy.copy(self.current_state[-1]),
                         'xobj': oc_obs[ob_name]
                     }
-                elif keeping:
-                    # check to see if the object type is not OC
-                    if ob_name in other_obs.keys():
+                elif keeping and ob_name in other_obs.keys():
+                    # place any object that's not oc
                         placed_forms[ob_name] = {
                             'state': copy.copy(self.current_state[-1]),
                             'xobj': other_obs[ob_name]
