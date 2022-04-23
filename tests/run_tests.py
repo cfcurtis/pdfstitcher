@@ -19,12 +19,13 @@ if not sys.warnoptions:
 def time_and_test(process, name, full_profile=False):
     if full_profile:
         return profile(process, name)
-    
+
     starttime = time.time()
     print(f'Starting {name}')
     processed = process.run()
     print(f'Process time: {time.time() - starttime:.1f} s')
     return processed
+
 
 def profile(process, name):
     print(f'Profiling {name}')
@@ -33,6 +34,7 @@ def profile(process, name):
         stats = pstats.Stats(pr).sort_stats('cumulative')
         stats.print_stats()
     return processed
+
 
 if __name__ == "__main__":
     root = Path(__file__).parent
@@ -81,7 +83,7 @@ if __name__ == "__main__":
                     print(e)
                     print('...Skipping')
                     continue
-                
+
                 page_range = utils.parse_page_range(t['page_range'])
                 if 'layer_filter' in t.keys():
                     layer_filter = LayerFilter(in_doc)
@@ -91,7 +93,9 @@ if __name__ == "__main__":
                         setattr(layer_filter, k, v)
                     for key in layer_filter.line_props.keys():
                         layer_filter.line_props[key]['fill_colour'] = fill
-                    full_profile = 'profile' in t['layer_filter'].keys() and t['layer_filter']['profile']
+                    full_profile = (
+                        'profile' in t['layer_filter'].keys() and t['layer_filter']['profile']
+                    )
                     filtered = time_and_test(layer_filter, t['name'] + ' LayerFilter', full_profile)
                 else:
                     filtered = in_doc
@@ -101,7 +105,9 @@ if __name__ == "__main__":
                     page_tiler.page_range = page_range
                     for k, v in t['page_tiler'].items():
                         setattr(page_tiler, k, v)
-                    full_profile = 'profile' in t['page_tiler'].keys() and t['page_tiler']['profile']
+                    full_profile = (
+                        'profile' in t['page_tiler'].keys() and t['page_tiler']['profile']
+                    )
                     out_doc = time_and_test(page_tiler, t['name'] + ' PageTiler', full_profile)
                 else:
                     page_filter = PageFilter(filtered)
