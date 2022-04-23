@@ -76,7 +76,7 @@ def setup_locale():
             lc = os.getenv("LANG")[:4]
         else:
             lang = lc[0]
-    except IndexError:
+    except:
         try:
             # try the Apple way
             from Foundation import NSUserDefaults
