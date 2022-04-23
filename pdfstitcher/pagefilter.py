@@ -13,6 +13,7 @@ class PageFilter:
     """
     Simple class to pass through the selected pages
     """
+
     def __init__(self, doc=None):
         self.in_doc = doc
         self.page_range = []
@@ -40,7 +41,7 @@ class PageFilter:
             if '/UserUnit' in self.in_doc.pages[-1].keys():
                 new_doc.pages[-1].UserUnit = self.in_doc.pages[-1].UserUnit
                 user_unit = self.in_doc.pages[-1].UserUnit
-            
+
             if self.margin:
                 # if margins were added, expand the new page boxes
                 margin = utils.layout_units.units_to_px(self.margin / user_unit)

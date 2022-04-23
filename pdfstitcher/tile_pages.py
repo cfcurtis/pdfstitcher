@@ -249,13 +249,15 @@ class PageTiler:
                             rtrim = [trim[3], trim[0], trim[2], trim[1]]
                         elif page_rot in (-90, 270):
                             rtrim = [trim[3], trim[1], trim[2], trim[0]]
-                        
+
                         # lowercase trimbox returns TrimBox if it exists, MediaBox otherwise
                         in_trim = [float(t) for t in in_doc_page.trimbox]
-                        new_page.TrimBox = [in_trim[0] + rtrim[0],
-                                            in_trim[1] + rtrim[1],
-                                            in_trim[2] - rtrim[2],
-                                            in_trim[3] - rtrim[3]]
+                        new_page.TrimBox = [
+                            in_trim[0] + rtrim[0],
+                            in_trim[1] + rtrim[1],
+                            in_trim[2] - rtrim[2],
+                            in_trim[3] - rtrim[3],
+                        ]
                 # get the input page height and width
                 p_width, p_height = utils.get_page_dims(in_doc_page, page_rot)
                 pw.append(p_width)
@@ -268,10 +270,8 @@ class PageTiler:
                 # update the reference handles to be the current page
                 ref_width = p_width
                 ref_height = p_height
-                
-                content_dict[pagekey] = new_doc.copy_foreign(
-                    new_page.as_form_xobject()
-                )
+
+                content_dict[pagekey] = new_doc.copy_foreign(new_page.as_form_xobject())
 
             else:
                 # blank page, use the reference for sizes and such
@@ -281,9 +281,9 @@ class PageTiler:
 
         if len(different_size) > 0:
             print(
-                _(
-                    'Warning: The pages {} have a different size than the page before'
-                ).format(different_size)
+                _('Warning: The pages {} have a different size than the page before').format(
+                    different_size
+                )
             )
 
         n_tiles = len(page_names)
@@ -293,9 +293,9 @@ class PageTiler:
             self.rows = math.ceil(n_tiles / self.cols)
             if self.rows == 1 and self.cols > n_tiles:
                 print(
-                    _(
-                        'Warning: requested {} columns, but there are only {} pages'
-                    ).format(self.cols, n_tiles)
+                    _('Warning: requested {} columns, but there are only {} pages').format(
+                        self.cols, n_tiles
+                    )
                 )
                 self.cols = n_tiles
 
@@ -350,24 +350,20 @@ class PageTiler:
             # Find the grid that contains the maximum page size for each row/col
             if self.col_major:
                 for c in range(self.cols):
-                    col_width[c] = max(
-                        pw[c * self.rows : c * self.rows + self.rows]
-                    ) - (trim[0] + trim[1])
-
-                for r in range(self.rows):
-                    row_height[r] = max(ph[r : n_tiles : self.cols]) - (
-                        trim[2] + trim[3]
-                    )
-            else:
-                for r in range(self.rows):
-                    row_height[r] = max(
-                        ph[r * self.cols : r * self.cols + self.cols]
-                    ) - (trim[2] + trim[3])
-
-                for c in range(self.cols):
-                    col_width[c] = max(pw[c : n_tiles : self.rows]) - (
+                    col_width[c] = max(pw[c * self.rows : c * self.rows + self.rows]) - (
                         trim[0] + trim[1]
                     )
+
+                for r in range(self.rows):
+                    row_height[r] = max(ph[r : n_tiles : self.cols]) - (trim[2] + trim[3])
+            else:
+                for r in range(self.rows):
+                    row_height[r] = max(ph[r * self.cols : r * self.cols + self.cols]) - (
+                        trim[2] + trim[3]
+                    )
+
+                for c in range(self.cols):
+                    col_width[c] = max(pw[c : n_tiles : self.rows]) - (trim[0] + trim[1])
 
             if self.right_to_left:
                 col_width.reverse()
@@ -382,10 +378,10 @@ class PageTiler:
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
         margin = utils.layout_units.units_to_px(self.margin / user_unit)
         media_box = [
-            float(new_page.MediaBox[0]), 
-            float(new_page.MediaBox[1]), 
-            width + 2 * margin, 
-            height + 2 * margin
+            float(new_page.MediaBox[0]),
+            float(new_page.MediaBox[1]),
+            width + 2 * margin,
+            height + 2 * margin,
         ]
 
         utils.print_media_box(media_box)
@@ -423,9 +419,9 @@ class PageTiler:
                 # take the smaller scaling factor so that the page will fit into its box
                 scale_factor = min(scalef_width, scalef_height)
                 cpos_x0 = c * page_box_width - c * (trim[0] + trim[1])
-                cpos_y0 = (self.rows - r - 1) * page_box_height - (
-                    self.rows - r - 1
-                ) * (trim[2] + trim[3])
+                cpos_y0 = (self.rows - r - 1) * page_box_height - (self.rows - r - 1) * (
+                    trim[2] + trim[3]
+                )
             else:
                 cpos_x0 = sum(col_width[:c]) - trim[0]
                 cpos_y0 = sum(row_height[r + 1 :]) - trim[3]

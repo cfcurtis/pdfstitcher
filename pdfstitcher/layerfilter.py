@@ -11,9 +11,7 @@ from decimal import Decimal
 import copy
 
 STATE_OPS = [k for k, v in pdf_ops.ops.items() if v[0] == 'state']
-STATE_OPS += [
-    k for k, v in pdf_ops.ops.items() if v[0] in ['begin', 'end'] and v[1] != 'image'
-]
+STATE_OPS += [k for k, v in pdf_ops.ops.items() if v[0] in ['begin', 'end'] and v[1] != 'image']
 STROKE_OPS = [k for k, v in pdf_ops.ops.items() if v[0] == 'show' and v[1] == 'stroke']
 SKIP_TYPES = ['/Font', '/ExtGState']
 SKIP_KEYS = ['/Parent', '/Thumb', '/PieceInfo']
@@ -83,14 +81,14 @@ class LayerFilter:
         page_forms = []
         if '/Resources' not in page.keys():
             return None
-        
+
         if '/XObject' not in page.Resources.keys():
             return None
 
         for ob in page.Resources.XObject.values():
             if '/Subtype' in ob.keys() and ob.Subtype == '/Form':
                 page_forms.append(ob)
-        
+
         return page_forms
 
     @staticmethod
@@ -114,7 +112,7 @@ class LayerFilter:
             ocp = self.pdf.Root.OCProperties
         else:
             return None
-            
+
         names = [str(oc.Name) for oc in ocp.OCGs]
         ordered_names = []
         if '/D' in ocp.keys() and '/Order' in ocp.D.keys():
@@ -132,17 +130,17 @@ class LayerFilter:
 
         if ocg_list is None:
             ocg_list = self.out_pdf.Root.OCProperties.D.Order
-        
+
         if ocg_list._type_name == 'array':
             to_delete = []
             for i, item in enumerate(ocg_list):
                 if self.filter_ocg_order(item):
                     to_delete.append(i)
-            
+
             # delete the items in reverse order so we don't mess up the indices
             for i in reversed(to_delete):
                 del ocg_list[i]
-            
+
             return len(ocg_list) == 0
 
         elif ocg_list._type_name == 'dictionary':
@@ -150,7 +148,7 @@ class LayerFilter:
                 if ocg_list.Type == pikepdf.Name.OCG and ocg_list.Name not in self.keep_ocs:
                     # found the OCG entry, delete it if it's not in our keep array
                     return True
-        
+
         return False
 
     def update_ocs(self):
@@ -163,15 +161,9 @@ class LayerFilter:
             return
 
         # edit the OCG listing in the root
-        On = [
-            oc
-            for oc in self.out_pdf.Root.OCProperties.OCGs
-            if str(oc.Name) in self.keep_ocs
-        ]
+        On = [oc for oc in self.out_pdf.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]
         Off = [
-            oc
-            for oc in self.out_pdf.Root.OCProperties.OCGs
-            if str(oc.Name) not in self.keep_ocs
+            oc for oc in self.out_pdf.Root.OCProperties.OCGs if str(oc.Name) not in self.keep_ocs
         ]
 
         # Delete requires parsing
@@ -183,10 +175,10 @@ class LayerFilter:
             # just switch them off
             self.out_pdf.Root.OCProperties.D.ON = On
             self.out_pdf.Root.OCProperties.D.OFF = Off
-        
+
         # by default, unlock all layers
         self.out_pdf.Root.OCProperties.D.Locked = []
-    
+
     def process_page_range(self):
         """
         Convert the page range into a 1-indexed unique set.
@@ -258,7 +250,7 @@ class LayerFilter:
         Pop the last state off the list.
         """
         self.current_state.pop()
-    
+
     def reset_to_previous_state(self, commands):
         """
         Reset the state to the previous state without a Q operation.
@@ -277,7 +269,7 @@ class LayerFilter:
         """
         if '/Name' in xobj.OC.keys() and str(xobj.OC.Name) in self.keep_ocs:
             return True
-        
+
         if '/Type' in xobj.keys() and xobj.Type == '/OCMD':
             # optional content membership dictionary, check the list of OCGs
             for ocg in xobj.OCGs:
@@ -304,12 +296,10 @@ class LayerFilter:
                     oc_obs[key] = xobj
             else:
                 other_obs[key] = xobj
-        
+
         return oc_obs, other_obs
 
-    def run(
-        self, set_progress_range=None, update_progress=None, progress_was_cancelled=None
-    ):
+    def run(self, set_progress_range=None, update_progress=None, progress_was_cancelled=None):
         """
         The primary method to run the filter.
         If called from pdfstitcher.py, the progress window will be updated.
@@ -376,6 +366,8 @@ class LayerFilter:
         commands = []
         placed_forms = {}
         oc_obs, other_obs = self.get_valid_obs(ob)
+        # if the current object (page or form) is defined with transparency,
+        # things go wonky when we try to override the fill colour, so don't
         transparency = self._is_transparency_group(ob)
         current_layer_name = ''
         # initialize copying with keep_non_oc
@@ -386,11 +378,11 @@ class LayerFilter:
             page_props = ob.Resources.Properties
         else:
             page_props = None
-        
+
         for operands, operator in pikepdf.parse_content_stream(ob):
             previous_operator = op
             op = str(operator)
-            
+
             # if there's an empty q/Q, just pop the state and last command
             if previous_operator == 'q' and op == 'Q':
                 commands.pop()
@@ -404,27 +396,29 @@ class LayerFilter:
                 if ob_name in oc_obs.keys():
                     placed_forms[ob_name] = {
                         'state': copy.copy(self.current_state[-1]),
-                        'xobj': oc_obs[ob_name]
+                        'xobj': oc_obs[ob_name],
                     }
                 elif keeping and ob_name in other_obs.keys():
                     # place any object that's not oc
-                        placed_forms[ob_name] = {
-                            'state': copy.copy(self.current_state[-1]),
-                            'xobj': other_obs[ob_name]
-                        }
+                    placed_forms[ob_name] = {
+                        'state': copy.copy(self.current_state[-1]),
+                        'xobj': other_obs[ob_name],
+                    }
                 else:
                     # don't execute the Do command if it's not optional content
                     # and we're not in a keeping mood
                     continue
-            
+
             if keeping and current_layer_name in self.pdf_line_props:
                 if op == 'gs' or op in STROKE_OPS:
                     # check to see if the state needs to be modified before drawing
-                    self.override_state(commands, self.pdf_line_props[current_layer_name], transparency)
+                    self.override_state(
+                        commands, self.pdf_line_props[current_layer_name], transparency
+                    )
                 elif op in self.pdf_line_props[current_layer_name].keys():
                     # and check if the current operator is one we need to modify
                     operands = self.pdf_line_props[current_layer_name][op]
-                
+
             if keeping or op in STATE_OPS or op == 'Do':
                 # if we're keeping this command, write it out
                 commands.append((operands, operator))
@@ -432,7 +426,7 @@ class LayerFilter:
                 # and update the state
                 if op in self.current_state[-1].keys():
                     self.current_state[-1][op] = operands
-            
+
                 # check for q/Q
                 if op == 'q':
                     self.add_q_state()
@@ -448,7 +442,7 @@ class LayerFilter:
                         ocg = page_props[oc_label]
                         current_layer_name = str(ocg.Name)
                         keeping = current_layer_name in self.keep_ocs
-                    
+
                     mc_list.append(True)
                 else:
                     # not an OC block, but still need to add to the marked content list
@@ -471,7 +465,7 @@ class LayerFilter:
 
         Args:
             page (pikepdf Page): pdf page object, or form xobject
-            in_oc (bool, optional): True if we're currently "in" an optional content block. Defaults to False.
+            in_oc (bool, optional): True if we're currently "in" an optional content block.
         """
         # First check the id of the page and don't re-filter if we've seen it before
         obid = page.unparse()
@@ -479,7 +473,7 @@ class LayerFilter:
             return
         else:
             self.processed_objects.add(obid)
-        
+
         # the page is either an actual page, or a form xobject
         is_page = isinstance(page, pikepdf.Page)
 
@@ -488,11 +482,11 @@ class LayerFilter:
             bytestream = page.Contents.read_bytes()
         else:
             bytestream = page.read_bytes()
-        
+
         # filter if there's OC blocks or placed forms, or we're already
         # in an optional content group
         do_filter = b'/OC' in bytestream or b'Do' in bytestream or in_oc
-            
+
         # initialize empty stream and placed forms, then try to filter
         page_stream = None
         if do_filter:
@@ -504,7 +498,7 @@ class LayerFilter:
             except Exception as e:
                 print(e)
                 pass
-            
+
             # get the dictionary of xobjects to process as well
             for name, info in placed_xobjs.items():
                 if '/Subtype' in info['xobj'].keys() and info['xobj'].Subtype == '/Form':
@@ -512,7 +506,7 @@ class LayerFilter:
                     # if 'Page' is in the name, we're probably reprocessing a PDF stitched file,
                     # so we want to treat the xobj like a page. Probably.
                     self.filter_content(info['xobj'], in_oc=not 'Page' in name)
-        
+
         elif not self.keep_non_oc:
             # if we're not filtering and not keeping non-optional content, obliterate the stream
             page_stream = b''

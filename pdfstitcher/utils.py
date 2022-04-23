@@ -20,6 +20,7 @@ from pdfstitcher.version import __version__
 VERSION_STRING = "v" + __version__
 MAX_SIZE_PX = 14400
 
+
 class UNITS(IntEnum):
     INCHES = 0
     CENTIMETERS = 1
@@ -33,7 +34,7 @@ class UNITS(IntEnum):
             return _('cm')
         elif self == UNITS.POINTS:
             return _('pt')
-    
+
     def units_to_px(self, val):
         if self == UNITS.INCHES:
             return val * 72
@@ -41,7 +42,7 @@ class UNITS(IntEnum):
             return val * 72 / 2.54
         elif self == UNITS.POINTS:
             return val
-    
+
     def px_to_units(self, val):
         if self == UNITS.INCHES:
             return val / 72
@@ -50,8 +51,10 @@ class UNITS(IntEnum):
         elif self == UNITS.POINTS:
             return val
 
+
 # default to inches
 layout_units = UNITS.INCHES
+
 
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller"""
@@ -194,6 +197,7 @@ def get_page_dims(page, global_rotation=0):
 
     return page_width, page_height
 
+
 def print_media_box(media_box, user_unit=1):
     """
     Display the media box in the requested units.
@@ -205,13 +209,13 @@ def print_media_box(media_box, user_unit=1):
         # check if it exceeds Adobe's 200 inch maximum size
         print(62 * '*')
         print(
-            _(
-                'Warning! Output is larger than {} {}, may not open correctly.'
-            ).format(round(layout_units.px_to_units(MAX_SIZE_PX)), layout_units.str)
+            _('Warning! Output is larger than {} {}, may not open correctly.').format(
+                round(layout_units.px_to_units(MAX_SIZE_PX)), layout_units.str
+            )
         )
         print(62 * '*')
     # just print it out for info
-    print( 
+    print(
         _('Output size:')
         + ' {:0.2f} x {:0.2f} {}'.format(
             user_unit * layout_units.px_to_units(width),
