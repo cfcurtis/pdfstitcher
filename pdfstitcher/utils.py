@@ -223,3 +223,20 @@ def print_media_box(media_box, user_unit=1):
             layout_units.str,
         )
     )
+
+def normalize_boxes(page):
+    """
+    Normalizes the various pdf boxes on the page so they follow the assumed
+    [lower x, lower y, upper x, upper y] format
+    """
+
+    for box in [key for key in page.keys() if 'Box' in key]:
+        if page[box][0] > page[box][2]:
+            page[box][0], page[box][2] = page[box][2], page[box][0]
+        if page[box][1] > page[box][3]:
+            page[box][1], page[box][3] = page[box][3], page[box][1]
+    
+    # check if there are any xobjects with boxes that need to be normalized
+    if '/Resources' in page.keys() and '/XObject' in page.Resources.keys():
+        for key in page.Resources.XObject.keys():
+            normalize_boxes(page.Resources.XObject[key])

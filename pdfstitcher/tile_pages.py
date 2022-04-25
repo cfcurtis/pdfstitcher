@@ -164,6 +164,11 @@ class PageTiler:
         """
         The main function for tiling pages.
         """
+
+        # First, go through the pages and normalize the various boxes
+        for page in self.in_doc.pages:
+            utils.normalize_boxes(page)
+
         self.rows = rows
         self.cols = cols
 
