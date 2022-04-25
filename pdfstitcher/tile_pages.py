@@ -164,10 +164,8 @@ class PageTiler:
         """
         The main function for tiling pages.
         """
-        if rows is not None:
-            self.rows = rows
-        if cols is not None:
-            self.cols = cols
+        self.rows = rows
+        self.cols = cols
 
         if target_width is not None:
             self.target_width = utils.layout_units.units_to_px(target_width)
