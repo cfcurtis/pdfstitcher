@@ -164,10 +164,13 @@ class PageTiler:
         """
         The main function for tiling pages.
         """
-        if rows is not None:
-            self.rows = rows
-        if cols is not None:
-            self.cols = cols
+
+        # First, go through the pages and normalize the various boxes
+        for page in self.in_doc.pages:
+            utils.normalize_boxes(page)
+
+        self.rows = rows
+        self.cols = cols
 
         if target_width is not None:
             self.target_width = utils.layout_units.units_to_px(target_width)
@@ -200,7 +203,7 @@ class PageTiler:
         page_rot = 0
 
         if '/Rotate' in self.in_doc.Root.Pages.keys():
-            page_rot = self.in_doc.Root.Pages.Rotate
+            page_rot = self.in_doc.Root.Pages.Rotate % 360
 
         for p in self.page_range:
             if p > 0:
@@ -231,7 +234,7 @@ class PageTiler:
                     new_page = copy.copy(in_doc_page)
 
                     if '/Rotate' in in_doc_page.keys():
-                        page_rot = in_doc_page.Rotate
+                        page_rot = in_doc_page.Rotate % 360
 
                     if self.override_trim:
                         new_page.TrimBox = copy.copy(in_doc_page.MediaBox)
@@ -241,13 +244,12 @@ class PageTiler:
                         # things get tricky if there's rotation, because the user sees top/bottom as right/left
                         # trim: left, right, top, bottom as defined visually
                         # trimbox: left, bottom, right, top (absolute coordinates)
-                        if page_rot == 0:
-                            rtrim = [trim[0], trim[3], trim[1], trim[2]]
-                        elif page_rot == 90:
+                        rtrim = [trim[0], trim[3], trim[1], trim[2]]
+                        if page_rot == 90:
                             rtrim = [trim[2], trim[0], trim[3], trim[1]]
                         elif page_rot == 180:
                             rtrim = [trim[3], trim[0], trim[2], trim[1]]
-                        elif page_rot in (-90, 270):
+                        elif page_rot == 270:
                             rtrim = [trim[3], trim[1], trim[2], trim[0]]
 
                         # lowercase trimbox returns TrimBox if it exists, MediaBox otherwise
