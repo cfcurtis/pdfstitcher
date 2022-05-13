@@ -1,5 +1,5 @@
 - name: Jalie
-  input: '{gdrive}\Sewing\Jalie\jalie_2679_veste_sport_jacket_pieces.pdf'
+  input: '{gdrive}/Sewing/Jalie/jalie_2679_veste_sport_jacket_pieces.pdf'
   page_range: 1-23
   layer_filter:
     keep_ocs: all
@@ -15,7 +15,7 @@
   page_tiler:
     rows: 5
 - name: Puperita
-  input: '{gdrive}\Sewing\Puperita\PUPERITAmodel1181MYNESTSleepSack.pdf'
+  input: '{gdrive}/Sewing/Puperita/PUPERITAmodel1181MYNESTSleepSack.pdf'
   page_range: '33-44,0,0,45-51'
   layer_filter:
     keep_ocs: ['size L','size S','always checked']
@@ -30,7 +30,7 @@
   page_tiler:
     cols: 7
 - name: Sinclair
-  input: '{gdrive}\Sewing\Sinclair\Letter_SINCLAIR_S1065_PETITE-EI_Harper_knit_cardigan_and_duster_US0-US30_RL519.pdf'
+  input: '{gdrive}/Sewing/Sinclair/Letter_SINCLAIR_S1065_PETITE-EI_Harper_knit_cardigan_and_duster_US0-US30_RL519.pdf'
   page_range: '1-44'
   layer_filter:
     keep_ocs: ['PETITE US04-S','PETITE US06-S']
@@ -59,14 +59,14 @@
     margin: 12
     rows: 1
 - name: George & Ginger
-  input: '{gdrive}\Sewing\George&Ginger\GG_40K_Sway_Top_Projector_Color.pdf'
+  input: '{gdrive}/Sewing/George&Ginger/GG_40K_Sway_Top_Projector_Color.pdf'
   page_range: '1'
   layer_filter:
     keep_ocs: ['Size 4 - S','BORDERS (do not turn off)']
     do_fill: [True, False]
     line_props: {'Size 4 - S': {'thickness': 10.0, 'style': 1, 'rgb': [0,0,1]}}
 - name: SUAT
-  input: '{gdrive}\Sewing\SUAT\SUAT Midnight Slipper Pattern.pdf'
+  input: '{gdrive}/Sewing/SUAT/SUAT Midnight Slipper Pattern.pdf'
   page_range: '16-18'
   layer_filter: 
     keep_ocs: ['5/6','KEEP ON']
@@ -76,7 +76,7 @@
     trim: [0.5,0.5,0.5,0.5]
     margin: 12
 - name: P4P
-  input: '{gdrive}\Sewing\P4P\Wee-Lap-Tee-by-P4P-US-Letter.pdf'
+  input: '{gdrive}/Sewing/P4P/Wee-Lap-Tee-by-P4P-US-Letter.pdf'
   page_range: 13-16
   layer_filter:
     keep_ocs: ['9 Month','12 Month','All Sizes']
@@ -88,7 +88,7 @@
     trim: [0,1,0,1]
     margin: 8
 - name: PatternNiche
-  input: '{gdrive}\Sewing\PatternNiche\Tami-Revolution-Hoodie-Womens-Projector-File.pdf'
+  input: '{gdrive}/Sewing/PatternNiche/Tami-Revolution-Hoodie-Womens-Projector-File.pdf'
   page_range: '1'
   layer_filter:
     keep_ocs: ['26','text']
@@ -97,7 +97,7 @@
         style: 0
         rgb: [1,0,0]
 - name: BlueDot
-  input: '{gdrive}\Sewing\BlueDot\georgiacowlexpansionpackfinal.pdf'
+  input: '{gdrive}/Sewing/BlueDot/georgiacowlexpansionpackfinal.pdf'
   page_range: 2-7
   layer_filter:
     keep_ocs: ['Cowl']
@@ -107,7 +107,7 @@
   page_tiler:
     rows: 2
 - name: PSCO
-  input: '{gdrive}\Sewing\PetiteStitchery\PSCO_AdultYogger_Projector.pdf'
+  input: '{gdrive}/Sewing/PetiteStitchery/PSCO_AdultYogger_Projector.pdf'
   page_range: '1-2'
   layer_filter:
     keep_ocs: ['S']
@@ -119,7 +119,7 @@
   page_tiler:
     rows: 2
 - name: LLK
-  input: '{gdrive}\Sewing\LittleLizardKing\LLK_Galena_Girl_A0_Projector_Final.pdf'
+  input: '{gdrive}/Sewing/LittleLizardKing/LLK_Galena_Girl_A0_Projector_Final.pdf'
   page_range: '1-2'
   layer_filter:
     keep_ocs: ['2']
@@ -129,7 +129,7 @@
         style: 0
         rgb: [0,0,0]
 - name: SoSewEasy
-  input: '{gdrive}\Sewing\SoSewEasy\menspajamashortsfinal_aiid2146907.pdf'
+  input: '{gdrive}/Sewing/SoSewEasy/menspajamashortsfinal_aiid2146907.pdf'
   page_range: '18-37'
   layer_filter:
     keep_ocs: ['Size 32','Markings']
@@ -155,7 +155,7 @@
     trim: [50,0,0,0]
     margin: 50
 - name: MBJM
-  input: "/home/charlotte/Documents/Sewing/Waves&Wild/PickNMix/MBJM-Pick-n-Mix-T-Shirt.pdf"
+  input: "{gdrive}/Sewing/Waves&Wild/PickNMix/MBJM-Pick-n-Mix-T-Shirt.pdf"
   page_range: '1,2,5,7,9,12,13,3,4,6,8,10,11'
   layer_filter:
     keep_ocs: ['Age 2','6-12m','Pattern Information']
