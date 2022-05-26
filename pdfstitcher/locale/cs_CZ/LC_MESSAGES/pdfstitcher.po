@@ -9,14 +9,16 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-10-04 11:04-0600\n"
-"PO-Revision-Date: 2021-08-19 10:40-0600\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2022-05-27 15:19+0000\n"
+"Last-Translator: Charlotte Curtis <c.f.curtis@gmail.com>\n"
+"Language-Team: Czech <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/cs/>\n"
 "Language: cs_CZ\n"
-"Language-Team: cs_CZ <LL@li.org>\n"
-"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 4.13-dev\n"
 "Generated-By: Babel 2.9.1\n"
 
 #: layerfilter.py:122
@@ -85,9 +87,8 @@ msgid "Number of Columns"
 msgstr "Počet sloupců"
 
 #: pdfstitcher.py:128
-#, fuzzy
 msgid "OR Number of Rows"
-msgstr "Počet řádků"
+msgstr "NEBO počet řádků"
 
 #: pdfstitcher.py:136 tile_pages.py:139
 msgid "Rows then columns"
@@ -499,4 +500,3 @@ msgstr "Uveďte rozsah stránek"
 
 #~ msgid "PDF Stitcher"
 #~ msgstr ""
-
