@@ -169,8 +169,9 @@ class PageTiler:
         for page in self.in_doc.pages:
             utils.normalize_boxes(page)
 
-        self.rows = rows
-        self.cols = cols
+        if rows or cols:
+            self.rows = rows
+            self.cols = cols
 
         if target_width is not None:
             self.target_width = utils.layout_units.units_to_px(target_width)

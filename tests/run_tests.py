@@ -54,7 +54,7 @@ if __name__ == "__main__":
         elif sys.platform.startswith('darwin'):
             gdrive = '/Users/cfcurtis/Google Drive'
         elif sys.platform.startswith('linux'):
-            gdrive = '/home/charlotte/Documents'
+            gdrive = '/home/charlotte/Documents/gdrive/personal'
 
         t['input'] = t['input'].replace('{gdrive}', gdrive)
         t['input'] = t['input'].replace('\\', '/')
