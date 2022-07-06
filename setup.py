@@ -1,20 +1,29 @@
 #!/usr/bin/env python
 from setuptools import setup
 from setuptools.command.install import install
+from setuptools.command.develop import develop
 from babel.messages.frontend import compile_catalog
 
-# Shamelessly copied from https://stackoverflow.com/a/41120180
+def run_compile(cmdclass):
+    # Shamelessly copied from https://stackoverflow.com/a/41120180
+    compiler = compile_catalog(cmdclass.distribution)
+    compiler.directory = "pdfstitcher/locale"
+    compiler.domain = ["pdfstitcher"]
+    compiler.run()
+
 class InstallWithCompile(install):
     def run(self):
-        compiler = compile_catalog(self.distribution)
-        option_dict = self.distribution.get_option_dict('compile_catalog')
-        compiler.directory = option_dict['directory'][1]
-        compiler.domain = [option_dict['domain'][1]]
-        compiler.run()
+        run_compile(self)
+        super().run()
+
+class DevelopWithCompile(develop):
+    def run(self):
+        run_compile(self)
         super().run()
 
 setup(
     cmdclass={
-        "install": InstallWithCompile
+        "install": InstallWithCompile,
+        "develop": DevelopWithCompile
     }
 )
