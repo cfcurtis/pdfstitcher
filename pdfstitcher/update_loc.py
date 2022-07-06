@@ -8,30 +8,30 @@ from os.path import isdir, exists, abspath, dirname, join
 
 
 SourceTree = dirname(abspath(__file__))
-T = join(SourceTree, 'locale')
+T = join(SourceTree, "locale")
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Extract, update, or compile translations.")
     parser.add_argument(
-        '--extract',
-        '-e',
-        action='store_true',
+        "--extract",
+        "-e",
+        action="store_true",
     )
     parser.add_argument(
-        '--update',
-        '-u',
-        action='store_true',
+        "--update",
+        "-u",
+        action="store_true",
     )
     parser.add_argument(
-        '--compile',
-        '-c',
-        action='store_true',
+        "--compile",
+        "-c",
+        action="store_true",
     )
     parser.add_argument(
-        '--all',
-        '-a',
-        action='store_true',
+        "--all",
+        "-a",
+        action="store_true",
     )
     return parser.parse_args()
 
@@ -52,19 +52,19 @@ def update():
 
     for L in LOCALES:
         invoke_args = f' -D pdfstitcher -d {T} -i {join(T,"pdfstitcher.pot")} -l {L}'
-        if exists(join(T, L, 'LC_MESSAGES', 'pdfstitcher.po')):
-            cmd = 'pybabel update' + invoke_args
+        if exists(join(T, L, "LC_MESSAGES", "pdfstitcher.po")):
+            cmd = "pybabel update" + invoke_args
         else:
-            cmd = 'pybabel init' + invoke_args
+            cmd = "pybabel init" + invoke_args
         run(cmd, shell=True)
 
 
 def compile():
     print("**compile**")
-    run(f'pybabel compile -D pdfstitcher -d {T}', shell=True)
+    run(f"pybabel compile -D pdfstitcher -d {T}", shell=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     args = parse_args()
 

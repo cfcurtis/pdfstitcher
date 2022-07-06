@@ -38,7 +38,7 @@ class PageFilter:
             else:
                 new_doc.pages.extend([self.in_doc.pages[p - 1]])
 
-            if '/UserUnit' in self.in_doc.pages[-1].keys():
+            if "/UserUnit" in self.in_doc.pages[-1].keys():
                 new_doc.pages[-1].UserUnit = self.in_doc.pages[-1].UserUnit
                 user_unit = self.in_doc.pages[-1].UserUnit
 
