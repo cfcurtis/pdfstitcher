@@ -8,34 +8,51 @@
 import sys
 import os
 import pikepdf
-from enum import IntEnum
+from enum import Enum
+
+from appdirs import user_config_dir
+import yaml
 
 # localization stuff
 import gettext
 import locale
 from pathlib import Path
 
-from pdfstitcher.version import __version__
-from pdfstitcher import config
+import importlib.metadata
+
+__version__ = importlib.metadata.version("pdfstitcher")
+
 
 VERSION_STRING = "v" + __version__
+# Maximum size of a PDF document in Adobe (200 inches)
 MAX_SIZE_PX = 14400
 
-class UNITS(IntEnum):
+# Constant widget sizes - used for all the different panels
+BORDER = 5
+TXT_ENTRY_SIZE = (40, -1)
+
+
+class UNITS(Enum):
     INCHES = 0
     CENTIMETERS = 1
     POINTS = 2
 
     @property
     def str(self):
+        """
+        Returns the name of the units in the current language.
+        """
         if self == UNITS.INCHES:
-            return _('in')
+            return _("in")
         elif self == UNITS.CENTIMETERS:
-            return _('cm')
+            return _("cm")
         elif self == UNITS.POINTS:
-            return _('pt')
+            return _("pt")
 
     def units_to_px(self, val):
+        """
+        Converts from current units to pixels.
+        """
         if self == UNITS.INCHES:
             return val * 72
         elif self == UNITS.CENTIMETERS:
@@ -44,12 +61,86 @@ class UNITS(IntEnum):
             return val
 
     def px_to_units(self, val):
+        """
+        Converts from pixels to current units.
+        """
         if self == UNITS.INCHES:
             return val / 72
         elif self == UNITS.CENTIMETERS:
             return val / 72 * 2.54
         elif self == UNITS.POINTS:
             return val
+
+
+def unit_representer(dumper, data):
+    return dumper.represent_scalar("!units", "%s" % data.name)
+
+
+def unit_constructor(loader, node):
+    name = loader.construct_scalar(node)
+    return UNITS[name]
+
+
+yaml.add_representer(UNITS, unit_representer)
+yaml.add_constructor("!units", unit_constructor)
+
+
+class Config:
+    """
+    Singleton class to handle user preferences
+    """
+
+    general = {
+        "units": UNITS.INCHES,
+        "language": None,
+        "check_updates": True,
+        "open_dir": "",
+        "save_dir": "",
+        "margin": "0",
+    }
+    line_props = {
+        "colour": {"enable": True, "value": (0, 0, 0), "fill": False},
+        "thickness": {"enable": True, "value": "4", "units": UNITS.POINTS},
+        "style": {"enable": True, "value": 0},
+    }
+    combo = {"general": general, "line_props": line_props}
+    config_dir = Path(user_config_dir(appname="pdfstitcher", appauthor=False))
+    config_file = "config.yml"
+
+    @classmethod
+    def load(cls):
+        """
+        Defines defaults, then loads configuration file to make any changes.
+        """
+        try:
+            with open(cls.config_dir / cls.config_file, "r") as f:
+                prefs = yaml.full_load(f)
+        except OSError:
+            # write the defaults for next time
+            cls.save()
+            prefs = {}
+
+        try:
+            # merge the defaults with the loaded prefs
+            for key in prefs["general"].keys():
+                cls.general[key] = prefs["general"][key]
+            for key in prefs["line_props"].keys():
+                cls.line_props[key] = prefs["line_props"][key]
+        except KeyError:
+            pass
+
+    @classmethod
+    def save(cls):
+        """
+        Save the current configuration for next time.
+        """
+        try:
+            if not cls.config_dir.exists():
+                cls.config_dir.mkdir(parents=True)
+            with open(cls.config_dir / cls.config_file, "w") as f:
+                yaml.dump(cls.combo, f)
+        except OSError:
+            print("Could not save configuration file.")
 
 
 def resource_path(relative_path):
@@ -62,6 +153,7 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
+
 def get_valid_langs():
     """
     Get a list of valid languages for the UI.
@@ -72,7 +164,8 @@ def get_valid_langs():
             langs.append(lang)
     return langs
 
-def setup_locale(lang:str = None) -> None:
+
+def setup_locale(lang: str = None) -> None:
     """
     Sets the UI language, or falls back to the system default.
     """
@@ -105,12 +198,13 @@ def setup_locale(lang:str = None) -> None:
         lang = lang
     elif lang[:2] in valid_langs:
         lang = lang[:2]
-    
+
     try:
         translate = gettext.translation(
-            "pdfstitcher", resource_path("locale"), languages=[lang], fallback=False
+            "pdfstitcher", resource_path("locale"), languages=[lang], fallback=True
         )
         translate.install()
+        Config.general["language"] = lang
     except Exception as e:
         language_warning = e
 
@@ -212,22 +306,24 @@ def print_media_box(media_box, user_unit=1):
     height = abs(float(media_box[3]) - float(media_box[1]))
     if width > MAX_SIZE_PX or height > MAX_SIZE_PX:
         # check if it exceeds Adobe's 200 inch maximum size
-        print(62 * '*')
+        print(62 * "*")
         print(
-            _('Warning! Output is larger than {} {}, may not open correctly.').format(
-                round(config["general"]["units"].px_to_units(MAX_SIZE_PX)), config["general"]["units"].str
+            _("Warning! Output is larger than {} {}, may not open correctly.").format(
+                round(Config.general["units"].px_to_units(MAX_SIZE_PX)),
+                Config.general["units"].str,
             )
         )
-        print(62 * '*')
+        print(62 * "*")
     # just print it out for info
     print(
-        _('Output size:')
-        + ' {:0.2f} x {:0.2f} {}'.format(
-            user_unit * config["general"]["units"].px_to_units(width),
-            user_unit * config["general"]["units"].px_to_units(height),
-            config["general"]["units"].str,
+        _("Output size:")
+        + " {:0.2f} x {:0.2f} {}".format(
+            user_unit * Config.general["units"].px_to_units(width),
+            user_unit * Config.general["units"].px_to_units(height),
+            Config.general["units"].str,
         )
     )
+
 
 def normalize_boxes(page):
     """
@@ -235,13 +331,13 @@ def normalize_boxes(page):
     [lower x, lower y, upper x, upper y] format
     """
 
-    for box in [key for key in page.keys() if 'Box' in key]:
+    for box in [key for key in page.keys() if "Box" in key]:
         if page[box][0] > page[box][2]:
             page[box][0], page[box][2] = page[box][2], page[box][0]
         if page[box][1] > page[box][3]:
             page[box][1], page[box][3] = page[box][3], page[box][1]
-    
+
     # check if there are any xobjects with boxes that need to be normalized
-    if '/Resources' in page.keys() and '/XObject' in page.Resources.keys():
+    if "/Resources" in page.keys() and "/XObject" in page.Resources.keys():
         for key in page.Resources.XObject.keys():
             normalize_boxes(page.Resources.XObject[key])
