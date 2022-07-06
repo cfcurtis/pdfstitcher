@@ -12,16 +12,16 @@ import wx.lib.scrolledpanel as scrolled
 from pdfstitcher.tile_pages import PageTiler
 from pdfstitcher.layerfilter import LayerFilter
 from pdfstitcher.pagefilter import PageFilter
+from pdfstitcher import utils, config
+from pdfstitcher.dialogs import PrefsDialog, AboutDialog
 import os
 import sys
 import pikepdf
-from pdfstitcher import utils
 import traceback
 
 # Constant widget sizes - used for all the different panels
 BORDER = 5
 TXT_ENTRY_SIZE = (40, -1)
-
 
 class IOTab(scrolled.ScrolledPanel):
     def __init__(self, parent, main_gui):
@@ -96,6 +96,7 @@ class IOTab(scrolled.ScrolledPanel):
         )
         self.margin_txt = wx.TextCtrl(self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT)
         self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
+        self.margin_txt.ChangeValue(config.general["margin"])
         newline.Add(
             self.margin_txt,
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
@@ -108,6 +109,7 @@ class IOTab(scrolled.ScrolledPanel):
         self.unit_box = wx.RadioBox(
             self, label=_('Units'), choices=unit_opts, style=wx.RA_SPECIFY_COLS
         )
+        self.unit_box.SetStringSelection(config.general["units"].str)
         vert_sizer.Add(
             self.unit_box,
             flag=wx.TOP | wx.LEFT | wx.RIGHT,
@@ -336,6 +338,7 @@ class TileTab(scrolled.ScrolledPanel):
         )
         self.margin_txt = wx.TextCtrl(self, size=self.FromDIP(TXT_ENTRY_SIZE), style=wx.TE_RIGHT)
         self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
+        self.margin_txt.ChangeValue(config.general["margin"])
         newline.Add(
             self.margin_txt,
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
@@ -506,13 +509,13 @@ class LayersTab(scrolled.ScrolledPanel):
         )
         newline = wx.BoxSizer(wx.HORIZONTAL)
         self.enable_colour = wx.CheckBox(layer_opt_pane, label=_('Line Colour') + ':')
-        self.enable_colour.SetValue(1)
+        self.enable_colour.SetValue(config.line_props["colour"]["enable"])
         newline.Add(
             self.enable_colour,
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
             border=self.FromDIP(BORDER * 2),
         )
-        self.line_colour_ctrl = wx.ColourPickerCtrl(layer_opt_pane)
+        self.line_colour_ctrl = wx.ColourPickerCtrl(layer_opt_pane, colour = config.line_props["colour"]["value"])
         newline.Add(
             self.line_colour_ctrl,
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
@@ -522,21 +525,21 @@ class LayersTab(scrolled.ScrolledPanel):
 
         # Fill colour
         self.do_fill_colour = wx.CheckBox(layer_opt_pane, label=_('Also modify fill colour'))
-        self.do_fill_colour.SetValue(0)
+        self.do_fill_colour.SetValue(config.line_props["colour"]["fill"])
         layer_opt_sizer.AddSpacer(self.FromDIP(BORDER * 2))
         layer_opt_sizer.Add(self.do_fill_colour, flag=wx.LEFT, border=self.FromDIP(BORDER * 5))
 
         # thickness
         newline = wx.BoxSizer(wx.HORIZONTAL)
         self.enable_thickness = wx.CheckBox(layer_opt_pane, label=_('Line Thickness') + ':')
-        self.enable_thickness.SetValue(1)
+        self.enable_thickness.SetValue(config.line_props["thickness"]["enable"])
         newline.Add(
             self.enable_thickness,
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
             border=self.FromDIP(BORDER * 2),
         )
         self.line_thick_ctrl = wx.TextCtrl(
-            layer_opt_pane, size=self.FromDIP(TXT_ENTRY_SIZE), value='4'
+            layer_opt_pane, size=self.FromDIP(TXT_ENTRY_SIZE), value=config.line_props["thickness"]["value"]
         )
         newline.Add(
             self.line_thick_ctrl,
@@ -548,7 +551,7 @@ class LayersTab(scrolled.ScrolledPanel):
         # translation_note: pt = "points", in = "inches", cm = "centimeters"
         unit_choice = [_('in'), _('cm'), _('pt')]
         self.line_thick_units = wx.ComboBox(layer_opt_pane, choices=unit_choice)
-        self.line_thick_units.SetSelection(2)
+        self.line_thick_units.SetStringSelection(config.line_props["thickness"]["units"].str)
 
         newline.Add(
             self.line_thick_units,
@@ -560,7 +563,7 @@ class LayersTab(scrolled.ScrolledPanel):
         # style
         newline = wx.BoxSizer(wx.HORIZONTAL)
         self.enable_style = wx.CheckBox(layer_opt_pane, label=_('Line Style') + ':')
-        self.enable_style.SetValue(1)
+        self.enable_style.SetValue(config.line_props["style"]["enable"])
         newline.Add(
             self.enable_style,
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
@@ -572,7 +575,7 @@ class LayersTab(scrolled.ScrolledPanel):
             choices=self.style_names,
             style=wx.CB_READONLY,
         )
-        self.line_style_ctrl.SetSelection(0)
+        self.line_style_ctrl.SetSelection(config.line_props["style"]["value"])
         newline.Add(
             self.line_style_ctrl,
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
@@ -807,7 +810,6 @@ class SewGUI(wx.Frame):
         self.tiler = None
         self.layer_filter = None
 
-        self.working_dir = os.getcwd()
         self.make_menu_bar()
 
         if sys.platform == 'win32' or sys.platform == 'linux':
@@ -853,7 +855,7 @@ class SewGUI(wx.Frame):
 
         # global options
         page_range = utils.parse_page_range(self.io.page_range_txt.GetValue())
-        utils.layout_units = utils.UNITS(self.io.unit_box.GetSelection())
+        config.general["units"] = utils.UNITS(self.io.unit_box.GetSelection())
 
         if page_range is None:
             print(_('No page range specified, defaulting to all'))
@@ -964,26 +966,53 @@ class SewGUI(wx.Frame):
             self.progress_win.SetRange(val)
 
     def make_menu_bar(self):
+        """
+        Make and populate the menubar.
+        """
+        menuBar = wx.MenuBar()
+
         # Make a file menu with load and exit items
         fileMenu = wx.Menu()
         openItem = fileMenu.Append(wx.ID_OPEN)
         saveAsItem = fileMenu.Append(wx.ID_SAVE)
         exitItem = fileMenu.Append(wx.ID_EXIT)
-        menuBar = wx.MenuBar()
-        menuBar.Append(fileMenu, '&File')
-        self.SetMenuBar(menuBar)
         self.Bind(wx.EVT_MENU, self.on_open, openItem)
         self.Bind(wx.EVT_MENU, self.on_output, saveAsItem)
         self.Bind(wx.EVT_MENU, self.on_exit, exitItem)
+        menuBar.Append(fileMenu, '&File')
+
+        # Make the settings menu
+        settingsMenu = wx.Menu()
+        prefsItem = settingsMenu.Append(wx.ID_PREFERENCES)
+        aboutItem = settingsMenu.Append(wx.ID_ABOUT)
+        self.Bind(wx.EVT_MENU, self.on_prefs, prefsItem)
+        self.Bind(wx.EVT_MENU, self.on_about, aboutItem)
+        menuBar.Append(settingsMenu, '&Settings')
+
+        self.SetMenuBar(menuBar)
+    
+    def on_prefs(self, event):
+        """
+        Create and show the preferences dialog.
+        """
+        with PrefsDialog(parent=self) as dlg:
+            dlg.Show()
+    
+    def on_about(self):
+        """
+        Show the about info.
+        """
+        
 
     def on_exit(self, event):
+        config.save()
         self.Close(True)
 
     def on_output(self, event):
         with wx.FileDialog(
             self,
             _('Save output as'),
-            defaultDir=self.working_dir,
+            defaultDir=config.general["save_dir"],
             wildcard='PDF files (*.pdf)|*.pdf',
             style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
         ) as fileDialog:
@@ -1010,7 +1039,7 @@ class SewGUI(wx.Frame):
         with wx.FileDialog(
             self,
             _('Select input PDF'),
-            defaultDir=self.working_dir,
+            defaultDir=config.general["open_dir"],
             wildcard='PDF files (*.pdf)|*.pdf',
             style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
         ) as fileDialog:
@@ -1023,7 +1052,7 @@ class SewGUI(wx.Frame):
             self.load_file(pathname)
 
     def load_file(self, pathname):
-        self.working_dir = os.path.dirname(pathname)
+        config.general["open_dir"] = os.path.dirname(pathname)
         pdf_has_password = False
         password = ""
 
@@ -1086,7 +1115,8 @@ class SewGUI(wx.Frame):
 def main():
     # When this module is run (not imported) then create the app, the
     # frame, show it, and start the event loop.
-    language_warning = utils.setup_locale()
+    config.load()
+    language_warning = utils.setup_locale(config.general["language"])
     app = wx.App()
 
     # Fix the size for high-resolution displays on windows

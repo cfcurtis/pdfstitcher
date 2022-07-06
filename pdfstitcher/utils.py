@@ -16,10 +16,10 @@ import locale
 from pathlib import Path
 
 from pdfstitcher.version import __version__
+from pdfstitcher import config
 
 VERSION_STRING = "v" + __version__
 MAX_SIZE_PX = 14400
-
 
 class UNITS(IntEnum):
     INCHES = 0
@@ -52,10 +52,6 @@ class UNITS(IntEnum):
             return val
 
 
-# default to inches
-layout_units = UNITS.INCHES
-
-
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller"""
     if hasattr(sys, "_MEIPASS"):
@@ -66,48 +62,57 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
+def get_valid_langs():
+    """
+    Get a list of valid languages for the UI.
+    """
+    langs = ["en"]
+    for lang in os.listdir(resource_path("locale")):
+        if lang != "pdfstitcher.pot":
+            langs.append(lang)
+    return langs
 
-def setup_locale():
+def setup_locale(lang:str = None) -> None:
+    """
+    Sets the UI language, or falls back to the system default.
+    """
     language_warning = None
-    lc = locale.getdefaultlocale()
+    valid_langs = get_valid_langs()
+    if lang is None:
+        lc = locale.getdefaultlocale()
 
-    try:
-        if lc[0] is None:
-            lc = os.getenv("LANG")[:4]
-        else:
-            lang = lc[0]
-    except:
         try:
-            # try the Apple way
-            from Foundation import NSUserDefaults
+            if lc[0] is None:
+                lc = os.getenv("LANG")[:4]
+            else:
+                lang = lc[0]
+        except:
+            try:
+                # try the Apple way
+                from Foundation import NSUserDefaults
 
-            defaults = NSUserDefaults.standardUserDefaults()
-            globalDomain = defaults.persistentDomainForName_("NSGlobalDomain")
-            languages = globalDomain.objectForKey_("AppleLanguages")
+                defaults = NSUserDefaults.standardUserDefaults()
+                globalDomain = defaults.persistentDomainForName_("NSGlobalDomain")
+                languages = globalDomain.objectForKey_("AppleLanguages")
 
-            # just take the first one
-            lang = languages[0]
-        except Exception as e:
-            language_warning = "Could not detect system language, defaulting to English"
-            lang = "en"
+                # just take the first one
+                lang = languages[0]
+            except Exception as e:
+                language_warning = "Could not detect system language, defaulting to English"
+                lang = "en"
 
+    if lang in valid_langs:
+        lang = lang
+    elif lang[:2] in valid_langs:
+        lang = lang[:2]
+    
     try:
         translate = gettext.translation(
             "pdfstitcher", resource_path("locale"), languages=[lang], fallback=False
         )
         translate.install()
-    except:
-        # try just the first two letters
-        try:
-            translate = gettext.translation(
-                "pdfstitcher",
-                resource_path("locale"),
-                languages=[lang[:2]],
-                fallback=True,
-            )
-            translate.install()
-        except Exception as e:
-            language_warning = e
+    except Exception as e:
+        language_warning = e
 
     return language_warning
 
@@ -210,7 +215,7 @@ def print_media_box(media_box, user_unit=1):
         print(62 * '*')
         print(
             _('Warning! Output is larger than {} {}, may not open correctly.').format(
-                round(layout_units.px_to_units(MAX_SIZE_PX)), layout_units.str
+                round(config["general"]["units"].px_to_units(MAX_SIZE_PX)), config["general"]["units"].str
             )
         )
         print(62 * '*')
@@ -218,9 +223,9 @@ def print_media_box(media_box, user_unit=1):
     print(
         _('Output size:')
         + ' {:0.2f} x {:0.2f} {}'.format(
-            user_unit * layout_units.px_to_units(width),
-            user_unit * layout_units.px_to_units(height),
-            layout_units.str,
+            user_unit * config["general"]["units"].px_to_units(width),
+            user_unit * config["general"]["units"].px_to_units(height),
+            config["general"]["units"].str,
         )
     )
 
