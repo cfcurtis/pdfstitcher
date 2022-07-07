@@ -29,8 +29,9 @@ MAX_SIZE_PX = 14400
 
 # Constant widget sizes - used for all the different panels
 BORDER = 5
-TXT_ENTRY_SIZE = (40, -1)
-
+NUM_ENTRY_SIZE = (40, -1)
+PATH_ENTRY_SIZE = (250, -1)
+valid_langs = None
 
 class UNITS(Enum):
     INCHES = 0
@@ -170,6 +171,9 @@ def setup_locale(lang: str = None) -> None:
     Sets the UI language, or falls back to the system default.
     """
     language_warning = None
+
+    # Update the global valid_langs here to ensure it only happens once
+    global valid_langs
     valid_langs = get_valid_langs()
     if lang is None:
         lc = locale.getdefaultlocale()

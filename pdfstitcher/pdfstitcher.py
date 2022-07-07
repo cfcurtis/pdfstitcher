@@ -33,28 +33,30 @@ class IOTab(scrolled.ScrolledPanel):
         in_doc_btn = wx.Button(self, label=_("Select input PDF"))
         in_doc_btn.Bind(wx.EVT_BUTTON, main_gui.on_open)
         newline.Add(in_doc_btn, flag=wx.ALIGN_CENTRE_VERTICAL)
-        self.input_fname_display = wx.StaticText(self, label=_("None"))
+        self.input_fname_display = wx.TextCtrl(self, value=_("None"))
         newline.Add(
             self.input_fname_display,
+            proportion=1,
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(utils.BORDER),
         )
         vert_sizer.Add(
-            newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2)
+            newline, flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2)
         )
 
         newline = wx.BoxSizer(wx.HORIZONTAL)
         out_doc_btn = wx.Button(self, label=_("Save output as"))
         out_doc_btn.Bind(wx.EVT_BUTTON, main_gui.on_output)
         newline.Add(out_doc_btn, flag=wx.ALIGN_CENTRE_VERTICAL)
-        self.output_fname_display = wx.StaticText(self, label=_("None"))
+        self.output_fname_display = wx.TextCtrl(self, value=_("None"))
         newline.Add(
             self.output_fname_display,
+            proportion=1,
             flag=wx.ALIGN_CENTRE_VERTICAL | wx.LEFT,
             border=self.FromDIP(utils.BORDER),
         )
         vert_sizer.Add(
-            newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2)
+            newline, flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2)
         )
 
         # Output options
@@ -97,7 +99,7 @@ class IOTab(scrolled.ScrolledPanel):
             flag=wx.ALIGN_CENTRE_VERTICAL,
         )
         self.margin_txt = wx.TextCtrl(
-            self, size=self.FromDIP(utils.TXT_ENTRY_SIZE), style=wx.TE_RIGHT
+            self, size=self.FromDIP(utils.NUM_ENTRY_SIZE), style=wx.TE_RIGHT
         )
         self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
         self.margin_txt.ChangeValue(Config.general["margin"])
@@ -154,8 +156,8 @@ class IOTab(scrolled.ScrolledPanel):
         self.SetBackgroundColour(parent.GetBackgroundColour())
 
     def load_new(self, in_doc):
-        self.input_fname_display.SetLabel(in_doc.filename)
-        self.output_fname_display.SetLabel(label=_("None"))
+        self.input_fname_display.SetValue(in_doc.filename)
+        self.output_fname_display.SetValue(_("None"))
         self.page_range_txt.SetValue("1-{}".format(len(in_doc.pages)))
 
     def on_option_checked(self, event):
@@ -202,7 +204,7 @@ class TileTab(scrolled.ScrolledPanel):
             flag=wx.ALIGN_CENTRE_VERTICAL,
         )
         self.columns_txt = wx.TextCtrl(
-            self, size=self.FromDIP(utils.TXT_ENTRY_SIZE), style=wx.TE_RIGHT
+            self, size=self.FromDIP(utils.NUM_ENTRY_SIZE), style=wx.TE_RIGHT
         )
         self.columns_txt.Bind(wx.EVT_TEXT, self.on_col_row_entered)
         newline.Add(
@@ -218,7 +220,7 @@ class TileTab(scrolled.ScrolledPanel):
             border=self.FromDIP(utils.BORDER * 2),
         )
         self.rows_txt = wx.TextCtrl(
-            self, size=self.FromDIP(utils.TXT_ENTRY_SIZE), style=wx.TE_RIGHT
+            self, size=self.FromDIP(utils.NUM_ENTRY_SIZE), style=wx.TE_RIGHT
         )
         self.rows_txt.Bind(wx.EVT_TEXT, self.on_col_row_entered)
         newline.Add(
@@ -353,7 +355,7 @@ class TileTab(scrolled.ScrolledPanel):
             flag=wx.ALIGN_CENTRE_VERTICAL,
         )
         self.margin_txt = wx.TextCtrl(
-            self, size=self.FromDIP(utils.TXT_ENTRY_SIZE), style=wx.TE_RIGHT
+            self, size=self.FromDIP(utils.NUM_ENTRY_SIZE), style=wx.TE_RIGHT
         )
         self.margin_txt.Bind(wx.EVT_TEXT, main_gui.margin_updated)
         self.margin_txt.ChangeValue(Config.general["margin"])
@@ -396,7 +398,7 @@ class TileTab(scrolled.ScrolledPanel):
             border=self.FromDIP(utils.BORDER * 2),
         )
         self.left_trim_txt = wx.TextCtrl(
-            self, size=self.FromDIP(utils.TXT_ENTRY_SIZE), style=wx.TE_RIGHT
+            self, size=self.FromDIP(utils.NUM_ENTRY_SIZE), style=wx.TE_RIGHT
         )
         newline.Add(
             self.left_trim_txt,
@@ -411,7 +413,7 @@ class TileTab(scrolled.ScrolledPanel):
             border=self.FromDIP(utils.BORDER * 2),
         )
         self.right_trim_txt = wx.TextCtrl(
-            self, size=self.FromDIP(utils.TXT_ENTRY_SIZE), style=wx.TE_RIGHT
+            self, size=self.FromDIP(utils.NUM_ENTRY_SIZE), style=wx.TE_RIGHT
         )
         newline.Add(
             self.right_trim_txt,
@@ -426,7 +428,7 @@ class TileTab(scrolled.ScrolledPanel):
             border=self.FromDIP(utils.BORDER * 2),
         )
         self.top_trim_txt = wx.TextCtrl(
-            self, size=self.FromDIP(utils.TXT_ENTRY_SIZE), style=wx.TE_RIGHT
+            self, size=self.FromDIP(utils.NUM_ENTRY_SIZE), style=wx.TE_RIGHT
         )
         newline.Add(
             self.top_trim_txt,
@@ -441,7 +443,7 @@ class TileTab(scrolled.ScrolledPanel):
             border=self.FromDIP(utils.BORDER * 2),
         )
         self.bottom_trim_txt = wx.TextCtrl(
-            self, size=self.FromDIP(utils.TXT_ENTRY_SIZE), style=wx.TE_RIGHT
+            self, size=self.FromDIP(utils.NUM_ENTRY_SIZE), style=wx.TE_RIGHT
         )
         newline.Add(
             self.bottom_trim_txt,
@@ -572,7 +574,7 @@ class LayersTab(scrolled.ScrolledPanel):
         )
         self.line_thick_ctrl = wx.TextCtrl(
             layer_opt_pane,
-            size=self.FromDIP(utils.TXT_ENTRY_SIZE),
+            size=self.FromDIP(utils.NUM_ENTRY_SIZE),
             value=Config.line_props["thickness"]["value"],
         )
         newline.Add(
@@ -858,7 +860,7 @@ class SewGUI(wx.Frame):
 
         if len(sys.argv) > 2:
             self.out_doc_path = sys.argv[2]
-            self.io.output_fname_display.SetLabel(sys.argv[2])
+            self.io.output_fname_display.SetValue(sys.argv[2])
 
     def reset_sash_position(self):
         # Sets the output panel to occupy just 1/3 of the height
@@ -1042,7 +1044,6 @@ class SewGUI(wx.Frame):
         """
 
     def on_exit(self, event):
-        Config.save()
         self.Destroy()
 
     def on_output(self, event):
@@ -1067,7 +1068,7 @@ class SewGUI(wx.Frame):
                 self.on_output(event)
             try:
                 self.out_doc_path = pathname
-                self.io.output_fname_display.SetLabel(pathname)
+                self.io.output_fname_display.SetValue(pathname)
                 Config.general["save_dir"] = os.path.dirname(pathname)
 
             except IOError:
@@ -1090,7 +1091,6 @@ class SewGUI(wx.Frame):
             self.load_file(pathname)
 
     def load_file(self, pathname):
-        Config.general["open_dir"] = os.path.dirname(pathname)
         pdf_has_password = False
         password = ""
 
@@ -1147,6 +1147,7 @@ class SewGUI(wx.Frame):
 
             else:
                 print(_("PDF file loaded without errors."))
+                Config.general["open_dir"] = os.path.dirname(pathname)
                 break
 
 
