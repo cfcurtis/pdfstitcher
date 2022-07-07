@@ -41,7 +41,9 @@ class IOTab(scrolled.ScrolledPanel):
             border=self.FromDIP(utils.BORDER),
         )
         vert_sizer.Add(
-            newline, flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2)
+            newline,
+            flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
         )
 
         newline = wx.BoxSizer(wx.HORIZONTAL)
@@ -56,7 +58,9 @@ class IOTab(scrolled.ScrolledPanel):
             border=self.FromDIP(utils.BORDER),
         )
         vert_sizer.Add(
-            newline, flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2)
+            newline,
+            flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
         )
 
         # Output options
