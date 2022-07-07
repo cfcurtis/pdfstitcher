@@ -41,6 +41,11 @@ class PrefsDialog(wx.Dialog):
             newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2)
         )
 
+        # Check for updates on startup
+        self.check_updates = wx.CheckBox(self, label=_("Check for updates on startup"))
+        self.check_updates.SetValue(Config.general["check_updates"])
+        vert_sizer.Add(self.check_updates, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2))
+
         # Checkbox to save current margin and unit settings
         self.save_margin_checkbox = wx.CheckBox(
             self,
@@ -150,6 +155,9 @@ class PrefsDialog(wx.Dialog):
         # update open and save directories
         Config.general["open_dir"] = self.open_dir_display.GetValue()
         Config.general["save_dir"] = self.save_dir_display.GetValue()
+
+        # update update check
+        Config.general["check_updates"] = self.check_updates.IsChecked()
 
         # save config
         Config.save()

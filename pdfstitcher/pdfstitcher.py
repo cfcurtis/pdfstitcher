@@ -1019,7 +1019,7 @@ class SewGUI(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_open, openItem)
         self.Bind(wx.EVT_MENU, self.on_output, saveAsItem)
         self.Bind(wx.EVT_MENU, self.on_exit, exitItem)
-        menuBar.Append(fileMenu, "&File")
+        menuBar.Append(fileMenu, "&" + _("File"))
 
         # Make the settings menu
         settingsMenu = wx.Menu()
@@ -1027,7 +1027,7 @@ class SewGUI(wx.Frame):
         aboutItem = settingsMenu.Append(wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, self.on_prefs, prefsItem)
         self.Bind(wx.EVT_MENU, self.on_about, aboutItem)
-        menuBar.Append(settingsMenu, "&Settings")
+        menuBar.Append(settingsMenu, "&" + _("Settings"))
 
         self.SetMenuBar(menuBar)
 
