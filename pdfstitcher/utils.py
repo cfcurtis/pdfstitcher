@@ -22,8 +22,8 @@ import importlib.metadata
 
 __version__ = importlib.metadata.version("pdfstitcher")
 
-
 VERSION_STRING = "v" + __version__
+
 # Maximum size of a PDF document in Adobe (200 inches)
 MAX_SIZE_PX = 14400
 
@@ -31,7 +31,15 @@ MAX_SIZE_PX = 14400
 BORDER = 5
 NUM_ENTRY_SIZE = (40, -1)
 PATH_ENTRY_SIZE = (250, -1)
+
+# language global variable
 valid_langs = None
+
+# URLs
+WEB_HOME = "https://www.pdfstitcher.org"
+DOCS_PAGE = WEB_HOME + "/docs/overview"
+DOWNLOAD_PAGE = WEB_HOME + "/docs/download"
+GIT_HOME = "https://github.com/cfcurtis/pdfstitcher"
 
 
 class UNITS(Enum):

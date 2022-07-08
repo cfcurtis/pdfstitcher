@@ -19,6 +19,7 @@ import os
 import sys
 import pikepdf
 import traceback
+import webbrowser
 
 
 class IOTab(scrolled.ScrolledPanel):
@@ -1013,27 +1014,39 @@ class SewGUI(wx.Frame):
         """
         Make and populate the menubar.
         """
-        menuBar = wx.MenuBar()
+        menu_bar = wx.MenuBar()
 
         # Make a file menu with load and exit items
-        fileMenu = wx.Menu()
-        openItem = fileMenu.Append(wx.ID_OPEN)
-        saveAsItem = fileMenu.Append(wx.ID_SAVE)
-        exitItem = fileMenu.Append(wx.ID_EXIT)
-        self.Bind(wx.EVT_MENU, self.on_open, openItem)
-        self.Bind(wx.EVT_MENU, self.on_output, saveAsItem)
-        self.Bind(wx.EVT_MENU, self.on_exit, exitItem)
-        menuBar.Append(fileMenu, "&" + _("File"))
+        file_menu = wx.Menu()
+        open_item = file_menu.Append(wx.ID_OPEN)
+        save_as_item = file_menu.Append(wx.ID_SAVE)
+        exit_item = file_menu.Append(wx.ID_EXIT)
+        self.Bind(wx.EVT_MENU, self.on_open, open_item)
+        self.Bind(wx.EVT_MENU, self.on_output, save_as_item)
+        self.Bind(wx.EVT_MENU, self.on_exit, exit_item)
+        menu_bar.Append(file_menu, "&" + _("File"))
 
         # Make the settings menu
-        settingsMenu = wx.Menu()
-        prefsItem = settingsMenu.Append(wx.ID_PREFERENCES)
-        aboutItem = settingsMenu.Append(wx.ID_ABOUT)
-        self.Bind(wx.EVT_MENU, self.on_prefs, prefsItem)
-        self.Bind(wx.EVT_MENU, self.on_about, aboutItem)
-        menuBar.Append(settingsMenu, "&" + _("Settings"))
+        settings_menu = wx.Menu()
+        prefs_item = settings_menu.Append(wx.ID_PREFERENCES)
+        self.Bind(wx.EVT_MENU, self.on_prefs, prefs_item)
+        menu_bar.Append(settings_menu, "&" + _("Settings"))
 
-        self.SetMenuBar(menuBar)
+        # Make the help menu
+        help_menu = wx.Menu()
+        docs_item = wx.MenuItem(
+            help_menu,
+            wx.ID_HELP,
+            text=_("Documentation"),
+            helpString=_("Open the documentation in a web browser"),
+        )
+        help_menu.Append(docs_item)
+        about_item = help_menu.Append(wx.ID_ABOUT)
+        self.Bind(wx.EVT_MENU, self.on_docs, docs_item)
+        self.Bind(wx.EVT_MENU, self.on_about, about_item)
+        menu_bar.Append(help_menu, "&" + _("Help"))
+
+        self.SetMenuBar(menu_bar)
 
     def on_prefs(self, event):
         """
@@ -1042,10 +1055,18 @@ class SewGUI(wx.Frame):
         prefs_dia = PrefsDialog(parent=self)
         prefs_dia.Show()
 
-    def on_about(self):
+    def on_docs(self, event):
+        """
+        Open docs in a web browser when menu item is clicked.
+        """
+        webbrowser.open(utils.DOCS_PAGE)
+
+    def on_about(self, event):
         """
         Show the about info.
         """
+        about_dia = AboutDialog(parent=self)
+        about_dia.Show()
 
     def on_exit(self, event):
         self.Destroy()
