@@ -5,10 +5,77 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-import wx
+import wx, wx.adv
 from pdfstitcher import utils
 from pdfstitcher.utils import Config
+from pdfstitcher import updater
 from babel import Locale
+
+
+class UpdateDialog(wx.Dialog):
+    """
+    Window to call update checker and display results.
+    """
+
+    def __init__(self, *args, **kw):
+        super(UpdateDialog, self).__init__(*args, **kw)
+        self.SetTitle(_("Checking for updates"))
+        self.nothing_exciting = False
+
+        vert_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.info_txt = wx.TextCtrl(
+            self, value=_("Please wait..."), style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER
+        )
+
+        # Style it to look like static text
+        self.info_txt.SetBackgroundColour(self.GetBackgroundColour())
+        vert_sizer.Add(
+            self.info_txt,
+            proportion=1,
+            flag=wx.EXPAND | wx.ALL,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+
+        # Check for updates, but handle potential errors
+        try:
+            pypi_version = updater.update_available()
+
+            if pypi_version is None:
+                self.info_txt.ChangeValue(
+                    _("No updates available, {} is the current version.").format(
+                        utils.VERSION_STRING
+                    )
+                )
+                self.nothing_exciting = True
+            else:
+                self.info_txt.ChangeValue(
+                    _("Update available!")
+                    + "\n"
+                    + _("Your version is {}, but the latest version is v{}.").format(
+                        utils.VERSION_STRING, pypi_version
+                    )
+                )
+                download_link = wx.adv.HyperlinkCtrl(
+                    self, label=_("Download Link"), url=updater.get_download_url()
+                )
+                changelog = wx.adv.HyperlinkCtrl(
+                    self, label=_("Changelog"), url=utils.GIT_HOME + "/releases/latest"
+                )
+                vert_sizer.Add(
+                    download_link,
+                    flag=wx.TOP | wx.LEFT | wx.RIGHT,
+                    border=self.FromDIP(utils.BORDER * 2),
+                )
+                vert_sizer.Add(
+                    changelog,
+                    flag=wx.TOP | wx.LEFT | wx.RIGHT,
+                    border=self.FromDIP(utils.BORDER * 2),
+                )
+        except Exception as e:
+            self.info_txt.ChangeValue(_("Error checking for updates") + f"\n{e}")
+
+        vert_sizer.SetMinSize(self.FromDIP((400, 150)))
+        self.SetSizerAndFit(vert_sizer)
 
 
 class PrefsDialog(wx.Dialog):
@@ -180,9 +247,3 @@ class PrefsDialog(wx.Dialog):
 
         wx.MessageBox(msg, _("Preferences saved"), wx.OK | wx.ICON_INFORMATION)
         self.Destroy()
-
-
-class AboutDialog(wx.Dialog):
-    """
-    Small window to show about info.
-    """

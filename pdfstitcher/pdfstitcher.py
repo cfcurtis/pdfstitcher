@@ -14,7 +14,7 @@ from pdfstitcher.layerfilter import LayerFilter
 from pdfstitcher.pagefilter import PageFilter
 from pdfstitcher import utils
 from pdfstitcher.utils import Config
-from pdfstitcher.dialogs import PrefsDialog, AboutDialog
+from pdfstitcher.dialogs import PrefsDialog, UpdateDialog
 import os
 import sys
 import pikepdf
@@ -1029,7 +1029,10 @@ class SewGUI(wx.Frame):
         # Make the settings menu
         settings_menu = wx.Menu()
         prefs_item = settings_menu.Append(wx.ID_PREFERENCES)
+        update_item = wx.MenuItem(settings_menu, wx.ID_ANY, text=_("Check for updates"))
+        settings_menu.Append(update_item)
         self.Bind(wx.EVT_MENU, self.on_prefs, prefs_item)
+        self.Bind(wx.EVT_MENU, self.on_update, update_item)
         menu_bar.Append(settings_menu, "&" + _("Settings"))
 
         # Make the help menu
@@ -1055,6 +1058,16 @@ class SewGUI(wx.Frame):
         prefs_dia = PrefsDialog(parent=self)
         prefs_dia.Show()
 
+    def on_update(self, event):
+        """
+        Open the dialog to check for updates.
+        """
+        update_dia = UpdateDialog(parent=self)
+        if event is None and update_dia.nothing_exciting:
+            update_dia.Destroy()
+        else:
+            update_dia.Show()
+
     def on_docs(self, event):
         """
         Open docs in a web browser when menu item is clicked.
@@ -1065,8 +1078,22 @@ class SewGUI(wx.Frame):
         """
         Show the about info.
         """
-        about_dia = AboutDialog(parent=self)
-        about_dia.Show()
+        about_info = wx.adv.AboutDialogInfo()
+        about_info.SetIcon(wx.Icon(utils.resource_path("resources/stitcher-icon.ico")))
+        about_info.SetName("PDFStitcher")
+        about_info.SetVersion(utils.VERSION_STRING)
+        about_info.SetDescription(_("The PDF Stitching app for sewists, by sewists."))
+        about_info.SetCopyright("(C) 2020-2022")
+        about_info.SetWebSite(utils.WEB_HOME)
+        about_info.AddDeveloper("Charlotte Curtis")
+        about_info.AddDeveloper(
+            _("Contributors") + "https://github.com/cfcurtis/pdfstitcher/graphs/contributors"
+        )
+        about_info.SetLicense(
+            "Mozilla Public License Version 2.0\n" "https://www.mozilla.org/en-US/MPL/2.0/"
+        )
+
+        wx.adv.AboutBox(about_info)
 
     def on_exit(self, event):
         self.Destroy()
@@ -1200,6 +1227,10 @@ def main():
         print(language_warning)
 
     frm.Show()
+
+    if Config.general["check_updates"]:
+        frm.on_update(None)
+
     app.MainLoop()
 
 

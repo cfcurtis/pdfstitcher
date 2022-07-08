@@ -13,20 +13,23 @@ from pdfstitcher import utils
 __version__ = importlib.metadata.version("pdfstitcher")
 
 
-def is_update_available():
+def update_available():
     """
     Checks whether there's a new release of PDFStitcher.
     """
     response = requests.get(utils.PYPI_HOME + "/json")
+    if not response.ok:
+        raise requests.HTTPError(response.status_code, response.url, response.reason)
+
     pypi_version = response.json()["info"]["version"]
 
     current = [int(num) for num in __version__.split(".")]
     pypi = [int(num) for num in pypi_version.split(".")]
 
     if any(pypi[i] > current[i] for i in range(len(current))):
-        return True
+        return pypi_version
     else:
-        return False
+        return None
 
 
 def get_download_url():
