@@ -24,6 +24,7 @@ dependencies = [
     "Babel",
     "PyYAML",
     "appdirs",
+    "requests",
     "pyobjc ; platform_system=='Darwin'"
 ]
 

@@ -40,6 +40,8 @@ WEB_HOME = "https://www.pdfstitcher.org"
 DOCS_PAGE = WEB_HOME + "/docs/overview"
 DOWNLOAD_PAGE = WEB_HOME + "/docs/download"
 GIT_HOME = "https://github.com/cfcurtis/pdfstitcher"
+PYPI_HOME = "https://pypi.org/pypi/pdfstitcher"
+FLATHUB_HOME = "https://flathub.org/apps/details/com.github.cfcurtis.pdfstitcher"
 
 
 class UNITS(Enum):
