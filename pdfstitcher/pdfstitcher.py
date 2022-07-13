@@ -1087,7 +1087,9 @@ class SewGUI(wx.Frame):
         about_info.SetWebSite(utils.WEB_HOME)
         about_info.AddDeveloper("Charlotte Curtis")
         about_info.AddDeveloper(
-            _("Contributors") + "https://github.com/cfcurtis/pdfstitcher/graphs/contributors"
+            "\n"
+            + _("Contributors")
+            + ": https://github.com/cfcurtis/pdfstitcher/graphs/contributors"
         )
         about_info.SetLicense(
             "Mozilla Public License Version 2.0\n" "https://www.mozilla.org/en-US/MPL/2.0/"
