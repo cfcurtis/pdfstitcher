@@ -122,12 +122,13 @@ class IOTab(scrolled.ScrolledPanel):
         self.unit_box = wx.RadioBox(
             self, label=_("Units"), choices=unit_opts, style=wx.RA_SPECIFY_COLS
         )
-        self.unit_box.SetStringSelection(Config.general["units"].str)
+        self.unit_box.SetSelection(Config.general["units"].value)
         vert_sizer.Add(
             self.unit_box,
             flag=wx.TOP | wx.LEFT | wx.RIGHT,
             border=self.FromDIP(utils.BORDER * 2),
         )
+        self.unit_box.Bind(wx.EVT_RADIOBOX, main_gui.unit_changed)
 
         # checklist of features to enable/disable
         self.do_layers = wx.CheckBox(self, label=_("Process Layers"))
@@ -341,19 +342,7 @@ class TileTab(scrolled.ScrolledPanel):
         lbl.SetFont(lbl.GetFont().Bold())
         vert_sizer.Add(lbl, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2))
 
-        # override trimbox - sometimes needed for wonky PDFs
-        # translation_note: TrimBox and MediaBox are PDF elements, so they likely won't translate nicely.
-        self.override_trim = wx.CheckBox(self, label=_("Set TrimBox to MediaBox"))
-        self.override_trim.SetToolTip(
-            wx.ToolTip(_("May help fix things when output is not as expected"))
-        )
-        vert_sizer.Add(
-            self.override_trim,
-            flag=wx.TOP | wx.LEFT | wx.RIGHT,
-            border=self.FromDIP(utils.BORDER * 2),
-        )
-
-        # Margin
+        # Margin - mirrored from options tab
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(
             wx.StaticText(self, label=_("Margin to add to final output") + ":"),
@@ -371,6 +360,31 @@ class TileTab(scrolled.ScrolledPanel):
         )
         vert_sizer.Add(
             newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2)
+        )
+
+        # Unit selection - mirrored from options tab
+        unit_opts = [_("Inches"), _("Centimetres")]
+        self.unit_box = wx.RadioBox(
+            self, label=_("Units"), choices=unit_opts, style=wx.RA_SPECIFY_COLS
+        )
+        self.unit_box.SetSelection(Config.general["units"].value)
+        vert_sizer.Add(
+            self.unit_box,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+        self.unit_box.Bind(wx.EVT_RADIOBOX, main_gui.unit_changed)
+
+        # override trimbox - sometimes needed for wonky PDFs
+        # translation_note: TrimBox and MediaBox are PDF elements, so they likely won't translate nicely.
+        self.override_trim = wx.CheckBox(self, label=_("Set TrimBox to MediaBox"))
+        self.override_trim.SetToolTip(
+            wx.ToolTip(_("May help fix things when output is not as expected"))
+        )
+        vert_sizer.Add(
+            self.override_trim,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
         )
 
         # Trim header
@@ -873,16 +887,31 @@ class SewGUI(wx.Frame):
         self.splitter.SetSashPosition(self.Size[1] * 2 // 3)
 
     def page_range_updated(self, event):
+        """
+        Mirror the page range options on both tabs.
+        """
         if event.GetId() == self.io.page_range_txt.GetId():
             self.tt.page_range_txt.ChangeValue(self.io.page_range_txt.GetValue())
         elif event.GetId() == self.tt.page_range_txt.GetId():
             self.io.page_range_txt.ChangeValue(self.tt.page_range_txt.GetValue())
 
     def margin_updated(self, event):
+        """
+        Mirror the margin options on both tabs.
+        """
         if event.GetId() == self.io.margin_txt.GetId():
             self.tt.margin_txt.ChangeValue(self.io.margin_txt.GetValue())
         elif event.GetId() == self.tt.margin_txt.GetId():
             self.io.margin_txt.ChangeValue(self.tt.margin_txt.GetValue())
+
+    def unit_changed(self, event):
+        """
+        Mirror the unit options on both tabs.
+        """
+        if event.GetId() == self.io.unit_box.GetId():
+            self.tt.unit_box.SetSelection(self.io.unit_box.GetSelection())
+        elif event.GetId() == self.tt.unit_box.GetId():
+            self.io.unit_box.SetSelection(self.tt.unit_box.GetSelection())
 
     def on_go_pressed(self, event):
         # retrieve the selected options
