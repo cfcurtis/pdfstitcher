@@ -1,5 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 import os
+from PyInstaller.utils.hooks import copy_metadata
 
 block_cipher = None
 locale_paths = []
@@ -9,12 +10,14 @@ for l in locales_full:
         (f"pdfstitcher\\locale\\{l}\\LC_MESSAGES\\pdfstitcher.mo", f"locale\\{l}\\LC_MESSAGES")
     )
 
+datas = locale_paths + [("pdfstitcher\\resources\\stitcher-icon.ico", "resources")]
+datas += copy_metadata('pdfstitcher', recursive=True)
 
 a = Analysis(
     ["pdfstitcher\\pdfstitcher.py"],
     pathex=[],
     binaries=[],
-    datas=locale_paths + [("pdfstitcher\\resources\\stitcher-icon.ico", "resources")],
+    datas=datas,
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

@@ -71,7 +71,8 @@ jobs:
         
       - name: Compile translation files and build exe
         run: | 
-          pip install pikepdf wxPython Babel pyinstaller
+          pip install . 
+          pip install pyinstaller
           python pdfstitcher/update_loc.py --compile
           pyinstaller pdfstitcher_win.spec
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
@@ -97,7 +98,8 @@ jobs:
         
       - name: Compile translation files and build .app
         run: | 
-          pip3 install pikepdf wxPython Babel pyinstaller pyobjc
+          pip3 install .
+          pip3 install pyinstaller
           python3 pdfstitcher/update_loc.py --compile
           pyinstaller pdfstitcher_mac.spec
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
