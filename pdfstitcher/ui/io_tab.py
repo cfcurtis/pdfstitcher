@@ -29,7 +29,8 @@ class IOTab(scrolled.ScrolledPanel):
         in_doc_btn = wx.Button(self, label=_("Select input PDF"))
         in_doc_btn.Bind(wx.EVT_BUTTON, main_gui.on_open)
         newline.Add(in_doc_btn, flag=wx.ALIGN_CENTRE_VERTICAL)
-        self.input_fname_display = wx.TextCtrl(self, value=_("None"))
+        self.input_fname_display = wx.TextCtrl(self, value="", style=wx.TE_PROCESS_ENTER)
+        self.input_fname_display.Bind(wx.EVT_TEXT_ENTER, main_gui.on_input_change)
         newline.Add(
             self.input_fname_display,
             proportion=1,
@@ -46,7 +47,8 @@ class IOTab(scrolled.ScrolledPanel):
         out_doc_btn = wx.Button(self, label=_("Save output as"))
         out_doc_btn.Bind(wx.EVT_BUTTON, main_gui.on_output)
         newline.Add(out_doc_btn, flag=wx.ALIGN_CENTRE_VERTICAL)
-        self.output_fname_display = wx.TextCtrl(self, value=_("None"))
+        self.output_fname_display = wx.TextCtrl(self, value="", style=wx.TE_PROCESS_ENTER)
+        self.output_fname_display.Bind(wx.EVT_TEXT_ENTER, main_gui.on_output_change)
         newline.Add(
             self.output_fname_display,
             proportion=1,
@@ -156,9 +158,9 @@ class IOTab(scrolled.ScrolledPanel):
         self.SetBackgroundColour(parent.GetBackgroundColour())
 
     def load_new(self, in_doc):
-        self.input_fname_display.SetValue(in_doc.filename)
-        self.output_fname_display.SetValue(_("None"))
-        self.page_range_txt.SetValue("1-{}".format(len(in_doc.pages)))
+        self.input_fname_display.ChangeValue(in_doc.filename)
+        self.output_fname_display.ChangeValue("")
+        self.page_range_txt.ChangeValue("1-{}".format(len(in_doc.pages)))
 
     def on_option_checked(self, event):
         do_layers = bool(self.do_layers.GetValue())

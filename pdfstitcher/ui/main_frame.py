@@ -17,6 +17,7 @@ from pdfstitcher.ui.dialogs import PrefsDialog, UpdateDialog
 from pdfstitcher.ui.io_tab import IOTab
 from pdfstitcher.ui.tile_tab import TileTab
 from pdfstitcher.ui.layers_tab import LayersTab
+from pathlib import Path
 import os
 import sys
 import pikepdf
@@ -331,20 +332,47 @@ class PDFStitcherFrame(wx.Frame):
                 return
 
             pathname = fileDialog.GetPath()
-            if pathname == self.in_doc.filename:
-                wx.MessageBox(
-                    _("Can't overwrite input file, " + "please select a different file for output"),
-                    "Error",
-                    wx.OK | wx.ICON_ERROR,
-                )
-                self.on_output(event)
+            self.set_output_filename(pathname)
+
+    def set_output_filename(self, pathname):
+        """
+        Helper function to define output filename and directory.
+        """
+        if pathname is None:
+            return
+
+        pathname = pathname.strip()
+        Config.general["save_dir"] = str(Path(pathname).parent)
+
+        if pathname == self.in_doc.filename:
+            wx.MessageBox(
+                _("Can't overwrite input file, " + "please select a different file for output"),
+                "Error",
+                wx.OK | wx.ICON_ERROR,
+            )
+            self.on_output(wx.EVT_BUTTON)
+        else:
             try:
                 self.out_doc_path = pathname
-                self.io.output_fname_display.SetValue(pathname)
-                Config.general["save_dir"] = os.path.dirname(pathname)
+                self.io.output_fname_display.ChangeValue(pathname)
+                print(_("File will be written to " + pathname))
 
             except IOError:
                 wx.LogError(_("unable to write to") + pathname)
+
+    def on_input_change(self, event):
+        """
+        Load the file by editing the text box directly.
+        """
+        pathname = self.io.input_fname_display.GetValue()
+        self.load_file(pathname)
+
+    def on_output_change(self, event):
+        """
+        Define the save file by editing the text box directly.
+        """
+        pathname = self.io.output_fname_display.GetValue()
+        self.set_output_filename(pathname)
 
     def on_open(self, event):
         with wx.FileDialog(
@@ -362,65 +390,62 @@ class PDFStitcherFrame(wx.Frame):
             pathname = fileDialog.GetPath()
             self.load_file(pathname)
 
-    def load_file(self, pathname):
-        pdf_has_password = False
-        password = ""
+    def load_file(self, pathname, password=""):
+        """
+        Open the pdf and enable/disable options based on the file.
+        """
+        try:
+            # open the pdf
+            pathname = pathname.strip()
+            print(_("Opening") + " " + pathname)
+            self.in_doc = pikepdf.Pdf.open(pathname, password=password)
+            self.io.load_new(self.in_doc)
 
-        while True:
-            try:
-                if pdf_has_password:
-                    password_dialog = wx.PasswordEntryDialog(
-                        self, _("Password"), _("PDF file is locked"), ""
-                    )
-                    if password_dialog.ShowModal() == wx.ID_OK:
-                        password = password_dialog.GetValue()
-                        password_dialog.Destroy()
-                    else:
-                        wx.LogError(_("PDF will not open as you canceled the operation."))
-                        password_dialog.Destroy()
-                        break
-
-                # open the pdf
-                print(_("Opening") + " " + pathname)
-                self.in_doc = pikepdf.Pdf.open(pathname, password=password)
-                self.io.load_new(self.in_doc)
-
-                # create the processing objects
-                self.layer_filter = LayerFilter(self.in_doc)
-                if not self.lt.load_new(self.layer_filter.get_layer_names()):
-                    self.lt.Disable()
-                    self.io.do_layers.SetValue(0)
-                    self.io.do_layers.Disable()
-                else:
-                    self.io.do_layers.SetValue(1)
-                    self.io.do_layers.Enable()
-                    self.lt.Enable()
-
-                # only enable tiling if there are more than one page
-                if len(self.in_doc.pages) > 1:
-                    self.tiler = PageTiler()
-                    self.io.do_tile.SetValue(1)
-                    self.io.do_tile.Enable()
-                    self.tt.Enable()
-                else:
-                    self.io.do_tile.SetValue(0)
-                    self.io.do_tile.Disable()
-                    self.tt.Disable()
-
-                # clear the output if it's already set
-                self.out_doc_path = None
-
-            except pikepdf.PasswordError:
-                pdf_has_password = True
-                print(_("PDF locked! Enter the correct password."))
-
-            except IOError:
-                wx.LogError(_("Cannot open file") + pathname)
-
+            # create the processing objects
+            self.layer_filter = LayerFilter(self.in_doc)
+            if not self.lt.load_new(self.layer_filter.get_layer_names()):
+                self.lt.Disable()
+                self.io.do_layers.SetValue(0)
+                self.io.do_layers.Disable()
             else:
-                print(_("PDF file loaded without errors."))
-                Config.general["open_dir"] = os.path.dirname(pathname)
-                break
+                self.io.do_layers.SetValue(1)
+                self.io.do_layers.Enable()
+                self.lt.Enable()
+
+            # only enable tiling if there are more than one page
+            if len(self.in_doc.pages) > 1:
+                self.tiler = PageTiler()
+                self.io.do_tile.SetValue(1)
+                self.io.do_tile.Enable()
+                self.tt.Enable()
+            else:
+                self.io.do_tile.SetValue(0)
+                self.io.do_tile.Disable()
+                self.tt.Disable()
+
+            # clear the output if it's already set
+            self.out_doc_path = None
+
+        except pikepdf.PasswordError:
+            print(_("PDF locked! Enter the correct password."))
+
+            password_dialog = wx.PasswordEntryDialog(
+                self, _("Password"), _("PDF file is locked"), ""
+            )
+            if password_dialog.ShowModal() == wx.ID_OK:
+                password = password_dialog.GetValue()
+                password_dialog.Destroy()
+                self.load_file(pathname, password)
+            else:
+                wx.LogError(_("PDF will not open as you canceled the operation."))
+                password_dialog.Destroy()
+
+        except IOError:
+            wx.LogError(_("Cannot open file") + " " + pathname)
+
+        else:
+            print(_("PDF file loaded without errors."))
+            Config.general["open_dir"] = str(Path(pathname).parent)
 
 
 def main():
