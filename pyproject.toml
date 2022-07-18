@@ -3,7 +3,7 @@
 ## Also no Babel stuff working.
 [project]
 name = "pdfstitcher"
-version = "0.6.2"
+version = "0.7"
 description = "The open source PDF stitching software for sewists, by sewists."
 readme = "README.md"
 requires-python = ">=3.6, <3.10"
