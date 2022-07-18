@@ -3,7 +3,7 @@
 ## Also no Babel stuff working.
 [project]
 name = "pdfstitcher"
-version = "0.7"
+version = "0.7.1"
 description = "The open source PDF stitching software for sewists, by sewists."
 readme = "README.md"
 requires-python = ">=3.6, <3.10"
@@ -48,7 +48,7 @@ requires = ["setuptools", "Babel"]
 build-backend = "setuptools.build_meta:__legacy__"
 
 [tool.setuptools]
-packages = ["pdfstitcher"]
+packages = ["pdfstitcher", "pdfstitcher.ui"]
 
 [tool.black]
 line-length = 100

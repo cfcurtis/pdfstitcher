@@ -26,7 +26,12 @@ def update_available():
     current = [int(num) for num in __version__.split(".")]
     pypi = [int(num) for num in pypi_version.split(".")]
 
-    if any(pypi[i] > current[i] for i in range(len(current))):
+    if len(current) == 2:
+        current.append(0)
+    if len(pypi) == 2:
+        pypi.append(0)
+
+    if any(pypi[i] > current[i] for i in range(3)):
         return pypi_version
     else:
         return None
