@@ -53,6 +53,7 @@ class PageTiler:
         target_height=None,
         vertical_align=SW_ALIGN_V.BOTTOM,
         horizontal_align=SW_ALIGN_H.LEFT,
+        units=utils.UNITS.INCHES,
     ):
 
         self.in_doc = in_doc
@@ -81,10 +82,11 @@ class PageTiler:
         self.target_height = target_height
         self.target_width = target_width
 
+        self.units = units
         if self.target_height:
-            self.target_height = utils.layout_units.units_to_px(self.target_height)
+            self.target_height = self.units.units_to_px(self.target_height)
         if self.target_width:
-            self.target_width = utils.layout_units.units_to_px(self.target_width)
+            self.target_width = self.units.units_to_px(self.target_width)
 
         # Optional vertical and horizontal alignment in case pages are non-uniform in size
         self.vertical_align = vertical_align
@@ -101,56 +103,56 @@ class PageTiler:
             self.trim = trim
 
         else:
-            print(_('Invalid trim value specified, ignoring'))
+            print(_("Invalid trim value specified, ignoring"))
             self.trim = [0, 0, 0, 0]
 
     def show_options(self):
         # convert the margin and trim options into pixels
         # translation_note: in = "inches", cm = "centimetres"
-        rotstr = _('None')
+        rotstr = _("None")
 
         if self.rotation == SW_ROTATION.CLOCKWISE:
-            rotstr = _('Clockwise')
+            rotstr = _("Clockwise")
         elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
-            rotstr = _('Counterclockwise')
+            rotstr = _("Counterclockwise")
         elif self.rotation == SW_ROTATION.TURNAROUND:
             # translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
-            rotstr = _('Turn Around')
+            rotstr = _("Turn Around")
 
-        orderstr = _('Rows then columns')
+        orderstr = _("Rows then columns")
         if self.col_major:
-            orderstr = _('Columns then rows')
+            orderstr = _("Columns then rows")
 
-        lrstr = _('Left to right')
+        lrstr = _("Left to right")
         if self.right_to_left:
-            lrstr = _('Right to left')
+            lrstr = _("Right to left")
 
-        btstr = _('Top to bottom')
+        btstr = _("Top to bottom")
         if self.bottom_to_top:
-            btstr = _('Bottom to top')
+            btstr = _("Bottom to top")
 
         if self.vertical_align is SW_ALIGN_V.BOTTOM:
-            alvstr = _('Bottom')
+            alvstr = _("Bottom")
         elif self.vertical_align is SW_ALIGN_V.MID:
-            alvstr = _('Middle')
+            alvstr = _("Middle")
         elif self.vertical_align is SW_ALIGN_V.TOP:
-            alvstr = _('Top')
+            alvstr = _("Top")
 
         if self.horizontal_align is SW_ALIGN_H.LEFT:
-            alhstr = _('Left')
+            alhstr = _("Left")
         elif self.horizontal_align is SW_ALIGN_H.MID:
-            alhstr = _('Middle')
+            alhstr = _("Middle")
         elif self.horizontal_align is SW_ALIGN_H.RIGHT:
-            alhstr = _('Right')
+            alhstr = _("Right")
 
-        print(_('Tiling with {} rows and {} columns').format(self.rows, self.cols))
-        print(_('Options') + ':')
-        print('    ' + _('Margins') + ': {} {}'.format(self.margin, utils.layout_units.str))
-        print('    ' + _('Trim') + ': {} {}'.format(self.trim, utils.layout_units.str))
-        print('    ' + _('Rotation') + ': {}'.format(rotstr))
-        print('    ' + _('Page order') + ': {}, {}, {}'.format(orderstr, lrstr, btstr))
-        print('    ' + _('Vertical alignment') + ': {}'.format(alvstr))
-        print('    ' + _('Horizontal alignment') + ': {}'.format(alhstr))
+        print(_("Tiling with {} rows and {} columns").format(self.rows, self.cols))
+        print(_("Options") + ":")
+        print("    " + _("Margins") + ": {} {}".format(self.margin, self.units.str))
+        print("    " + _("Trim") + ": {} {}".format(self.trim, self.units.str))
+        print("    " + _("Rotation") + ": {}".format(rotstr))
+        print("    " + _("Page order") + ": {}, {}, {}".format(orderstr, lrstr, btstr))
+        print("    " + _("Vertical alignment") + ": {}".format(alvstr))
+        print("    " + _("Horizontal alignment") + ": {}".format(alhstr))
 
     def run(
         self,
@@ -174,9 +176,9 @@ class PageTiler:
             self.cols = cols
 
         if target_width is not None:
-            self.target_width = utils.layout_units.units_to_px(target_width)
+            self.target_width = self.units.units_to_px(target_width)
         if target_height is not None:
-            self.target_height = utils.layout_units.units_to_px(target_height)
+            self.target_height = self.units.units_to_px(target_height)
 
         if vertical_align is not None:
             self.vertical_align = vertical_align
@@ -184,7 +186,7 @@ class PageTiler:
             self.horizontal_align = horizontal_align
 
         if self.in_doc is None:
-            print(_('Input document not loaded'))
+            print(_("Input document not loaded"))
             return
 
         # initialize a new document
@@ -198,12 +200,12 @@ class PageTiler:
         ph = []
 
         page_count = len(self.in_doc.pages)
-        trim = [utils.layout_units.units_to_px(t) for t in self.trim]
+        trim = [self.units.units_to_px(t) for t in self.trim]
 
         # initialize the width/height indices based on page rotation
         page_rot = 0
 
-        if '/Rotate' in self.in_doc.Root.Pages.keys():
+        if "/Rotate" in self.in_doc.Root.Pages.keys():
             page_rot = self.in_doc.Root.Pages.Rotate % 360
 
         for p in self.page_range:
@@ -215,18 +217,18 @@ class PageTiler:
         ref_width, ref_height = utils.get_page_dims(ref_page, page_rot)
 
         user_unit = 1
-        if '/UserUnit' in ref_page.keys():
+        if "/UserUnit" in ref_page.keys():
             user_unit = float(ref_page.UserUnit)
 
         different_size = set()
 
         for p in self.page_range:
             if p > page_count:
-                print(_('Only {} pages in document, skipping {}').format(page_count, p))
+                print(_("Only {} pages in document, skipping {}").format(page_count, p))
                 continue
 
             if p > 0:
-                pagekey = f'/Page{p}'
+                pagekey = f"/Page{p}"
 
                 # Check if it's already been copied (in case of duplicate page numbers)
                 if pagekey not in content_dict.keys():
@@ -234,7 +236,7 @@ class PageTiler:
                     in_doc_page = self.in_doc.pages[p - 1]
                     new_page = copy.copy(in_doc_page)
 
-                    if '/Rotate' in in_doc_page.keys():
+                    if "/Rotate" in in_doc_page.keys():
                         page_rot = in_doc_page.Rotate % 360
 
                     if self.override_trim:
@@ -284,7 +286,7 @@ class PageTiler:
 
         if len(different_size) > 0:
             print(
-                _('Warning: The pages {} have a different size than the page before').format(
+                _("Warning: The pages {} have a different size than the page before").format(
                     different_size
                 )
             )
@@ -296,7 +298,7 @@ class PageTiler:
             self.rows = math.ceil(n_tiles / self.cols)
             if self.rows == 1 and self.cols > n_tiles:
                 print(
-                    _('Warning: requested {} columns, but there are only {} pages').format(
+                    _("Warning: requested {} columns, but there are only {} pages").format(
                         self.cols, n_tiles
                     )
                 )
@@ -306,7 +308,7 @@ class PageTiler:
             self.cols = math.ceil(n_tiles / self.rows)
             if self.cols == 1 and self.rows > n_tiles:
                 print(
-                    _('Warning: requested {} rows, but there are only {} pages').format(
+                    _("Warning: requested {} rows, but there are only {} pages").format(
                         self.rows, n_tiles
                     )
                 )
@@ -330,7 +332,7 @@ class PageTiler:
         if self.rotation == SW_ROTATION.TURNAROUND:
             order = [1, 0, 3, 2]
 
-        trim = [utils.layout_units.units_to_px(t / user_unit) for t in self.trim]
+        trim = [self.units.units_to_px(t / user_unit) for t in self.trim]
         trim = [trim[o] for o in order]
 
         if self.rotation in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
@@ -379,7 +381,7 @@ class PageTiler:
             page_box_defined = False
 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
-        margin = utils.layout_units.units_to_px(self.margin / user_unit)
+        margin = self.units.units_to_px(self.margin / user_unit)
         media_box = [
             float(new_page.MediaBox[0]),
             float(new_page.MediaBox[1]),
@@ -390,7 +392,7 @@ class PageTiler:
         utils.print_media_box(media_box)
 
         i = 0
-        content_txt = ''
+        content_txt = ""
         performed_scale = False
 
         # loop through all the page xobjects and place the non-empty ones
@@ -497,8 +499,8 @@ class PageTiler:
                 R = [R[i] * scale_factor for i in range(len(R))]
 
             # scale, shift and rotate
-            content_txt += f'q {R[0]} {R[1]} {R[2]} {R[3]} {x0} {y0} cm '
-            content_txt += f'{page_names[i]} Do Q '
+            content_txt += f"q {R[0]} {R[1]} {R[2]} {R[3]} {x0} {y0} cm "
+            content_txt += f"{page_names[i]} Do Q "
 
         if performed_scale:
             print(
@@ -530,7 +532,7 @@ def main(args):
     try:
         in_doc = pikepdf.Pdf.open(args.input)
     except:
-        print(_('Unable to open') + ' ' + args.input)
+        print(_("Unable to open") + " " + args.input)
         sys.exit()
 
     tiler = PageTiler(in_doc)
@@ -545,7 +547,7 @@ def main(args):
         tiler.margin = utils.txt_to_float(args.margin)
 
     if args.trim is not None:
-        trim = [utils.txt_to_float(t) for t in args.trim.split(',')]
+        trim = [utils.txt_to_float(t) for t in args.trim.split(",")]
         tiler.set_trim(trim)
 
     if args.rotate is not None:
@@ -585,58 +587,58 @@ def main(args):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        description=_('Tile PDF pages into one document.'),
-        epilog=_('Note: If both rows and columns are specified, rows are ignored.')
-        + ' '
-        + _('To insert a blank page, include a zero in the page list.'),
+        description=_("Tile PDF pages into one document."),
+        epilog=_("Note: If both rows and columns are specified, rows are ignored.")
+        + " "
+        + _("To insert a blank page, include a zero in the page list."),
     )
 
     parser.add_argument(
-        'input',
-        help=_('Input filename (pdf)'),
+        "input",
+        help=_("Input filename (pdf)"),
     )
     parser.add_argument(
-        'output',
-        help=_('Output filename (pdf)'),
+        "output",
+        help=_("Output filename (pdf)"),
     )
     parser.add_argument(
-        '-p',
-        '--pages',
+        "-p",
+        "--pages",
         help=_(
-            'Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: entire document.'
+            "Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: entire document."
         ),
     )
     parser.add_argument(
-        '-r',
-        '--rows',
+        "-r",
+        "--rows",
         type=int,
-        help=_('Number of rows in tiled grid.'),
+        help=_("Number of rows in tiled grid."),
     )
     parser.add_argument(
-        '-c',
-        '--columns',
+        "-c",
+        "--columns",
         type=int,
-        help=_('Number of columns in tiled grid.'),
+        help=_("Number of columns in tiled grid."),
     )
     parser.add_argument(
-        '-m',
-        '--margin',
-        help=_('Margin size in inches.'),
+        "-m",
+        "--margin",
+        help=_("Margin size in inches."),
     )
     parser.add_argument(
-        '-t',
-        '--trim',
-        help=_('Amount to trim from edges')
-        + ' '
+        "-t",
+        "--trim",
+        help=_("Amount to trim from edges")
+        + " "
         + _(
-            'given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from left and top)'
+            "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from left and top)"
         ),
     )
     parser.add_argument(
-        '-R',
-        '--rotate',
+        "-R",
+        "--rotate",
         type=int,
-        help=_('Rotate pages (90, 180, or 270 degrees)'),
+        help=_("Rotate pages (90, 180, or 270 degrees)"),
     )
 
     return parser.parse_args()

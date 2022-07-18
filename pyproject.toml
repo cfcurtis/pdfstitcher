@@ -1,0 +1,54 @@
+## Note: tried migrating from setup.cfg to pyproject.toml,
+## got ModuleNotFoundError when executing pdfstitcher command.
+## Also no Babel stuff working.
+[project]
+name = "pdfstitcher"
+version = "0.7"
+description = "The open source PDF stitching software for sewists, by sewists."
+readme = "README.md"
+requires-python = ">=3.6, <3.10"
+license = {file = "LICENSE"}
+keywords = ["pdf", "sewing", "utility", "stitch", "n-up", "page imposition"]
+authors = [
+    {name = "Charlotte Curtis"},
+    {email = "c.f.curtis@gmail.com"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Operating System :: OS Independent"
+]
+dependencies = [
+    "pikepdf >= 2.2.0",
+    "wxPython >= 4.1",
+    "Babel",
+    "PyYAML",
+    "appdirs",
+    "requests",
+    "pyobjc ; platform_system=='Darwin'"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pre-commit",
+    "black"
+]
+
+[project.urls]
+homepage = "https://www.pdfstitcher.org/"
+repository = "https://github.com/cfcurtis/pdfstitcher"
+
+[project.scripts]
+pdfstitcher = "pdfstitcher.pdfstitcher:main"
+
+[build-system]
+requires = ["setuptools", "Babel"]
+# use legacy to force setup.py to run
+build-backend = "setuptools.build_meta:__legacy__"
+
+[tool.setuptools]
+packages = ["pdfstitcher"]
+
+[tool.black]
+line-length = 100

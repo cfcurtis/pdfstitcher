@@ -74,7 +74,7 @@ jobs:
           pip install pikepdf wxPython Babel pyinstaller
           python pdfstitcher/update_loc.py --compile
           pyinstaller pdfstitcher_win.spec
-          echo "VERSION_STRING=v$(cat pdfstitcher/version.py | cut -d \' -f 2)" >> $GITHUB_ENV
+          echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
       
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.14
@@ -100,7 +100,7 @@ jobs:
           pip3 install pikepdf wxPython Babel pyinstaller pyobjc
           python3 pdfstitcher/update_loc.py --compile
           pyinstaller pdfstitcher_mac.spec
-          echo "VERSION_STRING=v$(cat pdfstitcher/version.py | cut -d \' -f 2)" >> $GITHUB_ENV
+          echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
 
       - name: Create dmg
         run: |
