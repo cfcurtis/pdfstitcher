@@ -172,19 +172,7 @@ class TileTab(scrolled.ScrolledPanel):
         lbl.SetFont(lbl.GetFont().Bold())
         vert_sizer.Add(lbl, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2))
 
-        # override trimbox - sometimes needed for wonky PDFs
-        # translation_note: TrimBox and MediaBox are PDF elements, so they likely won't translate nicely.
-        self.override_trim = wx.CheckBox(self, label=_("Set TrimBox to MediaBox"))
-        self.override_trim.SetToolTip(
-            wx.ToolTip(_("May help fix things when output is not as expected"))
-        )
-        vert_sizer.Add(
-            self.override_trim,
-            flag=wx.TOP | wx.LEFT | wx.RIGHT,
-            border=self.FromDIP(utils.BORDER * 2),
-        )
-
-        # Margin
+        # Margin - mirrored from options tab
         newline = wx.BoxSizer(wx.HORIZONTAL)
         newline.Add(
             wx.StaticText(self, label=_("Margin to add to final output") + ":"),
@@ -202,6 +190,31 @@ class TileTab(scrolled.ScrolledPanel):
         )
         vert_sizer.Add(
             newline, flag=wx.TOP | wx.LEFT | wx.RIGHT, border=self.FromDIP(utils.BORDER * 2)
+        )
+
+        # Unit selection - mirrored from options tab
+        unit_opts = [_("Inches"), _("Centimetres")]
+        self.unit_box = wx.RadioBox(
+            self, label=_("Units"), choices=unit_opts, style=wx.RA_SPECIFY_COLS
+        )
+        self.unit_box.SetSelection(Config.general["units"].value)
+        vert_sizer.Add(
+            self.unit_box,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+        self.unit_box.Bind(wx.EVT_RADIOBOX, main_gui.unit_changed)
+
+        # override trimbox - sometimes needed for wonky PDFs
+        # translation_note: TrimBox and MediaBox are PDF elements, so they likely won't translate nicely.
+        self.override_trim = wx.CheckBox(self, label=_("Set TrimBox to MediaBox"))
+        self.override_trim.SetToolTip(
+            wx.ToolTip(_("May help fix things when output is not as expected"))
+        )
+        vert_sizer.Add(
+            self.override_trim,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
         )
 
         # Trim header

@@ -22,21 +22,30 @@ class UpdateDialog(wx.Dialog):
         self.SetTitle(_("Checking for updates"))
         self.nothing_exciting = False
 
-        vert_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.vert_sizer = wx.BoxSizer(wx.VERTICAL)
         self.info_txt = wx.TextCtrl(
-            self, value=_("Please wait..."), style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER
+            self,
+            value=_("Please wait..."),
+            size=self.FromDIP((400, -1)),
+            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER,
         )
 
         # Style it to look like static text
         self.info_txt.SetBackgroundColour(self.GetBackgroundColour())
-        vert_sizer.Add(
+        self.vert_sizer.Add(
             self.info_txt,
             proportion=1,
-            flag=wx.EXPAND | wx.ALL,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
             border=self.FromDIP(utils.BORDER * 2),
         )
 
-        # Check for updates, but handle potential errors
+        self.SetSizerAndFit(self.vert_sizer)
+        self.check_updates()
+
+    def check_updates(self):
+        """
+        Check for updates and show results.
+        """
         try:
             pypi_version = updater.update_available()
 
@@ -55,27 +64,25 @@ class UpdateDialog(wx.Dialog):
                         utils.VERSION_STRING, pypi_version
                     )
                 )
-                download_link = wx.adv.HyperlinkCtrl(
-                    self, label=_("Download Link"), url=updater.get_download_url()
-                )
                 changelog = wx.adv.HyperlinkCtrl(
-                    self, label=_("Changelog"), url=utils.GIT_HOME + "/releases/latest"
+                    self, label=_("What's changed?"), url=utils.GIT_HOME + "/releases/latest"
                 )
-                vert_sizer.Add(
-                    download_link,
-                    flag=wx.TOP | wx.LEFT | wx.RIGHT,
-                    border=self.FromDIP(utils.BORDER * 2),
+                download_link = wx.adv.HyperlinkCtrl(
+                    self, label=_("Download Now"), url=updater.get_download_url()
                 )
-                vert_sizer.Add(
-                    changelog,
-                    flag=wx.TOP | wx.LEFT | wx.RIGHT,
+                newline = wx.BoxSizer(wx.HORIZONTAL)
+                newline.Add(changelog, flag=wx.ALL, border=self.FromDIP(utils.BORDER))
+                newline.AddStretchSpacer()
+                newline.Add(download_link, flag=wx.ALL, border=self.FromDIP(utils.BORDER))
+                self.vert_sizer.Add(
+                    newline,
+                    flag=wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM,
                     border=self.FromDIP(utils.BORDER * 2),
                 )
         except Exception as e:
             self.info_txt.ChangeValue(_("Error checking for updates") + f"\n{e}")
 
-        vert_sizer.SetMinSize(self.FromDIP((400, 150)))
-        self.SetSizerAndFit(vert_sizer)
+        self.vert_sizer.Fit(self)
 
 
 class PrefsDialog(wx.Dialog):

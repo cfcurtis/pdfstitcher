@@ -125,6 +125,7 @@ class IOTab(scrolled.ScrolledPanel):
             flag=wx.TOP | wx.LEFT | wx.RIGHT,
             border=self.FromDIP(utils.BORDER * 2),
         )
+        self.unit_box.Bind(wx.EVT_RADIOBOX, main_gui.unit_changed)
 
         # checklist of features to enable/disable
         self.do_layers = wx.CheckBox(self, label=_("Process Layers"))

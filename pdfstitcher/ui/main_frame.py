@@ -94,16 +94,31 @@ class PDFStitcherFrame(wx.Frame):
         self.splitter.SetSashPosition(self.Size[1] * 2 // 3)
 
     def page_range_updated(self, event):
+        """
+        Mirror the page range options on both tabs.
+        """
         if event.GetId() == self.io.page_range_txt.GetId():
             self.tt.page_range_txt.ChangeValue(self.io.page_range_txt.GetValue())
         elif event.GetId() == self.tt.page_range_txt.GetId():
             self.io.page_range_txt.ChangeValue(self.tt.page_range_txt.GetValue())
 
     def margin_updated(self, event):
+        """
+        Mirror the margin options on both tabs.
+        """
         if event.GetId() == self.io.margin_txt.GetId():
             self.tt.margin_txt.ChangeValue(self.io.margin_txt.GetValue())
         elif event.GetId() == self.tt.margin_txt.GetId():
             self.io.margin_txt.ChangeValue(self.tt.margin_txt.GetValue())
+
+    def unit_changed(self, event):
+        """
+        Mirror the unit options on both tabs.
+        """
+        if event.GetId() == self.io.unit_box.GetId():
+            self.tt.unit_box.SetSelection(self.io.unit_box.GetSelection())
+        elif event.GetId() == self.tt.unit_box.GetId():
+            self.io.unit_box.SetSelection(self.tt.unit_box.GetSelection())
 
     def on_go_pressed(self, event):
         # retrieve the selected options
@@ -308,7 +323,9 @@ class PDFStitcherFrame(wx.Frame):
         about_info.SetWebSite(utils.WEB_HOME)
         about_info.AddDeveloper("Charlotte Curtis")
         about_info.AddDeveloper(
-            _("Contributors") + "https://github.com/cfcurtis/pdfstitcher/graphs/contributors"
+            "\n"
+            + _("Contributors")
+            + ": https://github.com/cfcurtis/pdfstitcher/graphs/contributors"
         )
         about_info.SetLicense(
             "Mozilla Public License Version 2.0\n" "https://www.mozilla.org/en-US/MPL/2.0/"
