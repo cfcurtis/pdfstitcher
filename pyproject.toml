@@ -1,6 +1,3 @@
-## Note: tried migrating from setup.cfg to pyproject.toml,
-## got ModuleNotFoundError when executing pdfstitcher command.
-## Also no Babel stuff working.
 [project]
 name = "pdfstitcher"
 version = "0.7.1"
@@ -45,7 +42,7 @@ pdfstitcher = "pdfstitcher.pdfstitcher:main"
 [build-system]
 requires = ["setuptools", "Babel"]
 # use legacy to force setup.py to run
-build-backend = "setuptools.build_meta:__legacy__"
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["pdfstitcher", "pdfstitcher.ui"]
