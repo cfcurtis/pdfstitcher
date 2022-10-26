@@ -7,9 +7,25 @@ on:
         description: 'Draft'
         type: boolean
         required: true
+        
+      pypi:
+        description: 'Deploy to PyPi'
+        type: boolean
+        required: true
+        
+      win:
+        description: 'Build for Windows'
+        type: boolean
+        required: true
+        
+      mac:
+        description: 'build for macOS'
+        type: boolean
+        required: true
 
 jobs:
   pypi-release:
+    if: ${{ github.event.inputs.pypi }}
     runs-on: ubuntu-latest
     
     steps:
@@ -55,6 +71,7 @@ jobs:
           password:  ${{ secrets.PYPI_TOKEN }}
         
   win-build:
+    if: ${{ github.event.inputs.win }}
     runs-on: windows-2019   
     defaults:
       run:
@@ -85,6 +102,7 @@ jobs:
           tag_name: ${{ env.VERSION_STRING }}
 
   mac-build:
+    if: ${{ github.event.inputs.mac }}
     runs-on: macos-10.15
     
     steps:
