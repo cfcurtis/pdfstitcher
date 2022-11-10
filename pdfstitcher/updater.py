@@ -9,14 +9,20 @@ import sys
 import importlib.metadata
 import requests
 from pdfstitcher import utils
+import os
 
 __version__ = importlib.metadata.version("pdfstitcher")
 
+def is_flatpak() -> bool:
+    """
+    Returns True if the app is running in a Flatpak sandbox.
+    """
+    return "FLATPAK_ID" in os.environ
 
 def update_available():
     """
     Checks whether there's a new release of PDFStitcher.
-    """
+    """ 
     response = requests.get(utils.PYPI_HOME + "/json")
     if not response.ok:
         raise requests.HTTPError(response.status_code, response.url, response.reason)
