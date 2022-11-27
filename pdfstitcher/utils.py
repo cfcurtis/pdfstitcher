@@ -209,10 +209,17 @@ def setup_locale(lang: str = None) -> None:
                 language_warning = "Could not detect system language, defaulting to English"
                 lang = "en"
 
+    # First check if the language is defined as-is
     if lang in valid_langs:
         lang = lang
+    # Then check just the language without country code
     elif lang[:2] in valid_langs:
         lang = lang[:2]
+    else:
+        for valid_lang in valid_langs:
+            if lang[:2] in valid_lang:
+                lang = valid_lang
+                break
 
     try:
         translate = gettext.translation(
