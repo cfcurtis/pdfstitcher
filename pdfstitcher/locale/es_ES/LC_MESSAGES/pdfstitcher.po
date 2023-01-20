@@ -9,19 +9,21 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-10-04 11:04-0600\n"
-"PO-Revision-Date: 2020-12-08 12:27-0700\n"
-"Last-Translator: Leia McFly <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2023-01-20 14:35+0000\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/es/>\n"
 "Language: es_ES\n"
-"Language-Team: es_ES <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.1\n"
 "Generated-By: Babel 2.9.1\n"
 
 #: layerfilter.py:122
 msgid "No layers selected, generated PDF would be blank."
-msgstr "No hay capas seleccionadas, el PDF generado estara en blanco"
+msgstr "No hay capas seleccionadas, el PDF generado estara en blanco."
 
 #: pdfstitcher.py:29 pdfstitcher.py:706
 msgid "Select input PDF"
@@ -37,9 +39,8 @@ msgid "Save output as"
 msgstr "Guardar el nuevo PDF como"
 
 #: pdfstitcher.py:46
-#, fuzzy
 msgid "Output Options"
-msgstr "Opciones"
+msgstr "Opciones de salida"
 
 #: pdfstitcher.py:52 pdfstitcher.py:159
 msgid "Page Range"
@@ -69,7 +70,7 @@ msgstr "Procesar capas, juntar paginas y guardar"
 
 #: pdfstitcher.py:99
 msgid "Process layers and save without tiling pages"
-msgstr "Procesar capas y guardar sin juntar paginas "
+msgstr "Edite y guarde capas sin fusionar páginas"
 
 #: pdfstitcher.py:102
 msgid "Tile pages and save without processing layers"
@@ -88,9 +89,8 @@ msgid "Number of Columns"
 msgstr "Numero de Columnas"
 
 #: pdfstitcher.py:128
-#, fuzzy
 msgid "OR Number of Rows"
-msgstr "Numero de Filas"
+msgstr "O Número de filas"
 
 #: pdfstitcher.py:136 tile_pages.py:139
 msgid "Rows then columns"
@@ -110,7 +110,7 @@ msgstr "Derecha a Izquierda"
 
 #: pdfstitcher.py:138 tile_pages.py:147
 msgid "Top to bottom"
-msgstr " De Arriba hacia abajo "
+msgstr "De Arriba hacia abajo"
 
 #: pdfstitcher.py:138 tile_pages.py:149
 msgid "Bottom to top"
@@ -131,7 +131,7 @@ msgstr "Sentido anti-horario"
 #. translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
 #: pdfstitcher.py:151 tile_pages.py:137
 msgid "Turn Around"
-msgstr ""
+msgstr "Dar la vuelta"
 
 #: pdfstitcher.py:152
 msgid "Page Rotation"
@@ -195,20 +195,19 @@ msgstr "Abajo"
 
 #: pdfstitcher.py:239
 msgid "Load PDF to view layers."
-msgstr "Cargar PDF para ver las capas"
+msgstr "Cargar PDF para ver las capas."
 
 #: pdfstitcher.py:249
-#, fuzzy
 msgid "Deselected layers:"
-msgstr "Deseleccionar todo"
+msgstr "Capas no seleccionadas:"
 
 #: pdfstitcher.py:250
 msgid "Delete"
-msgstr ""
+msgstr "Borrar"
 
 #: pdfstitcher.py:250
 msgid "Hide"
-msgstr ""
+msgstr "Ocultar"
 
 #: pdfstitcher.py:254
 msgid "Include non-optional content"
@@ -342,7 +341,7 @@ msgstr "Imposible guardar en"
 
 #: pdfstitcher.py:651
 msgid "Make sure  isn't open in another program"
-msgstr ""
+msgstr "Asegúrese de que no está abierto en otro programa"
 
 #: pdfstitcher.py:696
 msgid "Cant overwrite input file, please select a different file for output"
@@ -364,7 +363,7 @@ msgstr "Valor de recorte especificado no válido, ignorando"
 
 #: tile_pages.py:154 tile_pages.py:161
 msgid "Middle"
-msgstr ""
+msgstr "Medio"
 
 #: tile_pages.py:165
 msgid "Tiling with {} rows and {} columns"
@@ -380,11 +379,11 @@ msgstr "Rotación"
 
 #: tile_pages.py:171
 msgid "Vertical alignment"
-msgstr ""
+msgstr "Alineación vertical"
 
 #: tile_pages.py:172
 msgid "Horizontal alignment"
-msgstr ""
+msgstr "Alineación horizontal"
 
 #: tile_pages.py:203
 msgid "Input document not loaded"
@@ -395,43 +394,36 @@ msgid "Only {} pages in document, skipping {}"
 msgstr "Solo hay {} páginas en el documento, omitiendo {}"
 
 #: tile_pages.py:307
-#, fuzzy
 msgid "Warning: The pages {} have a different size than the page before"
 msgstr ""
-"Advertencia: la página {} tiene un tamaño diferente al de {}, el "
-"resultado puede ser impredecible"
+"Atención: Las páginas {} tienen un tamaño diferente al de la página anterior"
 
 #: tile_pages.py:315
-#, fuzzy
 msgid "Warning: requested {} columns, but there are only {} pages"
-msgstr ""
-"Advertencia: solicitó {} columnas y {} filas, pero {} filas son "
-"necesarias con {} páginas"
+msgstr "Advertencia: se han solicitado {} columnas, pero sólo hay {} páginas"
 
 #: tile_pages.py:321
-#, fuzzy
 msgid "Warning: requested {} rows, but there are only {} pages"
-msgstr ""
-"Advertencia: solicitó {} columnas y {} filas, pero {} filas son "
-"necesarias con {} páginas"
+msgstr "Advertencia: se han solicitado {} filas, pero sólo hay {} páginas"
 
 #: tile_pages.py:398
-#, fuzzy
 msgid "Warning! Output is larger than {} {}, may not open correctly."
 msgstr ""
-"Advetrencia! El resultado fina es más grande de 508cm, puede que no abra "
+"¡Advertencia! La salida es mayor que {} {}, es posible que no se abra "
 "correctamente."
 
 #: tile_pages.py:401
-#, fuzzy
 msgid "Output size:"
-msgstr "Guardar el nuevo PDF como"
+msgstr "Tamaño de salida:"
 
 #: tile_pages.py:523
 msgid ""
 "Warning: Some pages have been scaled because a target size was set. You "
 "should not see this warning if using the PDFStitcher GUI."
 msgstr ""
+"Advertencia: Algunas páginas se han escalado porque se ha establecido un "
+"tamaño objetivo. No debería ver esta advertencia si utiliza la interfaz "
+"gráfica de PDFStitcher."
 
 #: tile_pages.py:548
 msgid "Unable to open"
@@ -439,61 +431,65 @@ msgstr "No es posible abrir el archivo"
 
 #: tile_pages.py:578
 msgid "Invalid rotation value"
-msgstr ""
+msgstr "Valor de rotación no válido"
 
 #: tile_pages.py:603
 msgid "Tile PDF pages into one document."
-msgstr ""
+msgstr "Agrupa las páginas PDF en un documento."
 
 #: tile_pages.py:604
 msgid "Note: If both rows and columns are specified, rows are ignored."
 msgstr ""
+"Nota: Si se especifican tanto filas como columnas, se ignoran las filas."
 
 #: tile_pages.py:605
 msgid "To insert a blank page, include a zero in the page list."
 msgstr ""
+"Para insertar una página en blanco, incluya un cero en la lista de páginas."
 
 #: tile_pages.py:610
 msgid "Input filename (pdf)"
-msgstr ""
+msgstr "Nombre del archivo de entrada (pdf)"
 
 #: tile_pages.py:614
 msgid "Output filename (pdf)"
-msgstr ""
+msgstr "Fichero de salida (pdf)"
 
 #: tile_pages.py:618
 msgid ""
 "Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: "
 "entire document."
 msgstr ""
+"Páginas a embaldosar. Puede ser un rango o una lista (por ejemplo, 1-5 o "
+"1,3,5-7, etc). Por defecto: todo el documento."
 
 #: tile_pages.py:623
 msgid "Number of rows in tiled grid."
-msgstr ""
+msgstr "Número de filas de la cuadrícula en mosaico."
 
 #: tile_pages.py:628
-#, fuzzy
 msgid "Number of columns in tiled grid."
-msgstr "Numero de Columnas"
+msgstr "Número de columnas en la cuadrícula de mosaicos."
 
 #: tile_pages.py:632
 msgid "Margin size in inches."
-msgstr ""
+msgstr "Tamaño del margen en pulgadas."
 
 #: tile_pages.py:636
-#, fuzzy
 msgid "Amount to trim from edges"
-msgstr "Margen a recortar de cada página"
+msgstr "La cantidad a recortar de los bordes"
 
 #: tile_pages.py:637
 msgid ""
 "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch "
 "from left and top)"
 msgstr ""
+"indicados como izquierda,derecha,arriba,abajo (por ejemplo, 0,5,0,0,5,0 "
+"recortaría media pulgada de la izquierda y la parte superior)"
 
 #: tile_pages.py:642
 msgid "Rotate pages (90, 180, or 270 degrees)"
-msgstr ""
+msgstr "Girar páginas (90, 180 o 270 grados)"
 
 #: utils.py:75
 msgid "Invalid input"
@@ -515,4 +511,3 @@ msgstr "Por favor especifique un rango de paginas"
 
 #~ msgid "PDF Stitcher"
 #~ msgstr "PDF Stitcher"
-
