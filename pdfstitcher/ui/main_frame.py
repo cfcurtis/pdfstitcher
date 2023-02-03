@@ -465,7 +465,7 @@ class PDFStitcherFrame(wx.Frame):
             Config.general["open_dir"] = str(Path(pathname).parent)
 
 
-def main():
+def main(language_warning: str):
     """
     Create the app and run it.
     """
@@ -483,6 +483,9 @@ def main():
     frm = PDFStitcherFrame(None, title="PDF Stitcher" + " " + utils.VERSION_STRING, size=app_size)
     frm.SetSize(frm.FromDIP(app_size))
     frm.reset_sash_position()
+
+    if language_warning:
+        print(language_warning)
 
     frm.Show()
 

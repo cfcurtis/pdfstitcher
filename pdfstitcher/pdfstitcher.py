@@ -22,7 +22,7 @@ def main():
     if language_warning:
         print(language_warning)
 
-    launch_gui()
+    launch_gui(language_warning)
 
 
 if __name__ == "__main__":

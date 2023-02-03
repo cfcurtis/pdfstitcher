@@ -16,6 +16,7 @@ import yaml
 # localization stuff
 import gettext
 import locale
+from babel import Locale
 from pathlib import Path
 
 import importlib.metadata
@@ -225,7 +226,12 @@ def setup_locale(lang: str = None) -> None:
             "pdfstitcher", resource_path("locale"), languages=[lang], fallback=True
         )
         translate.install()
-        Config.general["language"] = lang
+
+        if isinstance(translate, gettext.GNUTranslations):
+            Config.general["language"] = lang
+        elif lang != "en":
+            language_warning = f"Could not find translation for language {Locale(*lang.split('_')).display_name}, defaulting to English"
+            Config.general["language"] = "en"
     except Exception as e:
         language_warning = e
 
