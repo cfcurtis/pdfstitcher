@@ -49,6 +49,7 @@ jobs:
           freeglut3-dev \
           libgl1-mesa-dev \
           libglu1-mesa-dev \
+          libunwind-dev \
           libgstreamer-plugins-base1.0-dev \
           libgtk-3-dev \
           libjpeg-dev \
