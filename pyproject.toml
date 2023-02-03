@@ -3,7 +3,7 @@ name = "pdfstitcher"
 version = "0.7.1"
 description = "The open source PDF stitching software for sewists, by sewists."
 readme = "README.md"
-requires-python = ">=3.6, <3.10"
+requires-python = ">=3.8, <3.11"
 license = {file = "LICENSE"}
 keywords = ["pdf", "sewing", "utility", "stitch", "n-up", "page imposition"]
 authors = [
