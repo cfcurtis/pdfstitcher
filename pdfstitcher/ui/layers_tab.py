@@ -69,6 +69,8 @@ class LayersTab(scrolled.ScrolledPanel):
         self.layer_list.EnableCheckBoxes(True)
         self.layer_list.InsertColumn(0, _("Layer Name"))
         self.layer_list.InsertColumn(1, _("Line Properties"))
+        self.layer_list.SetBackgroundColour(wx.Colour(180, 180, 180))
+        self.layer_list.SetForegroundColour(wx.Colour(0, 0, 0))
         layer_sizer.Add(
             self.layer_list,
             proportion=1,
