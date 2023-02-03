@@ -138,7 +138,7 @@ class LayersTab(scrolled.ScrolledPanel):
         # translation_note: pt = "points", in = "inches", cm = "centimeters"
         unit_choice = [_("in"), _("cm"), _("pt")]
         self.line_thick_units = wx.ComboBox(layer_opt_pane, choices=unit_choice)
-        self.line_thick_units.SetStringSelection(Config.line_props["thickness"]["units"].str)
+        self.line_thick_units.SetSelection(Config.line_props["thickness"]["units"])
 
         newline.Add(
             self.line_thick_units,
@@ -229,7 +229,7 @@ class LayersTab(scrolled.ScrolledPanel):
                 return "", None
 
             units = utils.UNITS(self.line_thick_units.GetSelection())
-            line_str += f"{line_thick} {units.str} "
+            line_str += f"{line_thick} {units} "
             line_thick = units.units_to_px(line_thick)
             self.line_props[layer]["thickness"] = line_thick
 

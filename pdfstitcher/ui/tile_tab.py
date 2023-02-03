@@ -197,7 +197,7 @@ class TileTab(scrolled.ScrolledPanel):
         self.unit_box = wx.RadioBox(
             self, label=_("Units"), choices=unit_opts, style=wx.RA_SPECIFY_COLS
         )
-        self.unit_box.SetSelection(Config.general["units"].value)
+        self.unit_box.SetSelection(Config.general["units"])
         vert_sizer.Add(
             self.unit_box,
             flag=wx.TOP | wx.LEFT | wx.RIGHT,

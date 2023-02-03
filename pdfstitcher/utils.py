@@ -8,7 +8,7 @@
 import sys
 import os
 import pikepdf
-from enum import Enum
+from enum import IntEnum
 
 from appdirs import user_config_dir
 import yaml
@@ -44,13 +44,12 @@ PYPI_HOME = "https://pypi.org/pypi/pdfstitcher"
 FLATHUB_HOME = "https://flathub.org/apps/details/com.github.cfcurtis.pdfstitcher"
 
 
-class UNITS(Enum):
+class UNITS(IntEnum):
     INCHES = 0
     CENTIMETERS = 1
     POINTS = 2
 
-    @property
-    def str(self):
+    def __str__(self):
         """
         Returns the name of the units in the current language.
         """
@@ -332,7 +331,7 @@ def print_media_box(media_box, user_unit=1):
         print(
             _("Warning! Output is larger than {} {}, may not open correctly.").format(
                 round(Config.general["units"].px_to_units(MAX_SIZE_PX)),
-                Config.general["units"].str,
+                Config.general["units"],
             )
         )
         print(62 * "*")
@@ -342,7 +341,7 @@ def print_media_box(media_box, user_unit=1):
         + " {:0.2f} x {:0.2f} {}".format(
             user_unit * Config.general["units"].px_to_units(width),
             user_unit * Config.general["units"].px_to_units(height),
-            Config.general["units"].str,
+            Config.general["units"],
         )
     )
 
