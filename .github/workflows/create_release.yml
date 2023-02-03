@@ -85,7 +85,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8 # needs to be 3.8 to support Windows 7
+          python-version: "3.8" # needs to be 3.8 to support Windows 7
         
       - name: Compile translation files and build exe
         run: | 
@@ -114,7 +114,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.10 # better compatibility with pikepdf, it seems
+          python-version: "3.10" # better compatibility with pikepdf, it seems
         
       - name: Compile translation files and build .app
         run: | 
