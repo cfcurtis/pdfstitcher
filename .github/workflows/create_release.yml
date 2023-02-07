@@ -105,7 +105,7 @@ jobs:
 
   mac-build:
     if: ${{ github.event.inputs.mac }}
-    runs-on: macos-11 # 10.15 is deprecated :(
+    runs-on: macos-10.15 # 10.15 is deprecated, but still seems to work?
     env:
       MACOSX_DEPLOYMENT_TARGET: "10.9" # it can't be this easy, but let's try
     steps:

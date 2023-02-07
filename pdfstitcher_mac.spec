@@ -2,6 +2,8 @@
 
 import os
 from PyInstaller.utils.hooks import copy_metadata
+import importlib.metadata
+__version__ = importlib.metadata.version("pdfstitcher")
 
 block_cipher = None
 locale_paths = []
@@ -40,6 +42,7 @@ exe = EXE(
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
+    # target_arch='universal2', # not yet working, fails on Pillow
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
@@ -50,7 +53,7 @@ app = BUNDLE(
     name="pdfstitcher.app",
     icon="pdfstitcher/resources/stitcher-icon.icns",
     bundle_identifier="org.pdfstitcher",
-    version="0.5",
+    version=f"{__version__}",
     info_plist={
         "NSPrincipalClass": "NSApplication",
         "NSAppleScriptEnabled": False,
