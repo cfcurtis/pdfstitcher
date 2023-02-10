@@ -25,7 +25,7 @@ on:
 
 jobs:
   pypi-release:
-    if: ${{ github.event.inputs.pypi }}
+    if: ${{ inputs.pypi }}
     runs-on: ubuntu-latest
     
     steps:
@@ -73,7 +73,7 @@ jobs:
           password:  ${{ secrets.PYPI_TOKEN }}
         
   win-build:
-    if: ${{ github.event.inputs.win }}
+    if: ${{ inputs.win }}
     runs-on: windows-2019   
     defaults:
       run:
@@ -100,11 +100,11 @@ jobs:
         uses: softprops/action-gh-release@v0.1.14
         with:
           files: dist/pdfstitcher.exe
-          draft: ${{ github.event.inputs.draft }}
+          draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
 
   mac-build:
-    if: ${{ github.event.inputs.mac }}
+    if: ${{ inputs.mac }}
     runs-on: macos-10.15 # 10.15 is deprecated, but still seems to work?
     env:
       MACOSX_DEPLOYMENT_TARGET: "10.9" # it can't be this easy, but let's try
@@ -136,5 +136,5 @@ jobs:
         uses: softprops/action-gh-release@v0.1.14
         with:
           files: PDFStitcher-Installer.dmg
-          draft: ${{ github.event.inputs.draft }}
+          draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
