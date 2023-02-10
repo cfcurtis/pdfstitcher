@@ -19,9 +19,11 @@ def is_flatpak() -> bool:
     """
     return "FLATPAK_ID" in os.environ
 
-def update_available():
+def update_available() -> str:
     """
     Checks whether there's a new release of PDFStitcher.
+    Returns a string containing the latest version if there's a new one,
+    or None if the current version is up to date.
     """ 
     response = requests.get(utils.PYPI_HOME + "/json")
     if not response.ok:
@@ -43,7 +45,7 @@ def update_available():
         return None
 
 
-def get_download_url():
+def get_download_url() -> str:
     """
     Returns the platform-specific download link for the latest release.
     """
