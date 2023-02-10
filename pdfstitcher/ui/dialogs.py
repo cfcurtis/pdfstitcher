@@ -9,6 +9,7 @@ import wx, wx.adv
 from pdfstitcher import utils
 from pdfstitcher.utils import Config
 from pdfstitcher import updater
+from pdfstitcher import bug_info
 from babel import Locale
 
 
@@ -88,6 +89,89 @@ class UpdateDialog(wx.Dialog):
             self.info_txt.ChangeValue(_("Error checking for updates") + f"\n{e}")
 
         self.vert_sizer.Fit(self)
+
+
+class BugReporter(wx.Dialog):
+    """
+    Dialog to help users submit a bug report.
+    """
+
+    def __init__(self, *args, **kw):
+        super(BugReporter, self).__init__(*args, **kw)
+        self.SetTitle(_("Report a bug"))
+        self.main_gui = kw["parent"]
+
+        vert_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        # Text box for bug report
+        vert_sizer.Add(
+            wx.StaticText(
+                self,
+                label=_("Please describe the steps to reproduce the problem"),
+            ),
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+        self.bug_report = wx.TextCtrl(
+            self,
+            value="",
+            size=self.FromDIP((600, 200)),
+            style=wx.TE_MULTILINE | wx.TE_PROCESS_ENTER,
+        )
+        vert_sizer.Add(
+            self.bug_report,
+            proportion=1,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+
+        # Button to create zip file of info
+        horiz_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        submit_btn = wx.Button(self, label=_("Create zip file"))
+        submit_btn.Bind(wx.EVT_BUTTON, self.create_zip_file)
+        horiz_sizer.Add(
+            submit_btn,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+        # add a checkbox to optionally include the PDF
+        self.include_pdf = wx.CheckBox(self, label=_("Include mangled PDF (Beta)"))
+        horiz_sizer.Add(
+            self.include_pdf,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+        vert_sizer.Add(
+            horiz_sizer,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+
+        self.SetSizerAndFit(vert_sizer)
+
+    def create_zip_file(self, event):
+        """
+        Create a zip file with system info, config, and bug report.
+        """
+        if self.include_pdf.IsChecked():
+            pdf = self.main_gui.in_doc
+        else:
+            pdf = None
+
+        try:
+            zip_path = bug_info.collect_and_zip(pdf)
+            wx.MessageBox(
+                _("Zip file created at") + f" {zip_path}",
+                _("Success"),
+                wx.OK | wx.ICON_INFORMATION,
+            )
+
+        except Exception as e:
+            wx.MessageBox(
+                _("Error creating zip file") + f"\n{e}",
+                _("Error"),
+                wx.OK | wx.ICON_ERROR,
+            )
 
 
 class PrefsDialog(wx.Dialog):

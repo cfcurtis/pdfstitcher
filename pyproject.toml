@@ -22,6 +22,8 @@ dependencies = [
     "PyYAML",
     "appdirs",
     "requests",
+    "pdf-mangler",
+    "psutil",
     "pyobjc ; platform_system=='Darwin'"
 ]
 
