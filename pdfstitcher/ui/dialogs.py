@@ -46,6 +46,11 @@ class UpdateDialog(wx.Dialog):
         """
         Check for updates and show results.
         """
+        if updater.is_flatpak():
+            self.info_txt.ChangeValue(_("PDFStitcher is installed and managed via Flatpak."))
+            self.nothing_exciting = True
+            return
+
         try:
             pypi_version = updater.update_available()
 

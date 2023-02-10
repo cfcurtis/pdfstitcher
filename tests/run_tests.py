@@ -52,7 +52,7 @@ if __name__ == "__main__":
         if sys.platform.startswith("win32"):
             gdrive = "D:/My Drive/"
         elif sys.platform.startswith("darwin"):
-            gdrive = "/Users/cfcurtis/Google Drive"
+            gdrive = "/Users/charlotte/Documents"
         elif sys.platform.startswith("linux"):
             gdrive = "/home/charlotte/Documents/gdrive/personal"
 

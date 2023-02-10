@@ -25,15 +25,15 @@ on:
 
 jobs:
   pypi-release:
-    if: ${{ github.event.inputs.pypi }}
+    if: ${{ inputs.pypi }}
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8
         
@@ -49,6 +49,7 @@ jobs:
           freeglut3-dev \
           libgl1-mesa-dev \
           libglu1-mesa-dev \
+          libunwind-dev \
           libgstreamer-plugins-base1.0-dev \
           libgtk-3-dev \
           libjpeg-dev \
@@ -60,18 +61,19 @@ jobs:
           libwebkit2gtk-4.0-dev \
           libxtst-dev
       
-      - name: Build distribution
+      - name: Compile translation files and build distribution
         run: |
+          python3 pdfstitcher/update_loc.py --compile
           pip3 install build
           python3 -m build
       
       - name: Publish to pypi
-        uses: pypa/gh-action-pypi-publish@v1.5.0
+        uses: pypa/gh-action-pypi-publish@v1.6.4
         with:
           password:  ${{ secrets.PYPI_TOKEN }}
         
   win-build:
-    if: ${{ github.event.inputs.win }}
+    if: ${{ inputs.win }}
     runs-on: windows-2019   
     defaults:
       run:
@@ -79,12 +81,12 @@ jobs:
     
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: "3.8" # needs to be 3.8 to support Windows 7
         
       - name: Compile translation files and build exe
         run: | 
@@ -98,24 +100,26 @@ jobs:
         uses: softprops/action-gh-release@v0.1.14
         with:
           files: dist/pdfstitcher.exe
-          draft: ${{ github.event.inputs.draft }}
+          draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
 
   mac-build:
-    if: ${{ github.event.inputs.mac }}
-    runs-on: macos-10.15
-    
+    if: ${{ inputs.mac }}
+    runs-on: macos-10.15 # 10.15 is deprecated, but still seems to work?
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "10.9" # it can't be this easy, but let's try
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: "3.10" # better compatibility with pikepdf, it seems
         
       - name: Compile translation files and build .app
         run: | 
+          brew install qpdf
           pip3 install .
           pip3 install pyinstaller
           python3 pdfstitcher/update_loc.py --compile
@@ -132,5 +136,5 @@ jobs:
         uses: softprops/action-gh-release@v0.1.14
         with:
           files: PDFStitcher-Installer.dmg
-          draft: ${{ github.event.inputs.draft }}
+          draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}

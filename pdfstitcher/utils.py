@@ -8,7 +8,7 @@
 import sys
 import os
 import pikepdf
-from enum import Enum
+from enum import IntEnum
 
 from appdirs import user_config_dir
 import yaml
@@ -16,6 +16,7 @@ import yaml
 # localization stuff
 import gettext
 import locale
+from babel import Locale
 from pathlib import Path
 
 import importlib.metadata
@@ -44,13 +45,12 @@ PYPI_HOME = "https://pypi.org/pypi/pdfstitcher"
 FLATHUB_HOME = "https://flathub.org/apps/details/com.github.cfcurtis.pdfstitcher"
 
 
-class UNITS(Enum):
+class UNITS(IntEnum):
     INCHES = 0
     CENTIMETERS = 1
     POINTS = 2
 
-    @property
-    def str(self):
+    def __str__(self):
         """
         Returns the name of the units in the current language.
         """
@@ -209,17 +209,34 @@ def setup_locale(lang: str = None) -> None:
                 language_warning = "Could not detect system language, defaulting to English"
                 lang = "en"
 
+    # First check if the language is defined as-is
     if lang in valid_langs:
         lang = lang
+    # Then check just the language without country code
     elif lang[:2] in valid_langs:
         lang = lang[:2]
+    elif lang[:2] == "sk":
+        # fallback to Czech if Slovak is not available
+        lang = "cs"
+        language_warning = _("Slovak translation not available, defaulting to Czech")
+    else:
+        # check if there's a country code variant for the language
+        for valid_lang in valid_langs:
+            if lang[:2] in valid_lang:
+                lang = valid_lang
+                break
 
     try:
         translate = gettext.translation(
             "pdfstitcher", resource_path("locale"), languages=[lang], fallback=True
         )
         translate.install()
-        Config.general["language"] = lang
+
+        if isinstance(translate, gettext.GNUTranslations):
+            Config.general["language"] = lang
+        elif lang != "en":
+            language_warning = f"Could not find translation for language {Locale(*lang.split('_')).display_name}, defaulting to English"
+            Config.general["language"] = "en"
     except Exception as e:
         language_warning = e
 
@@ -325,7 +342,7 @@ def print_media_box(media_box, user_unit=1):
         print(
             _("Warning! Output is larger than {} {}, may not open correctly.").format(
                 round(Config.general["units"].px_to_units(MAX_SIZE_PX)),
-                Config.general["units"].str,
+                Config.general["units"],
             )
         )
         print(62 * "*")
@@ -335,7 +352,7 @@ def print_media_box(media_box, user_unit=1):
         + " {:0.2f} x {:0.2f} {}".format(
             user_unit * Config.general["units"].px_to_units(width),
             user_unit * Config.general["units"].px_to_units(height),
-            Config.general["units"].str,
+            Config.general["units"],
         )
     )
 

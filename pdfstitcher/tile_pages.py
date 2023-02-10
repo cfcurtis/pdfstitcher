@@ -13,6 +13,7 @@ import sys
 import math
 import copy
 import pdfstitcher.utils as utils
+from pdfstitcher.utils import Config
 
 
 class SW_ROTATION(IntEnum):
@@ -53,7 +54,6 @@ class PageTiler:
         target_height=None,
         vertical_align=SW_ALIGN_V.BOTTOM,
         horizontal_align=SW_ALIGN_H.LEFT,
-        units=utils.UNITS.INCHES,
     ):
 
         self.in_doc = in_doc
@@ -82,11 +82,10 @@ class PageTiler:
         self.target_height = target_height
         self.target_width = target_width
 
-        self.units = units
         if self.target_height:
-            self.target_height = self.units.units_to_px(self.target_height)
+            self.target_height = Config.general["units"].units_to_px(self.target_height)
         if self.target_width:
-            self.target_width = self.units.units_to_px(self.target_width)
+            self.target_width = Config.general["units"].units_to_px(self.target_width)
 
         # Optional vertical and horizontal alignment in case pages are non-uniform in size
         self.vertical_align = vertical_align
@@ -147,8 +146,8 @@ class PageTiler:
 
         print(_("Tiling with {} rows and {} columns").format(self.rows, self.cols))
         print(_("Options") + ":")
-        print("    " + _("Margins") + ": {} {}".format(self.margin, self.units.str))
-        print("    " + _("Trim") + ": {} {}".format(self.trim, self.units.str))
+        print("    " + _("Margins") + ": {} {}".format(self.margin, Config.general["units"]))
+        print("    " + _("Trim") + ": {} {}".format(self.trim, Config.general["units"]))
         print("    " + _("Rotation") + ": {}".format(rotstr))
         print("    " + _("Page order") + ": {}, {}, {}".format(orderstr, lrstr, btstr))
         print("    " + _("Vertical alignment") + ": {}".format(alvstr))
@@ -176,9 +175,9 @@ class PageTiler:
             self.cols = cols
 
         if target_width is not None:
-            self.target_width = self.units.units_to_px(target_width)
+            self.target_width = Config.general["units"].units_to_px(target_width)
         if target_height is not None:
-            self.target_height = self.units.units_to_px(target_height)
+            self.target_height = Config.general["units"].units_to_px(target_height)
 
         if vertical_align is not None:
             self.vertical_align = vertical_align
@@ -200,7 +199,7 @@ class PageTiler:
         ph = []
 
         page_count = len(self.in_doc.pages)
-        trim = [self.units.units_to_px(t) for t in self.trim]
+        trim = [Config.general["units"].units_to_px(t) for t in self.trim]
 
         # initialize the width/height indices based on page rotation
         page_rot = 0
@@ -332,7 +331,7 @@ class PageTiler:
         if self.rotation == SW_ROTATION.TURNAROUND:
             order = [1, 0, 3, 2]
 
-        trim = [self.units.units_to_px(t / user_unit) for t in self.trim]
+        trim = [Config.general["units"].units_to_px(t / user_unit) for t in self.trim]
         trim = [trim[o] for o in order]
 
         if self.rotation in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
@@ -381,7 +380,7 @@ class PageTiler:
             page_box_defined = False
 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
-        margin = self.units.units_to_px(self.margin / user_unit)
+        margin = Config.general["units"].units_to_px(self.margin / user_unit)
         media_box = [
             float(new_page.MediaBox[0]),
             float(new_page.MediaBox[1]),
