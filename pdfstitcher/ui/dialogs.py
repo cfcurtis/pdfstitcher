@@ -223,7 +223,8 @@ class BugReporter(wx.Dialog):
         if wx.TheClipboard.Open():
             wx.TheClipboard.SetData(wx.TextDataObject(self.bug_report.GetValue()))
             wx.TheClipboard.Close()
-            wx.MessageBox(_("Bug report copied to clipboard."), _("Success"))
+        else:
+            wx.MessageBox(_("Could not copy to clipboard"), _("Error"))
 
     def create_mangled_pdf(self, event):
         """Creates a mangled version of the input PDF."""
@@ -236,7 +237,7 @@ class BugReporter(wx.Dialog):
                 _("Success"),
             )
         else:
-            wx.MessageBox(_("Failed to mangle PDF!"), _("Error"))
+            wx.MessageBox(_("Failed to mangle PDF"), _("Error"))
 
     def open_issue(self, event):
         """
