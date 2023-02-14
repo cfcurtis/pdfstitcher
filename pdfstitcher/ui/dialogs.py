@@ -128,7 +128,7 @@ class BugReporter(wx.Dialog):
         self.bug_report = wx.TextCtrl(
             self,
             value="",
-            size=self.FromDIP((width, width * 2 / 3)),
+            size=self.FromDIP((width, int(width * 2 / 3))),
             style=wx.TE_MULTILINE | wx.TE_PROCESS_ENTER,
         )
         horiz_sizer.Add(
