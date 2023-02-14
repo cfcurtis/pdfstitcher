@@ -477,6 +477,14 @@ class PDFStitcherFrame(wx.Frame):
 
         else:
             print(_("PDF file loaded without errors."))
+            # Check for permissions
+            if self.in_doc.is_encrypted:
+                permissions = self.in_doc.allow
+                print(_("Warning: this PDF is encrypted with the following permissions:"))
+                for perm, allowed in permissions._asdict().items():
+                    print(f"{perm}: {allowed}")
+
+            print(_("Please be respectful of the author and only use this tool for personal use."))
             Config.general["open_dir"] = str(Path(pathname).parent)
 
 
