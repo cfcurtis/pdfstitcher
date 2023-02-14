@@ -1,14 +1,13 @@
 import platform, psutil
 import yaml
 import pikepdf
-import zipfile
+
 from pathlib import Path
 from pdf_mangler import mangler
-from tempfile import gettempdir
 from pdfstitcher.utils import __version__, Config
 
 
-def get_system_info() -> dict:
+def get_system_info() -> str:
     """
     Gets info on hardware and OS.
     """
@@ -28,47 +27,36 @@ def get_system_info() -> dict:
     except Exception as e:
         print(_("Error getting system info: {}").format(e))
 
-    # Return whatever was collected
-    return info
+    # Return whatever was collected as a yaml string
+    return yaml.dump(info)
 
 
-def mangle_pdf(pdf: pikepdf.Pdf) -> str:
+def mangle_pdf(pdf: pikepdf.Pdf) -> Path:
     """
-    Mangles the current PDF file, then returns
-    the hash of the mangled file (its filename).
+    Mangles and saves the current PDF file, then returns
+    the path to the mangled file.
     """
+    if not pdf:
+        return None
+
+    desktop = Path.home() / "Desktop"
+
     try:
-        print(_("Mangling PDF. This may take some time."))
         mglr = mangler.Mangler(pdf=pdf)
-        mglr.mangle_pdf()
-        mglr.save(gettempdir())
+        mangled_path = desktop / mglr.hash_name
 
-        return mglr.hash_name
+        # don't re-mangle if the file already exists
+        if mangled_path.exists():
+            return mangled_path
+
+        print(_("Mangling PDF. This may take some time."))
+        mglr.mangle_pdf()
+        mglr.save(desktop)
+
+        return mangled_path
     except Exception as e:
         print(_("Error mangling PDF: {}").format(e))
-        return ""
-
-
-def collect_and_zip(pdf: pikepdf.Pdf) -> str:
-    """
-    Collects the various pieces of information and zips them up.
-    Returns a string with the path to the zip file.
-    """
-    tempdir = Path(gettempdir())
-    sys_info = get_system_info()
-    with open(tempdir / "info.yaml", "w") as f:
-        yaml.dump(sys_info, f)
-        yaml.dump(Config.combo, f)
-
-    if pdf:
-        mangled_pdf = mangle_pdf(pdf)
-
-    with zipfile.ZipFile(tempdir / "bug_info.zip", "w", compression=zipfile.ZIP_DEFLATED) as zip:
-        zip.write(tempdir / "info.yaml")
-        if pdf:
-            zip.write(tempdir / mangled_pdf)
-
-    return tempdir / "bug_info.zip"
+        return None
 
 
 if __name__ == "__main__":
