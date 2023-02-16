@@ -105,7 +105,7 @@ jobs:
 
   mac-build:
     if: ${{ inputs.mac }}
-    runs-on: [macos-10.15, self-hosted] # 10.15 is deprecated, but still seems to work?
+    runs-on: [macos-11, self-hosted] # 10.15 is deprecated :(
     env:
       MACOSX_DEPLOYMENT_TARGET: "10.9" # it can't be this easy, but let's try
     steps:
