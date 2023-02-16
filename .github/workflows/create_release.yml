@@ -105,7 +105,11 @@ jobs:
 
   mac-build:
     if: ${{ inputs.mac }}
-    runs-on: [macos-11, self-hosted] # 10.15 is deprecated :(
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-10.15, self-hosted]
     env:
       MACOSX_DEPLOYMENT_TARGET: "10.9" # it can't be this easy, but let's try
     steps:
