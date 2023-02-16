@@ -9,7 +9,10 @@ import wx, wx.adv
 from pdfstitcher import utils
 from pdfstitcher.utils import Config
 from pdfstitcher import updater
+from pdfstitcher import bug_info
 from babel import Locale
+import webbrowser
+import yaml
 
 
 class UpdateDialog(wx.Dialog):
@@ -88,6 +91,168 @@ class UpdateDialog(wx.Dialog):
             self.info_txt.ChangeValue(_("Error checking for updates") + f"\n{e}")
 
         self.vert_sizer.Fit(self)
+
+
+class BugReporter(wx.Dialog):
+    """
+    Dialog to help users submit a bug report.
+    """
+
+    def __init__(self, *args, **kw):
+        super(BugReporter, self).__init__(
+            *args, style=wx.RESIZE_BORDER | wx.CAPTION | wx.CLOSE_BOX, **kw
+        )
+        self.SetTitle(_("Report a bug"))
+        self.main_gui = kw["parent"]
+
+        # Grab the width of the main gui as a guideline for how big it should be
+        width = self.main_gui.GetSize()[0]
+
+        vert_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        instructions = wx.StaticText(
+            self,
+            label=_(
+                "Describe the steps reproduce the problem below. Follow the buttons to open an issue via GitHub (preferred, but requires login), or send the report via email. Optionally, include a mangled version of the input document - it will be saved to your Desktop and can be attached to the issue."
+            ),
+        )
+        instructions.Wrap(width)
+        vert_sizer.Add(
+            instructions,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+
+        # Text box for bug report with copy button
+        horiz_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.bug_report = wx.TextCtrl(
+            self,
+            value="",
+            size=self.FromDIP((width, int(width * 2 / 3))),
+            style=wx.TE_MULTILINE | wx.TE_PROCESS_ENTER,
+        )
+        horiz_sizer.Add(
+            self.bug_report,
+            proportion=1,
+            flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+
+        # Button to copy text
+        self.copy_text = wx.Button(self, id=wx.ID_COPY)
+        self.copy_text.Bind(wx.EVT_BUTTON, self.copy_to_clipboard)
+
+        horiz_sizer.Add(
+            self.copy_text,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+        vert_sizer.Add(
+            horiz_sizer,
+            proportion=1,
+            flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+
+        # Add some boilerplate text
+        self.bug_report.AppendText("## Steps to reproduce the problem\n\n")
+        self.bug_report.AppendText("1. \n")
+        self.bug_report.AppendText("2. \n")
+        self.bug_report.AppendText("3. \n\n\n")
+        self.populate_system_info()
+
+        # scroll back up to the top
+        self.bug_report.SetInsertionPoint(0)
+
+        # button to create mangled pdf
+        self.include_pdf = wx.Button(self, label=_("Create mangled PDF (Beta)"))
+        self.include_pdf.Bind(wx.EVT_BUTTON, self.create_mangled_pdf)
+        vert_sizer.Add(
+            self.include_pdf,
+            proportion=0,
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+
+        # Button to report via Github
+        horiz_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        report_btn = wx.Button(self, label=_("Report Via GitHub"))
+        report_btn.Bind(wx.EVT_BUTTON, self.open_issue)
+        horiz_sizer.Add(
+            report_btn,
+            flag=wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+
+        # Slightly dangerous, but send me an email
+        email_btn = wx.Button(self, label=_("Email to ccurtis@mtroyal.ca"))
+        email_btn.Bind(wx.EVT_BUTTON, self.email_issue)
+        horiz_sizer.Add(
+            email_btn,
+            flag=wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+        vert_sizer.Add(
+            horiz_sizer,
+            proportion=0,
+            flag=wx.ALL,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+
+        self.SetSizerAndFit(vert_sizer)
+
+    def populate_system_info(self) -> None:
+        """
+        Populate the system info section of the bug report.
+        """
+
+        self.bug_report.AppendText(
+            "## Program Output\n" + "```\n" + self.main_gui.log.GetValue() + "```\n\n"
+        )
+
+        self.bug_report.AppendText(
+            "## Current Configuration\n" + "```\n" + yaml.dump(Config.combo) + "```\n\n"
+        )
+
+        self.bug_report.AppendText(
+            "## System Info\n" + "```\n" + bug_info.get_system_info() + "```\n\n"
+        )
+
+    def copy_to_clipboard(self, event):
+        """Copies the bug report to the clipboard."""
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.SetData(wx.TextDataObject(self.bug_report.GetValue()))
+            wx.TheClipboard.Close()
+        else:
+            wx.MessageBox(_("Could not copy to clipboard"), _("Error"))
+
+    def create_mangled_pdf(self, event):
+        """Creates a mangled version of the input PDF."""
+        pdf_path = bug_info.mangle_pdf(self.main_gui.in_doc)
+        if pdf_path:
+            wx.MessageBox(
+                _("Mangled PDF saved to {}.\n\nPlease attach to GitHub issue or email.").format(
+                    pdf_path
+                ),
+                _("Success"),
+            )
+        else:
+            wx.MessageBox(_("Failed to mangle PDF"), _("Error"))
+
+    def open_issue(self, event):
+        """
+        Open a new issue in GitHub.
+        """
+        webbrowser.open(utils.GIT_HOME + "/issues/new")
+
+    def email_issue(self, event):
+        """
+        Send a new email with the bug report.
+        """
+        webbrowser.open(
+            "mailto:ccurtis@mtroyal.ca?subject=PDFStitcher Bug Report&body="
+            + self.bug_report.GetValue()
+        )
 
 
 class PrefsDialog(wx.Dialog):
@@ -209,7 +374,6 @@ class PrefsDialog(wx.Dialog):
             defaultPath=current_path,
             style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST,
         ) as dlg:
-
             if dlg.ShowModal() == wx.ID_OK:
                 textctrl.SetValue(dlg.GetPath())
 

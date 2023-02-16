@@ -97,7 +97,7 @@ jobs:
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
       
       - name: GH Release
-        uses: softprops/action-gh-release@v0.1.14
+        uses: softprops/action-gh-release@v0.1.15
         with:
           files: dist/pdfstitcher.exe
           draft: ${{ inputs.draft }}
@@ -105,14 +105,23 @@ jobs:
 
   mac-build:
     if: ${{ inputs.mac }}
-    runs-on: macos-10.15 # 10.15 is deprecated, but still seems to work?
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-10.15, self-hosted]
     env:
       MACOSX_DEPLOYMENT_TARGET: "10.9" # it can't be this easy, but let's try
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Set up Python for with ARM64
+        if: ${{ runner.arch == 'ARM64' }}
+        run: brew install python@3.10
+
       - name: Install Python
+        if: ${{ runner.arch == 'X64' }}
         uses: actions/setup-python@v4
         with:
           python-version: "3.10" # better compatibility with pikepdf, it seems
@@ -132,9 +141,12 @@ jobs:
           chmod +x make_mac_installer.sh
           ./make_mac_installer.sh
       
+      - name: Rename with system architecture
+        run: mv PDFStitcher-Installer.dmg "PDFStitcher-Installer${{ runner.arch }}.dmg"
+      
       - name: GH Release
-        uses: softprops/action-gh-release@v0.1.14
+        uses: softprops/action-gh-release@v0.1.15
         with:
-          files: PDFStitcher-Installer.dmg
+          files: "PDFStitcher-Installer${{ runner.arch }}.dmg"
           draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}

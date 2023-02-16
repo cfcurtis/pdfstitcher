@@ -13,7 +13,7 @@ from pdfstitcher.layerfilter import LayerFilter
 from pdfstitcher.pagefilter import PageFilter
 from pdfstitcher import utils
 from pdfstitcher.utils import Config
-from pdfstitcher.ui.dialogs import PrefsDialog, UpdateDialog
+from pdfstitcher.ui.dialogs import PrefsDialog, UpdateDialog, BugReporter
 from pdfstitcher.ui.io_tab import IOTab
 from pdfstitcher.ui.tile_tab import TileTab
 from pdfstitcher.ui.layers_tab import LayersTab
@@ -283,9 +283,24 @@ class PDFStitcherFrame(wx.Frame):
         about_item = help_menu.Append(wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, self.on_docs, docs_item)
         self.Bind(wx.EVT_MENU, self.on_about, about_item)
+        bug_item = wx.MenuItem(
+            help_menu,
+            wx.ID_ANY,
+            text=_("Report a bug"),
+            helpString=_("Open the dialog to report a bug"),
+        )
+        help_menu.Append(bug_item)
+        self.Bind(wx.EVT_MENU, self.on_bug, bug_item)
         menu_bar.Append(help_menu, "&" + _("Help"))
 
         self.SetMenuBar(menu_bar)
+
+    def on_bug(self, event):
+        """
+        Open the dialog to report a bug.
+        """
+        bug_dia = BugReporter(parent=self)
+        bug_dia.Show()
 
     def on_prefs(self, event):
         """
@@ -462,6 +477,14 @@ class PDFStitcherFrame(wx.Frame):
 
         else:
             print(_("PDF file loaded without errors."))
+            # Check for permissions
+            if self.in_doc.is_encrypted:
+                permissions = self.in_doc.allow
+                print(_("Warning: this PDF is encrypted with the following permissions:"))
+                for perm, allowed in permissions._asdict().items():
+                    print(f"{perm}: {allowed}")
+
+            print(_("Please be respectful of the author and only use this tool for personal use."))
             Config.general["open_dir"] = str(Path(pathname).parent)
 
 
