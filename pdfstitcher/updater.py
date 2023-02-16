@@ -10,6 +10,7 @@ import importlib.metadata
 import requests
 from pdfstitcher import utils
 import os
+import packaging
 
 __version__ = importlib.metadata.version("pdfstitcher")
 
@@ -31,15 +32,7 @@ def update_available() -> str:
 
     pypi_version = response.json()["info"]["version"]
 
-    current = [int(num) for num in __version__.split(".")]
-    pypi = [int(num) for num in pypi_version.split(".")]
-
-    if len(current) == 2:
-        current.append(0)
-    if len(pypi) == 2:
-        pypi.append(0)
-
-    if any(pypi[i] > current[i] for i in range(3)):
+    if packaging.version.parse(pypi_version) > packaging.version.parse(__version__):
         return pypi_version
     else:
         return None
