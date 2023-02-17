@@ -15,6 +15,7 @@ for l in locales_full:
 
 datas = locale_paths
 datas += copy_metadata('pdfstitcher', recursive=True)
+datas += collect_data_files('pdf_mangler')
 
 a = Analysis(
     ["pdfstitcher/pdfstitcher.py"],
