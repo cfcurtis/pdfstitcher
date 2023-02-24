@@ -42,7 +42,9 @@ def mangle_pdf(pdf: pikepdf.Pdf) -> Path:
     desktop = Path.home() / "Desktop"
 
     try:
-        mglr = mangler.Mangler(pdf=pdf)
+        # open a new copy of the input file
+        pdf_copy = pikepdf.Pdf.open(pdf.filename)
+        mglr = mangler.Mangler(pdf=pdf_copy)
         mangled_path = desktop / mglr.hash_name
 
         # don't re-mangle if the file already exists
