@@ -231,9 +231,9 @@ class BugReporter(wx.Dialog):
         pdf_path = bug_info.mangle_pdf(self.main_gui.in_doc)
         if pdf_path:
             wx.MessageBox(
-                _("Mangled PDF saved to {}.\n\nPlease attach to GitHub issue or email.").format(
-                    pdf_path
-                ),
+                _("Mangled PDF saved to {}.".format(pdf_path))
+                + "\n\n"
+                + _("Please attach to GitHub issue or email."),
                 _("Success"),
             )
         else:
@@ -419,7 +419,7 @@ class PrefsDialog(wx.Dialog):
 
         msg = _("Preferences saved to {}").format(Config.config_dir / Config.config_file)
         if language_change:
-            msg += _("\n\nPlease restart to switch to {}.".format(self.lang_combo.GetValue()))
+            msg += "\n\n" + _("Please restart to switch to {}.".format(self.lang_combo.GetValue()))
 
         wx.MessageBox(msg, _("Preferences saved"), wx.OK | wx.ICON_INFORMATION)
         self.Destroy()

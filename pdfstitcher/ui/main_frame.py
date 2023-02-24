@@ -170,7 +170,7 @@ class PDFStitcherFrame(wx.Frame):
             trim[1] = utils.txt_to_float(self.tt.right_trim_txt.GetValue())
             trim[2] = utils.txt_to_float(self.tt.top_trim_txt.GetValue())
             trim[3] = utils.txt_to_float(self.tt.bottom_trim_txt.GetValue())
-            self.tiler.set_trim(trim)
+            self.tiler.trim = trim
             self.tiler.actually_trim = bool(self.tt.trim_overlap_combo.GetSelection())
             self.tiler.override_trim = self.tt.override_trim.GetValue()
 
@@ -205,7 +205,8 @@ class PDFStitcherFrame(wx.Frame):
             if do_tile:
                 self.tiler.in_doc = filtered
                 new_doc = self.tiler.run(rows, cols)
-                print(_("Tiling successful"))
+                if new_doc:
+                    print(_("Tiling successful"))
             else:
                 # extract the requested pages
                 page_filter = PageFilter(filtered)
@@ -219,8 +220,9 @@ class PDFStitcherFrame(wx.Frame):
             return
 
         try:
-            new_doc.save(self.out_doc_path)
-            print(_("Successfully written to") + " " + self.out_doc_path)
+            if new_doc:
+                new_doc.save(self.out_doc_path)
+                print(_("Successfully written to") + " " + self.out_doc_path)
         except Exception as e:
             print(
                 _("Something went wrong") + ", " + _("unable to write to") + " " + self.out_doc_path
@@ -359,7 +361,6 @@ class PDFStitcherFrame(wx.Frame):
             wildcard="PDF files (*.pdf)|*.pdf",
             style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
         ) as fileDialog:
-
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
 
@@ -414,7 +415,6 @@ class PDFStitcherFrame(wx.Frame):
             wildcard="PDF files (*.pdf)|*.pdf",
             style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
         ) as fileDialog:
-
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
 

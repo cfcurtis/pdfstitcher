@@ -45,7 +45,6 @@ def parse_arguments():
 
 
 def get_inkscape_command(args):
-
     if args.inkscape is not None:
         inkscape = args.inkscape
     else:
@@ -62,7 +61,6 @@ def get_inkscape_command(args):
 
 
 def get_convert_command(args):
-
     if args.magick is not None:
         binary = args.magick
     else:
@@ -86,7 +84,6 @@ def get_convert_command(args):
 
 
 def generate_icons_windows(convert_cmd):
-
     output = join(ICONS_PATH, "stitcher-icon.ico")
     command = f"{convert_cmd} -background none {input_file} -define icon:auto-resize {output}"
     print(command)
@@ -94,7 +91,6 @@ def generate_icons_windows(convert_cmd):
 
 
 def generate_icons_macos(inkscape_cmd):
-
     # create the different sized PNGs for mac
 
     out_directory = join(ICONS_PATH, "stitcher-icon.iconset")
@@ -121,7 +117,6 @@ def generate_icons_macos(inkscape_cmd):
 
 
 def main():
-
     args = parse_arguments()
 
     if args.windows:

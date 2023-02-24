@@ -65,7 +65,6 @@ def compile():
 
 
 if __name__ == "__main__":
-
     args = parse_args()
 
     do_all = False
