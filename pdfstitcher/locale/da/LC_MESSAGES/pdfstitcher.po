@@ -1,4 +1,4 @@
-# Translations template for pdfstitcher.
+# Danish translations for pdfstitcher.
 # Copyright (C) 2021 Charlotte Curtis
 # This file is distributed under the same license as the pdfstitcher
 # project.
@@ -8,444 +8,194 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-04 11:04-0600\n"
+"POT-Creation-Date: 2023-02-24 10:30-0700\n"
 "PO-Revision-Date: 2022-02-25 12:58+0000\n"
 "Last-Translator: Anne Lindholt <anneloppe@gmail.com>\n"
-"Language-Team: Danish <https://hosted.weblate.org/projects/pdfstitcher/"
-"user-interface/da/>\n"
 "Language: da\n"
+"Language-Team: Danish <https://hosted.weblate.org/projects/pdfstitcher"
+"/user-interface/da/>\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.11-dev\n"
-"Generated-By: Babel 2.9.1\n"
+"Generated-By: Babel 2.11.0\n"
 
-#: layerfilter.py:122
+#: pdfstitcher/bug_info.py:28
+msgid "Error getting system info: {}"
+msgstr ""
+
+#: pdfstitcher/bug_info.py:54
+msgid "Mangling PDF. This may take some time."
+msgstr ""
+
+#: pdfstitcher/bug_info.py:60
+msgid "Error mangling PDF: {}"
+msgstr ""
+
+#: pdfstitcher/layerfilter.py:328
 msgid "No layers selected, generated PDF would be blank."
 msgstr "Ingen lag valgt, genereret PDF vil blive tom."
 
-#: pdfstitcher.py:29 pdfstitcher.py:706
-msgid "Select input PDF"
-msgstr "Vælg input-PDF"
+#: pdfstitcher/layerfilter.py:516 pdfstitcher/layerfilter.py:545
+msgid "Failed writing stream to page with error type {}"
+msgstr ""
 
-#: pdfstitcher.py:32 pdfstitcher.py:40 pdfstitcher.py:88 pdfstitcher.py:151
-#: tile_pages.py:129
+#: pdfstitcher/tile_pages.py:105
+msgid "Invalid trim value specified, ignoring"
+msgstr "Trim sat til ugyldig værdi, ignorerer"
+
+#. translation_note: in = "inches", cm = "centimetres"
+#: pdfstitcher/tile_pages.py:111 pdfstitcher/ui/tile_tab.py:121
 msgid "None"
 msgstr "Ingen"
 
-#: pdfstitcher.py:37 pdfstitcher.py:687
-msgid "Save output as"
-msgstr "Gem output som"
-
-#: pdfstitcher.py:46
-msgid "Output Options"
-msgstr "Output-indstillinger"
-
-#: pdfstitcher.py:52 pdfstitcher.py:159
-msgid "Page Range"
-msgstr "Sideområde / valgte sider"
-
-#: pdfstitcher.py:54 pdfstitcher.py:161
-msgid "Pages assemble in specified order. 0 inserts a blank page."
-msgstr "Siderne samles i angivet rækkefølge. 0 sætter en blank side ind."
-
-#: pdfstitcher.py:61 pdfstitcher.py:185
-msgid "Margin to add to final output"
-msgstr "Margin, der skal tilføjes i output-filen"
-
-#: pdfstitcher.py:68
-msgid "Process Layers"
-msgstr "Behandle lag"
-
-#: pdfstitcher.py:71
-msgid "Tile pages"
-msgstr "Sætte sider sammen"
-
-#: pdfstitcher.py:96
-msgid "Process layers then tile pages and save"
-msgstr "Behandler lag, sætter sider sammen og gemmer"
-
-#: pdfstitcher.py:99
-msgid "Process layers and save without tiling pages"
-msgstr "Behandler lag og gemmer uden at sætte sider sammen"
-
-#: pdfstitcher.py:102
-msgid "Tile pages and save without processing layers"
-msgstr "Sætter sider sammen og gemmer uden at behandle lag"
-
-#: pdfstitcher.py:105
-msgid "Open the PDF and save selected page range without modifying"
-msgstr "Åbn PDF'en og gem valgte sider i output-PDF uden at ændre"
-
-#: pdfstitcher.py:116
-msgid "Required Parameters"
-msgstr "Nødvendige indstillinger"
-
-#: pdfstitcher.py:122
-msgid "Number of Columns"
-msgstr "Antal kolonner"
-
-#: pdfstitcher.py:128
-msgid "OR Number of Rows"
-msgstr "ELLER antal rækker"
-
-#: pdfstitcher.py:136 tile_pages.py:139
-msgid "Rows then columns"
-msgstr "Først rækker, derefter kolonner"
-
-#: pdfstitcher.py:136 tile_pages.py:141
-msgid "Columns then rows"
-msgstr "Først kolonner, derefter rækker"
-
-#: pdfstitcher.py:137 tile_pages.py:143
-msgid "Left to right"
-msgstr "Venstre mod højre"
-
-#: pdfstitcher.py:137 tile_pages.py:145
-msgid "Right to left"
-msgstr "Højre mod venstre"
-
-#: pdfstitcher.py:138 tile_pages.py:147
-msgid "Top to bottom"
-msgstr "Oppefra og ned"
-
-#: pdfstitcher.py:138 tile_pages.py:149
-msgid "Bottom to top"
-msgstr "Nedefra og op"
-
-#: pdfstitcher.py:140 tile_pages.py:170
-msgid "Page order"
-msgstr "Siderækkefølge"
-
-#: pdfstitcher.py:151 tile_pages.py:132
+#: pdfstitcher/tile_pages.py:114 pdfstitcher/ui/tile_tab.py:122
 msgid "Clockwise"
 msgstr "Med uret"
 
-#: pdfstitcher.py:151 tile_pages.py:134
+#: pdfstitcher/tile_pages.py:116 pdfstitcher/ui/tile_tab.py:123
 msgid "Counterclockwise"
 msgstr "Mod uret"
 
 #. translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
-#: pdfstitcher.py:151 tile_pages.py:137
+#: pdfstitcher/tile_pages.py:119 pdfstitcher/ui/tile_tab.py:124
 msgid "Turn Around"
 msgstr "Vend rundt"
 
-#: pdfstitcher.py:152
-msgid "Page Rotation"
-msgstr "Siderotation"
+#: pdfstitcher/tile_pages.py:121 pdfstitcher/ui/tile_tab.py:73
+msgid "Rows then columns"
+msgstr "Først rækker, derefter kolonner"
 
-#: pdfstitcher.py:168
-msgid "Optional Parameters"
-msgstr "Valgfrie indstillinger"
+#: pdfstitcher/tile_pages.py:123 pdfstitcher/ui/tile_tab.py:73
+msgid "Columns then rows"
+msgstr "Først kolonner, derefter rækker"
 
-#: pdfstitcher.py:173
-msgid "Inches"
-msgstr "Tommer"
+#: pdfstitcher/tile_pages.py:125 pdfstitcher/ui/tile_tab.py:74
+msgid "Left to right"
+msgstr "Venstre mod højre"
 
-#: pdfstitcher.py:173
-msgid "Centimetres"
-msgstr "Centimeter"
+#: pdfstitcher/tile_pages.py:127 pdfstitcher/ui/tile_tab.py:74
+msgid "Right to left"
+msgstr "Højre mod venstre"
 
-#: pdfstitcher.py:174
-msgid "Units"
-msgstr "Enheder"
+#: pdfstitcher/tile_pages.py:129 pdfstitcher/ui/tile_tab.py:75
+msgid "Top to bottom"
+msgstr "Oppefra og ned"
 
-#. translation_note: TrimBox and MediaBox are PDF elements, so they likely
-#. won't translate nicely.
-#: pdfstitcher.py:179
-msgid "Set TrimBox to MediaBox"
-msgstr "Sæt TrimBox til MediaBox"
+#: pdfstitcher/tile_pages.py:131 pdfstitcher/ui/tile_tab.py:75
+msgid "Bottom to top"
+msgstr "Nedefra og op"
 
-#: pdfstitcher.py:180
-msgid "May help fix things when output is not as expected"
-msgstr "Kan fikse problemer, hvis output ikke blev som forventet"
-
-#: pdfstitcher.py:193
-msgid "Amount to trim from each page"
-msgstr "Hvor meget skal trimmes fra hver side"
-
-#: pdfstitcher.py:194
-msgid "Overlap"
-msgstr ""
-
-#: pdfstitcher.py:194 tile_pages.py:168
-msgid "Trim"
-msgstr ""
-
-#: pdfstitcher.py:201 tile_pages.py:159
-msgid "Left"
-msgstr "Venstre"
-
-#: pdfstitcher.py:206 tile_pages.py:163
-msgid "Right"
-msgstr "Højre"
-
-#: pdfstitcher.py:211 tile_pages.py:156
-msgid "Top"
-msgstr "Top"
-
-#: pdfstitcher.py:216 tile_pages.py:152
+#: pdfstitcher/tile_pages.py:134 pdfstitcher/ui/tile_tab.py:290
 msgid "Bottom"
 msgstr "Bund"
 
-#: pdfstitcher.py:239
-msgid "Load PDF to view layers."
-msgstr "Åbn PDF'en for at se lag."
-
-#: pdfstitcher.py:249
-msgid "Deselected layers:"
-msgstr "Fravalgte lag:"
-
-#: pdfstitcher.py:250
-msgid "Delete"
-msgstr "Slet"
-
-#: pdfstitcher.py:250
-msgid "Hide"
-msgstr "Skjul"
-
-#: pdfstitcher.py:254
-msgid "Include non-optional content"
-msgstr "Inkludér grundlæggende informationer"
-
-#: pdfstitcher.py:258 pdfstitcher.py:467
-msgid "Deselect all"
-msgstr "Fravælg alle"
-
-#: pdfstitcher.py:265
-msgid "Layer Name"
-msgstr "Navn på lag"
-
-#: pdfstitcher.py:266
-msgid "Line Properties"
-msgstr "Linjeegenskaber"
-
-#: pdfstitcher.py:278
-msgid "Select line properties to modify"
-msgstr "Vælg linjeegenskaber, der skal ændres"
-
-#: pdfstitcher.py:280
-msgid "Line Colour"
-msgstr "Linjefarve"
-
-#: pdfstitcher.py:289
-msgid "Line Thickness"
-msgstr "Linjetykkelse"
-
-#. translation_note: pt = "points", in = "inches", cm = "centimeters"
-#: pdfstitcher.py:297 pdfstitcher.py:357
-msgid "pt"
-msgstr ""
-
-#: pdfstitcher.py:297 pdfstitcher.py:361 tile_pages.py:128
-msgid "in"
-msgstr "tommer"
-
-#. translation_note: in = "inches", cm = "centimetres"
-#: pdfstitcher.py:297 pdfstitcher.py:363 tile_pages.py:128
-msgid "cm"
-msgstr ""
-
-#: pdfstitcher.py:304
-msgid "Line Style"
-msgstr "Linjestil"
-
-#: pdfstitcher.py:307
-msgid "Solid"
-msgstr "Ubrudt"
-
-#: pdfstitcher.py:307
-msgid "Dashed"
-msgstr "Stiplet"
-
-#: pdfstitcher.py:307
-msgid "Dotted"
-msgstr "Prikket"
-
-#: pdfstitcher.py:314
-msgid "Apply"
-msgstr "Udfør"
-
-#: pdfstitcher.py:316 pdfstitcher.py:437
-msgid "Reset"
-msgstr "Nulstil"
-
-#: pdfstitcher.py:324
-msgid "Apply to checked"
-msgstr "Udfør på valgte"
-
-#: pdfstitcher.py:326
-msgid "Reset checked"
-msgstr "Nulstil valgte"
-
-#: pdfstitcher.py:436
-msgid "Apply to"
-msgstr "Udfør på"
-
-#: pdfstitcher.py:442
-msgid "No layers found in input document."
-msgstr "Ingen lag fundet i input-PDF."
-
-#: pdfstitcher.py:453
-msgid "Select layers to include in output document."
-msgstr "Vælg lag, der skal gemmes i output-PDF."
-
-#: pdfstitcher.py:469
-msgid "Select all"
-msgstr "Vælg alle"
-
-#: pdfstitcher.py:498 tile_pages.py:166
-msgid "Options"
-msgstr "Indstillinger"
-
-#: pdfstitcher.py:500
-msgid "Tile Pages"
-msgstr "Samling af sider"
-
-#: pdfstitcher.py:502
-msgid "Layers"
-msgstr "Lag"
-
-#: pdfstitcher.py:510
-msgid "Generate PDF"
-msgstr "Generér PDF"
-
-#: pdfstitcher.py:573
-msgid "No page range specified, defaulting to all"
-msgstr "Sideområde ikke specificeret, alle sider tages med"
-
-#: pdfstitcher.py:633
-msgid "Tiling successful"
-msgstr "Samling lykkedes"
-
-#: pdfstitcher.py:641 pdfstitcher.py:649
-msgid "Something went wrong"
-msgstr "Noget gik galt"
-
-#: pdfstitcher.py:642
-msgid "Exception"
-msgstr "Undtagelse"
-
-#: pdfstitcher.py:647
-msgid "Successfully written to"
-msgstr "Succesfuldt gemt i"
-
-#: pdfstitcher.py:649 pdfstitcher.py:703
-msgid "unable to write to"
-msgstr "kan ikke skrive til"
-
-#: pdfstitcher.py:651
-msgid "Make sure  isn't open in another program"
-msgstr "Kontrollér at  ikke er åben i et andet program"
-
-#: pdfstitcher.py:696
-msgid "Cant overwrite input file, please select a different file for output"
-msgstr ""
-"Kan ikke overskrive input-PDF, vælg venligst en anden fil til output-PDF"
-
-#: pdfstitcher.py:721
-msgid "Opening"
-msgstr "Åbner"
-
-#: pdfstitcher.py:735
-msgid "Cannot open file"
-msgstr "Kan ikke åbne fil"
-
-#: tile_pages.py:122
-msgid "Invalid trim value specified, ignoring"
-msgstr "Trim sat til ugyldig værdi, ignorerer"
-
-#: tile_pages.py:154 tile_pages.py:161
+#: pdfstitcher/tile_pages.py:136 pdfstitcher/tile_pages.py:143
 msgid "Middle"
 msgstr "Midten"
 
-#: tile_pages.py:165
+#: pdfstitcher/tile_pages.py:138 pdfstitcher/ui/tile_tab.py:275
+msgid "Top"
+msgstr "Top"
+
+#: pdfstitcher/tile_pages.py:141 pdfstitcher/ui/tile_tab.py:245
+msgid "Left"
+msgstr "Venstre"
+
+#: pdfstitcher/tile_pages.py:145 pdfstitcher/ui/tile_tab.py:260
+msgid "Right"
+msgstr "Højre"
+
+#: pdfstitcher/tile_pages.py:147
 msgid "Tiling with {} rows and {} columns"
 msgstr "Samler med {} rækker og {} kolonner"
 
-#: tile_pages.py:167
+#: pdfstitcher/tile_pages.py:148 pdfstitcher/ui/main_frame.py:44
+msgid "Options"
+msgstr "Indstillinger"
+
+#: pdfstitcher/tile_pages.py:149
 msgid "Margins"
 msgstr "Marginer"
 
-#: tile_pages.py:169
+#: pdfstitcher/tile_pages.py:150 pdfstitcher/ui/tile_tab.py:226
+msgid "Trim"
+msgstr ""
+
+#: pdfstitcher/tile_pages.py:151
 msgid "Rotation"
 msgstr ""
 
-#: tile_pages.py:171
+#: pdfstitcher/tile_pages.py:152 pdfstitcher/ui/tile_tab.py:78
+msgid "Page order"
+msgstr "Siderækkefølge"
+
+#: pdfstitcher/tile_pages.py:153
 msgid "Vertical alignment"
 msgstr "Lodret justering"
 
-#: tile_pages.py:172
+#: pdfstitcher/tile_pages.py:154
 msgid "Horizontal alignment"
 msgstr "Vandret justering"
 
-#: tile_pages.py:203
-msgid "Input document not loaded"
-msgstr "Input-PDF ikke indlæst"
-
-#: tile_pages.py:244
+#: pdfstitcher/tile_pages.py:185
 msgid "Only {} pages in document, skipping {}"
 msgstr "Der er kun {} sider i PDF'en, springer {} over"
 
-#: tile_pages.py:307
+#: pdfstitcher/tile_pages.py:248
 msgid "Warning: The pages {} have a different size than the page before"
 msgstr "Advarsel: Side {} har en anden størrelse end siden før"
 
-#: tile_pages.py:315
+#: pdfstitcher/tile_pages.py:269
+msgid "Input document not loaded"
+msgstr "Input-PDF ikke indlæst"
+
+#: pdfstitcher/tile_pages.py:309
 msgid "Warning: requested {} columns, but there are only {} pages"
 msgstr "Advarsel: Der er angivet {} kolonner, men der er kun {} sider"
 
-#: tile_pages.py:321
+#: pdfstitcher/tile_pages.py:319
 msgid "Warning: requested {} rows, but there are only {} pages"
 msgstr "Advarsel: Der er angivet {} rækker, men der er kun {} sider"
 
-#: tile_pages.py:398
-msgid "Warning! Output is larger than {} {}, may not open correctly."
-msgstr "Advarsel: Output er større end {} {}, åbner måske ikke korrekt."
-
-#: tile_pages.py:401
-msgid "Output size:"
-msgstr "Outputstørrelse:"
-
-#: tile_pages.py:523
+#: pdfstitcher/tile_pages.py:514
 msgid ""
 "Warning: Some pages have been scaled because a target size was set. You "
 "should not see this warning if using the PDFStitcher GUI."
 msgstr ""
 "Advarsel: Nogle sider er blevet skaleret, fordi en målstørrelse var "
-"defineret. Du burde ikke se denne advarsel, hvis du bruger PDFStitcher GUI."
+"defineret. Du burde ikke se denne advarsel, hvis du bruger PDFStitcher "
+"GUI."
 
-#: tile_pages.py:548
+#: pdfstitcher/tile_pages.py:542
 msgid "Unable to open"
 msgstr "Kan ikke åbne"
 
-#: tile_pages.py:578
+#: pdfstitcher/tile_pages.py:572
 msgid "Invalid rotation value"
 msgstr "Ugyldig rotationsværdi"
 
-#: tile_pages.py:603
+#: pdfstitcher/tile_pages.py:597
 msgid "Tile PDF pages into one document."
 msgstr "Saml PDF-sider i ét dokument."
 
-#: tile_pages.py:604
+#: pdfstitcher/tile_pages.py:598
 msgid "Note: If both rows and columns are specified, rows are ignored."
-msgstr ""
-"Bemærk: Hvis både rækker og kolonner er angivet, bliver rækker ignoreret."
+msgstr "Bemærk: Hvis både rækker og kolonner er angivet, bliver rækker ignoreret."
 
-#: tile_pages.py:605
+#: pdfstitcher/tile_pages.py:600
 msgid "To insert a blank page, include a zero in the page list."
 msgstr "Skriv et 0 i sideområde for at indsætte en blank side."
 
-#: tile_pages.py:610
+#: pdfstitcher/tile_pages.py:605
 msgid "Input filename (pdf)"
 msgstr "Input-filnavn (PDF)"
 
-#: tile_pages.py:614
+#: pdfstitcher/tile_pages.py:609
 msgid "Output filename (pdf)"
 msgstr "Output-filnavn (PDF)"
 
-#: tile_pages.py:618
+#: pdfstitcher/tile_pages.py:614
 msgid ""
 "Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: "
 "entire document."
@@ -453,42 +203,536 @@ msgstr ""
 "Sider der skal samles. Kan være rækkefølge eller liste (f.eks. 1-5 eller "
 "1,3,5-7, osv). Hvis feltet er tomt, bruges hele dokumentet."
 
-#: tile_pages.py:623
+#: pdfstitcher/tile_pages.py:622
 msgid "Number of rows in tiled grid."
 msgstr "Antal rækker i gitteret."
 
-#: tile_pages.py:628
+#: pdfstitcher/tile_pages.py:628
 msgid "Number of columns in tiled grid."
 msgstr "Antal kolonner i gitteret."
 
-#: tile_pages.py:632
+#: pdfstitcher/tile_pages.py:633
 msgid "Margin size in inches."
 msgstr "Marginstørrelse/-bredde i tommer."
 
-#: tile_pages.py:636
+#: pdfstitcher/tile_pages.py:638
 msgid "Amount to trim from edges"
 msgstr "Hvor meget skal kanterne trimmes"
 
-#: tile_pages.py:637
+#: pdfstitcher/tile_pages.py:640
 msgid ""
 "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch "
 "from left and top)"
 msgstr ""
-"skrevet som venstre, højre, top, bund (f.eks. ville 0,5, 0, 0,5, 0 skære 0,5 "
-"fra venstre side og toppen)"
+"skrevet som venstre, højre, top, bund (f.eks. ville 0,5, 0, 0,5, 0 skære "
+"0,5 fra venstre side og toppen)"
 
-#: tile_pages.py:642
+#: pdfstitcher/tile_pages.py:648
 msgid "Rotate pages (90, 180, or 270 degrees)"
 msgstr "Rotér sider (90, 180 eller 270 grader)"
 
-#: utils.py:75
+#. translation_note: pt = "points", in = "inches", cm = "centimeters"
+#: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:58
+msgid "in"
+msgstr "tommer"
+
+#: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:60
+msgid "cm"
+msgstr ""
+
+#: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:62
+msgid "pt"
+msgstr ""
+
+#: pdfstitcher/utils.py:221
+msgid "Slovak translation not available, defaulting to Czech"
+msgstr ""
+
+#: pdfstitcher/utils.py:257
 msgid "Invalid input"
 msgstr "Ugyldig indtastning"
 
-#: utils.py:75
+#: pdfstitcher/utils.py:257
 msgid "only numeric values allowed"
 msgstr "kun talværdier er tilladt"
 
-#: utils.py:91
+#: pdfstitcher/utils.py:277
 msgid "Please specify a page range"
 msgstr "Venligst angiv et sideområde"
+
+#: pdfstitcher/utils.py:343
+msgid "Warning! Output is larger than {} {}, may not open correctly."
+msgstr "Advarsel: Output er større end {} {}, åbner måske ikke korrekt."
+
+#: pdfstitcher/utils.py:351
+msgid "Output size:"
+msgstr "Outputstørrelse:"
+
+#: pdfstitcher/ui/dialogs.py:25
+msgid "Checking for updates"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:31
+msgid "Please wait..."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:53
+msgid "PDFStitcher is installed and managed via Flatpak."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:62
+msgid "No updates available, {} is the current version."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:69
+msgid "Update available!"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:71
+msgid "Your version is {}, but the latest version is v{}."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:76
+msgid "What's changed?"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:79
+msgid "Download Now"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:91
+msgid "Error checking for updates"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:105 pdfstitcher/ui/main_frame.py:289
+msgid "Report a bug"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:115
+msgid ""
+"Describe the steps reproduce the problem below. Follow the buttons to "
+"open an issue via GitHub (preferred, but requires login), or send the "
+"report via email. Optionally, include a mangled version of the input "
+"document - it will be saved to your Desktop and can be attached to the "
+"issue."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:168
+msgid "Create mangled PDF (Beta)"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:179
+msgid "Report Via GitHub"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:188
+msgid "Email to ccurtis@mtroyal.ca"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:227
+msgid "Could not copy to clipboard"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:227 pdfstitcher/ui/dialogs.py:240
+msgid "Error"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:234
+msgid "Mangled PDF saved to {}."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:236
+msgid "Please attach to GitHub issue or email."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:237
+msgid "Success"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:240
+msgid "Failed to mangle PDF"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:267
+msgid "Preferences"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:272
+msgid "Language"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:287
+msgid "Check for updates on startup"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:297
+msgid "Save current margin and unit settings"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:307
+#, fuzzy
+msgid "Save current line properties"
+msgstr "Vælg linjeegenskaber, der skal ændres"
+
+#: pdfstitcher/ui/dialogs.py:317
+msgid "Default open directory"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:337
+msgid "Default save directory"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:358
+msgid "Save preferences"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:373
+msgid "Choose a directory"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:420
+msgid "Preferences saved to {}"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:422
+msgid "Please restart to switch to {}."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:424
+msgid "Preferences saved"
+msgstr ""
+
+#: pdfstitcher/ui/io_tab.py:29 pdfstitcher/ui/main_frame.py:412
+msgid "Select input PDF"
+msgstr "Vælg input-PDF"
+
+#: pdfstitcher/ui/io_tab.py:47 pdfstitcher/ui/main_frame.py:357
+msgid "Save output as"
+msgstr "Gem output som"
+
+#: pdfstitcher/ui/io_tab.py:70
+msgid "Output Options"
+msgstr "Output-indstillinger"
+
+#: pdfstitcher/ui/io_tab.py:77 pdfstitcher/ui/tile_tab.py:145
+msgid "Page Range"
+msgstr "Sideområde / valgte sider"
+
+#: pdfstitcher/ui/io_tab.py:82 pdfstitcher/ui/tile_tab.py:150
+msgid "Pages assemble in specified order. 0 inserts a blank page."
+msgstr "Siderne samles i angivet rækkefølge. 0 sætter en blank side ind."
+
+#: pdfstitcher/ui/io_tab.py:100 pdfstitcher/ui/tile_tab.py:178
+msgid "Margin to add to final output"
+msgstr "Margin, der skal tilføjes i output-filen"
+
+#: pdfstitcher/ui/io_tab.py:118 pdfstitcher/ui/tile_tab.py:196
+msgid "Inches"
+msgstr "Tommer"
+
+#: pdfstitcher/ui/io_tab.py:118 pdfstitcher/ui/tile_tab.py:196
+msgid "Centimetres"
+msgstr "Centimeter"
+
+#: pdfstitcher/ui/io_tab.py:120 pdfstitcher/ui/tile_tab.py:198
+msgid "Units"
+msgstr "Enheder"
+
+#: pdfstitcher/ui/io_tab.py:131
+msgid "Process Layers"
+msgstr "Behandle lag"
+
+#: pdfstitcher/ui/io_tab.py:138
+msgid "Tile pages"
+msgstr "Sætte sider sammen"
+
+#: pdfstitcher/ui/io_tab.py:171
+msgid "Process layers then tile pages and save"
+msgstr "Behandler lag, sætter sider sammen og gemmer"
+
+#: pdfstitcher/ui/io_tab.py:174
+msgid "Process layers and save without tiling pages"
+msgstr "Behandler lag og gemmer uden at sætte sider sammen"
+
+#: pdfstitcher/ui/io_tab.py:177
+msgid "Tile pages and save without processing layers"
+msgstr "Sætter sider sammen og gemmer uden at behandle lag"
+
+#: pdfstitcher/ui/io_tab.py:181
+msgid "Open the PDF and save selected page range without modifying"
+msgstr "Åbn PDF'en og gem valgte sider i output-PDF uden at ændre"
+
+#: pdfstitcher/ui/io_tab.py:183
+msgid "Optionally, add margins to each page"
+msgstr ""
+
+#: pdfstitcher/ui/layers_tab.py:27
+msgid "Load PDF to view layers."
+msgstr "Åbn PDF'en for at se lag."
+
+#: pdfstitcher/ui/layers_tab.py:42
+msgid "Deselected layers:"
+msgstr "Fravalgte lag:"
+
+#: pdfstitcher/ui/layers_tab.py:42
+msgid "Delete"
+msgstr "Slet"
+
+#: pdfstitcher/ui/layers_tab.py:42
+msgid "Hide"
+msgstr "Skjul"
+
+#: pdfstitcher/ui/layers_tab.py:51
+msgid "Include non-optional content"
+msgstr "Inkludér grundlæggende informationer"
+
+#: pdfstitcher/ui/layers_tab.py:59 pdfstitcher/ui/layers_tab.py:342
+msgid "Deselect all"
+msgstr "Fravælg alle"
+
+#: pdfstitcher/ui/layers_tab.py:70
+msgid "Layer Name"
+msgstr "Navn på lag"
+
+#: pdfstitcher/ui/layers_tab.py:71
+msgid "Line Properties"
+msgstr "Linjeegenskaber"
+
+#: pdfstitcher/ui/layers_tab.py:91
+msgid "Select line properties to modify"
+msgstr "Vælg linjeegenskaber, der skal ændres"
+
+#: pdfstitcher/ui/layers_tab.py:94
+msgid "Line Colour"
+msgstr "Linjefarve"
+
+#: pdfstitcher/ui/layers_tab.py:112
+msgid "Also modify fill colour"
+msgstr ""
+
+#: pdfstitcher/ui/layers_tab.py:121
+msgid "Line Thickness"
+msgstr "Linjetykkelse"
+
+#: pdfstitcher/ui/layers_tab.py:154
+msgid "Line Style"
+msgstr "Linjestil"
+
+#: pdfstitcher/ui/layers_tab.py:161
+msgid "Solid"
+msgstr "Ubrudt"
+
+#: pdfstitcher/ui/layers_tab.py:161
+msgid "Dashed"
+msgstr "Stiplet"
+
+#: pdfstitcher/ui/layers_tab.py:161
+msgid "Dotted"
+msgstr "Prikket"
+
+#: pdfstitcher/ui/layers_tab.py:177
+msgid "Apply"
+msgstr "Udfør"
+
+#: pdfstitcher/ui/layers_tab.py:179 pdfstitcher/ui/layers_tab.py:311
+msgid "Reset"
+msgstr "Nulstil"
+
+#: pdfstitcher/ui/layers_tab.py:197
+msgid "Apply to checked"
+msgstr "Udfør på valgte"
+
+#: pdfstitcher/ui/layers_tab.py:199
+msgid "Reset checked"
+msgstr "Nulstil valgte"
+
+#: pdfstitcher/ui/layers_tab.py:310
+msgid "Apply to"
+msgstr "Udfør på"
+
+#: pdfstitcher/ui/layers_tab.py:316
+msgid "No layers found in input document."
+msgstr "Ingen lag fundet i input-PDF."
+
+#: pdfstitcher/ui/layers_tab.py:327
+msgid "Select layers to include in output document."
+msgstr "Vælg lag, der skal gemmes i output-PDF."
+
+#: pdfstitcher/ui/layers_tab.py:344
+msgid "Select all"
+msgstr "Vælg alle"
+
+#: pdfstitcher/ui/main_frame.py:46
+msgid "Tile Pages"
+msgstr "Samling af sider"
+
+#: pdfstitcher/ui/main_frame.py:48
+msgid "Layers"
+msgstr "Lag"
+
+#: pdfstitcher/ui/main_frame.py:56
+msgid "Generate PDF"
+msgstr "Generér PDF"
+
+#: pdfstitcher/ui/main_frame.py:142
+msgid "No page range specified, defaulting to all"
+msgstr "Sideområde ikke specificeret, alle sider tages med"
+
+#: pdfstitcher/ui/main_frame.py:208
+msgid "Tiling successful"
+msgstr "Samling lykkedes"
+
+#: pdfstitcher/ui/main_frame.py:217 pdfstitcher/ui/main_frame.py:226
+msgid "Something went wrong"
+msgstr "Noget gik galt"
+
+#: pdfstitcher/ui/main_frame.py:223
+msgid "Successfully written to"
+msgstr "Succesfuldt gemt i"
+
+#: pdfstitcher/ui/main_frame.py:226 pdfstitcher/ui/main_frame.py:393
+msgid "unable to write to"
+msgstr "kan ikke skrive til"
+
+#: pdfstitcher/ui/main_frame.py:229
+msgid "Make sure  isn't open in another program"
+msgstr "Kontrollér at  ikke er åben i et andet program"
+
+#: pdfstitcher/ui/main_frame.py:263
+#, fuzzy
+msgid "File"
+msgstr "Midten"
+
+#: pdfstitcher/ui/main_frame.py:268
+msgid "Check for updates"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:272
+msgid "Settings"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:279
+msgid "Documentation"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:280
+msgid "Open the documentation in a web browser"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:290
+msgid "Open the dialog to report a bug"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:294
+msgid "Help"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:336
+msgid "The PDF Stitching app for sewists, by sewists."
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:342
+msgid "Contributors"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:381
+#, fuzzy
+msgid "Can't overwrite input file, please select a different file for output"
+msgstr "Kan ikke overskrive input-PDF, vælg venligst en anden fil til output-PDF"
+
+#: pdfstitcher/ui/main_frame.py:390
+#, fuzzy
+msgid "File will be written to "
+msgstr "Succesfuldt gemt i"
+
+#: pdfstitcher/ui/main_frame.py:432
+msgid "Opening"
+msgstr "Åbner"
+
+#: pdfstitcher/ui/main_frame.py:462
+msgid "PDF locked! Enter the correct password."
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:465
+msgid "Password"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:465
+msgid "PDF file is locked"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:472
+msgid "PDF will not open as you canceled the operation."
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:476
+msgid "Cannot open file"
+msgstr "Kan ikke åbne fil"
+
+#: pdfstitcher/ui/main_frame.py:479
+msgid "PDF file loaded without errors."
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:483
+msgid "Warning: this PDF is encrypted with the following permissions:"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:487
+msgid ""
+"Please be respectful of the author and only use this tool for personal "
+"use."
+msgstr ""
+
+#: pdfstitcher/ui/tile_tab.py:32
+msgid "Required Parameters"
+msgstr "Nødvendige indstillinger"
+
+#: pdfstitcher/ui/tile_tab.py:39
+msgid "Number of Columns"
+msgstr "Antal kolonner"
+
+#: pdfstitcher/ui/tile_tab.py:54
+msgid "OR Number of Rows"
+msgstr "ELLER antal rækker"
+
+#: pdfstitcher/ui/tile_tab.py:127
+msgid "Page Rotation"
+msgstr "Siderotation"
+
+#: pdfstitcher/ui/tile_tab.py:171
+msgid "Optional Parameters"
+msgstr "Valgfrie indstillinger"
+
+#. translation_note: TrimBox and MediaBox are PDF elements, so they likely
+#. won't translate nicely.
+#: pdfstitcher/ui/tile_tab.py:210
+msgid "Set TrimBox to MediaBox"
+msgstr "Sæt TrimBox til MediaBox"
+
+#: pdfstitcher/ui/tile_tab.py:212
+msgid "May help fix things when output is not as expected"
+msgstr "Kan fikse problemer, hvis output ikke blev som forventet"
+
+#: pdfstitcher/ui/tile_tab.py:223
+msgid "Amount to trim from each page"
+msgstr "Hvor meget skal trimmes fra hver side"
+
+#: pdfstitcher/ui/tile_tab.py:226
+msgid "Overlap"
+msgstr ""
+
+#~ msgid "Exception"
+#~ msgstr "Undtagelse"
+
+#~ msgid ""
+#~ "Mangled PDF saved to {}.\n"
+#~ "\n"
+#~ "Please attach to GitHub issue or email."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Please restart to switch to {}."
+#~ msgstr ""
+

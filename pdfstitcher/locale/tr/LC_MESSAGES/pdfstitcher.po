@@ -1,4 +1,4 @@
-# Translations template for pdfstitcher.
+# Turkish translations for pdfstitcher.
 # Copyright (C) 2021 Charlotte Curtis
 # This file is distributed under the same license as the pdfstitcher
 # project.
@@ -8,488 +8,736 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-04 11:04-0600\n"
+"POT-Creation-Date: 2023-02-24 10:30-0700\n"
 "PO-Revision-Date: 2022-02-20 18:57+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
-"Language-Team: Turkish <https://hosted.weblate.org/projects/pdfstitcher/"
-"user-interface/tr/>\n"
 "Language: tr\n"
+"Language-Team: Turkish <https://hosted.weblate.org/projects/pdfstitcher"
+"/user-interface/tr/>\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.11-dev\n"
-"Generated-By: Babel 2.9.1\n"
+"Generated-By: Babel 2.11.0\n"
 
-#: layerfilter.py:122
+#: pdfstitcher/bug_info.py:28
+msgid "Error getting system info: {}"
+msgstr ""
+
+#: pdfstitcher/bug_info.py:54
+msgid "Mangling PDF. This may take some time."
+msgstr ""
+
+#: pdfstitcher/bug_info.py:60
+msgid "Error mangling PDF: {}"
+msgstr ""
+
+#: pdfstitcher/layerfilter.py:328
 msgid "No layers selected, generated PDF would be blank."
 msgstr "Hiçbir katman seçilmedi, oluşturulan PDF boş olacak."
 
-#: pdfstitcher.py:29 pdfstitcher.py:706
-msgid "Select input PDF"
-msgstr "Girdi PDF'sini seç"
+#: pdfstitcher/layerfilter.py:516 pdfstitcher/layerfilter.py:545
+msgid "Failed writing stream to page with error type {}"
+msgstr ""
 
-#: pdfstitcher.py:32 pdfstitcher.py:40 pdfstitcher.py:88 pdfstitcher.py:151
-#: tile_pages.py:129
+#: pdfstitcher/tile_pages.py:105
+msgid "Invalid trim value specified, ignoring"
+msgstr "Geçersiz kırpma değeri belirtildi, yok sayılıyor"
+
+#. translation_note: in = "inches", cm = "centimetres"
+#: pdfstitcher/tile_pages.py:111 pdfstitcher/ui/tile_tab.py:121
 msgid "None"
 msgstr "Yok"
 
-#: pdfstitcher.py:37 pdfstitcher.py:687
-msgid "Save output as"
-msgstr "Çıktıyı farklı kaydet"
-
-#: pdfstitcher.py:46
-msgid "Output Options"
-msgstr "Çıktı Seçenekleri"
-
-#: pdfstitcher.py:52 pdfstitcher.py:159
-msgid "Page Range"
-msgstr "Sayfa Aralığı"
-
-#: pdfstitcher.py:54 pdfstitcher.py:161
-msgid "Pages assemble in specified order. 0 inserts a blank page."
-msgstr "Sayfalar belirtilen sırada bir araya getirilir. 0 boş bir sayfa ekler."
-
-#: pdfstitcher.py:61 pdfstitcher.py:185
-msgid "Margin to add to final output"
-msgstr "Son çıktıya eklenecek kenar boşluğu"
-
-#: pdfstitcher.py:68
-msgid "Process Layers"
-msgstr "Katmanları işle"
-
-#: pdfstitcher.py:71
-msgid "Tile pages"
-msgstr "Sayfaları döşe"
-
-#: pdfstitcher.py:96
-msgid "Process layers then tile pages and save"
-msgstr "Katmanları işle, ardından sayfaları döşe ve kaydet"
-
-#: pdfstitcher.py:99
-msgid "Process layers and save without tiling pages"
-msgstr "Katmanları işle ve sayfaları döşemeden kaydet"
-
-#: pdfstitcher.py:102
-msgid "Tile pages and save without processing layers"
-msgstr "Sayfaları döşe ve katmanları işlemeden kaydet"
-
-#: pdfstitcher.py:105
-msgid "Open the PDF and save selected page range without modifying"
-msgstr "PDF'yi aç ve seçilen sayfa aralığını değiştirmeden kaydet"
-
-#: pdfstitcher.py:116
-msgid "Required Parameters"
-msgstr "Gerekli Parametreler"
-
-#: pdfstitcher.py:122
-msgid "Number of Columns"
-msgstr "Sütun Sayısı"
-
-#: pdfstitcher.py:128
-msgid "OR Number of Rows"
-msgstr "VEYA Satır Sayısı"
-
-#: pdfstitcher.py:136 tile_pages.py:139
-msgid "Rows then columns"
-msgstr "Satırlar sonra sütunlar"
-
-#: pdfstitcher.py:136 tile_pages.py:141
-msgid "Columns then rows"
-msgstr "Sütunlar sonra satırlar"
-
-#: pdfstitcher.py:137 tile_pages.py:143
-msgid "Left to right"
-msgstr "Soldan sağa"
-
-#: pdfstitcher.py:137 tile_pages.py:145
-msgid "Right to left"
-msgstr "Sağdan sola"
-
-#: pdfstitcher.py:138 tile_pages.py:147
-msgid "Top to bottom"
-msgstr "Yukarıdan aşağıya"
-
-#: pdfstitcher.py:138 tile_pages.py:149
-msgid "Bottom to top"
-msgstr "Aşağıdan yukarıya"
-
-#: pdfstitcher.py:140 tile_pages.py:170
-msgid "Page order"
-msgstr "Sayfa sırası"
-
-#: pdfstitcher.py:151 tile_pages.py:132
+#: pdfstitcher/tile_pages.py:114 pdfstitcher/ui/tile_tab.py:122
 msgid "Clockwise"
 msgstr "Saat yönünde"
 
-#: pdfstitcher.py:151 tile_pages.py:134
+#: pdfstitcher/tile_pages.py:116 pdfstitcher/ui/tile_tab.py:123
 msgid "Counterclockwise"
 msgstr "Saat yönünün tersine"
 
 #. translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
-#: pdfstitcher.py:151 tile_pages.py:137
+#: pdfstitcher/tile_pages.py:119 pdfstitcher/ui/tile_tab.py:124
 msgid "Turn Around"
 msgstr "Ters Döndür"
 
-#: pdfstitcher.py:152
-msgid "Page Rotation"
-msgstr "Sayfa Döndürme"
+#: pdfstitcher/tile_pages.py:121 pdfstitcher/ui/tile_tab.py:73
+msgid "Rows then columns"
+msgstr "Satırlar sonra sütunlar"
 
-#: pdfstitcher.py:168
-msgid "Optional Parameters"
-msgstr "İsteğe Bağlı Parametreler"
+#: pdfstitcher/tile_pages.py:123 pdfstitcher/ui/tile_tab.py:73
+msgid "Columns then rows"
+msgstr "Sütunlar sonra satırlar"
 
-#: pdfstitcher.py:173
-msgid "Inches"
-msgstr "İnç"
+#: pdfstitcher/tile_pages.py:125 pdfstitcher/ui/tile_tab.py:74
+msgid "Left to right"
+msgstr "Soldan sağa"
 
-#: pdfstitcher.py:173
-msgid "Centimetres"
-msgstr "Santimetre"
+#: pdfstitcher/tile_pages.py:127 pdfstitcher/ui/tile_tab.py:74
+msgid "Right to left"
+msgstr "Sağdan sola"
 
-#: pdfstitcher.py:174
-msgid "Units"
-msgstr "Birimler"
+#: pdfstitcher/tile_pages.py:129 pdfstitcher/ui/tile_tab.py:75
+msgid "Top to bottom"
+msgstr "Yukarıdan aşağıya"
 
-#. translation_note: TrimBox and MediaBox are PDF elements, so they likely
-#. won't translate nicely.
-#: pdfstitcher.py:179
-msgid "Set TrimBox to MediaBox"
-msgstr "TrimBox'ı MediaBox olarak ayarla"
+#: pdfstitcher/tile_pages.py:131 pdfstitcher/ui/tile_tab.py:75
+msgid "Bottom to top"
+msgstr "Aşağıdan yukarıya"
 
-#: pdfstitcher.py:180
-msgid "May help fix things when output is not as expected"
-msgstr ""
-"Çıktı beklendiği gibi olmadığında bazı şeyleri düzeltmeye yardımcı olabilir"
-
-#: pdfstitcher.py:193
-msgid "Amount to trim from each page"
-msgstr "Her sayfadan kırpılacak miktar"
-
-#: pdfstitcher.py:194
-msgid "Overlap"
-msgstr "Üst üste gel"
-
-#: pdfstitcher.py:194 tile_pages.py:168
-msgid "Trim"
-msgstr "Kırp"
-
-#: pdfstitcher.py:201 tile_pages.py:159
-msgid "Left"
-msgstr "Sol"
-
-#: pdfstitcher.py:206 tile_pages.py:163
-msgid "Right"
-msgstr "Sağ"
-
-#: pdfstitcher.py:211 tile_pages.py:156
-msgid "Top"
-msgstr "Üst"
-
-#: pdfstitcher.py:216 tile_pages.py:152
+#: pdfstitcher/tile_pages.py:134 pdfstitcher/ui/tile_tab.py:290
 msgid "Bottom"
 msgstr "Alt"
 
-#: pdfstitcher.py:239
-msgid "Load PDF to view layers."
-msgstr "Katmanları görüntülemek için PDF'yi yükleyin."
-
-#: pdfstitcher.py:249
-msgid "Deselected layers:"
-msgstr "Seçimi kaldırılan katmanlar:"
-
-#: pdfstitcher.py:250
-msgid "Delete"
-msgstr "Sil"
-
-#: pdfstitcher.py:250
-msgid "Hide"
-msgstr "Gizle"
-
-#: pdfstitcher.py:254
-msgid "Include non-optional content"
-msgstr "İsteğe bağlı olmayan içeriği dahil et"
-
-#: pdfstitcher.py:258 pdfstitcher.py:467
-msgid "Deselect all"
-msgstr "Tümünün seçimini kaldır"
-
-#: pdfstitcher.py:265
-msgid "Layer Name"
-msgstr "Katman Adı"
-
-#: pdfstitcher.py:266
-msgid "Line Properties"
-msgstr "Çizgi Özellikleri"
-
-#: pdfstitcher.py:278
-msgid "Select line properties to modify"
-msgstr "Değiştirilecek çizgi özelliklerini seçin"
-
-#: pdfstitcher.py:280
-msgid "Line Colour"
-msgstr "Çizgi Rengi"
-
-#: pdfstitcher.py:289
-msgid "Line Thickness"
-msgstr "Çizgi Kalınlığı"
-
-#. translation_note: pt = "points", in = "inches", cm = "centimeters"
-#: pdfstitcher.py:297 pdfstitcher.py:357
-msgid "pt"
-msgstr "pt"
-
-#: pdfstitcher.py:297 pdfstitcher.py:361 tile_pages.py:128
-msgid "in"
-msgstr "in"
-
-#. translation_note: in = "inches", cm = "centimetres"
-#: pdfstitcher.py:297 pdfstitcher.py:363 tile_pages.py:128
-msgid "cm"
-msgstr "cm"
-
-#: pdfstitcher.py:304
-msgid "Line Style"
-msgstr "Çizgi Tarzı"
-
-#: pdfstitcher.py:307
-msgid "Solid"
-msgstr "Düz"
-
-#: pdfstitcher.py:307
-msgid "Dashed"
-msgstr "Kesik"
-
-#: pdfstitcher.py:307
-msgid "Dotted"
-msgstr "Noktalı"
-
-#: pdfstitcher.py:314
-msgid "Apply"
-msgstr "Uygula"
-
-#: pdfstitcher.py:316 pdfstitcher.py:437
-msgid "Reset"
-msgstr "Sıfırla"
-
-#: pdfstitcher.py:324
-msgid "Apply to checked"
-msgstr "İşaretlenenlere uygula"
-
-#: pdfstitcher.py:326
-msgid "Reset checked"
-msgstr "İşaretlenenleri sıfırla"
-
-#: pdfstitcher.py:436
-msgid "Apply to"
-msgstr "Uygula"
-
-#: pdfstitcher.py:442
-msgid "No layers found in input document."
-msgstr "Girdi belgesinde katman bulunamadı."
-
-#: pdfstitcher.py:453
-msgid "Select layers to include in output document."
-msgstr "Çıktı belgesine dahil edilecek katmanları seçin."
-
-#: pdfstitcher.py:469
-msgid "Select all"
-msgstr "Tümünü seç"
-
-#: pdfstitcher.py:498 tile_pages.py:166
-msgid "Options"
-msgstr "Seçenekler"
-
-#: pdfstitcher.py:500
-msgid "Tile Pages"
-msgstr "Sayfaları Döşe"
-
-#: pdfstitcher.py:502
-msgid "Layers"
-msgstr "Katmanlar"
-
-#: pdfstitcher.py:510
-msgid "Generate PDF"
-msgstr "PDF oluştur"
-
-#: pdfstitcher.py:573
-msgid "No page range specified, defaulting to all"
-msgstr "Sayfa aralığı belirtilmedi, öntanımlı olarak tümü alınıyor"
-
-#: pdfstitcher.py:633
-msgid "Tiling successful"
-msgstr "Döşeme başarılı"
-
-#: pdfstitcher.py:641 pdfstitcher.py:649
-msgid "Something went wrong"
-msgstr "Bir şeyler yanlış gitti"
-
-#: pdfstitcher.py:642
-msgid "Exception"
-msgstr "İstisna"
-
-#: pdfstitcher.py:647
-msgid "Successfully written to"
-msgstr "Başarıyla yazıldı"
-
-#: pdfstitcher.py:649 pdfstitcher.py:703
-msgid "unable to write to"
-msgstr "yazılamıyor"
-
-#: pdfstitcher.py:651
-msgid "Make sure  isn't open in another program"
-msgstr "Başka bir programda açık olmadığından emin olun"
-
-#: pdfstitcher.py:696
-msgid "Cant overwrite input file, please select a different file for output"
-msgstr ""
-"Girdi dosyasının üzerine yazılamıyor, lütfen çıktı için farklı bir dosya "
-"seçin"
-
-#: pdfstitcher.py:721
-msgid "Opening"
-msgstr "Açılıyor"
-
-#: pdfstitcher.py:735
-msgid "Cannot open file"
-msgstr "Dosya açılamıyor"
-
-#: tile_pages.py:122
-msgid "Invalid trim value specified, ignoring"
-msgstr "Geçersiz kırpma değeri belirtildi, yok sayılıyor"
-
-#: tile_pages.py:154 tile_pages.py:161
+#: pdfstitcher/tile_pages.py:136 pdfstitcher/tile_pages.py:143
 msgid "Middle"
 msgstr "Orta"
 
-#: tile_pages.py:165
+#: pdfstitcher/tile_pages.py:138 pdfstitcher/ui/tile_tab.py:275
+msgid "Top"
+msgstr "Üst"
+
+#: pdfstitcher/tile_pages.py:141 pdfstitcher/ui/tile_tab.py:245
+msgid "Left"
+msgstr "Sol"
+
+#: pdfstitcher/tile_pages.py:145 pdfstitcher/ui/tile_tab.py:260
+msgid "Right"
+msgstr "Sağ"
+
+#: pdfstitcher/tile_pages.py:147
 msgid "Tiling with {} rows and {} columns"
 msgstr "{} satır ve {} sütunla döşeniyor"
 
-#: tile_pages.py:167
+#: pdfstitcher/tile_pages.py:148 pdfstitcher/ui/main_frame.py:44
+msgid "Options"
+msgstr "Seçenekler"
+
+#: pdfstitcher/tile_pages.py:149
 msgid "Margins"
 msgstr "Kenar boşlukları"
 
-#: tile_pages.py:169
+#: pdfstitcher/tile_pages.py:150 pdfstitcher/ui/tile_tab.py:226
+msgid "Trim"
+msgstr "Kırp"
+
+#: pdfstitcher/tile_pages.py:151
 msgid "Rotation"
 msgstr "Döndürme"
 
-#: tile_pages.py:171
+#: pdfstitcher/tile_pages.py:152 pdfstitcher/ui/tile_tab.py:78
+msgid "Page order"
+msgstr "Sayfa sırası"
+
+#: pdfstitcher/tile_pages.py:153
 msgid "Vertical alignment"
 msgstr "Dikey hizalama"
 
-#: tile_pages.py:172
+#: pdfstitcher/tile_pages.py:154
 msgid "Horizontal alignment"
 msgstr "Yatay hizalama"
 
-#: tile_pages.py:203
-msgid "Input document not loaded"
-msgstr "Girdi belgesi yüklenmedi"
-
-#: tile_pages.py:244
+#: pdfstitcher/tile_pages.py:185
 msgid "Only {} pages in document, skipping {}"
 msgstr "Belgede yalnızca {} sayfa var, {} atlanıyor"
 
-#: tile_pages.py:307
+#: pdfstitcher/tile_pages.py:248
 msgid "Warning: The pages {} have a different size than the page before"
 msgstr "Uyarı: {} sayfaları önceki sayfadan farklı bir boyuta sahip"
 
-#: tile_pages.py:315
+#: pdfstitcher/tile_pages.py:269
+msgid "Input document not loaded"
+msgstr "Girdi belgesi yüklenmedi"
+
+#: pdfstitcher/tile_pages.py:309
 msgid "Warning: requested {} columns, but there are only {} pages"
 msgstr "Uyarı: {} sütun istendi, ancak yalnızca {} sayfa var"
 
-#: tile_pages.py:321
+#: pdfstitcher/tile_pages.py:319
 msgid "Warning: requested {} rows, but there are only {} pages"
 msgstr "Uyarı: {} satır istendi, ancak yalnızca {} sayfa var"
 
-#: tile_pages.py:398
-msgid "Warning! Output is larger than {} {}, may not open correctly."
-msgstr "Uyarı! Çıktı, {} {} boyutundan büyük, doğru açılmayabilir."
-
-#: tile_pages.py:401
-msgid "Output size:"
-msgstr "Çıktı boyutu:"
-
-#: tile_pages.py:523
+#: pdfstitcher/tile_pages.py:514
 msgid ""
 "Warning: Some pages have been scaled because a target size was set. You "
 "should not see this warning if using the PDFStitcher GUI."
 msgstr ""
-"Uyarı: Bir hedef boyut ayarlandığından bazı sayfalar ölçeklendi. PDFStitcher "
-"grafiksel arayüzünü kullanıyorsanız bu uyarıyı görmemelisiniz."
+"Uyarı: Bir hedef boyut ayarlandığından bazı sayfalar ölçeklendi. "
+"PDFStitcher grafiksel arayüzünü kullanıyorsanız bu uyarıyı "
+"görmemelisiniz."
 
-#: tile_pages.py:548
+#: pdfstitcher/tile_pages.py:542
 msgid "Unable to open"
 msgstr "Açılamıyor"
 
-#: tile_pages.py:578
+#: pdfstitcher/tile_pages.py:572
 msgid "Invalid rotation value"
 msgstr "Geçersiz döndürme değeri"
 
-#: tile_pages.py:603
+#: pdfstitcher/tile_pages.py:597
 msgid "Tile PDF pages into one document."
 msgstr "PDF sayfalarını tek bir belgede döşe."
 
-#: tile_pages.py:604
+#: pdfstitcher/tile_pages.py:598
 msgid "Note: If both rows and columns are specified, rows are ignored."
 msgstr "Not: Hem satır hem de sütun belirtilirse, satır yok sayılır."
 
-#: tile_pages.py:605
+#: pdfstitcher/tile_pages.py:600
 msgid "To insert a blank page, include a zero in the page list."
 msgstr "Boş bir sayfa eklemek için sayfa listesine bir sıfır ekleyin."
 
-#: tile_pages.py:610
+#: pdfstitcher/tile_pages.py:605
 msgid "Input filename (pdf)"
 msgstr "Girdi dosyası adı (pdf)"
 
-#: tile_pages.py:614
+#: pdfstitcher/tile_pages.py:609
 msgid "Output filename (pdf)"
 msgstr "Çıktı dosyası adı (pdf)"
 
-#: tile_pages.py:618
+#: pdfstitcher/tile_pages.py:614
 msgid ""
 "Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: "
 "entire document."
 msgstr ""
-"Döşelenecek sayfalar. Aralık veya liste olabilir (örn. 1-5 veya 1,3,5-7, vb.)"
-". Öntanımlı değer: tüm belge."
+"Döşelenecek sayfalar. Aralık veya liste olabilir (örn. 1-5 veya 1,3,5-7, "
+"vb.). Öntanımlı değer: tüm belge."
 
-#: tile_pages.py:623
+#: pdfstitcher/tile_pages.py:622
 msgid "Number of rows in tiled grid."
 msgstr "Döşenen ızgaradaki satır sayısı."
 
-#: tile_pages.py:628
+#: pdfstitcher/tile_pages.py:628
 msgid "Number of columns in tiled grid."
 msgstr "Döşenen ızgaradaki sütun sayısı."
 
-#: tile_pages.py:632
+#: pdfstitcher/tile_pages.py:633
 msgid "Margin size in inches."
 msgstr "İnç cinsinden kenar boşluğu boyutu."
 
-#: tile_pages.py:636
+#: pdfstitcher/tile_pages.py:638
 msgid "Amount to trim from edges"
 msgstr "Kenarlardan kırpılacak miktar"
 
-#: tile_pages.py:637
+#: pdfstitcher/tile_pages.py:640
 msgid ""
 "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch "
 "from left and top)"
 msgstr ""
-"sol, sağ, üst, alt olarak verilir (örn. 0.5,0,0.5,0 soldan ve üstten yarım "
-"inç kırpacaktır)"
+"sol, sağ, üst, alt olarak verilir (örn. 0.5,0,0.5,0 soldan ve üstten "
+"yarım inç kırpacaktır)"
 
-#: tile_pages.py:642
+#: pdfstitcher/tile_pages.py:648
 msgid "Rotate pages (90, 180, or 270 degrees)"
 msgstr "Sayfaları döndür (90, 180 veya 270 derece)"
 
-#: utils.py:75
+#. translation_note: pt = "points", in = "inches", cm = "centimeters"
+#: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:58
+msgid "in"
+msgstr "in"
+
+#: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:60
+msgid "cm"
+msgstr "cm"
+
+#: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:62
+msgid "pt"
+msgstr "pt"
+
+#: pdfstitcher/utils.py:221
+msgid "Slovak translation not available, defaulting to Czech"
+msgstr ""
+
+#: pdfstitcher/utils.py:257
 msgid "Invalid input"
 msgstr "Geçersiz girdi"
 
-#: utils.py:75
+#: pdfstitcher/utils.py:257
 msgid "only numeric values allowed"
 msgstr "yalnızca sayısal değerlere izin verilir"
 
-#: utils.py:91
+#: pdfstitcher/utils.py:277
 msgid "Please specify a page range"
 msgstr "Lütfen bir sayfa aralığı belirtin"
+
+#: pdfstitcher/utils.py:343
+msgid "Warning! Output is larger than {} {}, may not open correctly."
+msgstr "Uyarı! Çıktı, {} {} boyutundan büyük, doğru açılmayabilir."
+
+#: pdfstitcher/utils.py:351
+msgid "Output size:"
+msgstr "Çıktı boyutu:"
+
+#: pdfstitcher/ui/dialogs.py:25
+msgid "Checking for updates"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:31
+msgid "Please wait..."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:53
+msgid "PDFStitcher is installed and managed via Flatpak."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:62
+msgid "No updates available, {} is the current version."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:69
+msgid "Update available!"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:71
+msgid "Your version is {}, but the latest version is v{}."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:76
+msgid "What's changed?"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:79
+msgid "Download Now"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:91
+msgid "Error checking for updates"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:105 pdfstitcher/ui/main_frame.py:289
+msgid "Report a bug"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:115
+msgid ""
+"Describe the steps reproduce the problem below. Follow the buttons to "
+"open an issue via GitHub (preferred, but requires login), or send the "
+"report via email. Optionally, include a mangled version of the input "
+"document - it will be saved to your Desktop and can be attached to the "
+"issue."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:168
+msgid "Create mangled PDF (Beta)"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:179
+msgid "Report Via GitHub"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:188
+msgid "Email to ccurtis@mtroyal.ca"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:227
+msgid "Could not copy to clipboard"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:227 pdfstitcher/ui/dialogs.py:240
+msgid "Error"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:234
+msgid "Mangled PDF saved to {}."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:236
+msgid "Please attach to GitHub issue or email."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:237
+msgid "Success"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:240
+msgid "Failed to mangle PDF"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:267
+msgid "Preferences"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:272
+msgid "Language"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:287
+msgid "Check for updates on startup"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:297
+msgid "Save current margin and unit settings"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:307
+#, fuzzy
+msgid "Save current line properties"
+msgstr "Değiştirilecek çizgi özelliklerini seçin"
+
+#: pdfstitcher/ui/dialogs.py:317
+msgid "Default open directory"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:337
+msgid "Default save directory"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:358
+msgid "Save preferences"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:373
+msgid "Choose a directory"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:420
+msgid "Preferences saved to {}"
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:422
+msgid "Please restart to switch to {}."
+msgstr ""
+
+#: pdfstitcher/ui/dialogs.py:424
+msgid "Preferences saved"
+msgstr ""
+
+#: pdfstitcher/ui/io_tab.py:29 pdfstitcher/ui/main_frame.py:412
+msgid "Select input PDF"
+msgstr "Girdi PDF'sini seç"
+
+#: pdfstitcher/ui/io_tab.py:47 pdfstitcher/ui/main_frame.py:357
+msgid "Save output as"
+msgstr "Çıktıyı farklı kaydet"
+
+#: pdfstitcher/ui/io_tab.py:70
+msgid "Output Options"
+msgstr "Çıktı Seçenekleri"
+
+#: pdfstitcher/ui/io_tab.py:77 pdfstitcher/ui/tile_tab.py:145
+msgid "Page Range"
+msgstr "Sayfa Aralığı"
+
+#: pdfstitcher/ui/io_tab.py:82 pdfstitcher/ui/tile_tab.py:150
+msgid "Pages assemble in specified order. 0 inserts a blank page."
+msgstr "Sayfalar belirtilen sırada bir araya getirilir. 0 boş bir sayfa ekler."
+
+#: pdfstitcher/ui/io_tab.py:100 pdfstitcher/ui/tile_tab.py:178
+msgid "Margin to add to final output"
+msgstr "Son çıktıya eklenecek kenar boşluğu"
+
+#: pdfstitcher/ui/io_tab.py:118 pdfstitcher/ui/tile_tab.py:196
+msgid "Inches"
+msgstr "İnç"
+
+#: pdfstitcher/ui/io_tab.py:118 pdfstitcher/ui/tile_tab.py:196
+msgid "Centimetres"
+msgstr "Santimetre"
+
+#: pdfstitcher/ui/io_tab.py:120 pdfstitcher/ui/tile_tab.py:198
+msgid "Units"
+msgstr "Birimler"
+
+#: pdfstitcher/ui/io_tab.py:131
+msgid "Process Layers"
+msgstr "Katmanları işle"
+
+#: pdfstitcher/ui/io_tab.py:138
+msgid "Tile pages"
+msgstr "Sayfaları döşe"
+
+#: pdfstitcher/ui/io_tab.py:171
+msgid "Process layers then tile pages and save"
+msgstr "Katmanları işle, ardından sayfaları döşe ve kaydet"
+
+#: pdfstitcher/ui/io_tab.py:174
+msgid "Process layers and save without tiling pages"
+msgstr "Katmanları işle ve sayfaları döşemeden kaydet"
+
+#: pdfstitcher/ui/io_tab.py:177
+msgid "Tile pages and save without processing layers"
+msgstr "Sayfaları döşe ve katmanları işlemeden kaydet"
+
+#: pdfstitcher/ui/io_tab.py:181
+msgid "Open the PDF and save selected page range without modifying"
+msgstr "PDF'yi aç ve seçilen sayfa aralığını değiştirmeden kaydet"
+
+#: pdfstitcher/ui/io_tab.py:183
+msgid "Optionally, add margins to each page"
+msgstr ""
+
+#: pdfstitcher/ui/layers_tab.py:27
+msgid "Load PDF to view layers."
+msgstr "Katmanları görüntülemek için PDF'yi yükleyin."
+
+#: pdfstitcher/ui/layers_tab.py:42
+msgid "Deselected layers:"
+msgstr "Seçimi kaldırılan katmanlar:"
+
+#: pdfstitcher/ui/layers_tab.py:42
+msgid "Delete"
+msgstr "Sil"
+
+#: pdfstitcher/ui/layers_tab.py:42
+msgid "Hide"
+msgstr "Gizle"
+
+#: pdfstitcher/ui/layers_tab.py:51
+msgid "Include non-optional content"
+msgstr "İsteğe bağlı olmayan içeriği dahil et"
+
+#: pdfstitcher/ui/layers_tab.py:59 pdfstitcher/ui/layers_tab.py:342
+msgid "Deselect all"
+msgstr "Tümünün seçimini kaldır"
+
+#: pdfstitcher/ui/layers_tab.py:70
+msgid "Layer Name"
+msgstr "Katman Adı"
+
+#: pdfstitcher/ui/layers_tab.py:71
+msgid "Line Properties"
+msgstr "Çizgi Özellikleri"
+
+#: pdfstitcher/ui/layers_tab.py:91
+msgid "Select line properties to modify"
+msgstr "Değiştirilecek çizgi özelliklerini seçin"
+
+#: pdfstitcher/ui/layers_tab.py:94
+msgid "Line Colour"
+msgstr "Çizgi Rengi"
+
+#: pdfstitcher/ui/layers_tab.py:112
+msgid "Also modify fill colour"
+msgstr ""
+
+#: pdfstitcher/ui/layers_tab.py:121
+msgid "Line Thickness"
+msgstr "Çizgi Kalınlığı"
+
+#: pdfstitcher/ui/layers_tab.py:154
+msgid "Line Style"
+msgstr "Çizgi Tarzı"
+
+#: pdfstitcher/ui/layers_tab.py:161
+msgid "Solid"
+msgstr "Düz"
+
+#: pdfstitcher/ui/layers_tab.py:161
+msgid "Dashed"
+msgstr "Kesik"
+
+#: pdfstitcher/ui/layers_tab.py:161
+msgid "Dotted"
+msgstr "Noktalı"
+
+#: pdfstitcher/ui/layers_tab.py:177
+msgid "Apply"
+msgstr "Uygula"
+
+#: pdfstitcher/ui/layers_tab.py:179 pdfstitcher/ui/layers_tab.py:311
+msgid "Reset"
+msgstr "Sıfırla"
+
+#: pdfstitcher/ui/layers_tab.py:197
+msgid "Apply to checked"
+msgstr "İşaretlenenlere uygula"
+
+#: pdfstitcher/ui/layers_tab.py:199
+msgid "Reset checked"
+msgstr "İşaretlenenleri sıfırla"
+
+#: pdfstitcher/ui/layers_tab.py:310
+msgid "Apply to"
+msgstr "Uygula"
+
+#: pdfstitcher/ui/layers_tab.py:316
+msgid "No layers found in input document."
+msgstr "Girdi belgesinde katman bulunamadı."
+
+#: pdfstitcher/ui/layers_tab.py:327
+msgid "Select layers to include in output document."
+msgstr "Çıktı belgesine dahil edilecek katmanları seçin."
+
+#: pdfstitcher/ui/layers_tab.py:344
+msgid "Select all"
+msgstr "Tümünü seç"
+
+#: pdfstitcher/ui/main_frame.py:46
+msgid "Tile Pages"
+msgstr "Sayfaları Döşe"
+
+#: pdfstitcher/ui/main_frame.py:48
+msgid "Layers"
+msgstr "Katmanlar"
+
+#: pdfstitcher/ui/main_frame.py:56
+msgid "Generate PDF"
+msgstr "PDF oluştur"
+
+#: pdfstitcher/ui/main_frame.py:142
+msgid "No page range specified, defaulting to all"
+msgstr "Sayfa aralığı belirtilmedi, öntanımlı olarak tümü alınıyor"
+
+#: pdfstitcher/ui/main_frame.py:208
+msgid "Tiling successful"
+msgstr "Döşeme başarılı"
+
+#: pdfstitcher/ui/main_frame.py:217 pdfstitcher/ui/main_frame.py:226
+msgid "Something went wrong"
+msgstr "Bir şeyler yanlış gitti"
+
+#: pdfstitcher/ui/main_frame.py:223
+msgid "Successfully written to"
+msgstr "Başarıyla yazıldı"
+
+#: pdfstitcher/ui/main_frame.py:226 pdfstitcher/ui/main_frame.py:393
+msgid "unable to write to"
+msgstr "yazılamıyor"
+
+#: pdfstitcher/ui/main_frame.py:229
+msgid "Make sure  isn't open in another program"
+msgstr "Başka bir programda açık olmadığından emin olun"
+
+#: pdfstitcher/ui/main_frame.py:263
+#, fuzzy
+msgid "File"
+msgstr "Orta"
+
+#: pdfstitcher/ui/main_frame.py:268
+msgid "Check for updates"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:272
+msgid "Settings"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:279
+#, fuzzy
+msgid "Documentation"
+msgstr "Döndürme"
+
+#: pdfstitcher/ui/main_frame.py:280
+msgid "Open the documentation in a web browser"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:290
+msgid "Open the dialog to report a bug"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:294
+msgid "Help"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:336
+msgid "The PDF Stitching app for sewists, by sewists."
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:342
+msgid "Contributors"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:381
+#, fuzzy
+msgid "Can't overwrite input file, please select a different file for output"
+msgstr ""
+"Girdi dosyasının üzerine yazılamıyor, lütfen çıktı için farklı bir dosya "
+"seçin"
+
+#: pdfstitcher/ui/main_frame.py:390
+#, fuzzy
+msgid "File will be written to "
+msgstr "Başarıyla yazıldı"
+
+#: pdfstitcher/ui/main_frame.py:432
+msgid "Opening"
+msgstr "Açılıyor"
+
+#: pdfstitcher/ui/main_frame.py:462
+msgid "PDF locked! Enter the correct password."
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:465
+msgid "Password"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:465
+msgid "PDF file is locked"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:472
+msgid "PDF will not open as you canceled the operation."
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:476
+msgid "Cannot open file"
+msgstr "Dosya açılamıyor"
+
+#: pdfstitcher/ui/main_frame.py:479
+msgid "PDF file loaded without errors."
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:483
+msgid "Warning: this PDF is encrypted with the following permissions:"
+msgstr ""
+
+#: pdfstitcher/ui/main_frame.py:487
+msgid ""
+"Please be respectful of the author and only use this tool for personal "
+"use."
+msgstr ""
+
+#: pdfstitcher/ui/tile_tab.py:32
+msgid "Required Parameters"
+msgstr "Gerekli Parametreler"
+
+#: pdfstitcher/ui/tile_tab.py:39
+msgid "Number of Columns"
+msgstr "Sütun Sayısı"
+
+#: pdfstitcher/ui/tile_tab.py:54
+msgid "OR Number of Rows"
+msgstr "VEYA Satır Sayısı"
+
+#: pdfstitcher/ui/tile_tab.py:127
+msgid "Page Rotation"
+msgstr "Sayfa Döndürme"
+
+#: pdfstitcher/ui/tile_tab.py:171
+msgid "Optional Parameters"
+msgstr "İsteğe Bağlı Parametreler"
+
+#. translation_note: TrimBox and MediaBox are PDF elements, so they likely
+#. won't translate nicely.
+#: pdfstitcher/ui/tile_tab.py:210
+msgid "Set TrimBox to MediaBox"
+msgstr "TrimBox'ı MediaBox olarak ayarla"
+
+#: pdfstitcher/ui/tile_tab.py:212
+msgid "May help fix things when output is not as expected"
+msgstr ""
+"Çıktı beklendiği gibi olmadığında bazı şeyleri düzeltmeye yardımcı "
+"olabilir"
+
+#: pdfstitcher/ui/tile_tab.py:223
+msgid "Amount to trim from each page"
+msgstr "Her sayfadan kırpılacak miktar"
+
+#: pdfstitcher/ui/tile_tab.py:226
+msgid "Overlap"
+msgstr "Üst üste gel"
+
+#~ msgid "Exception"
+#~ msgstr "İstisna"
+
+#~ msgid ""
+#~ "Mangled PDF saved to {}.\n"
+#~ "\n"
+#~ "Please attach to GitHub issue or email."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Please restart to switch to {}."
+#~ msgstr ""
+
