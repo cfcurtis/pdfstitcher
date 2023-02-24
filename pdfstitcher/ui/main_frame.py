@@ -359,7 +359,6 @@ class PDFStitcherFrame(wx.Frame):
             wildcard="PDF files (*.pdf)|*.pdf",
             style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
         ) as fileDialog:
-
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
 
@@ -414,7 +413,6 @@ class PDFStitcherFrame(wx.Frame):
             wildcard="PDF files (*.pdf)|*.pdf",
             style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
         ) as fileDialog:
-
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
 

@@ -26,6 +26,7 @@ DEFAULT_STATE = {
     "d": pdf_ops.line_style_arr[0],
 }
 
+
 # helper functions to dump page to file for debugging
 def write_page(fname, page):
     with open(fname, "w") as f:
@@ -43,7 +44,6 @@ class LayerFilter:
         page_range=[],
         line_props={},
     ):
-
         self.pdf = pdf
         self.keep_ocs = keep_ocs
         self.keep_non_oc = keep_non_oc
@@ -312,7 +312,7 @@ class LayerFilter:
     def run(self, set_progress_range=None, update_progress=None, progress_was_cancelled=None):
         """
         The primary method to run the filter.
-        If called from pdfstitcher.py, the progress window will be updated.
+        If called from PDFStitcher gui, the progress window will be updated.
         Returns:
             pikepdf.Pdf: the filtered PDF
         """
