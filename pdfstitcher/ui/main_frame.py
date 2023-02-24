@@ -170,7 +170,7 @@ class PDFStitcherFrame(wx.Frame):
             trim[1] = utils.txt_to_float(self.tt.right_trim_txt.GetValue())
             trim[2] = utils.txt_to_float(self.tt.top_trim_txt.GetValue())
             trim[3] = utils.txt_to_float(self.tt.bottom_trim_txt.GetValue())
-            self.tiler.set_trim(trim)
+            self.tiler.trim = trim
             self.tiler.actually_trim = bool(self.tt.trim_overlap_combo.GetSelection())
             self.tiler.override_trim = self.tt.override_trim.GetValue()
 

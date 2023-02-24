@@ -64,7 +64,7 @@ class PageTiler:
         else:
             self.page_range = []
 
-        self.set_trim(trim)
+        self.trim = trim
         self.margin = margin
         self.rotation = rotation
         self.actually_trim = actually_trim
@@ -90,19 +90,21 @@ class PageTiler:
         self.vertical_align = vertical_align
         self.horizontal_align = horizontal_align
 
-    def set_trim(self, trim):
+    @property
+    def trim(self):
+        return self._trim
+
+    @trim.setter
+    def trim(self, trim):
         if len(trim) == 1:
-            self.trim = [trim, trim, trim, trim]
-
-        if len(trim) == 2:
-            self.trim = [trim[0], trim[0], trim[1], trim[1]]
-
-        if len(trim) == 4:
-            self.trim = trim
-
+            self._trim = [trim[0], trim[0], trim[0], trim[0]]
+        elif len(trim) == 2:
+            self._trim = [trim[0], trim[0], trim[1], trim[1]]
+        elif len(trim) == 4:
+            self._trim = trim
         else:
             print(_("Invalid trim value specified, ignoring"))
-            self.trim = [0, 0, 0, 0]
+            self._trim = [0, 0, 0, 0]
 
     def show_options(self):
         # convert the margin and trim options into pixels
@@ -253,7 +255,7 @@ class PageTiler:
 
         return content_dict, pw, ph, page_names
 
-    def adjust_trim_order(self, trim: list) -> None:
+    def adjust_trim_order(self, px_trim: list) -> None:
         """
         Rearranges the trim order based on page rotation.
         """
@@ -268,7 +270,7 @@ class PageTiler:
         if self.rotation == SW_ROTATION.TURNAROUND:
             order = [1, 0, 3, 2]
 
-        trim = [trim[o] for o in order]
+        px_trim = [px_trim[o] for o in order]
 
     def compute_target_size(self, n_tiles: int, pw: list, ph: list, trim: list) -> tuple:
         """
@@ -383,8 +385,8 @@ class PageTiler:
             user_unit = float(first_page.UserUnit)
 
         # define the trim in pdf units, then build the page list
-        trim = [Config.general["units"].units_to_px(t / user_unit) for t in self.trim]
-        content_dict, pw, ph, page_names = self.build_pagelist(new_doc, trim)
+        px_trim = [Config.general["units"].units_to_px(t / user_unit) for t in self.trim]
+        content_dict, pw, ph, page_names = self.build_pagelist(new_doc, px_trim)
         n_tiles = len(page_names)
         if not self.calc_rows_cols(n_tiles):
             error_msg = _(
@@ -401,7 +403,7 @@ class PageTiler:
 
         # after calculating rows/cols but before reordering trim, show the user the selected options
         self.show_options()
-        self.adjust_trim_order(trim)
+        self.adjust_trim_order(px_trim)
 
         if self.rotation in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
             # swap width and height of pages
@@ -415,7 +417,7 @@ class PageTiler:
             page_box_height = self.target_height / self.rows
             page_box_defined = True
         else:
-            col_width, row_height = self.compute_target_size(n_tiles, pw, ph, trim)
+            col_width, row_height = self.compute_target_size(n_tiles, pw, ph, px_trim)
             width = sum(col_width)
             height = sum(row_height)
             page_box_defined = False
@@ -464,13 +466,13 @@ class PageTiler:
                 scalef_height = page_box_height / source_height
                 # take the smaller scaling factor so that the page will fit into its box
                 scale_factor = min(scalef_width, scalef_height)
-                cpos_x0 = c * page_box_width - c * (trim[0] + trim[1])
+                cpos_x0 = c * page_box_width - c * (px_trim[0] + px_trim[1])
                 cpos_y0 = (self.rows - r - 1) * page_box_height - (self.rows - r - 1) * (
-                    trim[2] + trim[3]
+                    px_trim[2] + px_trim[3]
                 )
             else:
-                cpos_x0 = sum(col_width[:c]) - trim[0]
-                cpos_y0 = sum(row_height[r + 1 :]) - trim[3]
+                cpos_x0 = sum(col_width[:c]) - px_trim[0]
+                cpos_y0 = sum(row_height[r + 1 :]) - px_trim[3]
 
                 # store the page box height/width for convenience if rotation is needed
                 page_box_height = ph[i]
@@ -582,28 +584,25 @@ def main(args):
     else:
         tiler.page_range = [i + 1 for i in range(len(in_doc.pages))]
 
+    if args.units == "cm":
+        Config.general["units"] = utils.UNITS.CENTIMETERS
+
     if args.margin is not None:
-        # all the docs/examples seem to assume 72 dpi all the time
         tiler.margin = utils.txt_to_float(args.margin)
 
     if args.trim is not None:
         trim = [utils.txt_to_float(t) for t in args.trim.split(",")]
-        tiler.set_trim(trim)
+        tiler.trim = trim
 
-    if args.rotate is not None:
-        failed = False
-        r = int(args.rotate)
-        if r == 0:
-            tiler.rotation = SW_ROTATION.NONE
-        elif r == 90:
-            tiler.rotation = SW_ROTATION.CLOCKWISE
-        elif r == 180:
-            tiler.rotation = SW_ROTATION.TURNAROUND
-        elif r == 270:
-            tiler.rotation = SW_ROTATION.COUNTERCLOCKWISE
-        else:
-            print(_("Invalid rotation value"))
-            sys.exit()
+    r = int(args.rotate)
+    if r == 0:
+        tiler.rotation = SW_ROTATION.NONE
+    elif r == 90:
+        tiler.rotation = SW_ROTATION.CLOCKWISE
+    elif r == 180:
+        tiler.rotation = SW_ROTATION.TURNAROUND
+    elif r == 270:
+        tiler.rotation = SW_ROTATION.COUNTERCLOCKWISE
 
     tiler.cols = 0
     tiler.rows = 0
@@ -661,24 +660,37 @@ def parse_arguments():
         help=_("Number of columns in tiled grid."),
     )
     parser.add_argument(
+        "-u",
+        "--units",
+        choices=["in", "cm"],
+        default="in",
+        help=_("Units for margin and trim values."),
+    )
+    parser.add_argument(
         "-m",
         "--margin",
-        help=_("Margin size in inches."),
+        help=_("Margin size in selected units."),
     )
     parser.add_argument(
         "-t",
         "--trim",
-        help=_("Amount to trim from edges")
+        help=_("Amount to trim from edges in selected units")
         + " "
-        + _(
-            "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch from left and top)"
-        ),
+        + _("given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim 0.5 from left and top)"),
     )
     parser.add_argument(
         "-R",
         "--rotate",
         type=int,
-        help=_("Rotate pages (90, 180, or 270 degrees)"),
+        default=0,
+        choices=[0, 90, 180, 270],
+        help=_("Rotate pages"),
+    )
+    parser.add_argument(
+        "--col-major",
+        type=bool,
+        default=False,
+        help=_("Fill columns before rows (default is rows first)"),
     )
 
     return parser.parse_args()
