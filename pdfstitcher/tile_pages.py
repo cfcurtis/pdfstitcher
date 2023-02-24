@@ -303,9 +303,10 @@ class PageTiler:
 
         return col_width, row_height
 
-    def calc_rows_cols(self, n_tiles: int) -> None:
+    def calc_rows_cols(self, n_tiles: int) -> bool:
         """
         Calculate the number of rows/columns requested based on the number of pages to tile.
+        Returns True if the result is valid, False otherwise.
         """
         if self.cols is not None and self.cols > 0:
             self.rows = math.ceil(n_tiles / self.cols)
@@ -330,6 +331,12 @@ class PageTiler:
             # try for square
             self.cols = math.ceil(math.sqrt(n_tiles))
             self.rows = math.ceil(n_tiles / self.cols)
+
+        # Make sure there are no empty columns or rows
+        if self.col_major:
+            return self.cols * self.rows - n_tiles < self.rows
+        else:
+            return self.cols * self.rows - n_tiles < self.cols
 
     def run(
         self,
@@ -379,7 +386,18 @@ class PageTiler:
         trim = [Config.general["units"].units_to_px(t / user_unit) for t in self.trim]
         content_dict, pw, ph, page_names = self.build_pagelist(new_doc, trim)
         n_tiles = len(page_names)
-        self.calc_rows_cols(n_tiles)
+        if not self.calc_rows_cols(n_tiles):
+            error_msg = _(
+                "Error: cannot tile {} pages with {} rows and {} columns".format(
+                    n_tiles, self.rows, self.cols
+                )
+            )
+            if self.col_major:
+                error_msg += "\n" + _("filling columns first, the last column would be empty.")
+            else:
+                error_msg += "\n" + _("filling rows first, the last row would be empty.")
+            print(error_msg)
+            return
 
         # after calculating rows/cols but before reordering trim, show the user the selected options
         self.show_options()

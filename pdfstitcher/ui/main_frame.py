@@ -205,7 +205,8 @@ class PDFStitcherFrame(wx.Frame):
             if do_tile:
                 self.tiler.in_doc = filtered
                 new_doc = self.tiler.run(rows, cols)
-                print(_("Tiling successful"))
+                if new_doc:
+                    print(_("Tiling successful"))
             else:
                 # extract the requested pages
                 page_filter = PageFilter(filtered)
@@ -219,8 +220,9 @@ class PDFStitcherFrame(wx.Frame):
             return
 
         try:
-            new_doc.save(self.out_doc_path)
-            print(_("Successfully written to") + " " + self.out_doc_path)
+            if new_doc:
+                new_doc.save(self.out_doc_path)
+                print(_("Successfully written to") + " " + self.out_doc_path)
         except Exception as e:
             print(
                 _("Something went wrong") + ", " + _("unable to write to") + " " + self.out_doc_path
