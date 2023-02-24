@@ -39,7 +39,7 @@ homepage = "https://www.pdfstitcher.org/"
 repository = "https://github.com/cfcurtis/pdfstitcher"
 
 [project.scripts]
-pdfstitcher = "pdfstitcher.pdfstitcher:main"
+pdfstitcher = "pdfstitcher.app:main"
 
 [build-system]
 requires = ["setuptools", "Babel"]
