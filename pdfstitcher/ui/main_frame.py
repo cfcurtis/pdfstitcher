@@ -496,9 +496,13 @@ def main(language_warning: str):
 
     # Fix the size for high-resolution displays on windows
     if sys.platform.startswith("win32"):
-        from ctypes import OleDLL
+        try:
+            from ctypes import OleDLL
 
-        OleDLL("shcore").SetProcessDpiAwareness(1)
+            OleDLL("shcore").SetProcessDpiAwareness(1)
+        except Exception:
+            # Probably Windows 7 with no shcore.dll
+            pass
 
     disp_size = wx.DisplaySize()
     app_size = wx.Size(min(int(disp_size[0] * 0.6), 700), min(int(disp_size[1] * 0.85), 800))
