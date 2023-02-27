@@ -1,3 +1,3 @@
-from pdfstitcher.pdfstitcher import main
+from pdfstitcher.app import main
 
 main()

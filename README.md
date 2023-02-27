@@ -7,9 +7,10 @@ For up-to-date information, also check out https://www.pdfstitcher.org.
 
 ## Download the latest release
 * [Windows (7 or 10, 64-bit)](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/pdfstitcher.exe)
-* [macOS (High Sierra or higher)](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/PDFStitcher-Installer.dmg)
+* [macOS - Intel Processor](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/PDFStitcher-InstallerX64.dmg)
+* [macOS - M1/M2 Processor](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/PDFStitcher-InstallerARM64.dmg)
 * <a href='https://flathub.org/apps/details/com.github.cfcurtis.pdfstitcher'><img width='120' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/></a>
-* Using pip: `pip install pdfstitcher` **Note: Requires Python <= 3.9.10**. As of February 2022, there is no wheel available for wxPython for 3.10.
+* Using pip: `pip install pdfstitcher` **Note: Requires Python <= 3.11**. As of November 2022, there is no wheel available for wxPython for 3.11+.
 
 ## Translations:
 
@@ -36,7 +37,7 @@ Want to contribute a translation? PDFStitcher is now on [weblate!](https://hoste
 Most people probably want to just use the executable links above. However, to edit the code, clone this repo and install in editable mode using the command:
 
 ```console
-$ pip install -e .
+$ pip install -e ".[dev]"
 ```
 
 ## Help!
