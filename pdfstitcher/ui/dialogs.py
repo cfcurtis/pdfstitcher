@@ -10,6 +10,7 @@ from pdfstitcher import utils
 from pdfstitcher.utils import Config
 from pdfstitcher import updater
 from pdfstitcher import bug_info
+from pathlib import Path
 from babel import Locale
 import webbrowser
 import yaml
@@ -228,7 +229,31 @@ class BugReporter(wx.Dialog):
 
     def create_mangled_pdf(self, event):
         """Creates a mangled version of the input PDF."""
-        pdf_path = bug_info.mangle_pdf(self.main_gui.in_doc)
+        pdf = self.main_gui.in_doc
+        save_path = Path(pdf.filename).parent
+        with wx.DirDialog(
+            self,
+            _("Choose a location to save the mangled PDF"),
+            defaultPath=str(save_path),
+            style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST,
+        ) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                save_path = Path(dlg.GetPath())
+            else:
+                return
+
+        progress_win = wx.ProgressDialog(
+            _("Mangling PDF with {} pages".format(len(pdf.pages))),
+            _("This may take some time, please wait"),
+            style=wx.PD_CAN_ABORT | wx.PD_AUTO_HIDE,
+        )
+        try:
+            pdf_path = bug_info.mangle_pdf(pdf, save_path, progress_win)
+        except InterruptedError:
+            print(_("Mangling PDF cancelled by user."))
+            progress_win.Update(progress_win.GetRange())
+            return
+
         if pdf_path:
             wx.MessageBox(
                 _("Mangled PDF saved to {}.".format(pdf_path))

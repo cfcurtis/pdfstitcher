@@ -31,7 +31,7 @@ def get_system_info() -> str:
     return yaml.dump(info)
 
 
-def mangle_pdf(pdf: pikepdf.Pdf) -> Path:
+def mangle_pdf(pdf: pikepdf.Pdf, save_path: Path, progress_win: None) -> Path:
     """
     Mangles and saves the current PDF file, then returns
     the path to the mangled file.
@@ -39,23 +39,25 @@ def mangle_pdf(pdf: pikepdf.Pdf) -> Path:
     if not pdf:
         return None
 
-    desktop = Path.home() / "Desktop"
-
     try:
         # open a new copy of the input file
         pdf_copy = pikepdf.Pdf.open(pdf.filename)
         mglr = mangler.Mangler(pdf=pdf_copy)
-        mangled_path = desktop / mglr.hash_name
+        mangled_path = save_path / mglr.hash_name
 
         # don't re-mangle if the file already exists
         if mangled_path.exists():
+            progress_win and progress_win.Update(progress_win.GetRange())
             return mangled_path
 
-        print(_("Mangling PDF. This may take some time."))
+        mglr.updater = progress_win
         mglr.mangle_pdf()
-        mglr.save(desktop)
+        mglr.save(save_path)
 
         return mangled_path
+    except InterruptedError:
+        raise InterruptedError
+
     except Exception as e:
         print(_("Error mangling PDF: {}").format(e))
         return None
