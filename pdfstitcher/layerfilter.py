@@ -309,7 +309,7 @@ class LayerFilter:
 
         return oc_obs, other_obs
 
-    def run(self, set_progress_range=None, update_progress=None, progress_was_cancelled=None):
+    def run(self, progress_win=None):
         """
         The primary method to run the filter.
         If called from PDFStitcher gui, the progress window will be updated.
@@ -334,7 +334,7 @@ class LayerFilter:
         n_page = len(page_range)
 
         # initialize the progress window
-        set_progress_range and set_progress_range(n_page)  # don't run if the callback is None
+        progress_win and progress_win.SetRange(n_page)  # don't run if the callback is None
 
         # update the OC dictionaries
         parse_streams = self.delete_ocgs and self.keep_ocs != "all"
@@ -352,12 +352,12 @@ class LayerFilter:
                 self.initialize_state()
                 self.filter_content(self.out_pdf.pages[p - 1])
                 # update the progress bar for each page, then check if user cancelled
-                update_progress and update_progress(page_range.index(p))
-                if progress_was_cancelled and progress_was_cancelled():
+                progress_win and progress_win.Update(page_range.index(p))
+                if progress_win and progress_win.WasCancelled():
                     return None
 
         # done, update progress and strip out unused stuff
-        update_progress and update_progress(n_page)
+        progress_win and progress_win.Update(n_page)
         self.out_pdf.remove_unreferenced_resources()
         return self.out_pdf
 
