@@ -1,6 +1,6 @@
 [project]
 name = "pdfstitcher"
-version = "0.8"
+version = "0.8.1"
 description = "The open source PDF stitching software for sewists, by sewists."
 readme = "README.md"
 requires-python = ">=3.8, <3.11"
@@ -22,7 +22,7 @@ dependencies = [
     "PyYAML",
     "appdirs",
     "requests",
-    "pdf-mangler",
+    "pdf-mangler >= 0.1.4",
     "psutil",
     "pyobjc ; platform_system=='Darwin'"
 ]
