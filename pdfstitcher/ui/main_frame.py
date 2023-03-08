@@ -183,21 +183,14 @@ class PDFStitcherFrame(wx.Frame):
         # do it
         try:
             if do_layers:
-                self.progress_win = wx.ProgressDialog(
-                    "Processing layers",
-                    "Processing layers, please wait",
-                    style=wx.PD_CAN_ABORT,
+                progress_win = wx.ProgressDialog(
+                    _("Processing layers"),
+                    _("Processing layers, please wait"),
+                    style=wx.PD_CAN_ABORT | wx.PD_AUTO_HIDE,
                 )
-                filtered = self.layer_filter.run(
-                    self.set_progress_range,
-                    self.update_progress,
-                    self.progress_was_cancelled,
-                )
+                filtered = self.layer_filter.run(progress_win)
             else:
                 filtered = self.in_doc
-
-            if self.progress_win:
-                self.update_progress(self.progress_win.GetRange())
 
             if filtered is None:
                 return
@@ -229,24 +222,6 @@ class PDFStitcherFrame(wx.Frame):
             )
             print(e)
             print(_("Make sure " + self.out_doc_path + " isn't open in another program"))
-
-    def progress_was_cancelled(self):
-        if self.progress_win != None:
-            return self.progress_win.WasCancelled()
-
-    def update_progress(self, val):
-        if self.progress_win != None:
-            p_range = self.progress_win.GetRange()
-            if p_range:
-                if val == p_range:
-                    # Hit the max, we're done
-                    self.progress_win = None
-                else:
-                    self.progress_win.Update(val)
-
-    def set_progress_range(self, val):
-        if self.progress_win != None:
-            self.progress_win.SetRange(val)
 
     def make_menu_bar(self):
         """
@@ -496,13 +471,9 @@ def main(language_warning: str):
 
     # Fix the size for high-resolution displays on windows
     if sys.platform.startswith("win32"):
-        try:
-            from ctypes import OleDLL
+        from ctypes import OleDLL
 
-            OleDLL("shcore").SetProcessDpiAwareness(1)
-        except Exception:
-            # Probably Windows 7 with no shcore.dll
-            pass
+        OleDLL("shcore").SetProcessDpiAwareness(1)
 
     disp_size = wx.DisplaySize()
     app_size = wx.Size(min(int(disp_size[0] * 0.6), 700), min(int(disp_size[1] * 0.85), 800))
