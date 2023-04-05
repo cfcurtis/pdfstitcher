@@ -218,7 +218,8 @@ def setup_locale(lang: str = None) -> None:
     elif lang[:2] == "sk":
         # fallback to Czech if Slovak is not available
         lang = "cs"
-        language_warning = _("Slovak translation not available, defaulting to Czech")
+        # Google Translate to Slovak, this might be kind of awful
+        language_warning = "Slovenský preklad nie je k dispozícii, predvolená je čeština"
     else:
         # check if there's a country code variant for the language
         for valid_lang in valid_langs:
