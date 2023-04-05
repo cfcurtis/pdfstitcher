@@ -234,7 +234,7 @@ def setup_locale(lang: str = None) -> None:
         translate.install()
 
         Config.general["language"] = lang
-        if not isinstance(translate, gettext.GNUTranslations):
+        if not isinstance(translate, gettext.GNUTranslations) and "en" not in lang:
             language_warning = f"Could not find translation for language {Locale(*lang.split('_')).display_name}, defaulting to English"
             Config.general["language"] = "en"
     except Exception as e:
