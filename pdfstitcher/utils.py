@@ -218,7 +218,8 @@ def setup_locale(lang: str = None) -> None:
     elif lang[:2] == "sk":
         # fallback to Czech if Slovak is not available
         lang = "cs"
-        language_warning = _("Slovak translation not available, defaulting to Czech")
+        # Google Translate to Slovak, this might be kind of awful
+        language_warning = "Slovenský preklad nie je k dispozícii, predvolená je čeština"
     else:
         # check if there's a country code variant for the language
         for valid_lang in valid_langs:
@@ -232,13 +233,13 @@ def setup_locale(lang: str = None) -> None:
         )
         translate.install()
 
-        if isinstance(translate, gettext.GNUTranslations):
-            Config.general["language"] = lang
-        elif lang != "en":
+        Config.general["language"] = lang
+        if not isinstance(translate, gettext.GNUTranslations) and "en" not in lang:
             language_warning = f"Could not find translation for language {Locale(*lang.split('_')).display_name}, defaulting to English"
             Config.general["language"] = "en"
     except Exception as e:
         language_warning = e
+        Config.general["language"] = "en"
 
     return language_warning
 
