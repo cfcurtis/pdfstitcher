@@ -41,7 +41,7 @@ class PageFilter:
 
             if "/UserUnit" in self.in_doc.pages[-1].keys():
                 new_doc.pages[-1].UserUnit = self.in_doc.pages[-1].UserUnit
-                user_unit = self.in_doc.pages[-1].UserUnit
+                user_unit = float(self.in_doc.pages[-1].UserUnit)
 
             if self.margin:
                 # if margins were added, expand the new page boxes
