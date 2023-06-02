@@ -10,20 +10,21 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: 2022-02-16 22:57+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"PO-Revision-Date: 2023-06-03 06:50+0000\n"
+"Last-Translator: Frederic Wrobel <frederic.wrobel@pm.me>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/fr/>\n"
 "Language: fr_FR\n"
-"Language-Team: French <https://hosted.weblate.org/projects/pdfstitcher"
-"/user-interface/fr/>\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.18-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: pdfstitcher/bug_info.py:28
 msgid "Error getting system info: {}"
-msgstr ""
+msgstr "Erreur lors de la récupération des paramètres système"
 
 #: pdfstitcher/bug_info.py:54
 msgid "Mangling PDF. This may take some time."
@@ -277,19 +278,19 @@ msgstr "Taille de sortie :"
 
 #: pdfstitcher/ui/dialogs.py:25
 msgid "Checking for updates"
-msgstr ""
+msgstr "Vérifier les mises à jour"
 
 #: pdfstitcher/ui/dialogs.py:31
 msgid "Please wait..."
-msgstr ""
+msgstr "Attendez..."
 
 #: pdfstitcher/ui/dialogs.py:53
 msgid "PDFStitcher is installed and managed via Flatpak."
-msgstr ""
+msgstr "PDFStitcher est installé et géré avec Flatpak."
 
 #: pdfstitcher/ui/dialogs.py:62
 msgid "No updates available, {} is the current version."
-msgstr ""
+msgstr "Aucune mise à jour,  {}  est la version actuelle"
 
 #: pdfstitcher/ui/dialogs.py:69
 msgid "Update available!"
@@ -305,15 +306,15 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:79
 msgid "Download Now"
-msgstr ""
+msgstr "Télécharger"
 
 #: pdfstitcher/ui/dialogs.py:91
 msgid "Error checking for updates"
-msgstr ""
+msgstr "Erreur lors de la vérification de mise à jour"
 
 #: pdfstitcher/ui/dialogs.py:105 pdfstitcher/ui/main_frame.py:289
 msgid "Report a bug"
-msgstr ""
+msgstr "Signaler un bug"
 
 #: pdfstitcher/ui/dialogs.py:115
 msgid ""
@@ -330,11 +331,11 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:179
 msgid "Report Via GitHub"
-msgstr ""
+msgstr "Signalement via GitHub"
 
 #: pdfstitcher/ui/dialogs.py:188
 msgid "Email to ccurtis@mtroyal.ca"
-msgstr ""
+msgstr "Envoyer un mail à ccurtis@mtroyal.ca"
 
 #: pdfstitcher/ui/dialogs.py:227
 msgid "Could not copy to clipboard"
@@ -342,7 +343,7 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:227 pdfstitcher/ui/dialogs.py:240
 msgid "Error"
-msgstr ""
+msgstr "Erreur"
 
 #: pdfstitcher/ui/dialogs.py:234
 msgid "Mangled PDF saved to {}."
@@ -350,7 +351,7 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:236
 msgid "Please attach to GitHub issue or email."
-msgstr ""
+msgstr "Ajouter un signalement GitHub ou par mail."
 
 #: pdfstitcher/ui/dialogs.py:237
 msgid "Success"
@@ -362,22 +363,21 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:267
 msgid "Preferences"
-msgstr ""
+msgstr "Préférences"
 
 #: pdfstitcher/ui/dialogs.py:272
 msgid "Language"
-msgstr ""
+msgstr "Langue"
 
 #: pdfstitcher/ui/dialogs.py:287
 msgid "Check for updates on startup"
-msgstr ""
+msgstr "Vérifier les mises à jour au démarrage"
 
 #: pdfstitcher/ui/dialogs.py:297
 msgid "Save current margin and unit settings"
-msgstr ""
+msgstr "Enregistrer les marges actuelles et les préférences d'unités"
 
 #: pdfstitcher/ui/dialogs.py:307
-#, fuzzy
 msgid "Save current line properties"
 msgstr "Choisir les propriétés de la ligne à modifier"
 
@@ -391,15 +391,15 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:358
 msgid "Save preferences"
-msgstr ""
+msgstr "Enregistrer les préférences"
 
 #: pdfstitcher/ui/dialogs.py:373
 msgid "Choose a directory"
-msgstr ""
+msgstr "Choix du répertoire"
 
 #: pdfstitcher/ui/dialogs.py:420
 msgid "Preferences saved to {}"
-msgstr ""
+msgstr "Préférences sauvegardées dans {}"
 
 #: pdfstitcher/ui/dialogs.py:422
 msgid "Please restart to switch to {}."
@@ -407,7 +407,7 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:424
 msgid "Preferences saved"
-msgstr ""
+msgstr "Préférences sauvegardées"
 
 #: pdfstitcher/ui/io_tab.py:29 pdfstitcher/ui/main_frame.py:412
 msgid "Select input PDF"
@@ -472,8 +472,9 @@ msgid "Open the PDF and save selected page range without modifying"
 msgstr "Ouvre le PDF et sauve l intervalle de page sans modification"
 
 #: pdfstitcher/ui/io_tab.py:183
+#, fuzzy
 msgid "Optionally, add margins to each page"
-msgstr ""
+msgstr "Optionnellement, ajouter des marges à chaque page"
 
 #: pdfstitcher/ui/layers_tab.py:27
 msgid "Load PDF to view layers."
@@ -610,34 +611,32 @@ msgid "Make sure  isn't open in another program"
 msgstr "Assurez-vous  n'est pas ouvert dans un autre programme"
 
 #: pdfstitcher/ui/main_frame.py:263
-#, fuzzy
 msgid "File"
-msgstr "Milieu"
+msgstr "Fichier"
 
 #: pdfstitcher/ui/main_frame.py:268
 msgid "Check for updates"
-msgstr ""
+msgstr "Vérifier les mises à jour"
 
 #: pdfstitcher/ui/main_frame.py:272
 msgid "Settings"
-msgstr ""
+msgstr "Préférences"
 
 #: pdfstitcher/ui/main_frame.py:279
-#, fuzzy
 msgid "Documentation"
-msgstr "Rotation"
+msgstr "Notice"
 
 #: pdfstitcher/ui/main_frame.py:280
 msgid "Open the documentation in a web browser"
-msgstr ""
+msgstr "Ouvrir la notice dans le navigateur"
 
 #: pdfstitcher/ui/main_frame.py:290
 msgid "Open the dialog to report a bug"
-msgstr ""
+msgstr "Ouvrir une fenêtre afin de signaler un bug"
 
 #: pdfstitcher/ui/main_frame.py:294
 msgid "Help"
-msgstr ""
+msgstr "Aide"
 
 #: pdfstitcher/ui/main_frame.py:336
 msgid "The PDF Stitching app for sewists, by sewists."
@@ -645,19 +644,17 @@ msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:342
 msgid "Contributors"
-msgstr ""
+msgstr "Contributeurs"
 
 #: pdfstitcher/ui/main_frame.py:381
-#, fuzzy
 msgid "Can't overwrite input file, please select a different file for output"
 msgstr ""
-"Impossible d'écrire sur le fichier source, choississez un autre nom de "
+"Impossible d'écrire sur le fichier source, choisissez un autre nom de "
 "fichier pour la destination"
 
 #: pdfstitcher/ui/main_frame.py:390
-#, fuzzy
 msgid "File will be written to "
-msgstr "Fichier enregistré sur"
+msgstr "Fichier enregistré sur "
 
 #: pdfstitcher/ui/main_frame.py:432
 msgid "Opening"
@@ -665,15 +662,15 @@ msgstr "Ouverture du fichier"
 
 #: pdfstitcher/ui/main_frame.py:462
 msgid "PDF locked! Enter the correct password."
-msgstr ""
+msgstr "PDF verrouillé ! Renseignez le bon mot de passe"
 
 #: pdfstitcher/ui/main_frame.py:465
 msgid "Password"
-msgstr ""
+msgstr "Mot de passe"
 
 #: pdfstitcher/ui/main_frame.py:465
 msgid "PDF file is locked"
-msgstr ""
+msgstr "PDF verrouillé"
 
 #: pdfstitcher/ui/main_frame.py:472
 msgid "PDF will not open as you canceled the operation."
@@ -685,7 +682,7 @@ msgstr "Impossible d'ouvrir le fichier"
 
 #: pdfstitcher/ui/main_frame.py:479
 msgid "PDF file loaded without errors."
-msgstr ""
+msgstr "PDF chargé sans erreurs."
 
 #: pdfstitcher/ui/main_frame.py:483
 msgid "Warning: this PDF is encrypted with the following permissions:"
@@ -696,6 +693,8 @@ msgid ""
 "Please be respectful of the author and only use this tool for personal "
 "use."
 msgstr ""
+"Respectez le travail du développeur et ne l'utilisez que pour un usage "
+"personnel."
 
 #: pdfstitcher/ui/tile_tab.py:32
 msgid "Required Parameters"
@@ -760,4 +759,3 @@ msgstr "Se chevaucher"
 #~ "\n"
 #~ "Please restart to switch to {}."
 #~ msgstr ""
-
