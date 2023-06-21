@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: 2023-06-03 06:50+0000\n"
-"Last-Translator: Frederic Wrobel <frederic.wrobel@pm.me>\n"
+"PO-Revision-Date: 2023-06-23 01:47+0000\n"
+"Last-Translator: Érika Baëna <erika.baena.1@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/pdfstitcher/"
 "user-interface/fr/>\n"
 "Language: fr_FR\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 4.18.1\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: pdfstitcher/bug_info.py:28
@@ -40,7 +40,7 @@ msgstr "Pas de calques selectionnés, le fichier généré sera vide."
 
 #: pdfstitcher/layerfilter.py:516 pdfstitcher/layerfilter.py:545
 msgid "Failed writing stream to page with error type {}"
-msgstr ""
+msgstr "Échec de l'écriture du flux dans la page avec une erreur de type {}"
 
 #: pdfstitcher/tile_pages.py:105
 msgid "Invalid trim value specified, ignoring"
@@ -253,6 +253,8 @@ msgstr "pt"
 #: pdfstitcher/utils.py:221
 msgid "Slovak translation not available, defaulting to Czech"
 msgstr ""
+"La traduction slovaque n'est pas disponible, le tchèque va être utilisé par "
+"défaut"
 
 #: pdfstitcher/utils.py:257
 msgid "Invalid input"
@@ -290,23 +292,23 @@ msgstr "PDFStitcher est installé et géré avec Flatpak."
 
 #: pdfstitcher/ui/dialogs.py:62
 msgid "No updates available, {} is the current version."
-msgstr "Aucune mise à jour,  {}  est la version actuelle"
+msgstr "Aucune mise à jour disponible, {} est la version actuelle."
 
 #: pdfstitcher/ui/dialogs.py:69
 msgid "Update available!"
-msgstr ""
+msgstr "Mise à jour disponible!"
 
 #: pdfstitcher/ui/dialogs.py:71
 msgid "Your version is {}, but the latest version is v{}."
-msgstr ""
+msgstr "Votre version est {}, mais la dernière version est v{}."
 
 #: pdfstitcher/ui/dialogs.py:76
 msgid "What's changed?"
-msgstr ""
+msgstr "Qu'est-ce qui a changé ?"
 
 #: pdfstitcher/ui/dialogs.py:79
 msgid "Download Now"
-msgstr "Télécharger"
+msgstr "Télécharger maintenant"
 
 #: pdfstitcher/ui/dialogs.py:91
 msgid "Error checking for updates"
@@ -335,11 +337,11 @@ msgstr "Signalement via GitHub"
 
 #: pdfstitcher/ui/dialogs.py:188
 msgid "Email to ccurtis@mtroyal.ca"
-msgstr "Envoyer un mail à ccurtis@mtroyal.ca"
+msgstr "Envoyer un courriel à ccurtis@mtroyal.ca"
 
 #: pdfstitcher/ui/dialogs.py:227
 msgid "Could not copy to clipboard"
-msgstr ""
+msgstr "N'a pas pu être copié dans le presse-papier"
 
 #: pdfstitcher/ui/dialogs.py:227 pdfstitcher/ui/dialogs.py:240
 msgid "Error"
@@ -355,7 +357,7 @@ msgstr "Ajouter un signalement GitHub ou par mail."
 
 #: pdfstitcher/ui/dialogs.py:237
 msgid "Success"
-msgstr ""
+msgstr "Succès"
 
 #: pdfstitcher/ui/dialogs.py:240
 msgid "Failed to mangle PDF"
@@ -382,12 +384,14 @@ msgid "Save current line properties"
 msgstr "Choisir les propriétés de la ligne à modifier"
 
 #: pdfstitcher/ui/dialogs.py:317
+#, fuzzy
 msgid "Default open directory"
-msgstr ""
+msgstr "Ouvrir le dossier par défaut"
 
 #: pdfstitcher/ui/dialogs.py:337
+#, fuzzy
 msgid "Default save directory"
-msgstr ""
+msgstr "Enregistrer le dossier par défaut"
 
 #: pdfstitcher/ui/dialogs.py:358
 msgid "Save preferences"
@@ -403,7 +407,7 @@ msgstr "Préférences sauvegardées dans {}"
 
 #: pdfstitcher/ui/dialogs.py:422
 msgid "Please restart to switch to {}."
-msgstr ""
+msgstr "Veuillez redémarrer pour basculer à {}."
 
 #: pdfstitcher/ui/dialogs.py:424
 msgid "Preferences saved"
@@ -472,7 +476,6 @@ msgid "Open the PDF and save selected page range without modifying"
 msgstr "Ouvre le PDF et sauve l intervalle de page sans modification"
 
 #: pdfstitcher/ui/io_tab.py:183
-#, fuzzy
 msgid "Optionally, add margins to each page"
 msgstr "Optionnellement, ajouter des marges à chaque page"
 
@@ -518,7 +521,7 @@ msgstr "Couleur de la ligne"
 
 #: pdfstitcher/ui/layers_tab.py:112
 msgid "Also modify fill colour"
-msgstr ""
+msgstr "Modifier également la couleur de remplissage"
 
 #: pdfstitcher/ui/layers_tab.py:121
 msgid "Line Thickness"
@@ -641,6 +644,8 @@ msgstr "Aide"
 #: pdfstitcher/ui/main_frame.py:336
 msgid "The PDF Stitching app for sewists, by sewists."
 msgstr ""
+"L'application d'assemblage des PDF pour les couturières/couturiers, par les "
+"couturières/couturiers."
 
 #: pdfstitcher/ui/main_frame.py:342
 msgid "Contributors"
@@ -674,7 +679,7 @@ msgstr "PDF verrouillé"
 
 #: pdfstitcher/ui/main_frame.py:472
 msgid "PDF will not open as you canceled the operation."
-msgstr ""
+msgstr "Le PDF ne s'ouvrira pas car vous avez annulé l'opération"
 
 #: pdfstitcher/ui/main_frame.py:476
 msgid "Cannot open file"
@@ -686,7 +691,7 @@ msgstr "PDF chargé sans erreurs."
 
 #: pdfstitcher/ui/main_frame.py:483
 msgid "Warning: this PDF is encrypted with the following permissions:"
-msgstr ""
+msgstr "Attention: ce PDF est chiffré avec les autorisations suivantes:"
 
 #: pdfstitcher/ui/main_frame.py:487
 msgid ""
