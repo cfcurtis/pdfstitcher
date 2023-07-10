@@ -9,13 +9,16 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-07-10 07:52+0000\n"
+"Last-Translator: Eric Luo <luolitao@gmail.com>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"pdfstitcher/user-interface/zh_Hans/>\n"
 "Language: zh_Hans\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.0-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: pdfstitcher/bug_info.py:28
@@ -82,7 +85,7 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:131 pdfstitcher/ui/tile_tab.py:75
 msgid "Bottom to top"
-msgstr ""
+msgstr "从下到上"
 
 #: pdfstitcher/tile_pages.py:134 pdfstitcher/ui/tile_tab.py:290
 msgid "Bottom"
@@ -210,7 +213,7 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:638
 msgid "Amount to trim from edges"
-msgstr ""
+msgstr "从边缘修剪的数量"
 
 #: pdfstitcher/tile_pages.py:640
 msgid ""
@@ -498,7 +501,7 @@ msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:112
 msgid "Also modify fill colour"
-msgstr ""
+msgstr "同时修改填充颜色"
 
 #: pdfstitcher/ui/layers_tab.py:121
 msgid "Line Thickness"
@@ -538,7 +541,7 @@ msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:310
 msgid "Apply to"
-msgstr ""
+msgstr "适用于"
 
 #: pdfstitcher/ui/layers_tab.py:316
 msgid "No layers found in input document."
