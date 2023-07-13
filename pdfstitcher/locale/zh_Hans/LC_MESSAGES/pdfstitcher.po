@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: 2023-07-12 07:52+0000\n"
+"PO-Revision-Date: 2023-07-15 03:00+0000\n"
 "Last-Translator: Eric Luo <luolitao@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "pdfstitcher/user-interface/zh_Hans/>\n"
@@ -30,8 +30,9 @@ msgid "Mangling PDF. This may take some time."
 msgstr "PDF 损坏。这可能需要一些时间。"
 
 #: pdfstitcher/bug_info.py:60
+#, fuzzy
 msgid "Error mangling PDF: {}"
-msgstr ""
+msgstr "错误地处理PDF：{}"
 
 #: pdfstitcher/layerfilter.py:328
 msgid "No layers selected, generated PDF would be blank."
@@ -61,7 +62,7 @@ msgstr "逆时针"
 #. translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
 #: pdfstitcher/tile_pages.py:119 pdfstitcher/ui/tile_tab.py:124
 msgid "Turn Around"
-msgstr ""
+msgstr "翻转"
 
 #: pdfstitcher/tile_pages.py:121 pdfstitcher/ui/tile_tab.py:73
 msgid "Rows then columns"
@@ -97,7 +98,7 @@ msgstr "中间"
 
 #: pdfstitcher/tile_pages.py:138 pdfstitcher/ui/tile_tab.py:275
 msgid "Top"
-msgstr ""
+msgstr "返回顶部"
 
 #: pdfstitcher/tile_pages.py:141 pdfstitcher/ui/tile_tab.py:245
 msgid "Left"
@@ -149,21 +150,24 @@ msgstr "警告：页面 {} 的尺寸与之前的页面不同"
 
 #: pdfstitcher/tile_pages.py:269
 msgid "Input document not loaded"
-msgstr ""
+msgstr "未加载输入文件"
 
 #: pdfstitcher/tile_pages.py:309
 msgid "Warning: requested {} columns, but there are only {} pages"
-msgstr ""
+msgstr "警告：要求{} 列，但只有{} 页。"
 
 #: pdfstitcher/tile_pages.py:319
+#, fuzzy
 msgid "Warning: requested {} rows, but there are only {} pages"
-msgstr ""
+msgstr "警告：请求{} 行，但只有{} 页。"
 
 #: pdfstitcher/tile_pages.py:514
+#, fuzzy
 msgid ""
 "Warning: Some pages have been scaled because a target size was set. You "
 "should not see this warning if using the PDFStitcher GUI."
-msgstr ""
+msgstr "警告：由于设置了目标尺寸，一些页面被缩放了。如果使用PDFStitcher "
+"GUI，你不应该看到这个警告。"
 
 #: pdfstitcher/tile_pages.py:542
 msgid "Unable to open"
@@ -174,30 +178,37 @@ msgid "Invalid rotation value"
 msgstr "旋转值无效"
 
 #: pdfstitcher/tile_pages.py:597
+#, fuzzy
 msgid "Tile PDF pages into one document."
-msgstr ""
+msgstr "将 PDF 页面平铺到一个文档中。"
 
 #: pdfstitcher/tile_pages.py:598
+#, fuzzy
 msgid "Note: If both rows and columns are specified, rows are ignored."
-msgstr ""
+msgstr "注意：如果同时指定了行和列，行将被忽略。"
 
 #: pdfstitcher/tile_pages.py:600
+#, fuzzy
 msgid "To insert a blank page, include a zero in the page list."
-msgstr ""
+msgstr "要插入一个空白页，在页面列表中包括一个零。"
 
 #: pdfstitcher/tile_pages.py:605
+#, fuzzy
 msgid "Input filename (pdf)"
-msgstr ""
+msgstr "输入文件名 (pdf)"
 
 #: pdfstitcher/tile_pages.py:609
+#, fuzzy
 msgid "Output filename (pdf)"
-msgstr ""
+msgstr "输出文件名 (pdf)"
 
 #: pdfstitcher/tile_pages.py:614
+#, fuzzy
 msgid ""
 "Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: "
 "entire document."
-msgstr ""
+msgstr "要平铺的页面。可以是范围或列表（例如 1-5 或 1，3，5-7 "
+"等）。默认值：整个文档。"
 
 #: pdfstitcher/tile_pages.py:622
 msgid "Number of rows in tiled grid."
@@ -208,8 +219,9 @@ msgid "Number of columns in tiled grid."
 msgstr "平铺网格中的列数。"
 
 #: pdfstitcher/tile_pages.py:633
+#, fuzzy
 msgid "Margin size in inches."
-msgstr ""
+msgstr "页边距大小（以英寸为单位）。"
 
 #: pdfstitcher/tile_pages.py:638
 msgid "Amount to trim from edges"
@@ -219,7 +231,7 @@ msgstr "从边缘修剪的数量"
 msgid ""
 "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch "
 "from left and top)"
-msgstr ""
+msgstr "以左、右、上、下的形式给出（例如，0.5,0,0.5,0将从左边和上面修剪半英寸）。"
 
 #: pdfstitcher/tile_pages.py:648
 msgid "Rotate pages (90, 180, or 270 degrees)"
@@ -243,8 +255,9 @@ msgid "Slovak translation not available, defaulting to Czech"
 msgstr "斯洛伐克语翻译不可用，默认为捷克语"
 
 #: pdfstitcher/utils.py:257
+#, fuzzy
 msgid "Invalid input"
-msgstr ""
+msgstr "无效输入"
 
 #: pdfstitcher/utils.py:257
 msgid "only numeric values allowed"
@@ -252,11 +265,12 @@ msgstr "只允许使用数字值"
 
 #: pdfstitcher/utils.py:277
 msgid "Please specify a page range"
-msgstr ""
+msgstr "请指定页面范围"
 
 #: pdfstitcher/utils.py:343
+#, fuzzy
 msgid "Warning! Output is larger than {} {}, may not open correctly."
-msgstr ""
+msgstr "警告！输出大于 {} {}，可能无法正确打开。"
 
 #: pdfstitcher/utils.py:351
 msgid "Output size:"
@@ -267,12 +281,14 @@ msgid "Checking for updates"
 msgstr "检查更新"
 
 #: pdfstitcher/ui/dialogs.py:31
+#, fuzzy
 msgid "Please wait..."
-msgstr ""
+msgstr "请稍候。。。"
 
 #: pdfstitcher/ui/dialogs.py:53
+#, fuzzy
 msgid "PDFStitcher is installed and managed via Flatpak."
-msgstr ""
+msgstr "PDFStitcher 通过 Flatpak 安装和管理。"
 
 #: pdfstitcher/ui/dialogs.py:62
 msgid "No updates available, {} is the current version."
@@ -280,11 +296,12 @@ msgstr "没有可用的更新，{} 是当前版本。"
 
 #: pdfstitcher/ui/dialogs.py:69
 msgid "Update available!"
-msgstr ""
+msgstr "有可用的更新！"
 
 #: pdfstitcher/ui/dialogs.py:71
+#, fuzzy
 msgid "Your version is {}, but the latest version is v{}."
-msgstr ""
+msgstr "您的版本是{}，但最新版本是v{}。"
 
 #: pdfstitcher/ui/dialogs.py:76
 msgid "What's changed?"
@@ -296,7 +313,7 @@ msgstr "立即下载"
 
 #: pdfstitcher/ui/dialogs.py:91
 msgid "Error checking for updates"
-msgstr ""
+msgstr "检查更新时出错"
 
 #: pdfstitcher/ui/dialogs.py:105 pdfstitcher/ui/main_frame.py:289
 msgid "Report a bug"
@@ -310,18 +327,23 @@ msgid ""
 "document - it will be saved to your Desktop and can be attached to the "
 "issue."
 msgstr ""
+"请在下面描述重现该问题的步骤。按照按钮，通过GitHub打开一个问题（首选，但需要"
+"登录），或通过电子邮件发送报告。可以选择包括输入文件的错误版本--"
+"它将被保存在你的桌面上，并可以附在问题上。"
 
 #: pdfstitcher/ui/dialogs.py:168
+#, fuzzy
 msgid "Create mangled PDF (Beta)"
-msgstr ""
+msgstr "创建损坏的 PDF（测试版）"
 
 #: pdfstitcher/ui/dialogs.py:179
+#, fuzzy
 msgid "Report Via GitHub"
-msgstr ""
+msgstr "通过GitHub报告"
 
 #: pdfstitcher/ui/dialogs.py:188
 msgid "Email to ccurtis@mtroyal.ca"
-msgstr ""
+msgstr "发送电子邮件至 ccurtis@mtroyal.ca"
 
 #: pdfstitcher/ui/dialogs.py:227
 msgid "Could not copy to clipboard"
@@ -332,24 +354,29 @@ msgid "Error"
 msgstr "错误"
 
 #: pdfstitcher/ui/dialogs.py:234
+#, fuzzy
 msgid "Mangled PDF saved to {}."
-msgstr ""
+msgstr "损坏的 PDF 已保存到 {}。"
 
 #: pdfstitcher/ui/dialogs.py:236
+#, fuzzy
 msgid "Please attach to GitHub issue or email."
-msgstr ""
+msgstr "请附上 GitHub 问题或电子邮件。"
 
 #: pdfstitcher/ui/dialogs.py:237
+#, fuzzy
 msgid "Success"
-msgstr ""
+msgstr "成功"
 
 #: pdfstitcher/ui/dialogs.py:240
+#, fuzzy
 msgid "Failed to mangle PDF"
-msgstr ""
+msgstr "无法修改 PDF"
 
 #: pdfstitcher/ui/dialogs.py:267
+#, fuzzy
 msgid "Preferences"
-msgstr ""
+msgstr "偏好"
 
 #: pdfstitcher/ui/dialogs.py:272
 msgid "Language"
@@ -364,8 +391,9 @@ msgid "Save current margin and unit settings"
 msgstr "保存当前边距和单位设置"
 
 #: pdfstitcher/ui/dialogs.py:307
+#, fuzzy
 msgid "Save current line properties"
-msgstr ""
+msgstr "保存当前线属性"
 
 #: pdfstitcher/ui/dialogs.py:317
 msgid "Default open directory"
@@ -373,11 +401,12 @@ msgstr "默认打开目录"
 
 #: pdfstitcher/ui/dialogs.py:337
 msgid "Default save directory"
-msgstr ""
+msgstr "默认保存目录"
 
 #: pdfstitcher/ui/dialogs.py:358
+#, fuzzy
 msgid "Save preferences"
-msgstr ""
+msgstr "保存首选项"
 
 #: pdfstitcher/ui/dialogs.py:373
 msgid "Choose a directory"
@@ -385,39 +414,47 @@ msgstr "选择目录"
 
 #: pdfstitcher/ui/dialogs.py:420
 msgid "Preferences saved to {}"
-msgstr ""
+msgstr "偏好已保存到 {}"
 
 #: pdfstitcher/ui/dialogs.py:422
+#, fuzzy
 msgid "Please restart to switch to {}."
-msgstr ""
+msgstr "请重新启动以切换到 {}。"
 
 #: pdfstitcher/ui/dialogs.py:424
+#, fuzzy
 msgid "Preferences saved"
-msgstr ""
+msgstr "已保存偏好设置"
 
 #: pdfstitcher/ui/io_tab.py:29 pdfstitcher/ui/main_frame.py:412
+#, fuzzy
 msgid "Select input PDF"
-msgstr ""
+msgstr "选择输入 PDF"
 
 #: pdfstitcher/ui/io_tab.py:47 pdfstitcher/ui/main_frame.py:357
+#, fuzzy
 msgid "Save output as"
-msgstr ""
+msgstr "将输出保存为"
 
 #: pdfstitcher/ui/io_tab.py:70
+#, fuzzy
 msgid "Output Options"
-msgstr ""
+msgstr "输出选项"
 
 #: pdfstitcher/ui/io_tab.py:77 pdfstitcher/ui/tile_tab.py:145
+#, fuzzy
 msgid "Page Range"
-msgstr ""
+msgstr "页码范围"
 
 #: pdfstitcher/ui/io_tab.py:82 pdfstitcher/ui/tile_tab.py:150
+#, fuzzy
 msgid "Pages assemble in specified order. 0 inserts a blank page."
-msgstr ""
+msgstr "页面按指定顺序组合。0 插入空白页。"
 
 #: pdfstitcher/ui/io_tab.py:100 pdfstitcher/ui/tile_tab.py:178
+#, fuzzy
 msgid "Margin to add to final output"
-msgstr ""
+msgstr "添加到最终输出的边距"
 
 #: pdfstitcher/ui/io_tab.py:118 pdfstitcher/ui/tile_tab.py:196
 msgid "Inches"
@@ -425,39 +462,46 @@ msgstr "英寸"
 
 #: pdfstitcher/ui/io_tab.py:118 pdfstitcher/ui/tile_tab.py:196
 msgid "Centimetres"
-msgstr ""
+msgstr "厘米"
 
 #: pdfstitcher/ui/io_tab.py:120 pdfstitcher/ui/tile_tab.py:198
+#, fuzzy
 msgid "Units"
-msgstr ""
+msgstr "单位"
 
 #: pdfstitcher/ui/io_tab.py:131
 msgid "Process Layers"
-msgstr ""
+msgstr "处理层"
 
 #: pdfstitcher/ui/io_tab.py:138
+#, fuzzy
 msgid "Tile pages"
-msgstr ""
+msgstr "平铺页面"
 
 #: pdfstitcher/ui/io_tab.py:171
+#, fuzzy
 msgid "Process layers then tile pages and save"
-msgstr ""
+msgstr "处理图层，然后平铺页面并保存"
 
 #: pdfstitcher/ui/io_tab.py:174
+#, fuzzy
 msgid "Process layers and save without tiling pages"
-msgstr ""
+msgstr "处理图层并保存，无需平铺页面"
 
 #: pdfstitcher/ui/io_tab.py:177
+#, fuzzy
 msgid "Tile pages and save without processing layers"
-msgstr ""
+msgstr "平铺页面并保存，无需处理图层"
 
 #: pdfstitcher/ui/io_tab.py:181
+#, fuzzy
 msgid "Open the PDF and save selected page range without modifying"
-msgstr ""
+msgstr "打开PDF并保存选定的页面范围，无需修改"
 
 #: pdfstitcher/ui/io_tab.py:183
+#, fuzzy
 msgid "Optionally, add margins to each page"
-msgstr ""
+msgstr "（可选）为每页添加边距"
 
 #: pdfstitcher/ui/layers_tab.py:27
 msgid "Load PDF to view layers."
@@ -488,12 +532,14 @@ msgid "Layer Name"
 msgstr "图层名称"
 
 #: pdfstitcher/ui/layers_tab.py:71
+#, fuzzy
 msgid "Line Properties"
-msgstr ""
+msgstr "线属性"
 
 #: pdfstitcher/ui/layers_tab.py:91
+#, fuzzy
 msgid "Select line properties to modify"
-msgstr ""
+msgstr "选择要修改的线属性"
 
 #: pdfstitcher/ui/layers_tab.py:94
 msgid "Line Colour"
@@ -504,8 +550,9 @@ msgid "Also modify fill colour"
 msgstr "同时修改填充颜色"
 
 #: pdfstitcher/ui/layers_tab.py:121
+#, fuzzy
 msgid "Line Thickness"
-msgstr ""
+msgstr "线条粗细"
 
 #: pdfstitcher/ui/layers_tab.py:154
 msgid "Line Style"
@@ -513,7 +560,7 @@ msgstr "线条样式"
 
 #: pdfstitcher/ui/layers_tab.py:161
 msgid "Solid"
-msgstr ""
+msgstr "实心"
 
 #: pdfstitcher/ui/layers_tab.py:161
 msgid "Dashed"
@@ -521,75 +568,82 @@ msgstr "虚线"
 
 #: pdfstitcher/ui/layers_tab.py:161
 msgid "Dotted"
-msgstr ""
+msgstr "点状的"
 
 #: pdfstitcher/ui/layers_tab.py:177
 msgid "Apply"
-msgstr ""
+msgstr "应用"
 
 #: pdfstitcher/ui/layers_tab.py:179 pdfstitcher/ui/layers_tab.py:311
+#, fuzzy
 msgid "Reset"
-msgstr ""
+msgstr "复位"
 
 #: pdfstitcher/ui/layers_tab.py:197
 msgid "Apply to checked"
-msgstr ""
+msgstr "申请已选中"
 
 #: pdfstitcher/ui/layers_tab.py:199
+#, fuzzy
 msgid "Reset checked"
-msgstr ""
+msgstr "重置已选中"
 
 #: pdfstitcher/ui/layers_tab.py:310
 msgid "Apply to"
 msgstr "适用于"
 
 #: pdfstitcher/ui/layers_tab.py:316
+#, fuzzy
 msgid "No layers found in input document."
-msgstr ""
+msgstr "在输入文件中没有发现任何图层。"
 
 #: pdfstitcher/ui/layers_tab.py:327
+#, fuzzy
 msgid "Select layers to include in output document."
-msgstr ""
+msgstr "选择要包含在输出文档中的图层。"
 
 #: pdfstitcher/ui/layers_tab.py:344
+#, fuzzy
 msgid "Select all"
-msgstr ""
+msgstr "选择所有"
 
 #: pdfstitcher/ui/main_frame.py:46
+#, fuzzy
 msgid "Tile Pages"
-msgstr ""
+msgstr "平铺页面"
 
 #: pdfstitcher/ui/main_frame.py:48
 msgid "Layers"
-msgstr ""
+msgstr "分层"
 
 #: pdfstitcher/ui/main_frame.py:56
 msgid "Generate PDF"
-msgstr ""
+msgstr "生成PDF"
 
 #: pdfstitcher/ui/main_frame.py:142
 msgid "No page range specified, defaulting to all"
-msgstr ""
+msgstr "没有指定页面范围，默认为全部"
 
 #: pdfstitcher/ui/main_frame.py:208
+#, fuzzy
 msgid "Tiling successful"
-msgstr ""
+msgstr "平铺成功"
 
 #: pdfstitcher/ui/main_frame.py:217 pdfstitcher/ui/main_frame.py:226
 msgid "Something went wrong"
-msgstr ""
+msgstr "出了些问题"
 
 #: pdfstitcher/ui/main_frame.py:223
 msgid "Successfully written to"
-msgstr ""
+msgstr "成功写入"
 
 #: pdfstitcher/ui/main_frame.py:226 pdfstitcher/ui/main_frame.py:393
 msgid "unable to write to"
-msgstr ""
+msgstr "无法写入"
 
 #: pdfstitcher/ui/main_frame.py:229
 msgid "Make sure  isn't open in another program"
-msgstr ""
+msgstr "确保没有在其他程序中打开"
 
 #: pdfstitcher/ui/main_frame.py:263
 msgid "File"
@@ -597,11 +651,11 @@ msgstr "文件"
 
 #: pdfstitcher/ui/main_frame.py:268
 msgid "Check for updates"
-msgstr ""
+msgstr "检查更新"
 
 #: pdfstitcher/ui/main_frame.py:272
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 #: pdfstitcher/ui/main_frame.py:279
 msgid "Documentation"
@@ -609,11 +663,12 @@ msgstr "文档"
 
 #: pdfstitcher/ui/main_frame.py:280
 msgid "Open the documentation in a web browser"
-msgstr ""
+msgstr "在浏览器中打开文件"
 
 #: pdfstitcher/ui/main_frame.py:290
+#, fuzzy
 msgid "Open the dialog to report a bug"
-msgstr ""
+msgstr "打开对话框以报告错误"
 
 #: pdfstitcher/ui/main_frame.py:294
 msgid "Help"
@@ -625,15 +680,15 @@ msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:342
 msgid "Contributors"
-msgstr ""
+msgstr "贡献者"
 
 #: pdfstitcher/ui/main_frame.py:381
 msgid "Can't overwrite input file, please select a different file for output"
-msgstr ""
+msgstr "无法覆盖输入文件，请选择不同的文件进行输出"
 
 #: pdfstitcher/ui/main_frame.py:390
 msgid "File will be written to "
-msgstr ""
+msgstr "文件将被写入 "
 
 #: pdfstitcher/ui/main_frame.py:432
 msgid "Opening"
@@ -641,41 +696,45 @@ msgstr "打开"
 
 #: pdfstitcher/ui/main_frame.py:462
 msgid "PDF locked! Enter the correct password."
-msgstr ""
+msgstr "PDF锁定！输入正确的密码。"
 
 #: pdfstitcher/ui/main_frame.py:465
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 #: pdfstitcher/ui/main_frame.py:465
 msgid "PDF file is locked"
-msgstr ""
+msgstr "PDF文件被锁定"
 
 #: pdfstitcher/ui/main_frame.py:472
+#, fuzzy
 msgid "PDF will not open as you canceled the operation."
-msgstr ""
+msgstr "由于您取消了操作，PDF 将无法打开。"
 
 #: pdfstitcher/ui/main_frame.py:476
 msgid "Cannot open file"
-msgstr ""
+msgstr "无法打开文件"
 
 #: pdfstitcher/ui/main_frame.py:479
+#, fuzzy
 msgid "PDF file loaded without errors."
-msgstr ""
+msgstr "PDF文件加载无误。"
 
 #: pdfstitcher/ui/main_frame.py:483
+#, fuzzy
 msgid "Warning: this PDF is encrypted with the following permissions:"
-msgstr ""
+msgstr "警告：此 PDF 使用以下权限进行加密："
 
 #: pdfstitcher/ui/main_frame.py:487
+#, fuzzy
 msgid ""
 "Please be respectful of the author and only use this tool for personal "
 "use."
-msgstr ""
+msgstr "请尊重作者，仅将此工具用于个人用途。"
 
 #: pdfstitcher/ui/tile_tab.py:32
 msgid "Required Parameters"
-msgstr ""
+msgstr "所需参数"
 
 #: pdfstitcher/ui/tile_tab.py:39
 msgid "Number of Columns"
@@ -683,30 +742,33 @@ msgstr "列数"
 
 #: pdfstitcher/ui/tile_tab.py:54
 msgid "OR Number of Rows"
-msgstr ""
+msgstr "或行数"
 
 #: pdfstitcher/ui/tile_tab.py:127
 msgid "Page Rotation"
-msgstr ""
+msgstr "页面旋转"
 
 #: pdfstitcher/ui/tile_tab.py:171
 msgid "Optional Parameters"
-msgstr ""
+msgstr "可选参数"
 
 #. translation_note: TrimBox and MediaBox are PDF elements, so they likely
 #. won't translate nicely.
 #: pdfstitcher/ui/tile_tab.py:210
+#, fuzzy
 msgid "Set TrimBox to MediaBox"
-msgstr ""
+msgstr "将“修剪框”设置为“媒体框”"
 
 #: pdfstitcher/ui/tile_tab.py:212
+#, fuzzy
 msgid "May help fix things when output is not as expected"
-msgstr ""
+msgstr "当输出不符合预期时可以帮助解决问题"
 
 #: pdfstitcher/ui/tile_tab.py:223
 msgid "Amount to trim from each page"
-msgstr ""
+msgstr "每页要修剪的数量"
 
 #: pdfstitcher/ui/tile_tab.py:226
+#, fuzzy
 msgid "Overlap"
-msgstr ""
+msgstr "过失"
