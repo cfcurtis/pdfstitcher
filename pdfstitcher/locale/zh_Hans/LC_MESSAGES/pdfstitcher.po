@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: 2023-07-15 03:00+0000\n"
+"PO-Revision-Date: 2023-07-19 08:07+0000\n"
 "Last-Translator: Eric Luo <luolitao@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "pdfstitcher/user-interface/zh_Hans/>\n"
@@ -32,7 +32,7 @@ msgstr "PDF 损坏。这可能需要一些时间。"
 #: pdfstitcher/bug_info.py:60
 #, fuzzy
 msgid "Error mangling PDF: {}"
-msgstr "错误地处理PDF：{}"
+msgstr "修改 PDF 时出错：{}"
 
 #: pdfstitcher/layerfilter.py:328
 msgid "No layers selected, generated PDF would be blank."
