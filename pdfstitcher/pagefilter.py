@@ -45,7 +45,7 @@ class PageFilter:
 
             if self.margin:
                 # if margins were added, expand the new page boxes
-                margin = Config.general["units"].units_to_px(self.margin / user_unit)
+                margin = Config.general["units"].units_to_px(self.margin, user_unit)
                 new_page = new_doc.pages[-1]
                 media_box = [
                     float(new_page.MediaBox[0]) - margin,

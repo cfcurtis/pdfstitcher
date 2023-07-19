@@ -61,27 +61,27 @@ class UNITS(IntEnum):
         elif self == UNITS.POINTS:
             return _("pt")
 
-    def units_to_px(self, val):
+    def units_to_px(self, val: float, user_unit: float = 1):
         """
         Converts from current units to pixels.
         """
         if self == UNITS.INCHES:
-            return val * 72
+            return val * 72 / user_unit
         elif self == UNITS.CENTIMETERS:
-            return val * 72 / 2.54
+            return val * 72 / user_unit / 2.54
         elif self == UNITS.POINTS:
-            return val
+            return val / user_unit
 
-    def px_to_units(self, val):
+    def px_to_units(self, val: float, user_unit: float = 1):
         """
         Converts from pixels to current units.
         """
         if self == UNITS.INCHES:
-            return val / 72
+            return val / 72 / user_unit
         elif self == UNITS.CENTIMETERS:
-            return val / 72 * 2.54
+            return val / 72 / user_unit * 2.54
         elif self == UNITS.POINTS:
-            return val
+            return val / user_unit
 
 
 def unit_representer(dumper, data):
@@ -303,11 +303,13 @@ def init_new_doc(pdf):
     return new_doc
 
 
-def get_page_dims(page, global_rotation=0):
+def get_page_dims(
+    page, global_rotation: float = 0, target_user_unit: float = 1
+) -> tuple[float, float]:
     """
     Helper function to calculate the page dimensions
     Returns width, height as observed by the user
-    (taking rotation into account)
+    (taking rotation and UserUnit into account)
     """
     # The mediabox is typically specified as
     # [lower left x, lower left y, upper left x, upper left y],
@@ -315,6 +317,14 @@ def get_page_dims(page, global_rotation=0):
     mbox = page.MediaBox
     page_width = float(abs(mbox[2] - mbox[0]))
     page_height = float(abs(mbox[3] - mbox[1]))
+
+    page_uu = 1
+    if "/UserUnit" in page.keys():
+        page_uu = float(page.UserUnit)
+
+    # scale according to the page and target user units
+    page_width *= page_uu / target_user_unit
+    page_height *= page_uu / target_user_unit
 
     # global_rotation is defined by the document root, but
     # may be overridden on a specific page
@@ -330,7 +340,7 @@ def get_page_dims(page, global_rotation=0):
     return page_width, page_height
 
 
-def print_media_box(media_box, user_unit=1):
+def print_media_box(media_box, user_unit: float = 1) -> None:
     """
     Display the media box in the requested units.
     Also checks to see if the size exceeds Adobe's max size.
@@ -342,7 +352,7 @@ def print_media_box(media_box, user_unit=1):
         print(62 * "*")
         print(
             _("Warning! Output is larger than {} {}, may not open correctly.").format(
-                round(Config.general["units"].px_to_units(MAX_SIZE_PX)),
+                round(Config.general["units"].px_to_units(MAX_SIZE_PX, user_unit)),
                 Config.general["units"],
             )
         )
@@ -351,8 +361,8 @@ def print_media_box(media_box, user_unit=1):
     print(
         _("Output size:")
         + " {:0.2f} x {:0.2f} {}".format(
-            user_unit * Config.general["units"].px_to_units(width),
-            user_unit * Config.general["units"].px_to_units(height),
+            Config.general["units"].px_to_units(width, user_unit),
+            Config.general["units"].px_to_units(height, user_unit),
             Config.general["units"],
         )
     )
