@@ -77,11 +77,11 @@ class UNITS(IntEnum):
         Converts from pixels to current units.
         """
         if self == UNITS.INCHES:
-            return val / 72 / user_unit
+            return user_unit * val / 72
         elif self == UNITS.CENTIMETERS:
-            return val / 72 / user_unit * 2.54
+            return user_unit * val / 72 * 2.54
         elif self == UNITS.POINTS:
-            return val / user_unit
+            return user_unit * val
 
 
 def unit_representer(dumper, data):

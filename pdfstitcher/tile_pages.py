@@ -494,7 +494,7 @@ class PageTiler:
             height + 2 * margin,
         ]
 
-        utils.print_media_box(media_box)
+        utils.print_media_box(media_box, self.user_unit)
 
         # TODO: Refactor this giant loop into two functions (scale to fit and no scaling)
         i = 0
