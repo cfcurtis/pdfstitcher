@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: 2023-07-19 08:07+0000\n"
+"PO-Revision-Date: 2023-07-21 04:10+0000\n"
 "Last-Translator: Eric Luo <luolitao@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "pdfstitcher/user-interface/zh_Hans/>\n"
@@ -30,7 +30,6 @@ msgid "Mangling PDF. This may take some time."
 msgstr "PDF 损坏。这可能需要一些时间。"
 
 #: pdfstitcher/bug_info.py:60
-#, fuzzy
 msgid "Error mangling PDF: {}"
 msgstr "修改 PDF 时出错：{}"
 
@@ -157,12 +156,10 @@ msgid "Warning: requested {} columns, but there are only {} pages"
 msgstr "警告：要求{} 列，但只有{} 页。"
 
 #: pdfstitcher/tile_pages.py:319
-#, fuzzy
 msgid "Warning: requested {} rows, but there are only {} pages"
 msgstr "警告：请求{} 行，但只有{} 页。"
 
 #: pdfstitcher/tile_pages.py:514
-#, fuzzy
 msgid ""
 "Warning: Some pages have been scaled because a target size was set. You "
 "should not see this warning if using the PDFStitcher GUI."
@@ -178,32 +175,26 @@ msgid "Invalid rotation value"
 msgstr "旋转值无效"
 
 #: pdfstitcher/tile_pages.py:597
-#, fuzzy
 msgid "Tile PDF pages into one document."
-msgstr "将 PDF 页面平铺到一个文档中。"
+msgstr "将 PDF 页面平铺成一个文档。"
 
 #: pdfstitcher/tile_pages.py:598
-#, fuzzy
 msgid "Note: If both rows and columns are specified, rows are ignored."
 msgstr "注意：如果同时指定了行和列，行将被忽略。"
 
 #: pdfstitcher/tile_pages.py:600
-#, fuzzy
 msgid "To insert a blank page, include a zero in the page list."
-msgstr "要插入一个空白页，在页面列表中包括一个零。"
+msgstr "要插入空白页，请在页列表中包含零。"
 
 #: pdfstitcher/tile_pages.py:605
-#, fuzzy
 msgid "Input filename (pdf)"
 msgstr "输入文件名 (pdf)"
 
 #: pdfstitcher/tile_pages.py:609
-#, fuzzy
 msgid "Output filename (pdf)"
 msgstr "输出文件名 (pdf)"
 
 #: pdfstitcher/tile_pages.py:614
-#, fuzzy
 msgid ""
 "Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: "
 "entire document."
@@ -219,7 +210,6 @@ msgid "Number of columns in tiled grid."
 msgstr "平铺网格中的列数。"
 
 #: pdfstitcher/tile_pages.py:633
-#, fuzzy
 msgid "Margin size in inches."
 msgstr "页边距大小（以英寸为单位）。"
 
@@ -255,7 +245,6 @@ msgid "Slovak translation not available, defaulting to Czech"
 msgstr "斯洛伐克语翻译不可用，默认为捷克语"
 
 #: pdfstitcher/utils.py:257
-#, fuzzy
 msgid "Invalid input"
 msgstr "无效输入"
 
@@ -268,7 +257,6 @@ msgid "Please specify a page range"
 msgstr "请指定页面范围"
 
 #: pdfstitcher/utils.py:343
-#, fuzzy
 msgid "Warning! Output is larger than {} {}, may not open correctly."
 msgstr "警告！输出大于 {} {}，可能无法正确打开。"
 
@@ -281,7 +269,6 @@ msgid "Checking for updates"
 msgstr "检查更新"
 
 #: pdfstitcher/ui/dialogs.py:31
-#, fuzzy
 msgid "Please wait..."
 msgstr "请稍候。。。"
 
@@ -299,7 +286,6 @@ msgid "Update available!"
 msgstr "有可用的更新！"
 
 #: pdfstitcher/ui/dialogs.py:71
-#, fuzzy
 msgid "Your version is {}, but the latest version is v{}."
 msgstr "您的版本是{}，但最新版本是v{}。"
 
@@ -332,12 +318,10 @@ msgstr ""
 "它将被保存在你的桌面上，并可以附在问题上。"
 
 #: pdfstitcher/ui/dialogs.py:168
-#, fuzzy
 msgid "Create mangled PDF (Beta)"
 msgstr "创建损坏的 PDF（测试版）"
 
 #: pdfstitcher/ui/dialogs.py:179
-#, fuzzy
 msgid "Report Via GitHub"
 msgstr "通过GitHub报告"
 
@@ -354,22 +338,18 @@ msgid "Error"
 msgstr "错误"
 
 #: pdfstitcher/ui/dialogs.py:234
-#, fuzzy
 msgid "Mangled PDF saved to {}."
 msgstr "损坏的 PDF 已保存到 {}。"
 
 #: pdfstitcher/ui/dialogs.py:236
-#, fuzzy
 msgid "Please attach to GitHub issue or email."
 msgstr "请附上 GitHub 问题或电子邮件。"
 
 #: pdfstitcher/ui/dialogs.py:237
-#, fuzzy
 msgid "Success"
 msgstr "成功"
 
 #: pdfstitcher/ui/dialogs.py:240
-#, fuzzy
 msgid "Failed to mangle PDF"
 msgstr "无法修改 PDF"
 
