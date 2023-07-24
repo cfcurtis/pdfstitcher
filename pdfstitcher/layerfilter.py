@@ -196,6 +196,7 @@ class LayerFilter:
         convert the line properties from the GUI to what the PDF needs
         """
         self.pdf_line_props = {}
+
         for layer, lp in self.line_props.items():
             w = 1
             clp = {}
@@ -219,6 +220,29 @@ class LayerFilter:
                     clp["k"] = clp["K"]
 
             self.pdf_line_props[layer] = clp
+            self.pdf_line_props["user_unit"] = 1
+
+    def adjust_user_unit(self, user_unit):
+        """
+        Updates the width and dash pattern to match the user unit.
+        """
+        # Don't do anything if it's already the same
+        if self.pdf_line_props["user_unit"] == user_unit:
+            return
+
+        scale = self.pdf_line_props["user_unit"] / user_unit
+
+        for layer, lp in self.pdf_line_props.items():
+            if layer == "user_unit":
+                continue
+
+            if "w" in lp.keys():
+                self.pdf_line_props[layer]["w"][0] *= scale
+
+            if "d" in lp.keys():
+                self.pdf_line_props[layer]["d"][0] = [d * scale for d in lp["d"][0]]
+
+        self.pdf_line_props["user_unit"] = user_unit
 
     def override_state(self, commands, line_props, transparency=False):
         """
@@ -490,6 +514,10 @@ class LayerFilter:
             return
         else:
             self.processed_objects.add(obid)
+
+        # Adjust the user unit if necessary
+        if "/UserUnit" in page.keys():
+            self.adjust_user_unit(page.UserUnit)
 
         # the page is either an actual page, or a form xobject
         is_page = isinstance(page, pikepdf.Page)
