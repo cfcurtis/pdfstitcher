@@ -308,7 +308,7 @@ def get_page_dims(
 ) -> tuple[float, float]:
     """
     Helper function to calculate the page dimensions
-    Returns width, height as observed by the user
+    Returns width, height in pixels as observed by the user
     (taking rotation and UserUnit into account)
     """
     # The mediabox is typically specified as

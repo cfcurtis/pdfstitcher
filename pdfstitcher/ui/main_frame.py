@@ -422,13 +422,23 @@ class PDFStitcherFrame(wx.Frame):
             # only enable tiling if there are more than one page
             if len(self.in_doc.pages) > 1:
                 self.tiler = PageTiler()
-                self.io.do_tile.SetValue(1)
                 self.io.do_tile.Enable()
                 self.tt.Enable()
+
+                # check how big the pages are, and default to no tiling if they're over A3
+                first_page = self.in_doc.pages[0]
+                w, h = utils.get_page_dims(first_page, target_user_unit=1)
+                if w > 11.7 * 72 or h > 16.5 * 72:
+                    self.io.do_tile.SetValue(0)
+                else:
+                    self.io.do_tile.SetValue(1)
             else:
                 self.io.do_tile.SetValue(0)
                 self.io.do_tile.Disable()
                 self.tt.Disable()
+
+            # update the processing description
+            self.io.on_option_checked(None)
 
             # clear the output if it's already set
             self.out_doc_path = None
