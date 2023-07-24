@@ -56,6 +56,7 @@ class PageTiler:
         horizontal_align=SW_ALIGN_H.LEFT,
     ):
         self.in_doc = in_doc
+        self.user_unit = 1
 
         if isinstance(page_range, str):
             self.page_range = utils.parse_page_range(page_range)
@@ -179,7 +180,7 @@ class PageTiler:
 
         # get a pointer to the reference page and parse out the width and height
         ref_page = self.in_doc.pages[p - 1]
-        ref_width, ref_height = utils.get_page_dims(ref_page, page_rot)
+        ref_width, ref_height = utils.get_page_dims(ref_page, page_rot, self.user_unit)
 
         different_size = set()
 
@@ -224,8 +225,8 @@ class PageTiler:
                             in_trim[2] - rtrim[2],
                             in_trim[3] - rtrim[3],
                         ]
-                # get the input page height and width
-                p_width, p_height = utils.get_page_dims(in_doc_page, page_rot)
+
+                p_width, p_height = utils.get_page_dims(in_doc_page, page_rot, self.user_unit)
                 pw.append(p_width)
                 ph.append(p_height)
                 page_names.append(pagekey)
@@ -239,6 +240,16 @@ class PageTiler:
 
                 # magic sauce to copy the info to the new document as an XOBject
                 content_dict[pagekey] = new_doc.copy_foreign(new_page.as_form_xobject())
+
+                # scale the form xobject by the target user unit
+                if self.user_unit != 1:
+                    if "/Matrix" in content_dict[pagekey].keys():
+                        xobj_matrix = pikepdf.PdfMatrix(content_dict[pagekey].Matrix)
+                    else:
+                        xobj_matrix = pikepdf.PdfMatrix.identity()
+                    content_dict[pagekey].Matrix = xobj_matrix.scaled(
+                        1 / self.user_unit, 1 / self.user_unit
+                    ).shorthand
 
             else:
                 # blank page, use the reference for sizes and such
@@ -340,6 +351,62 @@ class PageTiler:
         else:
             return self.cols * self.rows - n_tiles < self.cols
 
+    def grid_position(self, tile_i: int) -> tuple[int, int]:
+        """Determines the placement of the tile in the grid, returning a tuple of (row, col)"""
+        if self.col_major:
+            c = math.floor(tile_i / self.rows)
+            r = tile_i % self.rows
+        else:
+            r = math.floor(tile_i / self.cols)
+            c = tile_i % self.cols
+
+        if self.right_to_left:
+            c = self.cols - c - 1
+
+        if self.bottom_to_top:
+            r = self.rows - r - 1
+
+        return r, c
+
+    def calc_shift(self, horizontal_space: float, vertical_space: float) -> tuple[float, float]:
+        """
+        Calculates the shift needed to align the tile in the grid.
+        Returns a tuple of (shift_right, shift_up).
+        Only used if a tile is smaller than the grid space.
+        """
+        if self.horizontal_align is SW_ALIGN_H.LEFT:
+            shift_right = 0
+        elif self.horizontal_align is SW_ALIGN_H.MID:
+            shift_right = round(horizontal_space / 2)
+        elif self.horizontal_align is SW_ALIGN_H.RIGHT:
+            shift_right = round(horizontal_space)
+        if self.vertical_align is SW_ALIGN_V.BOTTOM:
+            shift_up = 0
+        elif self.vertical_align is SW_ALIGN_V.MID:
+            shift_up = round(vertical_space / 2)
+        elif self.vertical_align is SW_ALIGN_V.TOP:
+            shift_up = round(vertical_space)
+
+        # invert shift if we are rotating
+        if self.rotation == SW_ROTATION.CLOCKWISE:
+            shift_up *= -1
+        elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
+            shift_right *= -1
+        elif self.rotation == SW_ROTATION.TURNAROUND:
+            shift_right *= -1
+            shift_up *= -1
+
+        return shift_right, shift_up
+
+    def set_user_unit(self):
+        """
+        Find the maximum user_unit defined in the document, then use this for the new document.
+        """
+        for p in self.page_range:
+            page = self.in_doc.pages[p - 1]
+            if "/UserUnit" in page.keys() and page.UserUnit > self.user_unit:
+                self.user_unit = float(page.UserUnit)
+
     def run(
         self,
         rows=None,
@@ -378,14 +445,9 @@ class PageTiler:
         # initialize a new document
         new_doc = utils.init_new_doc(self.in_doc)
 
-        # get the user unit from the first page (either 1 or 10, if it's a huge page)
-        user_unit = 1
-        first_page = self.in_doc.pages[self.page_range[0] - 1]
-        if "/UserUnit" in first_page.keys():
-            user_unit = float(first_page.UserUnit)
-
         # define the trim in pdf units, then build the page list
-        px_trim = [Config.general["units"].units_to_px(t / user_unit) for t in self.trim]
+        self.set_user_unit()
+        px_trim = [Config.general["units"].units_to_px(t, self.user_unit) for t in self.trim]
         content_dict, pw, ph, page_names = self.build_pagelist(new_doc, px_trim)
         n_tiles = len(page_names)
         if not self.calc_rows_cols(n_tiles):
@@ -423,7 +485,8 @@ class PageTiler:
             page_box_defined = False
 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
-        margin = Config.general["units"].units_to_px(self.margin / user_unit)
+        first_page = self.in_doc.pages[self.page_range[0] - 1]
+        margin = Config.general["units"].units_to_px(self.margin, self.user_unit)
         media_box = [
             float(first_page.MediaBox[0]),
             float(first_page.MediaBox[1]),
@@ -431,7 +494,7 @@ class PageTiler:
             height + 2 * margin,
         ]
 
-        utils.print_media_box(media_box)
+        utils.print_media_box(media_box, self.user_unit)
 
         # TODO: Refactor this giant loop into two functions (scale to fit and no scaling)
         i = 0
@@ -443,19 +506,7 @@ class PageTiler:
             if not page_names[i]:
                 continue
 
-            if self.col_major:
-                c = math.floor(i / self.rows)
-                r = i % self.rows
-            else:
-                r = math.floor(i / self.cols)
-                c = i % self.cols
-
-            if self.right_to_left:
-                c = self.cols - c - 1
-
-            if self.bottom_to_top:
-                r = self.rows - r - 1
-
+            r, c = self.grid_position(i)
             scale_factor = 1
 
             if page_box_defined:
@@ -492,30 +543,8 @@ class PageTiler:
                 horizontal_space = col_width[c] - pw[i]
                 vertical_space = row_height[r] - ph[i]
 
-            # calculate shift
-            if self.horizontal_align is SW_ALIGN_H.LEFT:
-                shift_right = 0
-            elif self.horizontal_align is SW_ALIGN_H.MID:
-                shift_right = round(horizontal_space / 2)
-            elif self.horizontal_align is SW_ALIGN_H.RIGHT:
-                shift_right = round(horizontal_space)
-            if self.vertical_align is SW_ALIGN_V.BOTTOM:
-                shift_up = 0
-            elif self.vertical_align is SW_ALIGN_V.MID:
-                shift_up = round(vertical_space / 2)
-            elif self.vertical_align is SW_ALIGN_V.TOP:
-                shift_up = round(vertical_space)
-
-            # invert shift if we are rotating
-            if self.rotation == SW_ROTATION.CLOCKWISE:
-                shift_up *= -1
-            elif self.rotation == SW_ROTATION.COUNTERCLOCKWISE:
-                shift_right *= -1
-            elif self.rotation == SW_ROTATION.TURNAROUND:
-                shift_right *= -1
-                shift_up *= -1
-
             # apply shift
+            shift_right, shift_up = self.calc_shift(horizontal_space, vertical_space)
             x0 += shift_right
             y0 += shift_up
 
@@ -559,8 +588,8 @@ class PageTiler:
             Resources=pikepdf.Dictionary(XObject=content_dict),
             Contents=pikepdf.Stream(new_doc, content_txt.encode()),
         )
-        if user_unit != 1:
-            tiled_page.UserUnit = user_unit
+        if self.user_unit != 1:
+            tiled_page.UserUnit = self.user_unit
 
         new_doc.pages.append(tiled_page)
 
