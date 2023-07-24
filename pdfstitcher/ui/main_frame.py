@@ -430,6 +430,9 @@ class PDFStitcherFrame(wx.Frame):
                 self.io.do_tile.Disable()
                 self.tt.Disable()
 
+            # update the processing description
+            self.io.on_option_checked(None)
+
             # clear the output if it's already set
             self.out_doc_path = None
 
