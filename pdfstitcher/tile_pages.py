@@ -351,7 +351,7 @@ class PageTiler:
         else:
             return self.cols * self.rows - n_tiles < self.cols
 
-    def grid_position(self, tile_i: int) -> tuple[int, int]:
+    def grid_position(self, tile_i: int) -> tuple:
         """Determines the placement of the tile in the grid, returning a tuple of (row, col)"""
         if self.col_major:
             c = math.floor(tile_i / self.rows)
@@ -368,7 +368,7 @@ class PageTiler:
 
         return r, c
 
-    def calc_shift(self, horizontal_space: float, vertical_space: float) -> tuple[float, float]:
+    def calc_shift(self, horizontal_space: float, vertical_space: float) -> tuple:
         """
         Calculates the shift needed to align the tile in the grid.
         Returns a tuple of (shift_right, shift_up).
