@@ -1,0 +1,25 @@
+name: Test OpenSSL
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mac-build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-11, macos-12, macos-13]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10" # better compatibility with pikepdf, it seems
+        
+      - name: Install pikepdf and try to open encrypted PDF
+        run: | 
+          pip install pikepdf
+          python tests/test_encryption.py
