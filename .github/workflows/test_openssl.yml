@@ -2,6 +2,7 @@ name: Test OpenSSL
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   mac-build:
