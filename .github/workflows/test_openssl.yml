@@ -22,5 +22,6 @@ jobs:
         
       - name: Install pikepdf and try to open encrypted PDF
         run: | 
+          brew install qpdf
           pip install pikepdf
           python tests/test_encryption.py
