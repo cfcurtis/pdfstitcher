@@ -29,6 +29,7 @@ jobs:
   
   macOS-12-13-test:
     runs-on: ${{ matrix.os }}
+    needs: macOS-11-build
     strategy:
       fail-fast: false
       matrix:
