@@ -22,7 +22,7 @@ jobs:
           pyinstaller --onefile --copy-metadata pikepdf tests/test_encryption.py
       
       - name: Upload binary bundle
-      - uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3
         with:
           name: test_encryption
           path: dist/test_encryption
@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Download binary bundle
-      - uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v3
         with:
           name: test_encryption
       
