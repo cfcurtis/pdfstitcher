@@ -44,4 +44,4 @@ jobs:
           name: test_encryption
       
       - name: Run encryption test
-        run: ./test_encryption tests/encryption_test.pdf
+        run: chmod +x test_encryption && ./test_encryption tests/encryption_test.pdf
