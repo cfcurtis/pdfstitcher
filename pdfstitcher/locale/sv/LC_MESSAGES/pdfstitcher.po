@@ -9,13 +9,16 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-08-10 15:45+0000\n"
+"Last-Translator: Josefine Kristmansson <josefine.kristmansson@gmail.com>\n"
+"Language-Team: Swedish <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.0-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: pdfstitcher/bug_info.py:28
@@ -70,7 +73,7 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:125 pdfstitcher/ui/tile_tab.py:74
 msgid "Left to right"
-msgstr ""
+msgstr "Vänster till höger"
 
 #: pdfstitcher/tile_pages.py:127 pdfstitcher/ui/tile_tab.py:74
 msgid "Right to left"
@@ -98,7 +101,7 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:141 pdfstitcher/ui/tile_tab.py:245
 msgid "Left"
-msgstr ""
+msgstr "Vänster"
 
 #: pdfstitcher/tile_pages.py:145 pdfstitcher/ui/tile_tab.py:260
 msgid "Right"
@@ -114,7 +117,7 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:149
 msgid "Margins"
-msgstr ""
+msgstr "Marginaler"
 
 #: pdfstitcher/tile_pages.py:150 pdfstitcher/ui/tile_tab.py:226
 msgid "Trim"
@@ -126,7 +129,7 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:152 pdfstitcher/ui/tile_tab.py:78
 msgid "Page order"
-msgstr ""
+msgstr "Sidordning"
 
 #: pdfstitcher/tile_pages.py:153
 msgid "Vertical alignment"
@@ -206,7 +209,7 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:633
 msgid "Margin size in inches."
-msgstr ""
+msgstr "Marginalstorlek i inch"
 
 #: pdfstitcher/tile_pages.py:638
 msgid "Amount to trim from edges"
@@ -406,7 +409,7 @@ msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:77 pdfstitcher/ui/tile_tab.py:145
 msgid "Page Range"
-msgstr ""
+msgstr "Sidintervall"
 
 #: pdfstitcher/ui/io_tab.py:82 pdfstitcher/ui/tile_tab.py:150
 msgid "Pages assemble in specified order. 0 inserts a blank page."
@@ -422,7 +425,7 @@ msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:118 pdfstitcher/ui/tile_tab.py:196
 msgid "Centimetres"
-msgstr ""
+msgstr "Centimeter"
 
 #: pdfstitcher/ui/io_tab.py:120 pdfstitcher/ui/tile_tab.py:198
 msgid "Units"
@@ -458,7 +461,7 @@ msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:27
 msgid "Load PDF to view layers."
-msgstr ""
+msgstr "Öppna PDF för att visa lager"
 
 #: pdfstitcher/ui/layers_tab.py:42
 msgid "Deselected layers:"
@@ -482,11 +485,11 @@ msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:70
 msgid "Layer Name"
-msgstr ""
+msgstr "Lagernamn"
 
 #: pdfstitcher/ui/layers_tab.py:71
 msgid "Line Properties"
-msgstr ""
+msgstr "Linjeegenskaper"
 
 #: pdfstitcher/ui/layers_tab.py:91
 msgid "Select line properties to modify"
@@ -494,7 +497,7 @@ msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:94
 msgid "Line Colour"
-msgstr ""
+msgstr "Linjefärg"
 
 #: pdfstitcher/ui/layers_tab.py:112
 msgid "Also modify fill colour"
@@ -502,7 +505,7 @@ msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:121
 msgid "Line Thickness"
-msgstr ""
+msgstr "Linjetjocklek"
 
 #: pdfstitcher/ui/layers_tab.py:154
 msgid "Line Style"
@@ -510,7 +513,7 @@ msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:161
 msgid "Solid"
-msgstr ""
+msgstr "Heldragen"
 
 #: pdfstitcher/ui/layers_tab.py:161
 msgid "Dashed"
@@ -546,7 +549,7 @@ msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:327
 msgid "Select layers to include in output document."
-msgstr ""
+msgstr "Välj lager att ta med i projektorfilen"
 
 #: pdfstitcher/ui/layers_tab.py:344
 msgid "Select all"
@@ -558,7 +561,7 @@ msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:48
 msgid "Layers"
-msgstr ""
+msgstr "Lager"
 
 #: pdfstitcher/ui/main_frame.py:56
 msgid "Generate PDF"
@@ -574,7 +577,7 @@ msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:217 pdfstitcher/ui/main_frame.py:226
 msgid "Something went wrong"
-msgstr ""
+msgstr "Någonting gick fel"
 
 #: pdfstitcher/ui/main_frame.py:223
 msgid "Successfully written to"
@@ -586,7 +589,7 @@ msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:229
 msgid "Make sure  isn't open in another program"
-msgstr ""
+msgstr "Kontrollera att   inte är öppen i ett annat program"
 
 #: pdfstitcher/ui/main_frame.py:263
 msgid "File"
@@ -598,7 +601,7 @@ msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:272
 msgid "Settings"
-msgstr ""
+msgstr "Inställningar"
 
 #: pdfstitcher/ui/main_frame.py:279
 msgid "Documentation"
@@ -706,4 +709,4 @@ msgstr ""
 
 #: pdfstitcher/ui/tile_tab.py:226
 msgid "Overlap"
-msgstr ""
+msgstr "Överlapp"
