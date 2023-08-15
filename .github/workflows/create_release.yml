@@ -109,9 +109,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-12, self-hosted]
-    env:
-      MACOSX_DEPLOYMENT_TARGET: "10.9" # it can't be this easy, but let's try
+        os: [macos-11, self-hosted]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
