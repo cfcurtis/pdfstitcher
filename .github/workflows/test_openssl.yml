@@ -12,14 +12,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10" # better compatibility with pikepdf, it seems
+      - name: Install Python      
+        run: brew install python@3.10
         
       - name: Install dependencies and build pyinstaller bundle
         run: | 
-          brew install qpdf
           pip install pikepdf pyinstaller
           pyinstaller --onefile --copy-metadata pikepdf tests/test_encryption.py
       
