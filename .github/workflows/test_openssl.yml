@@ -6,8 +6,6 @@ on:
 jobs:
   macOS-11-build:
     runs-on: macos-11
-    env:
-      MACOSX_DEPLOYMENT_TARGET: "10.9"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -17,6 +15,7 @@ jobs:
         
       - name: Install dependencies and build pyinstaller bundle
         run: | 
+          brew install qpdf
           pip3 install pikepdf pyinstaller
           pyinstaller --onefile --copy-metadata pikepdf tests/test_encryption.py
       
