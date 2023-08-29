@@ -6,6 +6,8 @@ on:
 jobs:
   macOS-11-build:
     runs-on: macos-11
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "10.9"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
