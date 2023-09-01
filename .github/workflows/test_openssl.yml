@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies and build pyinstaller bundle
         run: | 
           brew install qpdf
-          pip3 install pikepdf pyinstaller
+          pip install pikepdf pyinstaller
           pyinstaller --onefile --copy-metadata pikepdf tests/test_encryption.py
       
       - name: Upload binary bundle
