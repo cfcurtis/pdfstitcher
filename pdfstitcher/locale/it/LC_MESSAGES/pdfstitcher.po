@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: 2023-10-31 23:06+0000\n"
+"PO-Revision-Date: 2023-11-03 05:14+0000\n"
 "Last-Translator: albanobattistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/pdfstitcher/"
 "user-interface/it/>\n"
@@ -23,15 +23,15 @@ msgstr ""
 
 #: pdfstitcher/bug_info.py:28
 msgid "Error getting system info: {}"
-msgstr ""
+msgstr "Errore durante il recupero delle informazioni di sistema: {}"
 
 #: pdfstitcher/bug_info.py:54
 msgid "Mangling PDF. This may take some time."
-msgstr ""
+msgstr "Manipolazione del PDF. L'operazione potrebbe richiedere del tempo."
 
 #: pdfstitcher/bug_info.py:60
 msgid "Error mangling PDF: {}"
-msgstr ""
+msgstr "Errore durante la distruzione del PDF: {}"
 
 #: pdfstitcher/layerfilter.py:328
 msgid "No layers selected, generated PDF would be blank."
@@ -39,7 +39,7 @@ msgstr "Nessun livello selezionato, il PDF generato risulterà bianco."
 
 #: pdfstitcher/layerfilter.py:516 pdfstitcher/layerfilter.py:545
 msgid "Failed writing stream to page with error type {}"
-msgstr ""
+msgstr "Impossibile scrivere lo stream sulla pagina con tipo di errore {}"
 
 #: pdfstitcher/tile_pages.py:105
 msgid "Invalid trim value specified, ignoring"
@@ -284,11 +284,11 @@ msgstr "Controllo degli aggiornamenti"
 
 #: pdfstitcher/ui/dialogs.py:31
 msgid "Please wait..."
-msgstr ""
+msgstr "Attendere prego..."
 
 #: pdfstitcher/ui/dialogs.py:53
 msgid "PDFStitcher is installed and managed via Flatpak."
-msgstr ""
+msgstr "PDFStitcher viene installato e gestito tramite Flatpak."
 
 #: pdfstitcher/ui/dialogs.py:62
 msgid "No updates available, {} is the current version."
@@ -296,11 +296,11 @@ msgstr "Nessun aggiornamento disponibile, {} è la versione corrente."
 
 #: pdfstitcher/ui/dialogs.py:69
 msgid "Update available!"
-msgstr ""
+msgstr "Aggiornamento disponibile!"
 
 #: pdfstitcher/ui/dialogs.py:71
 msgid "Your version is {}, but the latest version is v{}."
-msgstr ""
+msgstr "La tua versione è {}, ma la versione più recente è v{}."
 
 #: pdfstitcher/ui/dialogs.py:76
 msgid "What's changed?"
@@ -308,7 +308,7 @@ msgstr "Che cosa è cambiato?"
 
 #: pdfstitcher/ui/dialogs.py:79
 msgid "Download Now"
-msgstr ""
+msgstr "Scarica ora"
 
 #: pdfstitcher/ui/dialogs.py:91
 msgid "Error checking for updates"
@@ -326,10 +326,15 @@ msgid ""
 "document - it will be saved to your Desktop and can be attached to the "
 "issue."
 msgstr ""
+"Descrivi i passaggi per riprodurre il problema di seguito. Segui i pulsanti "
+"per aprire un problema tramite GitHub (preferibile, ma richiede l'accesso) o "
+"invia il report via email. Facoltativamente, includi una versione modificata "
+"del documento di input: verrà salvata sul desktop e potrà essere allegata al "
+"problema"
 
 #: pdfstitcher/ui/dialogs.py:168
 msgid "Create mangled PDF (Beta)"
-msgstr ""
+msgstr "Crea PDF modificato (Beta)"
 
 #: pdfstitcher/ui/dialogs.py:179
 msgid "Report Via GitHub"
@@ -349,19 +354,19 @@ msgstr "Errore"
 
 #: pdfstitcher/ui/dialogs.py:234
 msgid "Mangled PDF saved to {}."
-msgstr ""
+msgstr "PDF danneggiato e salvato in {}."
 
 #: pdfstitcher/ui/dialogs.py:236
 msgid "Please attach to GitHub issue or email."
-msgstr ""
+msgstr "Allega il problema su GitHub o invialo tramite email."
 
 #: pdfstitcher/ui/dialogs.py:237
 msgid "Success"
-msgstr ""
+msgstr "Successo"
 
 #: pdfstitcher/ui/dialogs.py:240
 msgid "Failed to mangle PDF"
-msgstr ""
+msgstr "Impossibile distruggere il PDF"
 
 #: pdfstitcher/ui/dialogs.py:267
 msgid "Preferences"
@@ -377,20 +382,19 @@ msgstr "Verifica la disponibilità di aggiornamenti all'avvio"
 
 #: pdfstitcher/ui/dialogs.py:297
 msgid "Save current margin and unit settings"
-msgstr ""
+msgstr "Salva le impostazioni correnti di margine e unità"
 
 #: pdfstitcher/ui/dialogs.py:307
-#, fuzzy
 msgid "Save current line properties"
-msgstr "Seleziona proprietà da modificare"
+msgstr "Salva le proprietà della linea corrente"
 
 #: pdfstitcher/ui/dialogs.py:317
 msgid "Default open directory"
-msgstr ""
+msgstr "Apri directory predefinita"
 
 #: pdfstitcher/ui/dialogs.py:337
 msgid "Default save directory"
-msgstr ""
+msgstr "Directory predefinita di salvataggio"
 
 #: pdfstitcher/ui/dialogs.py:358
 msgid "Save preferences"
@@ -406,7 +410,7 @@ msgstr "Preferenze salvate in {}"
 
 #: pdfstitcher/ui/dialogs.py:422
 msgid "Please restart to switch to {}."
-msgstr ""
+msgstr "Riavviare per passare a {}."
 
 #: pdfstitcher/ui/dialogs.py:424
 msgid "Preferences saved"
@@ -613,9 +617,8 @@ msgid "Make sure  isn't open in another program"
 msgstr "Assicurarsi che   non sia aperto in un altro programma"
 
 #: pdfstitcher/ui/main_frame.py:263
-#, fuzzy
 msgid "File"
-msgstr "Centro"
+msgstr "File"
 
 #: pdfstitcher/ui/main_frame.py:268
 msgid "Check for updates"
@@ -626,9 +629,8 @@ msgid "Settings"
 msgstr "Impostazioni"
 
 #: pdfstitcher/ui/main_frame.py:279
-#, fuzzy
 msgid "Documentation"
-msgstr "Rotazione"
+msgstr "Documentazione"
 
 #: pdfstitcher/ui/main_frame.py:280
 msgid "Open the documentation in a web browser"
@@ -657,9 +659,8 @@ msgstr ""
 "l'output"
 
 #: pdfstitcher/ui/main_frame.py:390
-#, fuzzy
 msgid "File will be written to "
-msgstr "Salvato con successo in"
+msgstr "Il file verrà scritto in "
 
 #: pdfstitcher/ui/main_frame.py:432
 msgid "Opening"
@@ -667,7 +668,7 @@ msgstr "Apertura"
 
 #: pdfstitcher/ui/main_frame.py:462
 msgid "PDF locked! Enter the correct password."
-msgstr ""
+msgstr "PDF bloccato! Inserisci la password corretta."
 
 #: pdfstitcher/ui/main_frame.py:465
 msgid "Password"
@@ -675,11 +676,11 @@ msgstr "Password"
 
 #: pdfstitcher/ui/main_frame.py:465
 msgid "PDF file is locked"
-msgstr ""
+msgstr "Il file PDF è bloccato"
 
 #: pdfstitcher/ui/main_frame.py:472
 msgid "PDF will not open as you canceled the operation."
-msgstr ""
+msgstr "Il PDF non si aprirà perché hai annullato l'operazione."
 
 #: pdfstitcher/ui/main_frame.py:476
 msgid "Cannot open file"
@@ -687,17 +688,19 @@ msgstr "Impossibile aprire il file"
 
 #: pdfstitcher/ui/main_frame.py:479
 msgid "PDF file loaded without errors."
-msgstr ""
+msgstr "File PDF caricato senza errori."
 
 #: pdfstitcher/ui/main_frame.py:483
 msgid "Warning: this PDF is encrypted with the following permissions:"
-msgstr ""
+msgstr "Attenzione: questo PDF è crittografato con le seguenti autorizzazioni:"
 
 #: pdfstitcher/ui/main_frame.py:487
 msgid ""
 "Please be respectful of the author and only use this tool for personal "
 "use."
 msgstr ""
+"Si prega di rispettare l'autore e di utilizzare questo strumento solo per "
+"uso personale."
 
 #: pdfstitcher/ui/tile_tab.py:32
 msgid "Required Parameters"
