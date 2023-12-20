@@ -264,7 +264,7 @@ class LayerFilter:
         """
         Initializes the list of relevant states.
         """
-        self.current_state = [copy.deepcopy(state)]
+        self.current_state = [copy.copy(state)]
 
     def add_q_state(self):
         """
