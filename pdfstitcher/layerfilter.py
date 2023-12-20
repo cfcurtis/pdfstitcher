@@ -227,7 +227,7 @@ class LayerFilter:
         Updates the width and dash pattern to match the user unit.
         """
         if not "user_unit" in self.pdf_line_props.keys():
-            self.pdf_line_props["user_unit"] = 1
+            self.pdf_line_props["user_unit"] = user_unit
 
         # Don't do anything if it's already the same
         if self.pdf_line_props["user_unit"] == user_unit:
@@ -368,7 +368,7 @@ class LayerFilter:
         # update_ocs modifies the keep_ocs list if it was previously 'all'!
         self.update_ocs()
 
-        if self.line_props != {}:
+        if self.line_props:
             self.convert_layer_props()
             parse_streams = True
 
@@ -519,7 +519,7 @@ class LayerFilter:
             self.processed_objects.add(obid)
 
         # Adjust the user unit if necessary
-        if "/UserUnit" in page.keys():
+        if "/UserUnit" in page.keys() and self.pdf_line_props:
             self.adjust_user_unit(page.UserUnit)
 
         # the page is either an actual page, or a form xobject
