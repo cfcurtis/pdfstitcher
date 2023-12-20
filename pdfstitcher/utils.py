@@ -187,13 +187,8 @@ def setup_locale(lang: str = None) -> None:
     global valid_langs
     valid_langs = get_valid_langs()
     if lang is None:
-        lc = locale.getdefaultlocale()
-
         try:
-            if lc[0] is None:
-                lc = os.getenv("LANG")[:4]
-            else:
-                lang = lc[0]
+            lang = os.getenv("LANG").split(".")[0]
         except:
             try:
                 # try the Apple way
@@ -303,9 +298,7 @@ def init_new_doc(pdf):
     return new_doc
 
 
-def get_page_dims(
-    page, global_rotation: float = 0, target_user_unit: float = 1
-) -> tuple:
+def get_page_dims(page, global_rotation: float = 0, target_user_unit: float = 1) -> tuple:
     """
     Helper function to calculate the page dimensions
     Returns width, height in pixels as observed by the user

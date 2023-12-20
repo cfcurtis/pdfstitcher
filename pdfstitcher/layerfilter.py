@@ -226,6 +226,9 @@ class LayerFilter:
         """
         Updates the width and dash pattern to match the user unit.
         """
+        if not "user_unit" in self.pdf_line_props.keys():
+            self.pdf_line_props["user_unit"] = user_unit
+
         # Don't do anything if it's already the same
         if self.pdf_line_props["user_unit"] == user_unit:
             return
@@ -261,7 +264,7 @@ class LayerFilter:
         """
         Initializes the list of relevant states.
         """
-        self.current_state = [state]
+        self.current_state = [copy.copy(state)]
 
     def add_q_state(self):
         """
@@ -365,7 +368,7 @@ class LayerFilter:
         # update_ocs modifies the keep_ocs list if it was previously 'all'!
         self.update_ocs()
 
-        if self.line_props != {}:
+        if self.line_props:
             self.convert_layer_props()
             parse_streams = True
 
@@ -516,7 +519,7 @@ class LayerFilter:
             self.processed_objects.add(obid)
 
         # Adjust the user unit if necessary
-        if "/UserUnit" in page.keys():
+        if "/UserUnit" in page.keys() and self.pdf_line_props:
             self.adjust_user_unit(page.UserUnit)
 
         # the page is either an actual page, or a form xobject
@@ -545,7 +548,7 @@ class LayerFilter:
                 pass
 
             # get the dictionary of xobjects to process as well
-            for name, info in placed_xobjs.items():
+            for _, info in placed_xobjs.items():
                 if "/Subtype" in info["xobj"].keys() and info["xobj"].Subtype == "/Form":
                     self.initialize_state(info["state"])
                     self.filter_content(

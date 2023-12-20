@@ -126,6 +126,7 @@ jobs:
         
       - name: Compile translation files and build .app
         run: | 
+          brew upgrade openssl
           pip3 install .
           pip3 install pyinstaller
           python3 pdfstitcher/update_loc.py --compile

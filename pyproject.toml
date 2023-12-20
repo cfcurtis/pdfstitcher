@@ -1,9 +1,9 @@
 [project]
 name = "pdfstitcher"
-version = "0.9.1"
+version = "0.9.2"
 description = "The open source PDF stitching software for sewists, by sewists."
 readme = "README.md"
-requires-python = ">=3.8, <3.11"
+requires-python = ">=3.8, <3.12"
 license = {file = "LICENSE"}
 keywords = ["pdf", "sewing", "utility", "stitch", "n-up", "page imposition"]
 authors = [
@@ -16,8 +16,8 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 dependencies = [
-    "pikepdf >= 2.2.0",
-    "wxPython >= 4.1",
+    "pikepdf",
+    "wxPython >= 4.2",
     "Babel",
     "PyYAML",
     "appdirs",

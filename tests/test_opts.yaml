@@ -122,12 +122,10 @@
   input: '{gdrive}/Sewing/LittleLizardKing/LLK_Galena_Girl_A0_Projector_Final.pdf'
   page_range: '1-2'
   layer_filter:
-    keep_ocs: ['2']
+    keep_ocs: 'all'
     line_props:
-      '2':
+      'all':
         thickness: 5.0
-        style: 0
-        rgb: [0,0,0]
 - name: SoSewEasy
   input: '{gdrive}/Sewing/SoSewEasy/menspajamashortsfinal_aiid2146907.pdf'
   page_range: '18-37'
