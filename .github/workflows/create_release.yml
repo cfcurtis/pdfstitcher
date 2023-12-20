@@ -110,8 +110,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-11, self-hosted]
-    env:
-      MACOSX_DEPLOYMENT_TARGET: "10.9" # it can't be this easy, but let's try
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -128,6 +126,7 @@ jobs:
         
       - name: Compile translation files and build .app
         run: | 
+          brew upgrade openssl
           brew install qpdf
           pip3 install .
           pip3 install pyinstaller
