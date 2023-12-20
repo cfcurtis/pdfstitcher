@@ -50,7 +50,7 @@ if __name__ == "__main__":
     total_start = time.time()
     for t in test_opts:
         if sys.platform.startswith("win32"):
-            gdrive = "D:/My Drive/"
+            gdrive = "C:/Users/ccurtis/Documents"
         elif sys.platform.startswith("darwin"):
             gdrive = "/Users/charlotte/Documents"
         elif sys.platform.startswith("linux"):
@@ -90,9 +90,20 @@ if __name__ == "__main__":
                     layer_filter.page_range = page_range
                     layer_filter.keep_non_oc = keep_non_oc
                     for k, v in t["layer_filter"].items():
+                        if k == 'line_props' and 'all' in v.keys():
+                            continue
                         setattr(layer_filter, k, v)
+                    
+                    if "line_props" in t["layer_filter"].keys() and "all" in t["layer_filter"]["line_props"].keys():
+                        layers = layer_filter.get_layer_names()
+                        for layer in layers:
+                            for k, v in t["layer_filter"]["line_props"]["all"].items():
+                                layer_filter.line_props[layer] = {}
+                                layer_filter.line_props[layer][k] = v
+
                     for key in layer_filter.line_props.keys():
                         layer_filter.line_props[key]["fill_colour"] = fill
+                        
                     full_profile = (
                         "profile" in t["layer_filter"].keys() and t["layer_filter"]["profile"]
                     )

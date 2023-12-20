@@ -6,6 +6,11 @@ else
     pdfs="$@"
 fi
 
+# alias for windows
+if [[ "$OSTYPE" == "msys" ]]; then
+    alias gs="gswin64c"
+fi
+
 for pdf in $pdfs; do
     echo "Checking $pdf..."
     gs -dNOPAUSE -dBATCH -sDEVICE=nullpage "$pdf" | grep -i 'warn\|err'
