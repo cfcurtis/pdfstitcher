@@ -264,7 +264,7 @@ class LayerFilter:
         """
         Initializes the list of relevant states.
         """
-        self.current_state = [state]
+        self.current_state = [copy.deepcopy(state)]
 
     def add_q_state(self):
         """
@@ -548,7 +548,7 @@ class LayerFilter:
                 pass
 
             # get the dictionary of xobjects to process as well
-            for name, info in placed_xobjs.items():
+            for _, info in placed_xobjs.items():
                 if "/Subtype" in info["xobj"].keys() and info["xobj"].Subtype == "/Form":
                     self.initialize_state(info["state"])
                     self.filter_content(
