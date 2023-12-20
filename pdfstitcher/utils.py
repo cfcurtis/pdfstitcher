@@ -187,13 +187,8 @@ def setup_locale(lang: str = None) -> None:
     global valid_langs
     valid_langs = get_valid_langs()
     if lang is None:
-        lc = locale.getdefaultlocale()
-
         try:
-            if lc[0] is None:
-                lc = os.getenv("LANG")[:4]
-            else:
-                lang = lc[0]
+            lang = os.getenv("LANG").split(".")[0]
         except:
             try:
                 # try the Apple way
