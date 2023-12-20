@@ -298,9 +298,7 @@ def init_new_doc(pdf):
     return new_doc
 
 
-def get_page_dims(
-    page, global_rotation: float = 0, target_user_unit: float = 1
-) -> tuple:
+def get_page_dims(page, global_rotation: float = 0, target_user_unit: float = 1) -> tuple:
     """
     Helper function to calculate the page dimensions
     Returns width, height in pixels as observed by the user

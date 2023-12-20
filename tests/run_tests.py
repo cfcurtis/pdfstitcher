@@ -90,11 +90,14 @@ if __name__ == "__main__":
                     layer_filter.page_range = page_range
                     layer_filter.keep_non_oc = keep_non_oc
                     for k, v in t["layer_filter"].items():
-                        if k == 'line_props' and 'all' in v.keys():
+                        if k == "line_props" and "all" in v.keys():
                             continue
                         setattr(layer_filter, k, v)
-                    
-                    if "line_props" in t["layer_filter"].keys() and "all" in t["layer_filter"]["line_props"].keys():
+
+                    if (
+                        "line_props" in t["layer_filter"].keys()
+                        and "all" in t["layer_filter"]["line_props"].keys()
+                    ):
                         layers = layer_filter.get_layer_names()
                         for layer in layers:
                             for k, v in t["layer_filter"]["line_props"]["all"].items():
@@ -103,7 +106,7 @@ if __name__ == "__main__":
 
                     for key in layer_filter.line_props.keys():
                         layer_filter.line_props[key]["fill_colour"] = fill
-                        
+
                     full_profile = (
                         "profile" in t["layer_filter"].keys() and t["layer_filter"]["profile"]
                     )
