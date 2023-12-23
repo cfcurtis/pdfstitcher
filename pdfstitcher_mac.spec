@@ -1,6 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 import os
+import platform
 from PyInstaller.utils.hooks import copy_metadata, collect_data_files
 import importlib.metadata
 __version__ = importlib.metadata.version("pdfstitcher")
@@ -43,7 +44,7 @@ exe = EXE(
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    # target_arch='universal2', # not yet working, fails on Pillow
+    target_arch=platform.machine(),
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
