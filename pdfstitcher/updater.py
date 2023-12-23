@@ -48,8 +48,10 @@ def get_download_url() -> str:
     if sys.platform == "win32":
         return gh_prefix + "pdfstitcher.exe"
     elif sys.platform == "darwin":
-        # for now, just return pdfstitcher.org
-        # TODO: Determine macOS architecture
-        return utils.WEB_HOME
+        import platform
+        if platform.machine() == "arm64":
+            return gh_prefix + "PDFStitcher-InstallerARM64.dmg"
+        else:
+            return gh_prefix + "PDFStitcher-InstallerX64.dmg"
     else:
         return utils.FLATHUB_HOME
