@@ -119,6 +119,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.10" # better compatibility with pikepdf, it seems
+      
+      - name: Configure Python venv on self-hosted
+        if: ${{ matrix.os == 'self-hosted' }}
+        run: |
+          /opt/homebrew/bin/python3.10 -m venv venv
+          source venv/bin/activate
         
       - name: Compile translation files and build .app
         run: | 
