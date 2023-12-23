@@ -114,8 +114,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        run: brew install python@3.10
+      - name: Install Python
+        if: ${{ matrix.os == 'macos-11' }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10" # better compatibility with pikepdf, it seems
         
       - name: Compile translation files and build .app
         run: | 
