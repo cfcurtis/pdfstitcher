@@ -140,12 +140,17 @@ jobs:
           chmod +x make_mac_installer.sh
           ./make_mac_installer.sh
       
-      - name: Rename with system architecture
-        run: mv PDFStitcher-Installer.dmg "PDFStitcher-Installer${{ runner.arch }}.dmg"
+      - name: Rename with arch for X64
+        if: ${{ matrix.os == 'macos-11' }}
+        run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerX64.dmg"
+      
+      - name: Rename with arch for ARM64
+        if: ${{ matrix.os == 'self-hosted' }}
+        run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerARM64.dmg"
       
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.15
         with:
-          files: "PDFStitcher-Installer${{ runner.arch }}.dmg"
+          files: "PDFStitcher-Installer*.dmg"
           draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
