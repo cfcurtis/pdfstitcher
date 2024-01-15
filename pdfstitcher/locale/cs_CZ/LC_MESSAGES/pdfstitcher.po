@@ -9,20 +9,21 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: 2022-05-27 15:19+0000\n"
-"Last-Translator: Charlotte Curtis <c.f.curtis@gmail.com>\n"
+"PO-Revision-Date: 2024-01-16 16:06+0000\n"
+"Last-Translator: Lucie Holá <hola.lucka1@gmail.com>\n"
+"Language-Team: Czech <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/cs/>\n"
 "Language: cs_CZ\n"
-"Language-Team: Czech <https://hosted.weblate.org/projects/pdfstitcher"
-"/user-interface/cs/>\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 5.4-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: pdfstitcher/bug_info.py:28
 msgid "Error getting system info: {}"
-msgstr ""
+msgstr "Chyba při získávání informací o systému:{}"
 
 #: pdfstitcher/bug_info.py:54
 msgid "Mangling PDF. This may take some time."
@@ -222,9 +223,8 @@ msgid "Margin size in inches."
 msgstr ""
 
 #: pdfstitcher/tile_pages.py:638
-#, fuzzy
 msgid "Amount to trim from edges"
-msgstr "Oříznutí z každé stránky"
+msgstr "Oříznutí z okrajů stránky"
 
 #: pdfstitcher/tile_pages.py:640
 msgid ""
@@ -244,7 +244,7 @@ msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:60
 msgid "cm"
-msgstr ""
+msgstr "cm"
 
 #: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:62
 msgid "pt"
@@ -276,7 +276,7 @@ msgstr "Velikost výstupního PDF:"
 
 #: pdfstitcher/ui/dialogs.py:25
 msgid "Checking for updates"
-msgstr ""
+msgstr "Probíhá kontrola aktualizací"
 
 #: pdfstitcher/ui/dialogs.py:31
 msgid "Please wait..."
@@ -304,11 +304,11 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:79
 msgid "Download Now"
-msgstr ""
+msgstr "Stáhnout teď"
 
 #: pdfstitcher/ui/dialogs.py:91
 msgid "Error checking for updates"
-msgstr ""
+msgstr "Chyba při kontrole aktualizací"
 
 #: pdfstitcher/ui/dialogs.py:105 pdfstitcher/ui/main_frame.py:289
 msgid "Report a bug"
@@ -322,6 +322,10 @@ msgid ""
 "document - it will be saved to your Desktop and can be attached to the "
 "issue."
 msgstr ""
+"Níže popište kroky, které vedly ke vzniku problému. Pomocí tlačítek otevřete "
+"problém přes GitHub (preferováno, ale vyžaduje přihlášení), nebo odešlete "
+"hlášení e-mailem. Volitelně zahrňte pozměněnou verzi vstupního dokumentu – "
+"uloží se na vaši plochu a lze jej připojit k hlášení."
 
 #: pdfstitcher/ui/dialogs.py:168
 msgid "Create mangled PDF (Beta)"
@@ -333,15 +337,15 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:188
 msgid "Email to ccurtis@mtroyal.ca"
-msgstr ""
+msgstr "Napsat e-mail ccurtis@mtroyal.ca"
 
 #: pdfstitcher/ui/dialogs.py:227
 msgid "Could not copy to clipboard"
-msgstr ""
+msgstr "Nelze zkopírovat do schránky"
 
 #: pdfstitcher/ui/dialogs.py:227 pdfstitcher/ui/dialogs.py:240
 msgid "Error"
-msgstr ""
+msgstr "Chyba"
 
 #: pdfstitcher/ui/dialogs.py:234
 msgid "Mangled PDF saved to {}."
@@ -369,7 +373,7 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:287
 msgid "Check for updates on startup"
-msgstr ""
+msgstr "Zkontrolujte aktualizace při spuštění"
 
 #: pdfstitcher/ui/dialogs.py:297
 msgid "Save current margin and unit settings"
@@ -382,11 +386,11 @@ msgstr "Vyberte vlastnosti čáry, které chcete upravit"
 
 #: pdfstitcher/ui/dialogs.py:317
 msgid "Default open directory"
-msgstr ""
+msgstr "Výchozí adresář - Otevřít"
 
 #: pdfstitcher/ui/dialogs.py:337
 msgid "Default save directory"
-msgstr ""
+msgstr "Výchozí adresář - Uložit"
 
 #: pdfstitcher/ui/dialogs.py:358
 msgid "Save preferences"
@@ -394,7 +398,7 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:373
 msgid "Choose a directory"
-msgstr ""
+msgstr "Vyberte adresář"
 
 #: pdfstitcher/ui/dialogs.py:420
 msgid "Preferences saved to {}"
@@ -514,7 +518,7 @@ msgstr "Barva čáry"
 
 #: pdfstitcher/ui/layers_tab.py:112
 msgid "Also modify fill colour"
-msgstr ""
+msgstr "Upravit i barvu výplně"
 
 #: pdfstitcher/ui/layers_tab.py:121
 msgid "Line Thickness"
@@ -611,16 +615,15 @@ msgstr "Skrýt"
 
 #: pdfstitcher/ui/main_frame.py:268
 msgid "Check for updates"
-msgstr ""
+msgstr "Kontrola aktualizací"
 
 #: pdfstitcher/ui/main_frame.py:272
 msgid "Settings"
 msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:279
-#, fuzzy
 msgid "Documentation"
-msgstr "Otočení"
+msgstr "Dokumentace"
 
 #: pdfstitcher/ui/main_frame.py:280
 msgid "Open the documentation in a web browser"
@@ -640,7 +643,7 @@ msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:342
 msgid "Contributors"
-msgstr ""
+msgstr "Přispěvatelé"
 
 #: pdfstitcher/ui/main_frame.py:381
 #, fuzzy
@@ -745,4 +748,3 @@ msgstr "Překrytí"
 #~ "\n"
 #~ "Please restart to switch to {}."
 #~ msgstr ""
-
