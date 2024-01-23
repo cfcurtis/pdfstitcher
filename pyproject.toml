@@ -16,7 +16,7 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 dependencies = [
-    "pikepdf == 7.2.0",
+    "pikepdf >= 8.11.1",
     "wxPython >= 4.2",
     "Babel",
     "PyYAML",

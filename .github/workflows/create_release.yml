@@ -114,8 +114,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Set up Python for with ARM64
+        if: ${{ runner.arch == 'ARM64' }}
+        run: brew install python@3.10
+
       - name: Install Python
-        if: ${{ matrix.os == 'macos-11' }}
+        if: ${{ runner.arch == 'X64' }}
         uses: actions/setup-python@v4
         with:
           python-version: "3.10" # better compatibility with pikepdf, it seems
@@ -134,17 +138,12 @@ jobs:
           chmod +x make_mac_installer.sh
           ./make_mac_installer.sh
       
-      - name: Rename with arch for X64
-        if: ${{ matrix.os == 'macos-11' }}
-        run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerX64.dmg"
-      
-      - name: Rename with arch for ARM64
-        if: ${{ matrix.os == 'self-hosted' }}
-        run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerARM64.dmg"
+      - name: Rename with system architecture
+        run: mv PDFStitcher-Installer.dmg "PDFStitcher-Installer${{ runner.arch }}.dmg"
       
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.15
         with:
-          files: "PDFStitcher-Installer*.dmg"
+          files: "PDFStitcher-Installer${{ runner.arch }}.dmg"
           draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
