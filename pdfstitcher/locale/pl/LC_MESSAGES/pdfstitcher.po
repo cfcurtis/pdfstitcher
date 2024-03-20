@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: 2024-03-18 23:37+0000\n"
-"Last-Translator: MA N <maianhania@yahoo.com>\n"
+"PO-Revision-Date: 2024-03-21 22:01+0000\n"
+"Last-Translator: Eryk Michalak <gnu.ewm@protonmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/pdfstitcher/"
 "user-interface/pl/>\n"
 "Language: pl\n"
@@ -90,23 +90,23 @@ msgstr "Od dołu do góry"
 
 #: pdfstitcher/tile_pages.py:134 pdfstitcher/ui/tile_tab.py:290
 msgid "Bottom"
-msgstr ""
+msgstr "Dół"
 
 #: pdfstitcher/tile_pages.py:136 pdfstitcher/tile_pages.py:143
 msgid "Middle"
-msgstr ""
+msgstr "Środek"
 
 #: pdfstitcher/tile_pages.py:138 pdfstitcher/ui/tile_tab.py:275
 msgid "Top"
-msgstr ""
+msgstr "Góra"
 
 #: pdfstitcher/tile_pages.py:141 pdfstitcher/ui/tile_tab.py:245
 msgid "Left"
-msgstr ""
+msgstr "Lewo"
 
 #: pdfstitcher/tile_pages.py:145 pdfstitcher/ui/tile_tab.py:260
 msgid "Right"
-msgstr ""
+msgstr "Prawo"
 
 #: pdfstitcher/tile_pages.py:147
 msgid "Tiling with {} rows and {} columns"
@@ -126,7 +126,7 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:151
 msgid "Rotation"
-msgstr ""
+msgstr "Rotacja"
 
 #: pdfstitcher/tile_pages.py:152 pdfstitcher/ui/tile_tab.py:78
 msgid "Page order"
@@ -229,7 +229,7 @@ msgstr "Obróć strony (90, 180 lub 270 stopni)"
 #. translation_note: pt = "points", in = "inches", cm = "centimeters"
 #: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:58
 msgid "in"
-msgstr ""
+msgstr "w"
 
 #: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:60
 msgid "cm"
@@ -342,7 +342,7 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:237
 msgid "Success"
-msgstr ""
+msgstr "Sukces"
 
 #: pdfstitcher/ui/dialogs.py:240
 msgid "Failed to mangle PDF"
@@ -514,7 +514,7 @@ msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:161
 msgid "Solid"
-msgstr ""
+msgstr "Ciągła"
 
 #: pdfstitcher/ui/layers_tab.py:161
 msgid "Dashed"
@@ -522,11 +522,11 @@ msgstr "Przerywana"
 
 #: pdfstitcher/ui/layers_tab.py:161
 msgid "Dotted"
-msgstr ""
+msgstr "Kropkowana"
 
 #: pdfstitcher/ui/layers_tab.py:177
 msgid "Apply"
-msgstr ""
+msgstr "Zastosuj"
 
 #: pdfstitcher/ui/layers_tab.py:179 pdfstitcher/ui/layers_tab.py:311
 msgid "Reset"
@@ -626,7 +626,7 @@ msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:342
 msgid "Contributors"
-msgstr ""
+msgstr "Współtwórcy"
 
 #: pdfstitcher/ui/main_frame.py:381
 msgid "Can't overwrite input file, please select a different file for output"
@@ -638,7 +638,7 @@ msgstr "Plik zostanie zapisany w "
 
 #: pdfstitcher/ui/main_frame.py:432
 msgid "Opening"
-msgstr ""
+msgstr "Otwieranie"
 
 #: pdfstitcher/ui/main_frame.py:462
 msgid "PDF locked! Enter the correct password."
