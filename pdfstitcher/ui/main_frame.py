@@ -8,9 +8,7 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 import wx
-from pdfstitcher.tile_pages import PageTiler
-from pdfstitcher.layerfilter import LayerFilter
-from pdfstitcher.pagefilter import PageFilter
+from pdfstitcher.processing.mainproc import MainProcess
 from pdfstitcher import utils
 from pdfstitcher.utils import Config
 from pdfstitcher.ui.dialogs import PrefsDialog, UpdateDialog, BugReporter
@@ -69,10 +67,7 @@ class PDFStitcherFrame(wx.Frame):
         self.splitter.SplitHorizontally(nb, pnl)
         self.splitter.SetMinimumPaneSize(40)
 
-        self.in_doc = None
-        self.out_doc_path = None
-        self.tiler = None
-        self.layer_filter = None
+        self.main_process = MainProcess()
 
         self.make_menu_bar()
         # connect the on_close event
@@ -120,108 +115,117 @@ class PDFStitcherFrame(wx.Frame):
         elif event.GetId() == self.tt.unit_box.GetId():
             self.io.unit_box.SetSelection(self.tt.unit_box.GetSelection())
 
-    def on_go_pressed(self, event):
-        # retrieve the selected options
-        do_tile = bool(self.io.do_tile.GetValue())
-        do_layers = bool(self.io.do_layers.GetValue())
+    def get_tile_opts(self):
+        """
+        Helper function to pack up the tiling options
+        """
+        # define trim options
+        trim = [0.0] * 4
+        trim[0] = utils.txt_to_float(self.tt.left_trim_txt.GetValue())
+        trim[1] = utils.txt_to_float(self.tt.right_trim_txt.GetValue())
+        trim[2] = utils.txt_to_float(self.tt.top_trim_txt.GetValue())
+        trim[3] = utils.txt_to_float(self.tt.bottom_trim_txt.GetValue())
 
-        if (do_tile and self.tiler is None) or (do_layers and self.layer_filter is None):
+        # rows/cols
+        cols = self.tt.columns_txt.GetValue().strip()
+        cols = int(cols) if cols else None
+        rows = self.tt.rows_txt.GetValue().strip()
+        rows = int(rows) if rows else None
+
+        return {
+            # The bare minimum rows/columns (only one should be defined)
+            "rows": rows,
+            "cols": cols,
+            # set all the various options of the tiler
+            "col_major": bool(self.tt.col_row_order_combo.GetSelection()),
+            "right_to_left": bool(self.tt.left_right_combo.GetSelection()),
+            "bottom_to_top": bool(self.tt.top_bottom_combo.GetSelection()),
+            # set the optional stuff
+            "rotation": self.tt.rotate_combo.GetSelection(),
+            # margins, margins!
+            "margin": utils.txt_to_float(self.tt.margin_txt.GetValue()),
+            # trim related stuff
+            "trim": trim,
+            "actually_trim": bool(self.tt.trim_overlap_combo.GetSelection()),
+            "override_trim": bool(self.tt.override_trim.GetValue()),
+        }
+
+    def get_layer_opts(self):
+        """
+        Helper function to pack up the layer options
+        """
+        return {
+            "keep_ocs": self.lt.get_selected_layers(),
+            "line_props": self.lt.line_props,
+            "keep_non_oc": bool(self.lt.include_nonoc.GetValue()),
+            "delete_ocgs": bool(self.lt.delete_ocgs.GetSelection() == 0),
+        }
+
+    def on_go_pressed(self, event):
+        if self.in_doc is None:
+            print(_("No PDF loaded"))
             return
 
+        # make sure an output path is defined
         if self.out_doc_path is None:
             self.on_output(event)
 
             if self.out_doc_path is None:
+                # user probably cancelled?
                 return
 
         # global options
-        page_range = utils.parse_page_range(self.io.page_range_txt.GetValue())
+        self.main_process.set_page_range(self.io.page_range_txt.GetValue())
         Config.general["units"] = utils.UNITS(self.io.unit_box.GetSelection())
 
-        if page_range is None:
-            print(_("No page range specified, defaulting to all"))
-            page_range = list(range(1, len(self.in_doc.pages) + 1))
+        # get the selected filters
+        do_tile = bool(self.io.do_tile.GetValue())
+        do_layers = bool(self.io.do_layers.GetValue())
 
-        if do_layers:
-            # set up the layer filter
-            self.layer_filter.keep_ocs = self.lt.get_selected_layers()
-            self.layer_filter.line_props = self.lt.line_props
-            self.layer_filter.keep_non_oc = bool(self.lt.include_nonoc.GetValue())
-            self.layer_filter.delete_ocgs = bool(self.lt.delete_ocgs.GetSelection() == 0)
-            self.layer_filter.page_range = page_range
+        # build the pipeline
+        self.main_process
 
-        if do_tile:
-            # set all the various options of the tiler
-            # define the page order
-            self.tiler.col_major = bool(self.tt.col_row_order_combo.GetSelection())
-            self.tiler.right_to_left = bool(self.tt.left_right_combo.GetSelection())
-            self.tiler.bottom_to_top = bool(self.tt.top_bottom_combo.GetSelection())
-            self.tiler.page_range = page_range
+        # create the progress window
+        progress_win = wx.ProgressDialog(
+            _("Processing"),
+            _("Processing, please wait"),
+            style=wx.PD_CAN_ABORT | wx.PD_AUTO_HIDE,
+        )
 
-            # set the optional stuff
-            self.tiler.rotation = self.tt.rotate_combo.GetSelection()
+        #         filtered = self.layer_filter.run(progress_win)
+        #     else:
+        #         filtered = self.in_doc
 
-            # margins
-            self.tiler.margin = utils.txt_to_float(self.tt.margin_txt.GetValue())
+        #     if filtered is None:
+        #         return
 
-            # trim
-            trim = [0.0] * 4
-            trim[0] = utils.txt_to_float(self.tt.left_trim_txt.GetValue())
-            trim[1] = utils.txt_to_float(self.tt.right_trim_txt.GetValue())
-            trim[2] = utils.txt_to_float(self.tt.top_trim_txt.GetValue())
-            trim[3] = utils.txt_to_float(self.tt.bottom_trim_txt.GetValue())
-            self.tiler.trim = trim
-            self.tiler.actually_trim = bool(self.tt.trim_overlap_combo.GetSelection())
-            self.tiler.override_trim = self.tt.override_trim.GetValue()
+        #     if do_tile:
+        #         in_doc = filtered
+        #         new_doc = run(rows, cols)
+        #         if new_doc:
+        #             print(_("Tiling successful"))
+        #     else:
+        #         # extract the requested pages
+        #         page_filter = PageFilter(filtered)
+        #         page_filter.page_range = page_range
+        #         page_filter.margin = utils.txt_to_float(self.io.margin_txt.GetValue())
+        #         new_doc = page_filter.run()
 
-            # rows/cols
-            cols = self.tt.columns_txt.GetValue().strip()
-            cols = int(cols) if cols else None
-            rows = self.tt.rows_txt.GetValue().strip()
-            rows = int(rows) if rows else None
+        # except Exception as e:
+        #     print(_("Something went wrong"))
+        #     traceback.print_exc()
+        #     return
 
-        # do it
-        try:
-            if do_layers:
-                progress_win = wx.ProgressDialog(
-                    _("Processing layers"),
-                    _("Processing layers, please wait"),
-                    style=wx.PD_CAN_ABORT | wx.PD_AUTO_HIDE,
-                )
-                filtered = self.layer_filter.run(progress_win)
-            else:
-                filtered = self.in_doc
-
-            if filtered is None:
-                return
-
-            if do_tile:
-                self.tiler.in_doc = filtered
-                new_doc = self.tiler.run(rows, cols)
-                if new_doc:
-                    print(_("Tiling successful"))
-            else:
-                # extract the requested pages
-                page_filter = PageFilter(filtered)
-                page_filter.page_range = page_range
-                page_filter.margin = utils.txt_to_float(self.io.margin_txt.GetValue())
-                new_doc = page_filter.run()
-
-        except Exception as e:
-            print(_("Something went wrong"))
-            traceback.print_exc()
-            return
-
-        try:
-            if new_doc:
-                new_doc.save(self.out_doc_path)
-                print(_("Successfully written to") + " " + self.out_doc_path)
-        except Exception as e:
-            print(
-                _("Something went wrong") + ", " + _("unable to write to") + " " + self.out_doc_path
-            )
-            print(e)
-            print(_("Make sure " + self.out_doc_path + " isn't open in another program"))
+        # try:
+        #     if new_doc:
+        #         new_doc.save(self.out_doc_path)
+        #         print(_("Successfully written to") + " " + self.out_doc_path)
+        # except Exception as e:
+        #     print(
+        #         _("Something went wrong") + ", " + _("unable to write to") + " " + self.out_doc_path
+        #     )
+        #     print(e)
+        #     print(_("Make sure " + self.out_doc_path + " isn't open in another program"))
 
     def make_menu_bar(self):
         """
