@@ -161,7 +161,7 @@ class IOTab(scrolled.ScrolledPanel):
     def load_new(self, path: str, n_pages: int):
         self.input_fname_display.ChangeValue(path)
         self.output_fname_display.ChangeValue("")
-        self.page_range_txt.ChangeValue("1-{}".format(n_pages))
+        self.page_range_txt.SetValue("1-{}".format(n_pages))
 
     def on_option_checked(self, event):
         do_layers = bool(self.do_layers.GetValue())

@@ -5,6 +5,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+from typing import Union
+
 from pdfstitcher.processing.procbase import ProcessingBase
 from pdfstitcher.processing.pagetiler import PageTiler
 from pdfstitcher.processing.pagefilter import PageFilter
@@ -20,25 +22,60 @@ class MainProcess(ProcessingBase):
     """
 
     def __init__(self, *args, **kw) -> None:
-        super().__init__(self, *args, **kw)
-        self.pipeline = []
+        super().__init__(*args, **kw)
 
-    def add_unit(self, name: str, params: dict) -> None:
+        self.pipeline = {
+            "LayerFilter": LayerFilter(),
+            "PageTiler": PageTiler(),
+            "PageFilter": PageFilter(),
+        }
+        self.active = {
+            "LayerFilter": False,
+            "PageTiler": False,
+            "PageFilter": False,
+        }
+
+    @ProcessingBase.page_range.setter
+    def page_range(self, page_range: str) -> None:
         """
-        Build the pipeline with the given units and parameters.
+        Override the page range setter of the base class to update processing units.
         """
-        if name == "PageTiler":
-            self.pipeline.append(PageTiler(params))
-        elif name == "PageFilter":
-            self.pipeline.append(PageFilter(params))
-        elif name == "LayerFilter":
-            self.pipeline.append(LayerFilter(params))
-        else:
+        ProcessingBase.page_range.fset(self, page_range)
+
+        for unit in self.pipeline.values():
+            unit.page_range = page_range
+
+    def toggle(self, name: str, active: bool) -> None:
+        """
+        Switches the active state of the given processing unit.
+        """
+        if name not in self.pipeline:
             print(_("Unknown processing unit: {}".format(name)))
+            return
+
+        self.active[name] = active
+
+        # Enforce mutual exclusivity between PageTiler and PageFilter
+        if name == "PageTiler":
+            self.active["PageFilter"] = not active
+
+        elif name == "PageFilter":
+            self.active["PageTiler"] = not active
+
+    def set_params(self, name: str, params: dict) -> bool:
+        """
+        Updates the pipeline with the given parameters.
+        Returns true if successfully added or updated.
+        """
+        if name not in self.pipeline:
+            print(_("Unknown processing unit: {}".format(name)))
+            return False
+
+        self.pipeline[name].params = params
 
     def run(self, progress_win=None) -> bool:
         """
-        Pass the document through the pipeline.
+        Pass the document through the pipeline. Returns true if successful.
         """
         if not self.pipeline:
             return False
@@ -49,29 +86,24 @@ class MainProcess(ProcessingBase):
 
         # Pass the document from one unit to the next
         output = self.in_doc
-        for unit in self.pipeline:
+        for name in filter(self.active.get, self.active):
+            unit = self.pipeline[name]
             unit.in_doc = output
-            try:
-                if unit.run(progress_win):
-                    output = unit.out_doc
-                else:
-                    return False
-            except Exception as e:
-                print(f"Error in {unit.__class__.__name__}: {e}")
+
+            # run the unit if necessary and check if cancelled
+            if unit.needs_run and not unit.run(progress_win=progress_win):
                 return False
+
+            output = unit.out_doc
 
         # update the final output
         self.out_doc = output
+        self.needs_run = False
         return True
 
-    def save(self, out_path: str) -> bool:
+    def save(self, out_path: str) -> None:
         if self.out_doc is None:
-            return False
+            return
 
-        try:
-            self.out_doc.save(out_path)
-        except Exception as e:
-            print(f"Error saving document: {e}")
-            return False
-
-        return True
+        # handle exceptions in the calling scope
+        self.out_doc.save(out_path)

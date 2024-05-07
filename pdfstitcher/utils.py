@@ -30,7 +30,7 @@ MAX_SIZE_PX = 14400
 
 # Constant widget sizes - used for all the different panels
 BORDER = 5
-NUM_ENTRY_SIZE = (40, -1)
+NUM_ENTRY_SIZE = (80, -1)
 PATH_ENTRY_SIZE = (250, -1)
 
 # language global variable
@@ -298,7 +298,9 @@ def init_new_doc(pdf):
     return new_doc
 
 
-def get_page_dims(page, global_rotation: float = 0, target_user_unit: float = 1) -> tuple:
+def get_page_dims(
+    page: pikepdf.Page, global_rotation: float = 0, target_user_unit: float = 1
+) -> tuple:
     """
     Helper function to calculate the page dimensions
     Returns width, height in pixels as observed by the user

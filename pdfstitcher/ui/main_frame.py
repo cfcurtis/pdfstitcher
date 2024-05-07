@@ -162,7 +162,7 @@ class PDFStitcherFrame(wx.Frame):
         }
 
     def on_go_pressed(self, event):
-        if self.in_doc is None:
+        if self.main_process.in_doc is None:
             print(_("No PDF loaded"))
             return
 
@@ -175,57 +175,46 @@ class PDFStitcherFrame(wx.Frame):
                 return
 
         # global options
-        self.main_process.set_page_range(self.io.page_range_txt.GetValue())
+        self.main_process.page_range = self.io.page_range_txt.GetValue()
         Config.general["units"] = utils.UNITS(self.io.unit_box.GetSelection())
 
-        # get the selected filters
-        do_tile = bool(self.io.do_tile.GetValue())
-        do_layers = bool(self.io.do_layers.GetValue())
+        # define the selected processing options
+        self.main_process.toggle("LayerFilter", bool(self.io.do_layers.GetValue()))
+        self.main_process.toggle("PageTiler", bool(self.io.do_tile.GetValue()))
+        # Page Filter is active if PageTiler is not active, and vice versa
 
-        # build the pipeline
-        self.main_process
-
-        # create the progress window
-        progress_win = wx.ProgressDialog(
-            _("Processing"),
-            _("Processing, please wait"),
-            style=wx.PD_CAN_ABORT | wx.PD_AUTO_HIDE,
+        self.main_process.set_params("LayerFilter", self.get_layer_opts())
+        self.main_process.set_params("PageTiler", self.get_tile_opts())
+        self.main_process.set_params(
+            "PageFilter", {"margin": utils.txt_to_float(self.io.margin_txt.GetValue())}
         )
 
-        #         filtered = self.layer_filter.run(progress_win)
-        #     else:
-        #         filtered = self.in_doc
+        progress_win = None
+        if self.main_process.active["LayerFilter"]:
+            # create the progress window if layer processing is selected
+            progress_win = wx.ProgressDialog(
+                _("Processing"),
+                _("Processing, please wait"),
+                style=wx.PD_CAN_ABORT | wx.PD_AUTO_HIDE,
+            )
 
-        #     if filtered is None:
-        #         return
-
-        #     if do_tile:
-        #         in_doc = filtered
-        #         new_doc = run(rows, cols)
-        #         if new_doc:
-        #             print(_("Tiling successful"))
-        #     else:
-        #         # extract the requested pages
-        #         page_filter = PageFilter(filtered)
-        #         page_filter.page_range = page_range
-        #         page_filter.margin = utils.txt_to_float(self.io.margin_txt.GetValue())
-        #         new_doc = page_filter.run()
-
-        # except Exception as e:
-        #     print(_("Something went wrong"))
-        #     traceback.print_exc()
-        #     return
-
-        # try:
-        #     if new_doc:
-        #         new_doc.save(self.out_doc_path)
-        #         print(_("Successfully written to") + " " + self.out_doc_path)
-        # except Exception as e:
-        #     print(
-        #         _("Something went wrong") + ", " + _("unable to write to") + " " + self.out_doc_path
-        #     )
-        #     print(e)
-        #     print(_("Make sure " + self.out_doc_path + " isn't open in another program"))
+        # run the processing
+        try:
+            complete = self.main_process.run(progress_win)
+            if not complete:
+                print(_("Processing cancelled"))
+            else:
+                self.main_process.save(self.out_doc_path)
+                print(_("Successfully written to") + " " + self.out_doc_path)
+        except IOError as e:
+            print(
+                _("Something went wrong") + ", " + _("unable to write to") + " " + self.out_doc_path
+            )
+            print(e)
+            print(_("Make sure " + self.out_doc_path + " isn't open in another program"))
+        except Exception as e:
+            print(_("Something went wrong"))
+            traceback.print_exc()
 
     def make_menu_bar(self):
         """
@@ -356,7 +345,7 @@ class PDFStitcherFrame(wx.Frame):
         pathname = pathname.strip()
         Config.general["save_dir"] = str(Path(pathname).parent)
 
-        if pathname == self.in_doc.filename:
+        if self.main_process.in_doc and pathname == self.main_process.in_doc.filename:
             wx.MessageBox(
                 _("Can't overwrite input file, " + "please select a different file for output"),
                 "Error",
@@ -370,7 +359,7 @@ class PDFStitcherFrame(wx.Frame):
                 print(_("File will be written to " + pathname))
 
             except IOError:
-                wx.LogError(_("unable to write to") + pathname)
+                print(_("unable to write to") + pathname)
 
     def on_input_change(self, event):
         """
@@ -400,14 +389,14 @@ class PDFStitcherFrame(wx.Frame):
             # Proceed loading the file chosen by the user
             pathname = fileDialog.GetPath()
             self.load_file(pathname)
-        
+
     def update_gui_options(self):
         """
         Update the GUI options based on the loaded file.
         """
         if not self.main_process.in_doc:
             return
-        
+
         Config.general["open_dir"] = str(Path(self.main_process.in_doc.filename).parent)
 
         # update the page range
@@ -415,9 +404,12 @@ class PDFStitcherFrame(wx.Frame):
 
         # update the layer options
         self.lt.load_new(self.main_process.doc_info["layers"])
-        
+
         # update the processing description
         self.io.on_option_checked(None)
+
+        # reset the output path
+        self.out_doc_path = None
 
     def load_file(self, pathname, password=""):
         """
@@ -429,7 +421,9 @@ class PDFStitcherFrame(wx.Frame):
             print(_("Opening") + " " + pathname)
 
             self.main_process.load_doc(pathname, password=password)
-            self.io.load_new(self.main_process.in_doc.filename, self.main_process.doc_info["n_pages"])
+            self.io.load_new(
+                self.main_process.in_doc.filename, self.main_process.doc_info["n_pages"]
+            )
         except pikepdf.PasswordError:
             print(_("PDF locked! Enter the correct password."))
 
@@ -441,25 +435,24 @@ class PDFStitcherFrame(wx.Frame):
                 password_dialog.Destroy()
                 self.load_file(pathname, password)
             else:
-                wx.LogError(_("PDF will not open as you canceled the operation."))
+                print(_("PDF will not open as you canceled the operation."))
                 password_dialog.Destroy()
                 return
 
         except IOError as e:
-            wx.LogError(_("Cannot open file") + " " + pathname)
-            wx.LogError(_("Error message") + f": {e}")
+            print(_("Cannot open file") + " " + pathname)
+            print(_("Error message") + f": {e}")
             return
-        
+
         # If we got this far, we should be good
         print(_("PDF file loaded without errors."))
-        
+
         # Check for permissions
         if self.main_process.in_doc.is_encrypted:
             permissions = self.main_process.in_doc.allow
-            # TODO: Redirect log to GUI
-            wx.LogWarning(_("This PDF is encrypted with the following permissions:"))
+            print(_("This PDF is encrypted with the following permissions:"))
             for perm, allowed in permissions._asdict().items():
-                wx.LogWarning(f"{perm}: {allowed}")
+                print(f"{perm}: {allowed}")
 
         print(_("Please be respectful of the author and only use this tool for personal use."))
         self.update_gui_options()
