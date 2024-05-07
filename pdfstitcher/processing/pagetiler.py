@@ -93,7 +93,7 @@ class PageTiler(ProcessingBase):
         if self.p["bottom_to_top"]:
             btstr = _("Bottom to top")
 
-        print(_("Tiling with {} rows and {} columns").format(self.p["rows"], self.p["cols"]))
+        print(_("Tiling with {} rows and {} columns").format(self.rows, self.cols))
         print(_("Options") + ":")
         print("    " + _("Margins") + ": {} {}".format(self.p["margin"], Config.general["units"]))
         print("    " + _("Trim") + ": {} {}".format(self.p["trim"], Config.general["units"]))
@@ -257,27 +257,27 @@ class PageTiler(ProcessingBase):
         Find the grid that contains the maximum page size for each row/col.
         Returns the grid dimensions as a tuple of two lists.
         """
-        col_width = [0] * self.p["cols"]
-        row_height = [0] * self.p["rows"]
+        col_width = [0] * self.cols
+        row_height = [0] * self.rows
 
         if self.p["col_major"]:
-            for c in range(self.p["cols"]):
-                col_width[c] = max(pw[c * self.p["rows"] : c * self.p["rows"] + self.p["rows"]]) - (
+            for c in range(self.cols):
+                col_width[c] = max(pw[c * self.rows : c * self.rows + self.rows]) - (
                     self.pt_trim[0] + self.pt_trim[1]
                 )
 
-            for r in range(self.p["rows"]):
-                row_height[r] = max(ph[r : n_tiles : self.p["cols"]]) - (
+            for r in range(self.rows):
+                row_height[r] = max(ph[r : n_tiles : self.cols]) - (
                     self.pt_trim[2] + self.pt_trim[3]
                 )
         else:
-            for r in range(self.p["rows"]):
-                row_height[r] = max(
-                    ph[r * self.p["cols"] : r * self.p["cols"] + self.p["cols"]]
-                ) - (self.pt_trim[2] + self.pt_trim[3])
+            for r in range(self.rows):
+                row_height[r] = max(ph[r * self.cols : r * self.cols + self.cols]) - (
+                    self.pt_trim[2] + self.pt_trim[3]
+                )
 
-            for c in range(self.p["cols"]):
-                col_width[c] = max(pw[c : n_tiles : self.p["rows"]]) - (
+            for c in range(self.cols):
+                col_width[c] = max(pw[c : n_tiles : self.rows]) - (
                     self.pt_trim[0] + self.pt_trim[1]
                 )
 
@@ -295,39 +295,41 @@ class PageTiler(ProcessingBase):
         Returns True if the result is valid, False otherwise.
         """
         if self.p["cols"] is not None and self.p["cols"] > 0:
-            self.p["rows"] = math.ceil(n_tiles / self.p["cols"])
-            if self.p["rows"] == 1 and self.p["cols"] > n_tiles:
+            self.cols = self.p["cols"]
+            self.rows = math.ceil(n_tiles / self.cols)
+            if self.rows == 1 and self.cols > n_tiles:
                 print(
                     _("Warning: requested {} columns, but there are only {} pages").format(
-                        self.p["cols"], n_tiles
+                        self.cols, n_tiles
                     )
                 )
-                self.p["cols"] = n_tiles
+                self.cols = n_tiles
 
         elif self.p["rows"] is not None and self.p["rows"] > 0:
-            self.p["cols"] = math.ceil(n_tiles / self.p["rows"])
-            if self.p["cols"] == 1 and self.p["rows"] > n_tiles:
+            self.rows = self.p["rows"]
+            self.cols = math.ceil(n_tiles / self.rows)
+            if self.cols == 1 and self.rows > n_tiles:
                 print(
                     _("Warning: requested {} rows, but there are only {} pages").format(
-                        self.p["rows"], n_tiles
+                        self.rows, n_tiles
                     )
                 )
-                self.p["rows"] = n_tiles
+                self.rows = n_tiles
         else:
             # try for square
-            self.p["cols"] = math.ceil(math.sqrt(n_tiles))
-            self.p["rows"] = math.ceil(n_tiles / self.p["cols"])
+            self.cols = math.ceil(math.sqrt(n_tiles))
+            self.rows = math.ceil(n_tiles / self.cols)
 
         # Make sure there are no empty columns or rows
         if self.p["col_major"]:
-            doable = self.p["cols"] * self.p["rows"] - n_tiles < self.p["rows"]
+            doable = self.cols * self.rows - n_tiles < self.rows
         else:
-            doable = self.p["cols"] * self.p["rows"] - n_tiles < self.p["cols"]
+            doable = self.cols * self.rows - n_tiles < self.cols
 
         if not doable:
             error_msg = _(
                 "Error: cannot tile {} pages with {} rows and {} columns".format(
-                    n_tiles, self.p["rows"], self.p["cols"]
+                    n_tiles, self.rows, self.cols
                 )
             )
             if self.p["col_major"]:
@@ -343,17 +345,17 @@ class PageTiler(ProcessingBase):
         Determines the placement of the tile in the grid, returning a tuple of (row, col).
         """
         if self.p["col_major"]:
-            c = math.floor(tile_i / self.p["rows"])
-            r = tile_i % self.p["rows"]
+            c = math.floor(tile_i / self.rows)
+            r = tile_i % self.rows
         else:
-            r = math.floor(tile_i / self.p["cols"])
-            c = tile_i % self.p["cols"]
+            r = math.floor(tile_i / self.cols)
+            c = tile_i % self.cols
 
         if self.p["right_to_left"]:
-            c = self.p["cols"] - c - 1
+            c = self.cols - c - 1
 
         if self.p["bottom_to_top"]:
-            r = self.p["rows"] - r - 1
+            r = self.rows - r - 1
 
         return r, c
 
@@ -468,8 +470,8 @@ class PageTiler(ProcessingBase):
         self.target_height = Config.general["units"].units_to_pts(self.target_width)
 
         # determine size of each page based on requested dimensions
-        page_box_width = self.target_width / self.p["cols"]
-        page_box_height = self.target_height / self.p["rows"]
+        page_box_width = self.target_width / self.cols
+        page_box_height = self.target_height / self.rows
 
         # loop through all the page xobjects and place the non-empty ones
         content_txt = ""
@@ -486,8 +488,8 @@ class PageTiler(ProcessingBase):
             scale_factor = min(scalef_width, scalef_height)
             T = self.compute_T_matrix(
                 i,
-                [page_box_width] * self.p["cols"],
-                [page_box_height] * self.p["rows"],
+                [page_box_width] * self.cols,
+                [page_box_height] * self.rows,
                 page_info,
                 scale_factor,
             )
