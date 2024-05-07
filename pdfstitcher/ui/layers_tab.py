@@ -232,7 +232,7 @@ class LayersTab(scrolled.ScrolledPanel):
 
             units = utils.UNITS(self.line_thick_units.GetSelection())
             line_str += f"{line_thick} {units} "
-            line_thick = units.units_to_px(line_thick)
+            line_thick = units.units_to_pts(line_thick)
             self.line_props[layer]["thickness"] = line_thick
 
         if self.enable_style.IsChecked():

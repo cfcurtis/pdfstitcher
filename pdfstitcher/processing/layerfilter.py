@@ -6,7 +6,8 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 import pikepdf
-import pdfstitcher.pdf_operators as pdf_ops
+import pdfstitcher.processing.pdf_operators as pdf_ops
+import pdfstitcher.utils as utils
 from decimal import Decimal
 import copy
 
@@ -44,7 +45,7 @@ class LayerFilter:
         page_range=[],
         line_props={},
     ):
-        self.pdf = pdf
+        self.in_doc = pdf
         self.keep_ocs = keep_ocs
         self.keep_non_oc = keep_non_oc
         self.delete_ocgs = delete_ocgs
@@ -53,25 +54,6 @@ class LayerFilter:
 
         self.line_props = line_props
         self.pdf_line_props = {}
-
-    @staticmethod
-    def _fix_utf16(string):
-        new_string = string.replace("\x00", "")
-        if new_string.startswith("ÿþ"):
-            new_string = new_string[2:]
-        return new_string
-
-    @staticmethod
-    def _search_names(ordered_names, name_object, depth=0):
-        if depth > 1:
-            return
-        for o in name_object:
-            if "/Name" in o.keys():
-                name = LayerFilter._fix_utf16(str(o.Name))
-                if name not in ordered_names:
-                    ordered_names.append(name)
-            else:
-                LayerFilter._search_names(ordered_names, o, depth=depth + 1)
 
     @staticmethod
     def _get_page_forms(page):
@@ -101,27 +83,6 @@ class LayerFilter:
                 return True
         return False
 
-    def get_layer_names(self):
-        """
-        reads through the root to parse out the layers present in the file.
-
-        Returns:
-            list: a list of layer names, or None if there are no layers
-        """
-        if "/OCProperties" in self.pdf.Root.keys() and "/OCGs" in self.pdf.Root.OCProperties.keys():
-            ocp = self.pdf.Root.OCProperties
-        else:
-            return None
-
-        names = [str(oc.Name) for oc in ocp.OCGs]
-        ordered_names = []
-        if "/D" in ocp.keys() and "/Order" in ocp.D.keys():
-            LayerFilter._search_names(ordered_names, ocp.D.Order)
-        for n in names:
-            real_n = LayerFilter._fix_utf16(n)
-            if real_n not in ordered_names:
-                ordered_names.append(real_n)
-        return ordered_names
 
     def filter_ocg_order(self, ocg_list=None):
         """
@@ -129,7 +90,7 @@ class LayerFilter:
         """
 
         if ocg_list is None:
-            ocg_list = self.out_pdf.Root.OCProperties.D.Order
+            ocg_list = self.out_doc.Root.OCProperties.D.Order
 
         if ocg_list._type_name == "array":
             to_delete = []
@@ -157,27 +118,27 @@ class LayerFilter:
         """
         # If the list was 'all', modify so it includes all the layers
         if self.keep_ocs == "all":
-            self.keep_ocs = self.get_layer_names()
+            self.keep_ocs = utils.get_layer_names(self.in_doc)
             return
 
         # edit the OCG listing in the root
-        On = [oc for oc in self.out_pdf.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]
+        On = [oc for oc in self.out_doc.Root.OCProperties.OCGs if str(oc.Name) in self.keep_ocs]
         Off = [
-            oc for oc in self.out_pdf.Root.OCProperties.OCGs if str(oc.Name) not in self.keep_ocs
+            oc for oc in self.out_doc.Root.OCProperties.OCGs if str(oc.Name) not in self.keep_ocs
         ]
 
         # Delete requires parsing
         if self.delete_ocgs:
-            self.out_pdf.Root.OCProperties.OCGs = On
-            self.out_pdf.Root.OCProperties.D.ON = On
+            self.out_doc.Root.OCProperties.OCGs = On
+            self.out_doc.Root.OCProperties.D.ON = On
             self.filter_ocg_order()
         else:
             # just switch them off
-            self.out_pdf.Root.OCProperties.D.ON = On
-            self.out_pdf.Root.OCProperties.D.OFF = Off
+            self.out_doc.Root.OCProperties.D.ON = On
+            self.out_doc.Root.OCProperties.D.OFF = Off
 
         # by default, unlock all layers
-        self.out_pdf.Root.OCProperties.D.Locked = []
+        self.out_doc.Root.OCProperties.D.Locked = []
 
     def process_page_range(self):
         """
@@ -186,7 +147,7 @@ class LayerFilter:
         """
         # This is different from the page range processing in tile_pages!
         if len(self.page_range) == 0:
-            return list(range(1, len(self.out_pdf.pages) + 1))
+            return list(range(1, len(self.out_doc.pages) + 1))
         else:
             # get rid of duplicates and zeros in the page range
             return list(set([p for p in self.page_range if p > 0]))
@@ -336,27 +297,27 @@ class LayerFilter:
 
         return oc_obs, other_obs
 
-    def run(self, progress_win=None):
+    def run(self, progress_win=None) -> bool:
         """
-        The primary method to run the filter.
-        If called from PDFStitcher gui, the progress window will be updated.
-        Returns:
-            pikepdf.Pdf: the filtered PDF
+        Process the layers. Progress window is optional, but a good idea as this can take a while.
         """
         self.processed_objects = set()
 
-        if "/OCProperties" not in self.pdf.Root.keys():
-            return self.pdf
+        if "/OCProperties" not in self.in_doc.Root.keys():
+            self.out_doc = self.in_doc
+            return True
 
         if self.keep_ocs == "all" and len(self.line_props) == 0:
-            return self.pdf
+            # nothing to do, just return the input document
+            self.out_doc = self.in_doc
+            return True
 
         if len(self.keep_ocs) == 0 and self.keep_non_oc == False:
             print(_("No layers selected, generated PDF would be blank."))
-            return self.pdf
+            return False
 
         # open a new copy of the input
-        self.out_pdf = pikepdf.Pdf.open(self.pdf.filename)
+        self.out_doc = pikepdf.Pdf.open(self.in_doc.filename)
         page_range = self.process_page_range()
         n_page = len(page_range)
 
@@ -377,16 +338,16 @@ class LayerFilter:
             for p in page_range:
                 # reset the state before each page
                 self.initialize_state()
-                self.filter_content(self.out_pdf.pages[p - 1])
+                self.filter_content(self.out_doc.pages[p - 1])
                 # update the progress bar for each page, then check if user cancelled
                 progress_win and progress_win.Update(page_range.index(p))
                 if progress_win and progress_win.WasCancelled():
-                    return None
+                    return False
 
         # done, update progress and strip out unused stuff
         progress_win and progress_win.Update(n_page)
-        self.out_pdf.remove_unreferenced_resources()
-        return self.out_pdf
+        self.out_doc.remove_unreferenced_resources()
+        return True
 
     def filter_stream(self, ob, current_layer_name=""):
         """
@@ -568,7 +529,7 @@ class LayerFilter:
         # finally, write the stream
         try:
             if is_page:
-                page.Contents = self.out_pdf.make_stream(page_stream)
+                page.Contents = self.out_doc.make_stream(page_stream)
             else:
                 # Probably a form xobject
                 page.write(page_stream)

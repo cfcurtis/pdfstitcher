@@ -400,6 +400,24 @@ class PDFStitcherFrame(wx.Frame):
             # Proceed loading the file chosen by the user
             pathname = fileDialog.GetPath()
             self.load_file(pathname)
+        
+    def update_gui_options(self):
+        """
+        Update the GUI options based on the loaded file.
+        """
+        if not self.main_process.in_doc:
+            return
+        
+        Config.general["open_dir"] = str(Path(self.main_process.in_doc.filename).parent)
+
+        # update the page range
+        self.io.page_range_txt.ChangeValue("1-{}".format(self.main_process.doc_info["n_pages"]))
+
+        # update the layer options
+        self.lt.load_new(self.main_process.doc_info["layers"])
+        
+        # update the processing description
+        self.io.on_option_checked(None)
 
     def load_file(self, pathname, password=""):
         """
@@ -409,44 +427,9 @@ class PDFStitcherFrame(wx.Frame):
             # open the pdf
             pathname = pathname.strip()
             print(_("Opening") + " " + pathname)
-            self.in_doc = pikepdf.Pdf.open(pathname, password=password)
-            self.io.load_new(self.in_doc)
 
-            # create the processing objects
-            self.layer_filter = LayerFilter(self.in_doc)
-            if not self.lt.load_new(self.layer_filter.get_layer_names()):
-                self.lt.Disable()
-                self.io.do_layers.SetValue(0)
-                self.io.do_layers.Disable()
-            else:
-                self.io.do_layers.SetValue(1)
-                self.io.do_layers.Enable()
-                self.lt.Enable()
-
-            # only enable tiling if there are more than one page
-            if len(self.in_doc.pages) > 1:
-                self.tiler = PageTiler()
-                self.io.do_tile.Enable()
-                self.tt.Enable()
-
-                # check how big the pages are, and default to no tiling if they're over A3
-                first_page = self.in_doc.pages[0]
-                w, h = utils.get_page_dims(first_page, target_user_unit=1)
-                if w > 11.7 * 72 or h > 16.5 * 72:
-                    self.io.do_tile.SetValue(0)
-                else:
-                    self.io.do_tile.SetValue(1)
-            else:
-                self.io.do_tile.SetValue(0)
-                self.io.do_tile.Disable()
-                self.tt.Disable()
-
-            # update the processing description
-            self.io.on_option_checked(None)
-
-            # clear the output if it's already set
-            self.out_doc_path = None
-
+            self.main_process.load_doc(pathname, password=password)
+            self.io.load_new(self.main_process.in_doc.filename, self.main_process.doc_info["n_pages"])
         except pikepdf.PasswordError:
             print(_("PDF locked! Enter the correct password."))
 
@@ -460,21 +443,26 @@ class PDFStitcherFrame(wx.Frame):
             else:
                 wx.LogError(_("PDF will not open as you canceled the operation."))
                 password_dialog.Destroy()
+                return
 
-        except IOError:
+        except IOError as e:
             wx.LogError(_("Cannot open file") + " " + pathname)
+            wx.LogError(_("Error message") + f": {e}")
+            return
+        
+        # If we got this far, we should be good
+        print(_("PDF file loaded without errors."))
+        
+        # Check for permissions
+        if self.main_process.in_doc.is_encrypted:
+            permissions = self.main_process.in_doc.allow
+            # TODO: Redirect log to GUI
+            wx.LogWarning(_("This PDF is encrypted with the following permissions:"))
+            for perm, allowed in permissions._asdict().items():
+                wx.LogWarning(f"{perm}: {allowed}")
 
-        else:
-            print(_("PDF file loaded without errors."))
-            # Check for permissions
-            if self.in_doc.is_encrypted:
-                permissions = self.in_doc.allow
-                print(_("Warning: this PDF is encrypted with the following permissions:"))
-                for perm, allowed in permissions._asdict().items():
-                    print(f"{perm}: {allowed}")
-
-            print(_("Please be respectful of the author and only use this tool for personal use."))
-            Config.general["open_dir"] = str(Path(pathname).parent)
+        print(_("Please be respectful of the author and only use this tool for personal use."))
+        self.update_gui_options()
 
 
 def main(language_warning: str):

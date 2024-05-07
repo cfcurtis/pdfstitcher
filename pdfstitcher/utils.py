@@ -61,9 +61,9 @@ class UNITS(IntEnum):
         elif self == UNITS.POINTS:
             return _("pt")
 
-    def units_to_px(self, val: float, user_unit: float = 1):
+    def units_to_pts(self, val: float, user_unit: float = 1):
         """
-        Converts from current units to pixels.
+        Converts from current units to points.
         """
         if self == UNITS.INCHES:
             return val * 72 / user_unit
@@ -72,9 +72,9 @@ class UNITS(IntEnum):
         elif self == UNITS.POINTS:
             return val / user_unit
 
-    def px_to_units(self, val: float, user_unit: float = 1):
+    def pts_to_units(self, val: float, user_unit: float = 1):
         """
-        Converts from pixels to current units.
+        Converts from points to current units.
         """
         if self == UNITS.INCHES:
             return user_unit * val / 72
@@ -345,7 +345,7 @@ def print_media_box(media_box, user_unit: float = 1) -> None:
         print(62 * "*")
         print(
             _("Warning! Output is larger than {} {}, may not open correctly.").format(
-                round(Config.general["units"].px_to_units(MAX_SIZE_PX, user_unit)),
+                round(Config.general["units"].pts_to_units(MAX_SIZE_PX, user_unit)),
                 Config.general["units"],
             )
         )
@@ -354,8 +354,8 @@ def print_media_box(media_box, user_unit: float = 1) -> None:
     print(
         _("Output size:")
         + " {:0.2f} x {:0.2f} {}".format(
-            Config.general["units"].px_to_units(width, user_unit),
-            Config.general["units"].px_to_units(height, user_unit),
+            Config.general["units"].pts_to_units(width, user_unit),
+            Config.general["units"].pts_to_units(height, user_unit),
             Config.general["units"],
         )
     )
@@ -377,3 +377,49 @@ def normalize_boxes(page):
     if "/Resources" in page.keys() and "/XObject" in page.Resources.keys():
         for key in page.Resources.XObject.keys():
             normalize_boxes(page.Resources.XObject[key])
+
+
+def fix_utf16(string: str) -> str:
+    """
+    Helper function to put a band-aid on UTF-16 encoded strings.
+    """
+    new_string = string.replace("\x00", "")
+    if new_string.startswith("ÿþ"):
+        new_string = new_string[2:]
+    return new_string
+
+
+def add_name(ordered_names: list, name_object: pikepdf.Dictionary, depth: int = 0) -> None:
+    """
+    Add the name to the list of ordered names. Ignores duplicates.
+    """
+    if depth > 1:
+        return
+    for o in name_object:
+        if "/Name" in o.keys():
+            name = fix_utf16(str(o.Name))
+            if name not in ordered_names:
+                ordered_names.append(name)
+        else:
+            add_name(ordered_names, o, depth=depth + 1)
+
+
+def get_layer_names(doc: pikepdf.Pdf) -> list:
+    """
+    Reads through the root to parse out the layers present in the file, excluding duplicates.
+    Returns a list of layer names, or None if there are no layers
+    """
+    if "/OCProperties" in doc.Root.keys() and "/OCGs" in doc.Root.OCProperties.keys():
+        ocp = doc.Root.OCProperties
+    else:
+        return None
+
+    names = [str(oc.Name) for oc in ocp.OCGs]
+    ordered_names = []
+    if "/D" in ocp.keys() and "/Order" in ocp.D.keys():
+        add_name(ordered_names, ocp.D.Order)
+    for n in names:
+        real_n = fix_utf16(n)
+        if real_n not in ordered_names:
+            ordered_names.append(real_n)
+    return ordered_names

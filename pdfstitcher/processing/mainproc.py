@@ -5,10 +5,10 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-from procbase import ProcessingBase
-from tile_pages import PageTiler
-from pagetiler import PageFilter
-from layerfilter import LayerFilter
+from pdfstitcher.processing.procbase import ProcessingBase
+from pdfstitcher.processing.pagetiler import PageTiler
+from pdfstitcher.processing.pagefilter import PageFilter
+from pdfstitcher.processing.layerfilter import LayerFilter
 
 from pdfstitcher import utils
 from pdfstitcher.utils import Config
@@ -27,7 +27,7 @@ class MainProcess(ProcessingBase):
         """
         Build the pipeline with the given units and parameters.
         """
-        if name == "TilePages":
+        if name == "PageTiler":
             self.pipeline.append(PageTiler(params))
         elif name == "PageFilter":
             self.pipeline.append(PageFilter(params))
@@ -43,17 +43,22 @@ class MainProcess(ProcessingBase):
         if not self.pipeline:
             return False
 
+        # First, go through the pages and normalize the various boxes
+        for page in self.in_doc.pages:
+            utils.normalize_boxes(page)
+
         # Pass the document from one unit to the next
         output = self.in_doc
         for unit in self.pipeline:
             unit.in_doc = output
             try:
-                unit.run()
+                if unit.run(progress_win):
+                    output = unit.out_doc
+                else:
+                    return False
             except Exception as e:
                 print(f"Error in {unit.__class__.__name__}: {e}")
                 return False
-
-            output = unit.out_doc
 
         # update the final output
         self.out_doc = output

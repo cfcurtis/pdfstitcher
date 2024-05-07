@@ -158,10 +158,10 @@ class IOTab(scrolled.ScrolledPanel):
         self.SetupScrolling()
         self.SetBackgroundColour(parent.GetBackgroundColour())
 
-    def load_new(self, in_doc):
-        self.input_fname_display.ChangeValue(in_doc.filename)
+    def load_new(self, path: str, n_pages: int):
+        self.input_fname_display.ChangeValue(path)
         self.output_fname_display.ChangeValue("")
-        self.page_range_txt.ChangeValue("1-{}".format(len(in_doc.pages)))
+        self.page_range_txt.ChangeValue("1-{}".format(n_pages))
 
     def on_option_checked(self, event):
         do_layers = bool(self.do_layers.GetValue())
