@@ -80,7 +80,6 @@ class PageTiler(ProcessingBase):
         """
         Display the options selected for tiling.
         """
-
         orderstr = _("Rows then columns")
         if self.p["col_major"]:
             orderstr = _("Columns then rows")

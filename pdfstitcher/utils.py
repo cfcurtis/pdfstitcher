@@ -15,7 +15,6 @@ import yaml
 
 # localization stuff
 import gettext
-import locale
 from babel import Locale
 from pathlib import Path
 

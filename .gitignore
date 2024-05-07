@@ -10,7 +10,7 @@ build/*
 *.mo
 venv/*
 tests/*.pdf
-!tests/userunit*.pdf
+tests/integration/*.pdf
 
 # Distribution / packaging
 bin/
