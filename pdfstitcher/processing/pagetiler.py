@@ -366,22 +366,27 @@ class PageTiler(ProcessingBase):
         Only used if a tile is smaller than the grid space.
         """
 
-        if "horizontal_align" not in self.p:
-            self.p["horizontal_align"] = SW_ALIGN_H.MID
-        if "vertical_align" not in self.p:
-            self.p["vertical_align"] = SW_ALIGN_V.MID
+        if "horizontal_align" in self.p:
+            h_align = self.p["horizontal_align"]
+        else:
+            h_align = SW_ALIGN_H.MID
 
-        if self.p["horizontal_align"] is SW_ALIGN_H.LEFT:
+        if "vertical_align" in self.p:
+            v_align = self.p["vertical_align"]
+        else:
+            v_align = SW_ALIGN_V.MID
+
+        if h_align is SW_ALIGN_H.LEFT:
             shift_right = 0
-        elif self.p["horizontal_align"] is SW_ALIGN_H.MID:
+        elif h_align is SW_ALIGN_H.MID:
             shift_right = round(horizontal_space / 2)
-        elif self.p["horizontal_align"] is SW_ALIGN_H.RIGHT:
+        elif h_align is SW_ALIGN_H.RIGHT:
             shift_right = round(horizontal_space)
-        if self.p["vertical_align"] is SW_ALIGN_V.BOTTOM:
+        if v_align is SW_ALIGN_V.BOTTOM:
             shift_up = 0
-        elif self.p["vertical_align"] is SW_ALIGN_V.MID:
+        elif v_align is SW_ALIGN_V.MID:
             shift_up = round(vertical_space / 2)
-        elif self.p["vertical_align"] is SW_ALIGN_V.TOP:
+        elif v_align is SW_ALIGN_V.TOP:
             shift_up = round(vertical_space)
 
         # invert shift if we are rotating
