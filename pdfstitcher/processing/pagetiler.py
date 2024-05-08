@@ -76,6 +76,11 @@ class PageTiler(ProcessingBase):
     def __init__(self, *args, **kw) -> None:
         super().__init__(*args, **kw)
 
+        # define a few attributes that will be overwritten on run
+        self.output_uu = 1
+        self.cols = 0
+        self.rows = 0
+
     def _show_options(self):
         """
         Display the options selected for tiling.
@@ -107,62 +112,105 @@ class PageTiler(ProcessingBase):
                 "    " + _("Horizontal alignment") + ": {}".format(str(self.p["horizontal_align"]))
             )
 
-    def _process_page(self, content_dict: pikepdf.Dictionary, p: int) -> str:
+    def _process_page(self, content_dict: pikepdf.Dictionary, p: int, info: dict) -> None:
         """
         Extracts page number p from the input document and adds it to the page_dict,
-        trimming if requested and storing page dimensions.
-        Returns the pagekey if a new page was added, None if it already exists.
+        performs trimming if requested, and stores page dimensions. Lots going on.
         """
         pagekey = f"/Page{p}"
         # Check if it's already been copied (in case of duplicate page numbers)
         if pagekey in content_dict.keys():
             return None
 
-        # get a copy of the input page
-        new_page = copy.copy(self.in_doc.pages[p - 1])
+        # get a convenient reference to the page
+        in_doc_page = self.in_doc.pages[p - 1]
 
-        if "/Rotate" in new_page.keys():
-            page_rot = new_page.Rotate % 360
+        # magic sauce to copy the info to the new document as an XOBject
+        content_dict[pagekey] = self.out_doc.copy_foreign(
+            in_doc_page.as_form_xobject(handle_transformations=False)
+        )
 
+        # get the page rotation and user unit
+        page_rot = 0
+        if "/Rotate" in in_doc_page.keys():
+            page_rot = in_doc_page.Rotate % 360
+
+        page_uu = 1
+        if "/UserUnit" in in_doc_page.keys():
+            page_uu = float(in_doc_page.UserUnit)
+
+        # lowercase trimbox returns TrimBox if it exists, MediaBox otherwise
+        # overriding trimbox will use the media box instead, sometimes fixes weird things
         if self.p["override_trim"]:
-            new_page.TrimBox = copy.copy(new_page.MediaBox)
+            bbox = copy.copy(in_doc_page.MediaBox)
+        else:
+            bbox = copy.copy(in_doc_page.trimbox)
 
         # set the trim box to cut off content if requested
         if self.p["actually_trim"]:
+            page_trim = self._get_trim(page_uu)
             # things get tricky if there's rotation, because the user sees top/bottom as right/left
             # trim: left, right, top, bottom as defined visually
             # trimbox: left, bottom, right, top (absolute coordinates)
-            rtrim = [self.pt_trim[0], self.pt_trim[3], self.pt_trim[1], self.pt_trim[2]]
+            rtrim = [page_trim[0], page_trim[3], page_trim[1], page_trim[2]]
             if page_rot == 90:
-                rtrim = [self.pt_trim[2], self.pt_trim[0], self.pt_trim[3], self.pt_trim[1]]
+                rtrim = [page_trim[2], page_trim[0], page_trim[3], page_trim[1]]
             elif page_rot == 180:
-                rtrim = [self.pt_trim[3], self.pt_trim[0], self.pt_trim[2], self.pt_trim[1]]
+                rtrim = [page_trim[3], page_trim[0], page_trim[2], page_trim[1]]
             elif page_rot == 270:
-                rtrim = [self.pt_trim[3], self.pt_trim[1], self.pt_trim[2], self.pt_trim[0]]
+                rtrim = [page_trim[3], page_trim[1], page_trim[2], page_trim[0]]
 
-            # lowercase trimbox returns TrimBox if it exists, MediaBox otherwise
-            in_trim = [float(t) for t in new_page.trimbox]
-            new_page.TrimBox = [
-                in_trim[0] + rtrim[0],
-                in_trim[1] + rtrim[1],
-                in_trim[2] - rtrim[2],
-                in_trim[3] - rtrim[3],
+            bbox = [
+                float(bbox[0]) + rtrim[0],
+                float(bbox[1]) + rtrim[1],
+                float(bbox[2]) - rtrim[2],
+                float(bbox[3]) - rtrim[3],
             ]
+        content_dict[pagekey].BBox = bbox
 
-        # magic sauce to copy the info to the new document as an XOBject
-        content_dict[pagekey] = self.out_doc.copy_foreign(new_page.as_form_xobject())
+        # also apply the rotation to the target matrix
+        if "/Matrix" in content_dict[pagekey].keys():
+            xobj_matrix = pikepdf.Matrix(content_dict[pagekey].Matrix).rotated(page_rot)
+        else:
+            xobj_matrix = pikepdf.Matrix().rotated(page_rot)
+        
+        # Scale the form xobject by the target document user unit relative to the page.
+        # This is why we're not letting pikepdf handle the transformation!
+        content_dict[pagekey].Matrix = xobj_matrix.scaled(
+            page_uu / self.output_uu, page_uu / self.output_uu
+        ).shorthand
 
-        # scale the form xobject by the target user unit
-        if self.user_unit != 1:
-            if "/Matrix" in content_dict[pagekey].keys():
-                xobj_matrix = pikepdf.PdfMatrix(content_dict[pagekey].Matrix)
-            else:
-                xobj_matrix = pikepdf.PdfMatrix.identity()
-            content_dict[pagekey].Matrix = xobj_matrix.scaled(
-                1 / self.user_unit, 1 / self.user_unit
-            ).shorthand
+        # update the info dictionary with the page dimensions
+        p_width, p_height = utils.get_page_dims(
+            content_dict[pagekey], page_rot, page_uu=page_uu, output_uu=self.output_uu
+        )
+    
+        # append the page info
+        info.append({"width": p_width, "height": p_height, "pagekey": pagekey})
 
-        return pagekey
+    def _get_first_page_dims(self) -> tuple:
+        """
+        Get the dimensions of the first page in the document. Returns a tuple of (width, height).
+        Mainly useful if the first page specified is blank (0).
+        """
+        # initialize the width/height indices based on page rotation
+        page_rot = 0
+
+        if "/Rotate" in self.in_doc.Root.Pages.keys():
+            page_rot = self.in_doc.Root.Pages.Rotate % 360
+
+        # find the first non-zero page number
+        p = None
+        for p in self.page_range:
+            if p > 0:
+                break
+        
+        if not p:
+            raise ValueError(_("No valid pages included in range"))
+
+        # get a pointer to the reference page and parse out the width and height
+        ref_page = self.in_doc.pages[p - 1]
+        return utils.get_page_dims(ref_page, page_rot, output_uu=self.output_uu)
 
     def _build_pagelist(self) -> tuple:
         """
@@ -176,54 +224,28 @@ class PageTiler(ProcessingBase):
         # define the dictionary to store xobjects and the corresponding names (e.g. MC0, MC1, etc.)
         content_dict = pikepdf.Dictionary({})
         info = []
-        page_count = len(self.in_doc.pages)
 
-        # initialize the width/height indices based on page rotation
-        page_rot = 0
-
-        if "/Rotate" in self.in_doc.Root.Pages.keys():
-            page_rot = self.in_doc.Root.Pages.Rotate % 360
-
-        # find the first non-zero page number
-        for p in self.page_range:
-            if p > 0:
-                break
-
-        # get a pointer to the reference page and parse out the width and height
-        ref_page = self.in_doc.pages[p - 1]
-        prev_width, prev_height = utils.get_page_dims(ref_page, page_rot, self.user_unit)
-
-        # keep track of any pages that are different from the first
+        # keep track of any pages that are different from the previous one
         different_size = set()
+        prev_width, prev_height = self._get_first_page_dims()
 
         for p in self.page_range:
-            if p > page_count:
-                print(_("Only {} pages in document, skipping {}").format(page_count, p))
-                continue
-
             if p == 0:
                 # blank page: append a placeholder to the info list
                 info.append({"width": prev_width, "height": prev_height, "pagekey": None})
                 continue
 
             # if we've already added this page to the dictionary, skip it
-            pagekey = self._process_page(content_dict, p)
+            pagekey = self._process_page(content_dict, p, info)
             if pagekey is None:
                 continue
 
-            p_width, p_height = utils.get_page_dims(
-                self.in_doc.pages[p - 1], page_rot, self.user_unit
-            )
-
-            if abs(p_width - prev_width) > 1 or abs(p_height - prev_height) > 1:
+            if abs(info[-1]["width"] - prev_width) > 1 or abs(info[-1]["height"] - prev_height) > 1:
                 different_size.add(p)
 
             # update the reference handles to be the current page
-            prev_width = p_width
-            prev_height = p_height
-
-            # append the page info
-            info.append({"width": p_width, "height": p_height, "pagekey": pagekey})
+            prev_width = info[-1]["width"]
+            prev_height = info[-1]["height"] 
 
         if len(different_size) > 0:
             print(
@@ -234,9 +256,9 @@ class PageTiler(ProcessingBase):
 
         return content_dict, info
 
-    def _adjust_trim_order(self) -> None:
+    def _get_trim(self, user_unit: float = 1) -> list:
         """
-        Rearranges the trim order based on requested rotation.
+        Rearranges the trim order based on requested rotation, handling any necessary scaling.
         """
         # swap the trim order
         # default: left,right,top,bottom
@@ -249,7 +271,7 @@ class PageTiler(ProcessingBase):
         if self.p["rotation"] == SW_ROTATION.TURNAROUND:
             order = [1, 0, 3, 2]
 
-        self.pt_trim = [self.pt_trim[o] for o in order]
+        return [Config.general["units"].units_to_pts(self.p["trim"][o], user_unit) for o in order]
 
     def _compute_target_size(self, n_tiles: int, pw: list, ph: list) -> tuple:
         """
@@ -259,25 +281,27 @@ class PageTiler(ProcessingBase):
         col_width = [0] * self.cols
         row_height = [0] * self.rows
 
+        doc_trim = self._get_trim(self.output_uu)
+
         if self.p["col_major"]:
             for c in range(self.cols):
                 col_width[c] = max(pw[c * self.rows : c * self.rows + self.rows]) - (
-                    self.pt_trim[0] + self.pt_trim[1]
+                    doc_trim[0] + doc_trim[1]
                 )
 
             for r in range(self.rows):
                 row_height[r] = max(ph[r : n_tiles : self.cols]) - (
-                    self.pt_trim[2] + self.pt_trim[3]
+                    doc_trim[2] + doc_trim[3]
                 )
         else:
             for r in range(self.rows):
                 row_height[r] = max(ph[r * self.cols : r * self.cols + self.cols]) - (
-                    self.pt_trim[2] + self.pt_trim[3]
+                    doc_trim[2] + doc_trim[3]
                 )
 
             for c in range(self.cols):
                 col_width[c] = max(pw[c : n_tiles : self.rows]) - (
-                    self.pt_trim[0] + self.pt_trim[1]
+                    doc_trim[0] + doc_trim[1]
                 )
 
         if self.p["right_to_left"]:
@@ -407,16 +431,11 @@ class PageTiler(ProcessingBase):
         """
         Find the maximum user_unit defined in the document, then use this for the new document.
         """
-        self.user_unit = 1
+        self.output_uu = 1
         for p in self.page_range:
             page = self.in_doc.pages[p - 1]
-            if "/UserUnit" in page.keys() and page.UserUnit > self.user_unit:
-                self.user_unit = float(page.UserUnit)
-
-        # copy over the trim values to the defined units
-        self.pt_trim = [
-            Config.general["units"].units_to_pts(t, self.user_unit) for t in self.p["trim"]
-        ]
+            if "/UserUnit" in page.keys() and page.UserUnit > self.output_uu:
+                self.output_uu = float(page.UserUnit)
 
     def _compute_T_matrix(
         self, i: int, col_width: list, row_height: list, page_info: dict, scale: float = 1
@@ -433,8 +452,9 @@ class PageTiler(ProcessingBase):
         r, c = self._grid_position(i)
 
         # the origin is the sum of all the sizes before the current one
-        x0 = sum(col_width[:c]) - self.pt_trim[0]
-        y0 = sum(row_height[r + 1 :]) - self.pt_trim[3]
+        doc_trim = self._get_trim(self.output_uu)
+        x0 = sum(col_width[:c]) - doc_trim[0]
+        y0 = sum(row_height[r + 1 :]) - doc_trim[3]
 
         # the XObject may be smaller than the grid space, so calculate the shift needed
         horizontal_space = col_width[c] - page_info["width"] * scale
@@ -466,7 +486,7 @@ class PageTiler(ProcessingBase):
 
         return R + [x0, y0]
 
-    def _layout_scaled(self, content_dict: pikepdf.Dictionary, info: list) -> tuple:
+    def _layout_scaled(self, info: list) -> tuple:
         """
         Constructs the content stream defining the page placement within the target dimensions.
         Returns a tuple containing the content text and the media box.
@@ -511,7 +531,7 @@ class PageTiler(ProcessingBase):
 
         return content_txt, (self.target_width, self.target_height)
 
-    def _layout_no_scaling(self, content_dict: pikepdf.Dictionary, info: list) -> tuple:
+    def _layout_no_scaling(self, info: list) -> tuple:
         """
         Constructs the content stream defining the page placement. No scaling is applied.
         Returns a tuple containing the content text and the media box.
@@ -520,7 +540,7 @@ class PageTiler(ProcessingBase):
 
         # ugly list comprehension to get the width and height for each row/column
         col_width, row_height = self._compute_target_size(
-            len(content_dict), [i["width"] for i in info], [i["height"] for i in info]
+            len(info), [i["width"] for i in info], [i["height"] for i in info]
         )
         width = sum(col_width)
         height = sum(row_height)
@@ -551,7 +571,7 @@ class PageTiler(ProcessingBase):
         # initialize the output
         self.out_doc = utils.init_new_doc(self.in_doc)
 
-        # set the target userunit and the pt_trim attribute
+        # set the target userunit
         self._update_units()
         content_dict, info = self._build_pagelist()
         n_tiles = len(info)
@@ -562,16 +582,15 @@ class PageTiler(ProcessingBase):
 
         # after calculating rows/cols but before reordering trim, show the user the selected options
         self._show_options()
-        self._adjust_trim_order()
 
         if scaling:
-            content_txt, dims = self._layout_scaled(content_dict, info)
+            content_txt, dims = self._layout_scaled(info)
         else:
-            content_txt, dims = self._layout_no_scaling(content_dict, info)
+            content_txt, dims = self._layout_no_scaling(info)
 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
-        margin = Config.general["units"].units_to_pts(self.p["margin"], self.user_unit)
-        # Note: change in behaviour! The origin is now inside the margin, not at 0,0.
+        margin = Config.general["units"].units_to_pts(self.p["margin"], self.output_uu)
+        # Note: change in behaviour from v0.9xx to v1.0! The origin is now inside the margin.
         media_box = [
             -margin,
             -margin,
@@ -579,7 +598,7 @@ class PageTiler(ProcessingBase):
             dims[1] + margin,
         ]
 
-        utils.print_media_box(media_box, self.user_unit)
+        utils.print_media_box(media_box, self.output_uu)
 
         # add the new page to the document
         tiled_page = pikepdf.Dictionary(
@@ -587,7 +606,7 @@ class PageTiler(ProcessingBase):
             MediaBox=media_box,
             Resources=pikepdf.Dictionary(XObject=content_dict),
             Contents=pikepdf.Stream(self.out_doc, content_txt.encode()),
-            UserUnit=self.user_unit,
+            UserUnit=self.output_uu,
         )
         self.out_doc.pages.append(pikepdf.Page(tiled_page))
         self.needs_run = False

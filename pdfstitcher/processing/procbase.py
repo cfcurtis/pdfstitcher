@@ -28,6 +28,10 @@ class ProcessingBase(ABC):
         # keep track of whether the unit needs to run
         self.needs_run = True
 
+    # ---------------------------------------------------------------------
+    # Property getters and setters
+    # ---------------------------------------------------------------------
+
     @property
     def params(self) -> dict:
         return self.p
@@ -60,14 +64,10 @@ class ProcessingBase(ABC):
                 "n_pages": len(self.in_doc.pages),
                 "layers": utils.get_layer_names(self.in_doc),
             }
-
-    def load_doc(self, doc: Union[Pdf, str, Path], password: str = "") -> None:
-        if isinstance(doc, Pdf):
-            self.in_doc = doc
-        elif isinstance(doc, str):
-            # let the calling scope handle exceptions if it doesn't open
-            self.in_doc = Pdf.open(doc, password=password)
-
+        
+        if not self.page_range:
+            self._validate_page_range()
+            
     @property
     def page_range(self) -> list:
         return self._page_range
@@ -87,6 +87,36 @@ class ProcessingBase(ABC):
         if parsed_range != self._page_range:
             self.needs_run = True
             self._page_range = parsed_range
+            self._validate_page_range()
+
+    # ---------------------------------------------------------------------
+    # Methods
+    # ---------------------------------------------------------------------
+
+    def _validate_page_range(self) -> None:
+        """
+        Compares the page range to the number of pages in the document.
+        If any pages are out of range, removes them and warns the user.
+        """
+        if not self.page_range or not self.in_doc:
+            return
+        
+        n_pages = len(self.in_doc.pages)
+        no_good = set()
+        for p in self._page_range:
+            if p < 0 or p > n_pages:
+                no_good.add(p)
+        
+        for p in no_good:
+            print(_("Page {} is out of range. Removing from page list.".format(p)))
+            self._page_range.remove(p)
+
+    def load_doc(self, doc: Union[Pdf, str, Path], password: str = "") -> None:
+        if isinstance(doc, Pdf):
+            self.in_doc = doc
+        elif isinstance(doc, str):
+            # let the calling scope handle exceptions if it doesn't open
+            self.in_doc = Pdf.open(doc, password=password)
 
     @abstractmethod
     def run(self, progress_win=None):

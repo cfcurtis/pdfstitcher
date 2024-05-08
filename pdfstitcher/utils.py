@@ -298,27 +298,31 @@ def init_new_doc(pdf):
 
 
 def get_page_dims(
-    page: pikepdf.Page, global_rotation: float = 0, target_user_unit: float = 1
+    page: pikepdf.Page, global_rotation: float = 0, page_uu: float = 1, output_uu: float = 1
 ) -> tuple:
     """
     Helper function to calculate the page dimensions
-    Returns width, height in pixels as observed by the user
+    Returns width, height in points as observed by the user
     (taking rotation and UserUnit into account)
     """
+
+    if "/MediaBox" in page.keys():
+        mbox = page.MediaBox
+    else:
+        mbox = page.BBox
+
     # The mediabox is typically specified as
     # [lower left x, lower left y, upper left x, upper left y],
     # but per PDF reference any two opposite corners can be defined
-    mbox = page.MediaBox
     page_width = float(abs(mbox[2] - mbox[0]))
     page_height = float(abs(mbox[3] - mbox[1]))
 
-    page_uu = 1
     if "/UserUnit" in page.keys():
         page_uu = float(page.UserUnit)
 
     # scale according to the page and target user units
-    page_width *= page_uu / target_user_unit
-    page_height *= page_uu / target_user_unit
+    page_width *= page_uu / output_uu
+    page_height *= page_uu / output_uu
 
     # global_rotation is defined by the document root, but
     # may be overridden on a specific page

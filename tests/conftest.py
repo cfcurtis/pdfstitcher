@@ -1,5 +1,6 @@
 import pytest
 import pdfstitcher.utils as utils
+from pdfstitcher.processing.pagetiler import PageTiler
 from pathlib import Path
 from pikepdf import Pdf
 
@@ -22,8 +23,9 @@ def setup_teardown():
 
 
 @pytest.fixture
-def default_tiler_params():
-    return {
+def default_tiler():
+    utils.Config.general["units"] = utils.UNITS.INCHES
+    params = {
         "cols": None,
         "rows": None,
         "col_major": False,
@@ -35,6 +37,7 @@ def default_tiler_params():
         "override_trim": False,
         "actually_trim": False,
     }
+    return PageTiler(params=params)
 
 
 @pytest.fixture
