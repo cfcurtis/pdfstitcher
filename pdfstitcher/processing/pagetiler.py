@@ -76,7 +76,7 @@ class PageTiler(ProcessingBase):
     def __init__(self, *args, **kw) -> None:
         super().__init__(*args, **kw)
 
-    def show_options(self):
+    def _show_options(self):
         """
         Display the options selected for tiling.
         """
@@ -107,7 +107,7 @@ class PageTiler(ProcessingBase):
                 "    " + _("Horizontal alignment") + ": {}".format(str(self.p["horizontal_align"]))
             )
 
-    def process_page(self, content_dict: dict, p: int) -> str:
+    def _process_page(self, content_dict: dict, p: int) -> str:
         """
         Extracts page number p from the input document and adds it to the page_dict,
         trimming if requested and storing page dimensions.
@@ -164,7 +164,7 @@ class PageTiler(ProcessingBase):
 
         return pagekey
 
-    def build_pagelist(self) -> tuple:
+    def _build_pagelist(self) -> tuple:
         """
         Loops through the pages and constructs the list of pages, their length/width, and XObjects.
         Returns a tuple containing the content dictionary (PDF format) and a list of info dictionaries.
@@ -207,7 +207,7 @@ class PageTiler(ProcessingBase):
                 continue
 
             # if we've already added this page to the dictionary, skip it
-            pagekey = self.process_page(content_dict, p)
+            pagekey = self._process_page(content_dict, p)
             if pagekey is None:
                 continue
 
@@ -234,7 +234,7 @@ class PageTiler(ProcessingBase):
 
         return content_dict, info
 
-    def adjust_trim_order(self) -> None:
+    def _adjust_trim_order(self) -> None:
         """
         Rearranges the trim order based on requested rotation.
         """
@@ -251,7 +251,7 @@ class PageTiler(ProcessingBase):
 
         self.pt_trim = [self.pt_trim[o] for o in order]
 
-    def compute_target_size(self, n_tiles: int, pw: list, ph: list) -> tuple:
+    def _compute_target_size(self, n_tiles: int, pw: list, ph: list) -> tuple:
         """
         Find the grid that contains the maximum page size for each row/col.
         Returns the grid dimensions as a tuple of two lists.
@@ -288,11 +288,15 @@ class PageTiler(ProcessingBase):
 
         return col_width, row_height
 
-    def calc_rows_cols(self, n_tiles: int) -> bool:
+    def _calc_rows_cols(self, n_tiles: int) -> bool:
         """
         Calculate the number of rows/columns requested based on the number of pages to tile.
         Returns True if the result is valid, False otherwise.
         """
+        if n_tiles == 0:
+            print(_("No pages to tile"))
+            return False
+
         if self.p["cols"] is not None and self.p["cols"] > 0:
             self.cols = self.p["cols"]
             self.rows = math.ceil(n_tiles / self.cols)
@@ -339,7 +343,7 @@ class PageTiler(ProcessingBase):
 
         return doable
 
-    def grid_position(self, tile_i: int) -> tuple:
+    def _grid_position(self, tile_i: int) -> tuple:
         """
         Determines the placement of the tile in the grid, returning a tuple of (row, col).
         """
@@ -358,7 +362,7 @@ class PageTiler(ProcessingBase):
 
         return r, c
 
-    def calc_shift(self, horizontal_space: float, vertical_space: float) -> tuple:
+    def _calc_shift(self, horizontal_space: float, vertical_space: float) -> tuple:
         """
         Calculates the shift needed to align the tile in the grid.
         Returns a tuple of (shift_right, shift_up).
@@ -399,7 +403,7 @@ class PageTiler(ProcessingBase):
 
         return shift_right, shift_up
 
-    def set_user_unit(self):
+    def _set_user_unit(self):
         """
         Find the maximum user_unit defined in the document, then use this for the new document.
         """
@@ -410,7 +414,7 @@ class PageTiler(ProcessingBase):
             if "/UserUnit" in page.keys() and page.UserUnit > self.user_unit:
                 self.user_unit = float(page.UserUnit)
 
-    def compute_T_matrix(
+    def _compute_T_matrix(
         self, i: int, col_width: list, row_height: list, page_info: dict, scale: float = 1
     ) -> list:
         """
@@ -422,7 +426,7 @@ class PageTiler(ProcessingBase):
             # swap width and height of pages if rotated
             page_info["width"], page_info["height"] = page_info["height"], page_info["width"]
 
-        r, c = self.grid_position(i)
+        r, c = self._grid_position(i)
 
         # the origin is the sum of all the sizes before the current one
         x0 = sum(col_width[:c]) - self.pt_trim[0]
@@ -433,7 +437,7 @@ class PageTiler(ProcessingBase):
         vertical_space = row_height[r] - page_info["height"] * scale
 
         # apply shift
-        shift_right, shift_up = self.calc_shift(horizontal_space, vertical_space)
+        shift_right, shift_up = self._calc_shift(horizontal_space, vertical_space)
         x0 += shift_right
         y0 += shift_up
 
@@ -458,7 +462,7 @@ class PageTiler(ProcessingBase):
 
         return R + [x0, y0]
 
-    def layout_scaled(self, content_dict: pikepdf.Dictionary, info: list) -> tuple:
+    def _layout_scaled(self, content_dict: pikepdf.Dictionary, info: list) -> tuple:
         """
         Constructs the content stream defining the page placement within the target dimensions.
         Returns a tuple containing the content text and the media box.
@@ -490,7 +494,7 @@ class PageTiler(ProcessingBase):
 
             # take the smaller scaling factor so that the page will fit into its box
             scale_factor = min(scalef_width, scalef_height)
-            T = self.compute_T_matrix(
+            T = self._compute_T_matrix(
                 i,
                 [page_box_width] * self.cols,
                 [page_box_height] * self.rows,
@@ -503,7 +507,7 @@ class PageTiler(ProcessingBase):
 
         return content_txt, (self.target_width, self.target_height)
 
-    def layout_no_scaling(self, content_dict: pikepdf.Dictionary, info: list) -> tuple:
+    def _layout_no_scaling(self, content_dict: pikepdf.Dictionary, info: list) -> tuple:
         """
         Constructs the content stream defining the page placement. No scaling is applied.
         Returns a tuple containing the content text and the media box.
@@ -511,7 +515,7 @@ class PageTiler(ProcessingBase):
         """
 
         # ugly list comprehension to get the width and height for each row/column
-        col_width, row_height = self.compute_target_size(
+        col_width, row_height = self._compute_target_size(
             len(content_dict), [i["width"] for i in info], [i["height"] for i in info]
         )
         width = sum(col_width)
@@ -524,7 +528,7 @@ class PageTiler(ProcessingBase):
                 # blank page, just carry on
                 continue
 
-            T = self.compute_T_matrix(i, col_width, row_height, page_info)
+            T = self._compute_T_matrix(i, col_width, row_height, page_info)
             content_txt += "q " + " ".join([str(t) for t in T]) + " cm "
             content_txt += f"{page_info['pagekey']} Do Q "
 
@@ -544,25 +548,25 @@ class PageTiler(ProcessingBase):
         self.out_doc = utils.init_new_doc(self.in_doc)
 
         # define the trim in pdf units, then build the page list
-        self.set_user_unit()
+        self._set_user_unit()
         self.pt_trim = [
             Config.general["units"].units_to_pts(t, self.user_unit) for t in self.p["trim"]
         ]
-        content_dict, info = self.build_pagelist()
+        content_dict, info = self._build_pagelist()
         n_tiles = len(info)
 
         # Make sure the requested rows and columns are valid
-        if not self.calc_rows_cols(n_tiles):
+        if not self._calc_rows_cols(n_tiles):
             return False
 
         # after calculating rows/cols but before reordering trim, show the user the selected options
-        self.show_options()
-        self.adjust_trim_order()
+        self._show_options()
+        self._adjust_trim_order()
 
         if scaling:
-            content_txt, dims = self.layout_scaled(content_dict, info)
+            content_txt, dims = self._layout_scaled(content_dict, info)
         else:
-            content_txt, dims = self.layout_no_scaling(content_dict, info)
+            content_txt, dims = self._layout_no_scaling(content_dict, info)
 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
         margin = Config.general["units"].units_to_pts(self.p["margin"], self.user_unit)

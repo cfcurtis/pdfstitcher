@@ -1,13 +1,13 @@
 import sys
 from pathlib import Path
-
-from pdfstitcher.processing.mainproc import MainProcess
-import pdfstitcher.utils as utils
-import pikepdf
 import time
 import yaml
 import cProfile, pstats
 
+from pdfstitcher.processing.mainproc import MainProcess
+import pdfstitcher.utils as utils
+
+# Make warnings become errors
 if not sys.warnoptions:
     import warnings
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
         #     keep_non_oc_opts = [True]
         #     do_fill = [False]
 
-        # default params
+        # should really import from conftest, but it's not working
         tile_params = {
             "cols": None,
             "rows": None,
