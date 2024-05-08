@@ -147,6 +147,7 @@ class PageTiler(ProcessingBase):
             bbox = copy.copy(in_doc_page.trimbox)
 
         # set the trim box to cut off content if requested
+        # TODO: Consider moving this to layout functions
         if self.p["actually_trim"]:
             page_trim = self._get_trim(page_uu)
             # things get tricky if there's rotation, because the user sees top/bottom as right/left
@@ -173,7 +174,7 @@ class PageTiler(ProcessingBase):
             xobj_matrix = pikepdf.Matrix(content_dict[pagekey].Matrix).rotated(page_rot)
         else:
             xobj_matrix = pikepdf.Matrix().rotated(page_rot)
-        
+
         # Scale the form xobject by the target document user unit relative to the page.
         # This is why we're not letting pikepdf handle the transformation!
         content_dict[pagekey].Matrix = xobj_matrix.scaled(
@@ -184,7 +185,7 @@ class PageTiler(ProcessingBase):
         p_width, p_height = utils.get_page_dims(
             content_dict[pagekey], page_rot, page_uu=page_uu, output_uu=self.output_uu
         )
-    
+
         # append the page info
         info.append({"width": p_width, "height": p_height, "pagekey": pagekey})
 
@@ -204,7 +205,7 @@ class PageTiler(ProcessingBase):
         for p in self.page_range:
             if p > 0:
                 break
-        
+
         if not p:
             raise ValueError(_("No valid pages included in range"))
 
@@ -245,7 +246,7 @@ class PageTiler(ProcessingBase):
 
             # update the reference handles to be the current page
             prev_width = info[-1]["width"]
-            prev_height = info[-1]["height"] 
+            prev_height = info[-1]["height"]
 
         if len(different_size) > 0:
             print(
@@ -290,9 +291,7 @@ class PageTiler(ProcessingBase):
                 )
 
             for r in range(self.rows):
-                row_height[r] = max(ph[r : n_tiles : self.cols]) - (
-                    doc_trim[2] + doc_trim[3]
-                )
+                row_height[r] = max(ph[r : n_tiles : self.cols]) - (doc_trim[2] + doc_trim[3])
         else:
             for r in range(self.rows):
                 row_height[r] = max(ph[r * self.cols : r * self.cols + self.cols]) - (
@@ -300,9 +299,7 @@ class PageTiler(ProcessingBase):
                 )
 
             for c in range(self.cols):
-                col_width[c] = max(pw[c : n_tiles : self.rows]) - (
-                    doc_trim[0] + doc_trim[1]
-                )
+                col_width[c] = max(pw[c : n_tiles : self.rows]) - (doc_trim[0] + doc_trim[1])
 
         if self.p["right_to_left"]:
             col_width.reverse()

@@ -64,10 +64,10 @@ class ProcessingBase(ABC):
                 "n_pages": len(self.in_doc.pages),
                 "layers": utils.get_layer_names(self.in_doc),
             }
-        
+
         if not self.page_range:
             self._validate_page_range()
-            
+
     @property
     def page_range(self) -> list:
         return self._page_range
@@ -100,13 +100,13 @@ class ProcessingBase(ABC):
         """
         if not self.page_range or not self.in_doc:
             return
-        
+
         n_pages = len(self.in_doc.pages)
         no_good = set()
         for p in self._page_range:
             if p < 0 or p > n_pages:
                 no_good.add(p)
-        
+
         for p in no_good:
             print(_("Page {} is out of range. Removing from page list.".format(p)))
             self._page_range.remove(p)

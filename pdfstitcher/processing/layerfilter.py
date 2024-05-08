@@ -83,7 +83,6 @@ class LayerFilter:
                 return True
         return False
 
-
     def filter_ocg_order(self, ocg_list=None):
         """
         Recursively filters the ocg list to only include those in the keep_ocs list.

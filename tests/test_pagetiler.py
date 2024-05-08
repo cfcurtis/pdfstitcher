@@ -15,7 +15,10 @@ def test_show_options(capsys, default_tiler):
     default_tiler._show_options()
 
     captured = capsys.readouterr()
-    assert "Tiling with {} rows and {} columns".format(default_tiler.rows, default_tiler.cols) in captured.out
+    assert (
+        "Tiling with {} rows and {} columns".format(default_tiler.rows, default_tiler.cols)
+        in captured.out
+    )
     assert "Options:" in captured.out
     assert "Margins: 0 in" in captured.out
     assert "Trim: [0, 0, 0, 0] in" in captured.out
@@ -37,6 +40,7 @@ def test_show_options(capsys, default_tiler):
     captured = capsys.readouterr()
     assert "Margins: 0 cm" in captured.out
 
+
 def test_update_units(doc_mixed_layers, default_tiler):
     """
     Test updating the units.
@@ -45,6 +49,7 @@ def test_update_units(doc_mixed_layers, default_tiler):
     default_tiler.page_range = None
     default_tiler._update_units()
     assert default_tiler.output_uu == pytest.approx(10.0)
+
 
 def test_get_trim(default_tiler, doc_mixed_layers):
     """
@@ -58,7 +63,8 @@ def test_get_trim(default_tiler, doc_mixed_layers):
 
     Config.general["units"] = UNITS.CENTIMETERS
     default_tiler._update_units()
-    assert default_tiler._get_trim(default_tiler.output_uu) == [pytest.approx(7.2/2.54)] * 4
+    assert default_tiler._get_trim(default_tiler.output_uu) == [pytest.approx(7.2 / 2.54)] * 4
+
 
 def test_get_first_page_dims(doc_mixed_layers, default_tiler):
     """
@@ -75,6 +81,7 @@ def test_get_first_page_dims(doc_mixed_layers, default_tiler):
     default_tiler._update_units()
     dims = default_tiler._get_first_page_dims()
     assert dims == (pytest.approx(14400.0), pytest.approx(14400.0))
+
 
 def test_process_page(doc_mixed_layers, default_tiler):
     """
@@ -116,10 +123,11 @@ def test_process_page(doc_mixed_layers, default_tiler):
     default_tiler._process_page(content_dict, 1, info)
     assert info[-1]["width"] == pytest.approx(1656.0)
     assert info[-1]["height"] == pytest.approx(1656.0)
-    
+
     default_tiler._process_page(content_dict, 2, info)
     assert info[-1]["width"] == pytest.approx(1296.0)
     assert info[-1]["height"] == pytest.approx(1296.0)
+
 
 def test_build_pagelist(default_tiler, doc_mixed_layers):
     """
@@ -131,7 +139,7 @@ def test_build_pagelist(default_tiler, doc_mixed_layers):
     # load the mixed layers document
     default_tiler.load_doc(doc_mixed_layers)
     default_tiler.out_doc = init_new_doc(default_tiler.in_doc)
-    
+
     page_ranges = [None, [1, 1], [1, 2], [1, 3]]
     expected_lengths = [2, 1, 2, 1]
 
@@ -142,7 +150,7 @@ def test_build_pagelist(default_tiler, doc_mixed_layers):
         assert len(content_dict) == expected_length
         assert len(info) == expected_length
         assert all(i["pagekey"] in content_dict for i in info)
-    
+
     # zeros need a bit of different handling
     default_tiler.page_range = [0, 1]
     default_tiler._update_units()
@@ -162,6 +170,7 @@ def test_build_pagelist(default_tiler, doc_mixed_layers):
     assert info[1]["pagekey"] is None
     assert info[0]["pagekey"] in content_dict
     assert info[0]["width"] == info[1]["width"]
+
 
 def test_calc_rows_cols(default_tiler):
     """

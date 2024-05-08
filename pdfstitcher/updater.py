@@ -49,6 +49,7 @@ def get_download_url() -> str:
         return gh_prefix + "pdfstitcher.exe"
     elif sys.platform == "darwin":
         import platform
+
         if platform.machine() == "arm64":
             return gh_prefix + "PDFStitcher-InstallerARM64.dmg"
         else:
