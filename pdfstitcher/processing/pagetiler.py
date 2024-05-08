@@ -107,7 +107,7 @@ class PageTiler(ProcessingBase):
                 "    " + _("Horizontal alignment") + ": {}".format(str(self.p["horizontal_align"]))
             )
 
-    def _process_page(self, content_dict: dict, p: int) -> str:
+    def _process_page(self, content_dict: pikepdf.Dictionary, p: int) -> str:
         """
         Extracts page number p from the input document and adds it to the page_dict,
         trimming if requested and storing page dimensions.
@@ -403,16 +403,20 @@ class PageTiler(ProcessingBase):
 
         return shift_right, shift_up
 
-    def _set_user_unit(self):
+    def _update_units(self):
         """
         Find the maximum user_unit defined in the document, then use this for the new document.
         """
-
         self.user_unit = 1
         for p in self.page_range:
             page = self.in_doc.pages[p - 1]
             if "/UserUnit" in page.keys() and page.UserUnit > self.user_unit:
                 self.user_unit = float(page.UserUnit)
+
+        # copy over the trim values to the defined units
+        self.pt_trim = [
+            Config.general["units"].units_to_pts(t, self.user_unit) for t in self.p["trim"]
+        ]
 
     def _compute_T_matrix(
         self, i: int, col_width: list, row_height: list, page_info: dict, scale: float = 1
@@ -547,11 +551,8 @@ class PageTiler(ProcessingBase):
         # initialize the output
         self.out_doc = utils.init_new_doc(self.in_doc)
 
-        # define the trim in pdf units, then build the page list
-        self._set_user_unit()
-        self.pt_trim = [
-            Config.general["units"].units_to_pts(t, self.user_unit) for t in self.p["trim"]
-        ]
+        # set the target userunit and the pt_trim attribute
+        self._update_units()
         content_dict, info = self._build_pagelist()
         n_tiles = len(info)
 
