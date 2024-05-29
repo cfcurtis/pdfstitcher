@@ -154,7 +154,7 @@ class Config:
             print("Could not save configuration file.")
 
 
-def resource_path(relative_path):
+def resource_path(relative_path: str) -> str:
     """Get absolute path to resource, works for dev and for PyInstaller"""
     if hasattr(sys, "_MEIPASS"):
         # PyInstaller creates a temp folder and stores path in _MEIPASS
@@ -165,7 +165,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-def get_valid_langs():
+def get_valid_langs() -> list:
     """
     Get a list of valid languages for the UI.
     """
@@ -238,7 +238,7 @@ def setup_locale(lang: str = None) -> None:
     return language_warning
 
 
-def txt_to_float(txt):
+def txt_to_float(txt: str) -> float:
     """
     Convert a string to a float, or return None if it can't be converted.
     Supports decimal and comma as decimal separator.
@@ -255,7 +255,7 @@ def txt_to_float(txt):
     return txtnum
 
 
-def parse_page_range(ptext=""):
+def parse_page_range(ptext: str = "") -> list:
     """
     Parse out the requested pages.
     Allows for pages to be repeated and out of order.
@@ -275,7 +275,7 @@ def parse_page_range(ptext=""):
     return page_range
 
 
-def init_new_doc(pdf):
+def init_new_doc(pdf: pikepdf.Pdf) -> pikepdf.Pdf:
     """
     Initialize a new document and copy over the layer info (OCGs) if it exists.
     """
@@ -287,8 +287,7 @@ def init_new_doc(pdf):
         new_doc.Root.OCProperties = local_root.OCProperties
 
     if "/Metadata" in local_root:
-        for k in pdf.Root.Metadata.keys():
-            new_doc.Root.Metadata = local_root.Metadata
+        new_doc.Root.Metadata = local_root.Metadata
 
     with new_doc.open_metadata() as meta:
         # update the creator info
@@ -366,7 +365,7 @@ def print_media_box(media_box, user_unit: float = 1) -> None:
     )
 
 
-def normalize_boxes(page):
+def normalize_boxes(page: pikepdf.Page) -> None:
     """
     Normalizes the various pdf boxes on the page so they follow the assumed
     [lower x, lower y, upper x, upper y] format
