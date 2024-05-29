@@ -1,4 +1,4 @@
-from pdfstitcher.processing.pagetiler import PageTiler
+from pdfstitcher.processing.pagetiler import PageTiler, SW_ALIGN_H, SW_ALIGN_V, SW_ROTATION
 from pdfstitcher.utils import Config, UNITS, init_new_doc
 import pytest
 
@@ -200,3 +200,107 @@ def test_calc_rows_cols(default_tiler):
     assert default_tiler._calc_rows_cols(19) == True
     default_tiler.params["col_major"] = True
     assert default_tiler._calc_rows_cols(19) == False
+
+
+def test_grid_position(default_tiler):
+    default_tiler.rows = 3
+    default_tiler.cols = 2
+
+    (r, c) = default_tiler._grid_position(0)
+    assert r == 0
+    assert c == 0
+
+    (r, c) = default_tiler._grid_position(1)
+    assert r == 0
+    assert c == 1
+
+    (r, c) = default_tiler._grid_position(2)
+    assert r == 1
+    assert c == 0
+
+    # Now change the order
+    default_tiler.params["col_major"] = True
+
+    (r, c) = default_tiler._grid_position(0)
+    assert r == 0
+    assert c == 0
+
+    (r, c) = default_tiler._grid_position(1)
+    assert r == 1
+    assert c == 0
+
+    (r, c) = default_tiler._grid_position(2)
+    assert r == 2
+    assert c == 0
+
+
+def test_calc_shift():
+    tiler = PageTiler()
+
+    # no shift
+    assert tiler._calc_shift(0, 0) == (0, 0)
+
+    # default: centred
+    assert tiler._calc_shift(10, 10) == (5, 5)
+
+    # top left
+    tiler.params["vertical_align"] = SW_ALIGN_V.TOP
+    tiler.params["horizontal_align"] = SW_ALIGN_H.LEFT
+    assert tiler._calc_shift(10, 10) == (0, 10)
+
+    # top right
+    tiler.params["horizontal_align"] = SW_ALIGN_H.RIGHT
+    assert tiler._calc_shift(10, 10) == (10, 10)
+
+    # rotate
+    tiler.params["rotation"] = SW_ROTATION.CLOCKWISE
+    assert tiler._calc_shift(10, 10) == (10, -10)
+
+
+def test_compute_T_matrix(default_tiler, doc_mixed_layers):
+    # load the mixed layers document
+    default_tiler.load_doc(doc_mixed_layers)
+    default_tiler.out_doc = init_new_doc(default_tiler.in_doc)
+
+    # build the pagelist
+    default_tiler.page_range = "1-2"
+    default_tiler._calc_rows_cols(2)
+    default_tiler._update_units()
+    _, info = default_tiler._build_pagelist()
+    col_width, row_height = default_tiler._compute_target_size(info)
+
+    # no trim, no rotation, nothing fancy
+    assert default_tiler._compute_T_matrix(0, col_width, row_height, info[0]) == [1, 0, 0, 1, 0, 0]
+
+    # the next page should be shifted by the width and centred
+    assert default_tiler._compute_T_matrix(1, col_width, row_height, info[1]) == [
+        1,
+        0,
+        0,
+        1,
+        col_width[0],
+        180,
+    ]
+
+    # now with some trim
+    default_tiler.params["trim"] = [1, 1, 1, 1]
+
+    # first page should be shifted by the trim
+    assert default_tiler._compute_T_matrix(0, col_width, row_height, info[0]) == [
+        1,
+        0,
+        0,
+        1,
+        -7.2,
+        -7.2,
+    ]
+
+    # second page should be shifted by the width and centred, but also trimmed
+    assert default_tiler._compute_T_matrix(1, col_width, row_height, info[1]) == [
+        1,
+        0,
+        0,
+        1,
+        col_width[0] - 7.2,
+        180 - 7.2,
+    ]

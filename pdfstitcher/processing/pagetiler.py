@@ -274,15 +274,21 @@ class PageTiler(ProcessingBase):
 
         return [Config.general["units"].units_to_pts(self.p["trim"][o], user_unit) for o in order]
 
-    def _compute_target_size(self, n_tiles: int, pw: list, ph: list) -> tuple:
+    def _compute_target_size(self, info: list) -> tuple:
         """
-        Find the grid that contains the maximum page size for each row/col.
+        Find the grid that contains the maximum page size for each row/col
+        based on the given list of page info.
         Returns the grid dimensions as a tuple of two lists.
         """
         col_width = [0] * self.cols
         row_height = [0] * self.rows
 
         doc_trim = self._get_trim(self.output_uu)
+
+        # extract the page dimensions from the info list
+        pw = [i["width"] for i in info]
+        ph = [i["height"] for i in info]
+        n_tiles = len(info)
 
         if self.p["col_major"]:
             for c in range(self.cols):
@@ -400,27 +406,27 @@ class PageTiler(ProcessingBase):
         else:
             v_align = SW_ALIGN_V.MID
 
-        if h_align is SW_ALIGN_H.LEFT:
-            shift_right = 0
-        elif h_align is SW_ALIGN_H.MID:
+        shift_right = 0
+        shift_up = 0
+        if h_align is SW_ALIGN_H.MID:
             shift_right = round(horizontal_space / 2)
         elif h_align is SW_ALIGN_H.RIGHT:
             shift_right = round(horizontal_space)
-        if v_align is SW_ALIGN_V.BOTTOM:
-            shift_up = 0
-        elif v_align is SW_ALIGN_V.MID:
+
+        if v_align is SW_ALIGN_V.MID:
             shift_up = round(vertical_space / 2)
         elif v_align is SW_ALIGN_V.TOP:
             shift_up = round(vertical_space)
 
         # invert shift if we are rotating
-        if self.p["rotation"] == SW_ROTATION.CLOCKWISE:
-            shift_up *= -1
-        elif self.p["rotation"] == SW_ROTATION.COUNTERCLOCKWISE:
-            shift_right *= -1
-        elif self.p["rotation"] == SW_ROTATION.TURNAROUND:
-            shift_right *= -1
-            shift_up *= -1
+        if "rotation" in self.p:
+            if self.p["rotation"] == SW_ROTATION.CLOCKWISE:
+                shift_up *= -1
+            elif self.p["rotation"] == SW_ROTATION.COUNTERCLOCKWISE:
+                shift_right *= -1
+            elif self.p["rotation"] == SW_ROTATION.TURNAROUND:
+                shift_right *= -1
+                shift_up *= -1
 
         return shift_right, shift_up
 
@@ -438,7 +444,7 @@ class PageTiler(ProcessingBase):
         self, i: int, col_width: list, row_height: list, page_info: dict, scale: float = 1
     ) -> list:
         """
-        Calculates the transformation matrix for the specified page.
+        Calculates the transformation matrix for page i (zero indexed).
         Returns a list of 6 elements representing the matrix.
         """
 
@@ -535,10 +541,8 @@ class PageTiler(ProcessingBase):
         This is the behaviour called by the PDFStitcher GUI.
         """
 
-        # ugly list comprehension to get the width and height for each row/column
-        col_width, row_height = self._compute_target_size(
-            len(info), [i["width"] for i in info], [i["height"] for i in info]
-        )
+        # get the width and height for each row/column based on the page info
+        col_width, row_height = self._compute_target_size(info)
         width = sum(col_width)
         height = sum(row_height)
 

@@ -83,11 +83,11 @@ class UNITS(IntEnum):
             return user_unit * val
 
 
-def unit_representer(dumper, data):
+def unit_representer(dumper: yaml.Dumper, data: UNITS):
     return dumper.represent_scalar("!units", "%s" % data.name)
 
 
-def unit_constructor(loader, node):
+def unit_constructor(loader: yaml.Loader, node: yaml.Node):
     name = loader.construct_scalar(node)
     return UNITS[name]
 
