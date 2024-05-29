@@ -73,11 +73,11 @@ class ProcessingBase(ABC):
         return self._page_range
 
     @page_range.setter
-    def page_range(self, page_range: Union[str, list]) -> None:
-        if isinstance(page_range, list):
-            parsed_range = page_range
-        elif isinstance(page_range, str):
-            parsed_range = utils.parse_page_range(page_range)
+    def page_range(self, pr: Union[str, list]) -> None:
+        if isinstance(pr, list):
+            parsed_range = pr
+        elif isinstance(pr, str):
+            parsed_range = utils.parse_page_range(pr)
         elif self.page_range is None and self.in_doc is not None:
             print(_("No page range specified, defaulting to all"))
             parsed_range = list(range(1, len(self.in_doc.pages) + 1))

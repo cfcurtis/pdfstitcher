@@ -36,14 +36,16 @@ class MainProcess(ProcessingBase):
         }
 
     @ProcessingBase.page_range.setter
-    def page_range(self, page_range: str) -> None:
+    def page_range(self, pr: str) -> None:
         """
         Override the page range setter of the base class to update processing units.
         """
-        ProcessingBase.page_range.fset(self, page_range)
+        ProcessingBase.page_range.fset(self, pr)
 
+        # Page range validation should only be done for the MainProcess,
+        # so we can update the private attribute directly
         for unit in self.pipeline.values():
-            unit.page_range = page_range
+            unit._page_range = self._page_range
 
     def toggle(self, name: str, active: bool) -> None:
         """

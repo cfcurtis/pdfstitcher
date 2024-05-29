@@ -159,7 +159,7 @@
     keep_ocs: ['Age 2','6-12m','Pattern Information']
   page_tiler:
     rows: 2
-    trim: [0, 0.45, 0.45, 0]
+    trim: [0, 0.3, 0.3, 0]
 - name: MBJM-Reprocess
   input: "MBJM-with-non-oc-with-fill.pdf"
   page_range: '1'
