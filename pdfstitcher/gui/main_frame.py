@@ -11,10 +11,10 @@ import wx
 from pdfstitcher.processing.mainproc import MainProcess
 from pdfstitcher import utils
 from pdfstitcher.utils import Config
-from pdfstitcher.ui.dialogs import PrefsDialog, UpdateDialog, BugReporter
-from pdfstitcher.ui.io_tab import IOTab
-from pdfstitcher.ui.tile_tab import TileTab
-from pdfstitcher.ui.layers_tab import LayersTab
+from pdfstitcher.gui.dialogs import PrefsDialog, UpdateDialog, BugReporter
+from pdfstitcher.gui.io_tab import IOTab
+from pdfstitcher.gui.tile_tab import TileTab
+from pdfstitcher.gui.layers_tab import LayersTab
 from pathlib import Path
 import os
 import sys

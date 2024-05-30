@@ -17,14 +17,9 @@ classifiers = [
 ]
 dependencies = [
     "pikepdf >= 8.11.1",
-    "wxPython >= 4.2",
     "Babel",
     "PyYAML",
     "appdirs",
-    "requests",
-    "pdf-mangler >= 0.1.4",
-    "psutil",
-    "pyobjc ; platform_system=='Darwin'"
 ]
 
 [project.optional-dependencies]
@@ -33,21 +28,28 @@ dev = [
     "pre-commit",
     "black"
 ]
+gui = [
+    "wxPython >= 4.2",
+    "requests",
+    "pdf-mangler >= 0.1.4",
+    "psutil",
+    "pyobjc ; platform_system=='Darwin'"
+]
 
 [project.urls]
 homepage = "https://www.pdfstitcher.org/"
 repository = "https://github.com/cfcurtis/pdfstitcher"
 
+[project.gui-scripts]
+pdfstitcher-gui = "pdfstitcher.gui.app:main"
+
 [project.scripts]
-pdfstitcher = "pdfstitcher.app:main"
+pdfstitcher = "pdfstitcher.cli.app:main"
 
 [build-system]
 requires = ["setuptools", "Babel"]
 # use legacy to force setup.py to run
 build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-packages = ["pdfstitcher", "pdfstitcher.ui"]
 
 [tool.black]
 line-length = 100
