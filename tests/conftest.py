@@ -1,6 +1,8 @@
 import pytest
 import pdfstitcher.utils as utils
 from pdfstitcher.processing.pagetiler import PageTiler
+from pdfstitcher.processing.pagefilter import PageFilter
+from pdfstitcher.processing.layerfilter import LayerFilter
 from pathlib import Path
 from pikepdf import Pdf
 
@@ -41,5 +43,17 @@ def default_tiler():
 
 
 @pytest.fixture
-def default_pagefilter_params():
-    return {"margin": 0}
+def default_pagefilter():
+    return PageFilter(params={"margin": 0})
+
+
+@pytest.fixture
+def default_layerfilter():
+    utils.Config.general["units"] = utils.UNITS.INCHES
+    params = {
+        "keep_ocs": [],
+        "line_props": [],
+        "keep_non_oc": True,
+        "delete_ocgs": True,
+    }
+    return LayerFilter(params=params)

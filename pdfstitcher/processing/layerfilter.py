@@ -55,11 +55,6 @@ class LayerFilter(ProcessingBase):
     def __init__(self, *args, **kw) -> None:
         super().__init__(*args, **kw)
 
-        # attributes that will be overwritten on run
-        self.pdf_line_props = {}
-        self.current_state = []
-        self.user_unit = 1
-
     def _filter_ocg_order(self, ocg_list=None):
         """
         Recursively filters the ocg list to only include those in the keep_ocs list.
@@ -448,7 +443,11 @@ class LayerFilter(ProcessingBase):
         """
         Process the layers. Progress window is optional, but a good idea as this can take a while.
         """
+        # initialize the state-tracking stuff
         self.processed_objects = set()
+        self.pdf_line_props = {}
+        self.current_state = []
+        self.user_unit = 1
 
         # TODO: allow for line thickness modifications even without layers
         if "/OCProperties" not in self.in_doc.Root.keys():
