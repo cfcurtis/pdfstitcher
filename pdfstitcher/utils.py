@@ -427,3 +427,10 @@ def get_layer_names(doc: pikepdf.Pdf) -> list:
         if real_n not in ordered_names:
             ordered_names.append(real_n)
     return ordered_names
+
+
+# helper functions to dump page contents to file for debugging
+def write_page(fname: str, page: pikepdf.Page) -> None:
+    with open(fname, "w") as f:
+        commands = pikepdf.parse_content_stream(page)
+        f.write(pikepdf.unparse_content_stream(commands).decode("pdfdoc"))

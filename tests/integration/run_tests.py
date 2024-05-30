@@ -68,18 +68,18 @@ if __name__ == "__main__":
     for t in test_opts:
         complete_filename(t)
 
-        # if "layer_filter" in t.keys():
-        #     if "keep_non_oc_opts" in t["layer_filter"].keys():
-        #         keep_non_oc_opts = t["layer_filter"]["keep_non_oc_opts"]
-        #     else:
-        #         keep_non_oc_opts = [True]
-        #     if "do_fill" in t["layer_filter"].keys():
-        #         do_fill = t["layer_filter"]["do_fill"]
-        #     else:
-        #         do_fill = [True]
-        # else:
-        #     keep_non_oc_opts = [True]
-        #     do_fill = [False]
+        if "layer_filter" in t.keys():
+            if "keep_non_oc_opts" in t["layer_filter"].keys():
+                keep_non_oc_opts = t["layer_filter"]["keep_non_oc_opts"]
+            else:
+                keep_non_oc_opts = [True]
+            if "do_fill" in t["layer_filter"].keys():
+                do_fill = t["layer_filter"]["do_fill"]
+            else:
+                do_fill = [True]
+        else:
+            keep_non_oc_opts = [True]
+            do_fill = [False]
 
         # should really import from conftest, but it's not working
         tile_params = {
@@ -95,69 +95,64 @@ if __name__ == "__main__":
             "actually_trim": False,
         }
 
-        # for keep_non_oc in keep_non_oc_opts:
-        #     for fill in do_fill:
-        # non_oc_str = "with-non-oc" if keep_non_oc else "without-non-oc"
-        # fill_str = "with-fill" if fill else "without-fill"
-        non_oc_str = "no-layer-filter"
-        fill_str = ""
+        for keep_non_oc in keep_non_oc_opts:
+            for fill in do_fill:
+                non_oc_str = "with-non-oc" if keep_non_oc else "without-non-oc"
+                fill_str = "with-fill" if fill else "without-fill"
 
-        print(f"Testing {t['name']} {non_oc_str} {fill_str}")
-        try:
-            main_process.load_doc(t["input"])
-        except OSError as e:
-            print(e)
-            print("...Skipping")
-            continue
+                print(f"Testing {t['name']} {non_oc_str} {fill_str}")
+                try:
+                    main_process.load_doc(t["input"])
+                except OSError as e:
+                    print(e)
+                    print("...Skipping")
+                    continue
 
-        main_process.page_range = t["page_range"]
-        if "layer_filter" in t.keys():
-            print("Layer filter not yet implemented, skipping layer processing")
+                main_process.page_range = t["page_range"]
+                full_profile = False
+                if "layer_filter" in t.keys():
+                    main_process.toggle("LayerFilter", True)
+                    lf_params = t["layer_filter"]
+                    lf_params["delete_ocgs"] = (
+                        lf_params["delete_ocgs"] if "delete_ocgs" in lf_params else True
+                    )
+                    lf_params["line_props"] = (
+                        lf_params["line_props"] if "line_props" in lf_params else []
+                    )
 
-            # main_process.toggle("LayerFilter", True)
-            # main_process.set_params("LayerFilter", t["layer_filter"])
-            # for k, v in t["layer_filter"].items():
-            #     if k == "line_props" and "all" in v.keys():
-            #         continue
-            #     setattr(layer_filter, k, v)
+                    lf_params["keep_non_oc"] = (
+                        lf_params["keep_non_oc"] if "keep_non_oc" in lf_params else True
+                    )
+                    main_process.set_params("LayerFilter", lf_params)
+                    full_profile |= (
+                        t["layer_filter"]["full_profile"]
+                        if "full_profile" in t["layer_filter"]
+                        else False
+                    )
 
-            # if (
-            #     "line_props" in t["layer_filter"].keys()
-            #     and "all" in t["layer_filter"]["line_props"].keys()
-            # ):
-            #     layers = layer_filter.get_layer_names()
-            #     for layer in layers:
-            #         for k, v in t["layer_filter"]["line_props"]["all"].items():
-            #             layer_filter.line_props[layer] = {}
-            #             layer_filter.line_props[layer][k] = v
+                if "page_tiler" in t.keys():
+                    main_process.toggle("PageTiler", True)
+                    for k, v in t["page_tiler"].items():
+                        tile_params[k] = v
+                    main_process.set_params("PageTiler", tile_params)
+                    full_profile |= (
+                        t["page_tiler"]["full_profile"]
+                        if "full_profile" in t["page_tiler"]
+                        else False
+                    )
+                else:
+                    main_process.toggle("PageFilter", True)
+                    main_process.set_params("PageFilter", {"margin": 0})
 
-            # for key in layer_filter.line_props.keys():
-            #     layer_filter.line_props[key]["fill_colour"] = fill
+                try:
+                    time_and_test(main_process, t["name"] + " PageTiler", full_profile)
+                except Exception as e:
+                    print(f"Error! {e}")
+                    print("...Skipping")
+                    continue
 
-            # full_profile = (
-            #     "profile" in t["layer_filter"].keys() and t["layer_filter"]["profile"]
-            # )
-            # filtered = time_and_test(layer_filter, t["name"] + " LayerFilter", full_profile)
-
-        if "page_tiler" in t.keys():
-            main_process.toggle("PageTiler", True)
-            for k, v in t["page_tiler"].items():
-                tile_params[k] = v
-            main_process.set_params("PageTiler", tile_params)
-            full_profile = "profile" in t["page_tiler"].keys() and t["page_tiler"]["profile"]
-        else:
-            main_process.toggle("PageFilter", True)
-            main_process.set_params("PageFilter", {"margin": 0})
-
-        try:
-            time_and_test(main_process, t["name"] + " PageTiler", full_profile)
-        except Exception as e:
-            print(f"Error! {e}")
-            print("...Skipping")
-            continue
-
-        outname = root / f"{t['name']}-{non_oc_str}-{fill_str}.pdf"
-        main_process.out_doc.save(outname, normalize_content=True)
+                outname = root / f"{t['name']}-{non_oc_str}-{fill_str}.pdf"
+                main_process.out_doc.save(outname, normalize_content=True)
 
     print("...\n...\n...")
     print(f"Total processing time: {time.time() - total_start}")

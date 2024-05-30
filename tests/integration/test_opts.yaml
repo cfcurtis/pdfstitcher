@@ -46,7 +46,7 @@
     rows: 4
     trim: [0,.59,0,.89]
 - name: Sinclair-reprocess
-  input: 'Sinclair-with-non-oc-with-fill.pdf'
+  input: '../integration/Sinclair-with-non-oc-with-fill.pdf'
   page_range: '1'
   layer_filter:
     keep_ocs: ['PETITE US04-S']
@@ -161,7 +161,7 @@
     rows: 2
     trim: [0, 0.3, 0.3, 0]
 - name: MBJM-Reprocess
-  input: "MBJM-with-non-oc-with-fill.pdf"
+  input: "../integration/MBJM-with-non-oc-with-fill.pdf"
   page_range: '1'
   layer_filter:
     keep_ocs: 'all'
