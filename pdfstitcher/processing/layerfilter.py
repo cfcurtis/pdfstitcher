@@ -453,17 +453,20 @@ class LayerFilter(ProcessingBase):
         # TODO: allow for line thickness modifications even without layers
         if "/OCProperties" not in self.in_doc.Root.keys():
             self.out_doc = self.in_doc
+            progress_win and progress_win.Update(1)
             return True
 
         # check if the user requested no modifications
-        if self.p["keep_ocs"] == "all" and len(self.p["line_props"]) == 0:
+        if self.p["keep_non_oc"] and self.p["keep_ocs"] == "all" and len(self.p["line_props"]) == 0:
             # nothing to do, just return the input document
             self.out_doc = self.in_doc
+            progress_win and progress_win.Update(1)
             return True
 
         # check if the user requested no layers
         if len(self.p["keep_ocs"]) == 0 and self.p["keep_non_oc"] == False:
             print(_("No layers selected, generated PDF would be blank."))
+            progress_win and progress_win.Update(1)
             return False
 
         # Open a new copy of the input. We could just open one instance,
@@ -476,7 +479,9 @@ class LayerFilter(ProcessingBase):
         progress_win and progress_win.SetRange(n_page)  # don't run if the callback is None
 
         # update the OC dictionaries if we're actually modifying them
-        parse_streams = self.p["delete_ocgs"] and self.p["keep_ocs"] != "all"
+        parse_streams = (self.p["delete_ocgs"] and self.p["keep_ocs"] != "all") or not self.p[
+            "keep_non_oc"
+        ]
         # update_ocs modifies the keep_ocs list if it was previously 'all'!
         self._update_ocs()
 

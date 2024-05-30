@@ -63,6 +63,7 @@ class ProcessingBase(ABC):
                 "author": xmp["dc:creator"] if "dc:creator" in xmp else "Unknown",
                 "n_pages": len(self.in_doc.pages),
                 "layers": utils.get_layer_names(self.in_doc),
+                "first_page_dims": utils.get_page_dims(self.in_doc.pages[0]),
             }
 
         if not self.page_range:

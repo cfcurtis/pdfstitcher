@@ -109,7 +109,6 @@ if __name__ == "__main__":
                     continue
 
                 main_process.page_range = t["page_range"]
-                full_profile = False
                 if "layer_filter" in t.keys():
                     main_process.toggle("LayerFilter", True)
                     lf_params = t["layer_filter"]
@@ -120,38 +119,28 @@ if __name__ == "__main__":
                         lf_params["line_props"] if "line_props" in lf_params else []
                     )
 
-                    lf_params["keep_non_oc"] = (
-                        lf_params["keep_non_oc"] if "keep_non_oc" in lf_params else True
-                    )
+                    lf_params["keep_non_oc"] = keep_non_oc
                     main_process.set_params("LayerFilter", lf_params)
-                    full_profile |= (
-                        t["layer_filter"]["full_profile"]
-                        if "full_profile" in t["layer_filter"]
-                        else False
-                    )
 
                 if "page_tiler" in t.keys():
                     main_process.toggle("PageTiler", True)
                     for k, v in t["page_tiler"].items():
                         tile_params[k] = v
                     main_process.set_params("PageTiler", tile_params)
-                    full_profile |= (
-                        t["page_tiler"]["full_profile"]
-                        if "full_profile" in t["page_tiler"]
-                        else False
-                    )
                 else:
                     main_process.toggle("PageFilter", True)
                     main_process.set_params("PageFilter", {"margin": 0})
 
+                name_opts = f"{t['name']}-{non_oc_str}-{fill_str}"
                 try:
-                    time_and_test(main_process, t["name"] + " PageTiler", full_profile)
+                    full_profile = t["profile"] if "profile" in t.keys() else False
+                    time_and_test(main_process, name_opts, full_profile)
                 except Exception as e:
                     print(f"Error! {e}")
                     print("...Skipping")
                     continue
 
-                outname = root / f"{t['name']}-{non_oc_str}-{fill_str}.pdf"
+                outname = root / f"{name_opts}.pdf"
                 main_process.out_doc.save(outname, normalize_content=True)
 
     print("...\n...\n...")

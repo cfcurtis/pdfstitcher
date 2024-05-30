@@ -416,7 +416,7 @@ def get_layer_names(doc: pikepdf.Pdf) -> list:
     if "/OCProperties" in doc.Root.keys() and "/OCGs" in doc.Root.OCProperties.keys():
         ocp = doc.Root.OCProperties
     else:
-        return None
+        return []
 
     names = [str(oc.Name) for oc in ocp.OCGs]
     ordered_names = []
