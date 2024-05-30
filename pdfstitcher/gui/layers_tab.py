@@ -327,6 +327,9 @@ class LayersTab(scrolled.ScrolledPanel):
         self.status_txt.SetLabel(_("Select layers to include in output document."))
         self.layer_splitter.Show()
         self.Layout()
+
+        # reset the line properties dictionary
+        self.line_props = {}
         return True
 
     def set_all_checked(self, select=True):

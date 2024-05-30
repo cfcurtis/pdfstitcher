@@ -129,14 +129,12 @@ class IOTab(scrolled.ScrolledPanel):
 
         # checklist of features to enable/disable
         self.do_layers = wx.CheckBox(self, label=_("Process Layers"))
-        self.do_layers.SetValue(1)
         vert_sizer.Add(
             self.do_layers,
             flag=wx.TOP | wx.LEFT | wx.RIGHT,
             border=self.FromDIP(utils.BORDER * 2),
         )
         self.do_tile = wx.CheckBox(self, label=_("Tile pages"))
-        self.do_tile.SetValue(1)
         self.do_layers.Bind(wx.EVT_CHECKBOX, self.on_option_checked)
         self.do_tile.Bind(wx.EVT_CHECKBOX, self.on_option_checked)
         vert_sizer.Add(
