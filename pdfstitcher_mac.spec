@@ -19,7 +19,7 @@ datas += copy_metadata('pdfstitcher', recursive=True)
 datas += collect_data_files('pdf_mangler')
 
 a = Analysis(
-    ["pdfstitcher/app.py"],
+    ["pdfstitcher/gui/app.py"],
     pathex=[],
     binaries=[],
     datas=datas,
