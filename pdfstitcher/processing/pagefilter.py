@@ -21,11 +21,7 @@ class PageFilter(ProcessingBase):
         The main method to run the filter. This one just filters to a selected page range
         with an optional margin added to each.
         """
-        # not sure what this means, so just return the pdf as is
-        if len(self.page_range) == 0:
-            return self.in_doc
-
-        # otherwise, copy the selected pages to a new document
+        # copy the selected pages to a new document
         self.out_doc = utils.init_new_doc(self.in_doc)
 
         for p in self.page_range:
@@ -48,6 +44,7 @@ class PageFilter(ProcessingBase):
                     float(self.out_doc.pages[-1].MediaBox[2]) + margin,
                     float(self.out_doc.pages[-1].MediaBox[3]) + margin,
                 ]
+                print(_("Page" + f" {p}: "), end="")
                 utils.print_media_box(media_box, user_unit)
 
                 self.out_doc.pages[-1].MediaBox = media_box

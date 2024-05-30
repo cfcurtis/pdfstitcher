@@ -75,10 +75,6 @@ class MainProcess(ProcessingBase):
 
         self.pipeline[name].params = params
 
-        if name == "PageTiler":
-            # also set the PageFilter parameters as they share trim/margin
-            self.pipeline["PageFilter"].params = params
-
     def run(self, progress_win=None) -> bool:
         """
         Pass the document through the pipeline. Returns true if successful.

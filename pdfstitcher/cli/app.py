@@ -69,6 +69,7 @@ def parse_arguments() -> argparse.Namespace:
         "--margin",
         type=float,
         help=_("Margin size in selected units."),
+        default=0,
     )
     parser.add_argument(
         "-t",
@@ -150,6 +151,15 @@ def parse_arguments() -> argparse.Namespace:
     return args
 
 
+def pretty_print(params: dict, name: str) -> None:
+    """
+    Pretty print the parameters with the given name.
+    """
+    print(name, _("Parameters:"))
+    for key, value in params.items():
+        print(f"\t{key}: {value}")
+
+
 def main():
     """
     Configure and run the app.
@@ -180,18 +190,21 @@ def main():
         "actually_trim": args.actually_trim,
     }
 
-    print(tile_params)
-
-    main_process.set_params("PageTiler", tile_params)
-
     if args.columns is None and args.rows is None:
-        main_process.toggle("PageTiler", False)
         if len(main_process.page_range) > 1:
             print(
                 _(
-                    "Warning: No grid layout specified, will process and save document without tiling."
+                    "Warning: No grid layout specified, will copy pages and save document without tiling."
                 )
             )
+        main_process.toggle("PageTiler", False)
+        filter_params = {"margin": args.margin}
+        main_process.set_params("PageFilter", filter_params)
+        pretty_print(filter_params, "PageFilter")
+    else:
+        main_process.toggle("PageTiler", True)
+        main_process.set_params("PageTiler", tile_params)
+        pretty_print(tile_params, "PageTiler")
 
     # Layer filter not yet implemented
     success = main_process.run()
