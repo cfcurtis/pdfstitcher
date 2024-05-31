@@ -437,15 +437,10 @@ class PDFStitcherFrame(wx.Frame):
         """
         Open the pdf and enable/disable options based on the file.
         """
+        # open the pdf
+        pathname = pathname.strip()
         try:
-            # open the pdf
-            pathname = pathname.strip()
-            print(_("Opening") + " " + pathname)
-
             self.main_process.load_doc(pathname, password=password)
-            self.io.load_new(
-                self.main_process.in_doc.filename, self.main_process.doc_info["n_pages"]
-            )
         except pikepdf.PasswordError:
             print(_("PDF locked! Enter the correct password."))
 
@@ -466,6 +461,8 @@ class PDFStitcherFrame(wx.Frame):
             print(_("Error message") + f": {e}")
             return
 
+        print(_("Opening") + " " + pathname)
+        self.io.load_new(self.main_process.in_doc.filename, self.main_process.doc_info["n_pages"])
         # If we got this far, we should be good
         print(_("PDF file loaded without errors."))
 

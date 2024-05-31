@@ -229,7 +229,11 @@ class BugReporter(wx.Dialog):
 
     def create_mangled_pdf(self, event):
         """Creates a mangled version of the input PDF."""
-        pdf = self.main_gui.in_doc
+        pdf = self.main_gui.main_process.in_doc
+        if not pdf:
+            wx.MessageBox(_("No PDF loaded"), _("Error"))
+            return
+
         save_path = Path(pdf.filename).parent
         with wx.DirDialog(
             self,
