@@ -35,7 +35,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.8 # old to support Windows 7
         
       - name: Update package index
         run: sudo apt-get update
@@ -90,16 +90,18 @@ jobs:
         
       - name: Compile translation files and build exe
         run: | 
-          pip install . 
-          pip install pyinstaller
+          pip install .[gui]
           python pdfstitcher/update_loc.py --compile
-          pyinstaller pdfstitcher_win.spec
+          pip install nuitka
+          python -m nuitka --onefile --disable-console --windows-icon-from-ico=pdfstitcher\resources\stitcher-icon.ico --include-data-dir=pdfstitcher\resources\=pdfstitcher\resources\ --include-data-dir=pdfstitcher\locale\=pdfstitcher\locale\ --include-package-data=pdf_mangler .\pdfstitcher\gui\app.py
+          mv app.exe pdfstitcher.exe
+
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
       
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.15
         with:
-          files: dist/pdfstitcher.exe
+          files: pdfstitcher.exe
           draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
 

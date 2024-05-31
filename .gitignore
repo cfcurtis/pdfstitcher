@@ -28,6 +28,7 @@ var/
 .installed.cfg
 *.egg
 .eggs
+app*
 
 # Installer logs
 pip-log.txt
