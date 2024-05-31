@@ -106,12 +106,12 @@ jobs:
           include-package-data: pdf_mangler
         
       - name: Rename executable
-        run: mv app.exe pdfstitcher.exe
+        run: mv build/app.exe build/pdfstitcher.exe
       
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.15
         with:
-          files: pdfstitcher.exe
+          files: build/pdfstitcher.exe
           draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
 
