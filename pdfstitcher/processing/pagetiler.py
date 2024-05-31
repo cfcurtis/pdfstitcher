@@ -5,6 +5,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+from typing import Union
 import pikepdf
 from pikepdf import _cpphelpers
 from enum import IntEnum
@@ -112,7 +113,9 @@ class PageTiler(ProcessingBase):
                 "    " + _("Horizontal alignment") + ": {}".format(str(self.p["horizontal_align"]))
             )
 
-    def _process_page(self, content_dict: pikepdf.Dictionary, p: int, info: dict) -> None:
+    def _process_page(
+        self, content_dict: pikepdf.Dictionary, p: int, info: dict
+    ) -> Union[None, str]:
         """
         Extracts page number p from the input document and adds it to the page_dict,
         performs trimming if requested, and stores page dimensions. Lots going on.
@@ -187,6 +190,7 @@ class PageTiler(ProcessingBase):
 
         # append the page info
         info.append({"width": p_width, "height": p_height, "pagekey": pagekey})
+        return pagekey
 
     def _get_first_page_dims(self) -> tuple:
         """
@@ -429,7 +433,7 @@ class PageTiler(ProcessingBase):
 
         return shift_right, shift_up
 
-    def _update_units(self):
+    def _set_output_user_unit(self):
         """
         Find the maximum user_unit defined in the document, then use this for the new document.
         """
@@ -572,7 +576,7 @@ class PageTiler(ProcessingBase):
         self.out_doc = utils.init_new_doc(self.in_doc)
 
         # set the target userunit
-        self._update_units()
+        self._set_output_user_unit()
         content_dict, info = self._build_pagelist()
         n_tiles = len(info)
 

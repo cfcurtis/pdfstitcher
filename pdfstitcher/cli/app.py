@@ -11,30 +11,19 @@ from pdfstitcher.processing.mainproc import MainProcess
 from pdfstitcher.utils import Config
 
 
-def parse_arguments() -> argparse.Namespace:
+def add_tile_args(parser: argparse.ArgumentParser) -> None:
     """
-    Helper function to parse command line arguments.
+    Add the tile arguments to the parser.
     """
-    parser = argparse.ArgumentParser(
-        description=_("Tile PDF pages into one document."),
-        epilog=_("Note: If both rows and columns are specified, rows are ignored.")
-        + " "
-        + _("To insert a blank page, include a zero in the page list."),
+    t_parser = parser.add_argument_group(
+        _("Tile Options"),
+        _(
+            "Options for tiling pages. "
+            "If no grid layout is specified, pages will be copied without tiling."
+        ),
     )
 
-    # Required arguments
-    parser.add_argument(
-        "input",
-        help=_("Input filename (pdf)"),
-    )
-    parser.add_argument(
-        "output",
-        help=_("Output filename (pdf)"),
-    )
-    group = parser.add_argument_group(
-        _("Grid layout"), _("Number of Columns") + " " + _("OR Number of Rows")
-    )
-    m_group = group.add_mutually_exclusive_group(required=False)
+    m_group = t_parser.add_mutually_exclusive_group(required=False)
     m_group.add_argument(
         "-r",
         "--rows",
@@ -50,28 +39,21 @@ def parse_arguments() -> argparse.Namespace:
         default=None,
     )
 
-    parser.add_argument(
-        "-p",
-        "--pages",
-        help=_(
-            "Pages to tile. May be range or list (e.g. 1-5 or 1,3,5-7, etc). Default: entire document."
-        ),
-    )
-    parser.add_argument(
+    t_parser.add_argument(
         "-u",
         "--units",
         choices=[_("in"), _("cm")],
         default=_("in"),
         help=_("Units for margin and trim values."),
     )
-    parser.add_argument(
+    t_parser.add_argument(
         "-m",
         "--margin",
         type=float,
         help=_("Margin size in selected units."),
         default=0,
     )
-    parser.add_argument(
+    t_parser.add_argument(
         "-t",
         "--trim",
         default="0,0,0,0",
@@ -79,7 +61,7 @@ def parse_arguments() -> argparse.Namespace:
         + " "
         + _("given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim 0.5 from left and top)"),
     )
-    parser.add_argument(
+    t_parser.add_argument(
         "-R",
         "--rotate",
         type=int,
@@ -87,25 +69,25 @@ def parse_arguments() -> argparse.Namespace:
         choices=[0, 90, 180, 270],
         help=_("Rotate pages"),
     )
-    parser.add_argument(
+    t_parser.add_argument(
         "--col-major",
         type=bool,
         default=False,
         help=_("Fill columns before rows (default is rows first)"),
     )
-    parser.add_argument(
+    t_parser.add_argument(
         "--right-to-left",
         type=bool,
         default=False,
         help=_("Fill columns right to left (default is left to right)"),
     )
-    parser.add_argument(
+    t_parser.add_argument(
         "--bottom-to-top",
         type=bool,
         default=False,
         help=_("Fill rows bottom to top (default is top to bottom)"),
     )
-    parser.add_argument(
+    t_parser.add_argument(
         "--target-height",
         type=float,
         help=_("Height of output document in selected units.")
@@ -113,7 +95,7 @@ def parse_arguments() -> argparse.Namespace:
         + _("Caution: results in scaling of pages"),
         default=None,
     )
-    parser.add_argument(
+    t_parser.add_argument(
         "--target-width",
         type=float,
         help=_("Width of output document in selected units.")
@@ -121,20 +103,92 @@ def parse_arguments() -> argparse.Namespace:
         + _("Caution: results in scaling of pages"),
         default=None,
     )
-    parser.add_argument(
+    t_parser.add_argument(
         "--trimbox-to-mediabox",
         action="store_true",
         help=_("Override trimbox with mediabox"),
         default=False,
     )
-    parser.add_argument(
+    t_parser.add_argument(
         "--actually-trim",
         action="store_true",
         help=_("Actually trim the pages (default is overlap)"),
         default=False,
     )
 
-    args = parser.parse_args()
+
+def add_layer_args(parser: argparse.ArgumentParser) -> None:
+    """
+    Add the layer arguments to the parser.
+    """
+    l_parser = parser.add_argument_group(
+        _("Layer Options"),
+        _("Options for handling layers in the document."),
+    )
+
+    l_parser.add_argument(
+        "-k",
+        "--keep",
+        type=str,
+        help=_("List of layer names to keep."),
+        default=[],
+    )
+    l_parser.add_argument(
+        "--line-props",
+        help=_("List of line properties per layer."),
+        default=[],
+    )
+    l_parser.add_argument(
+        "--keep-non-oc",
+        type=bool,
+        help=_("Keep non-optional (background) content."),
+        default=True,
+    )
+    l_parser.add_argument(
+        "--delete-layers",
+        type=bool,
+        help=_(
+            "Delete layers. If False, layer visibility is set to Off instead of removing content."
+        ),
+        default=True,
+    )
+
+
+def parse_arguments() -> argparse.Namespace:
+    """
+    Helper function to parse command line arguments.
+    """
+    parser = argparse.ArgumentParser(
+        _("PDF Stitcher"),
+        description=_("Stitch PDF pages together, add margins, remove layers, and more."),
+    )
+
+    # Required arguments
+    parser.add_argument(
+        "input",
+        help=_("Input filename (pdf)"),
+    )
+    parser.add_argument(
+        "output",
+        nargs="?",
+        help=_("Output filename (pdf)"),
+        default=None,
+    )
+
+    parser.add_argument(
+        "-p",
+        "--pages",
+        help=_(
+            "Pages to Process. May be range or list (e.g. 1-5 or 1,3,5-7, etc). "
+            "Default: entire document. Use 0 values to add blank pages."
+        ),
+    )
+    add_tile_args(parser)
+    add_layer_args(parser)
+
+    args, unknown = parser.parse_known_args()
+    if unknown:
+        pretty_print(unknown, _("Ignoring unknown arguments:"))
 
     # validate the trim values
     trim = [utils.txt_to_float(t) for t in args.trim.split(",")]
@@ -155,7 +209,7 @@ def pretty_print(params: dict, name: str) -> None:
     """
     Pretty print the parameters with the given name.
     """
-    print(name, _("Parameters:"))
+    print(name)
     for key, value in params.items():
         print(f"\t{key}: {value}")
 
@@ -171,7 +225,19 @@ def main():
         print(language_warning)
 
     args = parse_arguments()
+    Config.general["units"] = utils.UNITS.INCHES if args.units == _("in") else utils.UNITS.CM
     main_process = MainProcess(doc=args.input)
+
+    if args.output is None:
+        # Show info about the file and exit
+        doc_info = main_process.doc_info
+        doc_info["first_page_dims"] = (
+            str([Config.general["units"].pts_to_units(d) for d in doc_info["first_page_dims"]])
+            + " "
+            + str(Config.general["units"])
+        )
+        pretty_print(doc_info, args.input)
+        return
 
     # Set the page range
     main_process.page_range = args.pages
@@ -200,11 +266,11 @@ def main():
         main_process.toggle("PageTiler", False)
         filter_params = {"margin": args.margin}
         main_process.set_params("PageFilter", filter_params)
-        pretty_print(filter_params, "PageFilter")
+        pretty_print(filter_params, _("Options"))
     else:
         main_process.toggle("PageTiler", True)
         main_process.set_params("PageTiler", tile_params)
-        pretty_print(tile_params, "PageTiler")
+        pretty_print(tile_params, _("Tile Options"))
 
     # Layer filter not yet implemented
     success = main_process.run()
