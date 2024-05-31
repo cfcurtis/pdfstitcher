@@ -91,6 +91,7 @@ jobs:
       - name: Compile translation files and stash version string
         run: | 
           python pdfstitcher/update_loc.py --compile
+          pip install .[gui]
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
       
       - uses: Nuitka/Nuitka-Action@main
