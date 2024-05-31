@@ -93,7 +93,7 @@ jobs:
           pip install .[gui]
           python pdfstitcher/update_loc.py --compile
           pip install nuitka
-          python -m nuitka --onefile --disable-console --windows-icon-from-ico=pdfstitcher\resources\stitcher-icon.ico --include-data-dir=pdfstitcher\resources\=pdfstitcher\resources\ --include-data-dir=pdfstitcher\locale\=pdfstitcher\locale\ --include-package-data=pdf_mangler .\pdfstitcher\gui\app.py
+          python -m nuitka --onefile --disable-console --windows-icon-from-ico=pdfstitcher/resources/stitcher-icon.ico --include-data-dir=pdfstitcher/resources/=pdfstitcher/resources/ --include-data-dir=pdfstitcher/locale/=pdfstitcher/locale/ --include-package-data=pdf_mangler ./pdfstitcher/gui/app.py
           mv app.exe pdfstitcher.exe
 
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
