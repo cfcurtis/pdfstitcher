@@ -88,15 +88,25 @@ jobs:
         with:
           python-version: "3.8" # needs to be 3.8 to support Windows 7
         
-      - name: Compile translation files and build exe
+      - name: Compile translation files and stash version string
         run: | 
-          pip install .[gui]
           python pdfstitcher/update_loc.py --compile
-          pip install nuitka
-          python -m nuitka --onefile --disable-console --windows-icon-from-ico=pdfstitcher/resources/stitcher-icon.ico --include-data-dir=pdfstitcher/resources/=pdfstitcher/resources/ --include-data-dir=pdfstitcher/locale/=pdfstitcher/locale/ --include-package-data=pdf_mangler ./pdfstitcher/gui/app.py
-          mv app.exe pdfstitcher.exe
-
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
+      
+      - uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main
+          script-name: pdfstitcher/gui/app.py
+          onefile: true
+          disable-console: true
+          windows-icon-from-ico: pdfstitcher/resources/stitcher-icon.ico
+          include-data-dir: |
+            pdfstitcher/resources=pdfstitcher/resources
+            pdfstitcher/locale=pdfstitcher/locale
+          include-package-data: pdf_mangler
+        
+      - name: Rename executable
+        run: mv app.exe pdfstitcher.exe
       
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.15
