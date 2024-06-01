@@ -41,13 +41,13 @@ def test_show_options(capsys, default_tiler):
     assert "Margins: 0 cm" in captured.out
 
 
-def test_update_units(doc_mixed_layers, default_tiler):
+def test_set_output_user_unit(doc_mixed_layers, default_tiler):
     """
     Test updating the units.
     """
     default_tiler.load_doc(doc_mixed_layers)
     default_tiler.page_range = None
-    default_tiler._update_units()
+    default_tiler._set_output_user_unit()
     assert default_tiler.output_uu == pytest.approx(10.0)
 
 
@@ -58,11 +58,11 @@ def test_get_trim(default_tiler, doc_mixed_layers):
     default_tiler.params["trim"] = [1, 1, 1, 1]
     default_tiler.load_doc(doc_mixed_layers)
     default_tiler.page_range = None
-    default_tiler._update_units()
+    default_tiler._set_output_user_unit()
     assert default_tiler._get_trim(default_tiler.output_uu) == [pytest.approx(7.2)] * 4
 
     Config.general["units"] = UNITS.CENTIMETERS
-    default_tiler._update_units()
+    default_tiler._set_output_user_unit()
     assert default_tiler._get_trim(default_tiler.output_uu) == [pytest.approx(7.2 / 2.54)] * 4
 
 
@@ -72,13 +72,13 @@ def test_get_first_page_dims(doc_mixed_layers, default_tiler):
     """
     default_tiler.load_doc(doc_mixed_layers)
     default_tiler.page_range = [1]
-    default_tiler._update_units()
+    default_tiler._set_output_user_unit()
     dims = default_tiler._get_first_page_dims()
     assert dims == (pytest.approx(1800.0), pytest.approx(1800.0))
 
     # second page only
     default_tiler.page_range = [2]
-    default_tiler._update_units()
+    default_tiler._set_output_user_unit()
     dims = default_tiler._get_first_page_dims()
     assert dims == (pytest.approx(14400.0), pytest.approx(14400.0))
 
@@ -91,7 +91,7 @@ def test_process_page(doc_mixed_layers, default_tiler):
     default_tiler.load_doc(doc_mixed_layers)
     default_tiler.out_doc = init_new_doc(default_tiler.in_doc)
     default_tiler.page_range = [1, 2]
-    default_tiler._update_units()
+    default_tiler._set_output_user_unit()
     content_dict = {}
     info = []
     default_tiler._process_page(content_dict, 1, info)
@@ -117,7 +117,19 @@ def test_process_page(doc_mixed_layers, default_tiler):
     # now try with trim values
     default_tiler.params["trim"] = [10, 10, 10, 10]
     default_tiler.params["actually_trim"] = True
-    default_tiler._update_units()
+    default_tiler._set_output_user_unit()
+    content_dict = {}
+    info = []
+    default_tiler._process_page(content_dict, 1, info)
+    assert info[-1]["width"] == pytest.approx(1656.0)
+    assert info[-1]["height"] == pytest.approx(1656.0)
+
+    default_tiler._process_page(content_dict, 2, info)
+    assert info[-1]["width"] == pytest.approx(1296.0)
+    assert info[-1]["height"] == pytest.approx(1296.0)
+
+    # overlap instead of modifying bbox should work the same way
+    default_tiler.params["actually_trim"] = False
     content_dict = {}
     info = []
     default_tiler._process_page(content_dict, 1, info)
@@ -145,7 +157,7 @@ def test_build_pagelist(default_tiler, doc_mixed_layers):
 
     for page_range, expected_length in zip(page_ranges, expected_lengths):
         default_tiler.page_range = page_range
-        default_tiler._update_units()
+        default_tiler._set_output_user_unit()
         content_dict, info = default_tiler._build_pagelist()
         assert len(content_dict) == expected_length
         assert len(info) == expected_length
@@ -153,7 +165,7 @@ def test_build_pagelist(default_tiler, doc_mixed_layers):
 
     # zeros need a bit of different handling
     default_tiler.page_range = [0, 1]
-    default_tiler._update_units()
+    default_tiler._set_output_user_unit()
     content_dict, info = default_tiler._build_pagelist()
     assert len(content_dict) == 1
     assert len(info) == 2
@@ -163,7 +175,7 @@ def test_build_pagelist(default_tiler, doc_mixed_layers):
 
     # other way around
     default_tiler.page_range = [1, 0]
-    default_tiler._update_units()
+    default_tiler._set_output_user_unit()
     content_dict, info = default_tiler._build_pagelist()
     assert len(content_dict) == 1
     assert len(info) == 2
@@ -265,42 +277,42 @@ def test_compute_T_matrix(default_tiler, doc_mixed_layers):
     # build the pagelist
     default_tiler.page_range = "1-2"
     default_tiler._calc_rows_cols(2)
-    default_tiler._update_units()
+    default_tiler._set_output_user_unit()
     _, info = default_tiler._build_pagelist()
     col_width, row_height = default_tiler._compute_target_size(info)
 
-    # no trim, no rotation, nothing fancy
-    assert default_tiler._compute_T_matrix(0, col_width, row_height, info[0]) == [1, 0, 0, 1, 0, 0]
+    # trim should not affect anything anymore (handled in pagelist)
+    for trim in [[0, 0, 0, 0], [1, 2, 3, 4]]:
+        default_tiler.params["trim"] = trim
+        # no trim, no rotation, nothing fancy
+        expected = [1, 0, 0, 1, 0, 0]
+        assert default_tiler._compute_T_matrix(0, col_width, row_height, info[0]) == expected
 
-    # the next page should be shifted by the width and centred
-    assert default_tiler._compute_T_matrix(1, col_width, row_height, info[1]) == [
-        1,
-        0,
-        0,
-        1,
-        col_width[0],
-        180,
-    ]
+        # the next page should be shifted by the width and centred
+        expected = [1, 0, 0, 1, col_width[0], 180]
+        assert default_tiler._compute_T_matrix(1, col_width, row_height, info[1]) == expected
 
-    # now with some trim
-    default_tiler.params["trim"] = [1, 1, 1, 1]
 
-    # first page should be shifted by the trim
-    assert default_tiler._compute_T_matrix(0, col_width, row_height, info[0]) == [
-        1,
-        0,
-        0,
-        1,
-        -7.2,
-        -7.2,
-    ]
+def test_get_page_trim(default_tiler):
+    # start with the basics
+    # [left, right, top, bottom] in GUI, [left, bottom, right, top] in PDF
+    #
+    # ---- top (3) ----
+    # |                |
+    # left (1)       right (2)
+    # |                |
+    # --- bottom (4)  --
 
-    # second page should be shifted by the width and centred, but also trimmed
-    assert default_tiler._compute_T_matrix(1, col_width, row_height, info[1]) == [
-        1,
-        0,
-        0,
-        1,
-        col_width[0] - 7.2,
-        180 - 7.2,
-    ]
+    default_tiler.params["trim"] = [1, 2, 3, 4]
+    Config.general["units"] = UNITS.POINTS
+
+    # no rotation, uu = 1
+    assert default_tiler._get_page_trim(1, 0) == [1, 4, 2, 3]
+    # 90 degree rotation
+    assert default_tiler._get_page_trim(1, 90) == [4, 2, 3, 1]
+    # 180 degree rotation
+    assert default_tiler._get_page_trim(1, 180) == [2, 3, 1, 4]
+    # 270 degree rotation
+    assert default_tiler._get_page_trim(1, 270) == [3, 1, 4, 2]
+    # 360 degree rotation
+    assert default_tiler._get_page_trim(1, 360) == [1, 4, 2, 3]

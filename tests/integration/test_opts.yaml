@@ -75,7 +75,7 @@
     trim: [0.5,0.5,0.5,0.5]
     margin: 12
 - name: P4P
-  input: '{gdrive}/Sewing/P4P/Wee-Lap-Tee-by-P4P-US-Letter.pdf'
+  input: '{gdrive}/Sewing/PatternsForPirates/Wee-Lap-Tee-by-P4P-US-Letter.pdf'
   page_range: 13-16
   layer_filter:
     keep_ocs: ['9 Month','12 Month','All Sizes']
@@ -158,7 +158,7 @@
     keep_ocs: ['Age 2','6-12m','Pattern Information']
   page_tiler:
     rows: 2
-    trim: [0, 0.3, 0.3, 0]
+    trim: [.15, .15, .15, .15]
 - name: MBJM-Reprocess
   input: "../integration/MBJM-with-non-oc-with-fill.pdf"
   page_range: '1'

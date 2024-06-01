@@ -150,24 +150,13 @@ class PageTiler(ProcessingBase):
             bbox = copy.copy(in_doc_page.trimbox)
 
         # set the trim box to cut off content if requested
+        page_trim = self._get_page_trim(page_uu, page_rot)
         if self.p["actually_trim"]:
-            page_trim = self._get_trim(page_uu)
-            # things get tricky if there's rotation, because the user sees top/bottom as right/left
-            # trim: left, right, top, bottom as defined visually
-            # trimbox: left, bottom, right, top (absolute coordinates)
-            rtrim = [page_trim[0], page_trim[3], page_trim[1], page_trim[2]]
-            if page_rot == 90:
-                rtrim = [page_trim[2], page_trim[0], page_trim[3], page_trim[1]]
-            elif page_rot == 180:
-                rtrim = [page_trim[3], page_trim[0], page_trim[2], page_trim[1]]
-            elif page_rot == 270:
-                rtrim = [page_trim[3], page_trim[1], page_trim[2], page_trim[0]]
-
             bbox = [
-                float(bbox[0]) + rtrim[0],
-                float(bbox[1]) + rtrim[1],
-                float(bbox[2]) - rtrim[2],
-                float(bbox[3]) - rtrim[3],
+                float(bbox[0]) + page_trim[0],
+                float(bbox[1]) + page_trim[1],
+                float(bbox[2]) - page_trim[2],
+                float(bbox[3]) - page_trim[3],
             ]
         content_dict[pagekey].BBox = bbox
 
@@ -187,6 +176,12 @@ class PageTiler(ProcessingBase):
         p_width, p_height = utils.get_page_dims(
             content_dict[pagekey], page_rot, page_uu=page_uu, output_uu=self.output_uu
         )
+
+        # if we're not actually trimming, subtract the trim from the page size
+        if not self.p["actually_trim"]:
+            page_trim = [p * page_uu / self.output_uu for p in page_trim]
+            p_width -= page_trim[0] + page_trim[2]
+            p_height -= page_trim[1] + page_trim[3]
 
         # append the page info
         info.append({"width": p_width, "height": p_height, "pagekey": pagekey})
@@ -277,6 +272,31 @@ class PageTiler(ProcessingBase):
 
         return [Config.general["units"].units_to_pts(self.p["trim"][o], user_unit) for o in order]
 
+    def _get_page_trim(self, page_uu: float, rotation: int) -> list:
+        """
+        Rearranges the trim order based on page rotation.
+        This is different from _get_trim because it provides the order in PDF format (left, bottom, right, top).
+        Note that the rotation is in degrees as specified by the PDF (opaque to the user), NOT the requested rotation.
+        """
+        # things get tricky if there's rotation, because the user sees top/bottom as right/left
+        # Rotation is in clockwise degrees, so we need to adjust the trim order accordingly
+        # trim: left, right, top, bottom as defined visually
+        # trimbox: left, bottom, right, top (absolute coordinates)
+        page_trim = self._get_trim(page_uu)
+
+        # PDF rotation should be in increments of 90 degrees, but I've actually seen 360
+        rotation = rotation % 360
+        if rotation == 0:
+            order = [0, 3, 1, 2]
+        elif rotation == 90:
+            order = [3, 1, 2, 0]
+        elif rotation == 180:
+            order = [1, 2, 0, 3]
+        elif rotation == 270:
+            order = [2, 0, 3, 1]
+
+        return [page_trim[o] for o in order]
+
     def _compute_target_size(self, info: list) -> tuple:
         """
         Find the grid that contains the maximum page size for each row/col
@@ -286,8 +306,6 @@ class PageTiler(ProcessingBase):
         col_width = [0] * self.cols
         row_height = [0] * self.rows
 
-        doc_trim = self._get_trim(self.output_uu)
-
         # extract the page dimensions from the info list
         pw = [i["width"] for i in info]
         ph = [i["height"] for i in info]
@@ -295,20 +313,16 @@ class PageTiler(ProcessingBase):
 
         if self.p["col_major"]:
             for c in range(self.cols):
-                col_width[c] = max(pw[c * self.rows : c * self.rows + self.rows]) - (
-                    doc_trim[0] + doc_trim[1]
-                )
+                col_width[c] = max(pw[c * self.rows : c * self.rows + self.rows])
 
             for r in range(self.rows):
-                row_height[r] = max(ph[r : n_tiles : self.cols]) - (doc_trim[2] + doc_trim[3])
+                row_height[r] = max(ph[r : n_tiles : self.cols])
         else:
             for r in range(self.rows):
-                row_height[r] = max(ph[r * self.cols : r * self.cols + self.cols]) - (
-                    doc_trim[2] + doc_trim[3]
-                )
+                row_height[r] = max(ph[r * self.cols : r * self.cols + self.cols])
 
             for c in range(self.cols):
-                col_width[c] = max(pw[c : n_tiles : self.rows]) - (doc_trim[0] + doc_trim[1])
+                col_width[c] = max(pw[c : n_tiles : self.rows])
 
         if self.p["right_to_left"]:
             col_width.reverse()
@@ -458,9 +472,8 @@ class PageTiler(ProcessingBase):
         r, c = self._grid_position(i)
 
         # the origin is the sum of all the sizes before the current one
-        doc_trim = self._get_trim(self.output_uu)
-        x0 = sum(col_width[:c]) - doc_trim[0]
-        y0 = sum(row_height[r + 1 :]) - doc_trim[3]
+        x0 = sum(col_width[:c])
+        y0 = sum(row_height[r + 1 :])
 
         # the XObject may be smaller than the grid space, so calculate the shift needed
         horizontal_space = col_width[c] - page_info["width"] * scale
