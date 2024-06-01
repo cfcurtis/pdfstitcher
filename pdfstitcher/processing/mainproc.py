@@ -43,9 +43,12 @@ class MainProcess(ProcessingBase):
         ProcessingBase.page_range.fset(self, pr)
 
         # Page range validation should only be done for the MainProcess,
-        # so we can update the private attribute directly
+        # so we can update the private attribute directly.
+        # Also flag the units to run if the page range has changed.
         for unit in self.pipeline.values():
-            unit._page_range = self._page_range
+            if unit._page_range != self._page_range:
+                unit._page_range = self._page_range
+                unit.needs_run = True
 
     def toggle(self, name: str, active: bool) -> None:
         """
