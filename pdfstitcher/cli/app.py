@@ -125,17 +125,11 @@ def add_layer_args(parser: argparse.ArgumentParser) -> None:
         _("Layer Options"),
         _("Options for handling layers in the document."),
     )
-
     l_parser.add_argument(
         "-k",
         "--keep",
         type=str,
-        help=_("List of layer names to keep."),
-        default=[],
-    )
-    l_parser.add_argument(
-        "--line-props",
-        help=_("List of line properties per layer."),
+        help=_("List of layer names to keep, separated by semicolons (e.g. 'Layer1;Layer2')"),
         default=[],
     )
     l_parser.add_argument(
@@ -145,12 +139,9 @@ def add_layer_args(parser: argparse.ArgumentParser) -> None:
         default=True,
     )
     l_parser.add_argument(
-        "--delete-layers",
-        type=bool,
-        help=_(
-            "Delete layers. If False, layer visibility is set to Off instead of removing content."
-        ),
-        default=True,
+        "--hide-layers",
+        action="store_true",
+        help=_("Hide layers. If set, layer visibility is set to Off instead of removing content."),
     )
 
 
@@ -183,12 +174,21 @@ def parse_arguments() -> argparse.Namespace:
             "Default: entire document. Use 0 values to add blank pages."
         ),
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help=_("Print verbose output"),
+        default=False,
+    )
+
     add_tile_args(parser)
     add_layer_args(parser)
 
     args, unknown = parser.parse_known_args()
     if unknown:
-        pretty_print(unknown, _("Ignoring unknown arguments:"))
+        print(_("Ignoring unknown arguments:"))
+        [print(u) for u in unknown]
 
     # validate the trim values
     trim = [utils.txt_to_float(t) for t in args.trim.split(",")]
@@ -229,6 +229,9 @@ def main():
     main_process = MainProcess(doc=args.input)
 
     if args.output is None:
+        if args.verbose:
+            print(_("No output file specified, showing input document info and exiting."))
+
         # Show info about the file and exit
         doc_info = main_process.doc_info
         doc_info["first_page_dims"] = (
@@ -254,25 +257,41 @@ def main():
         "trim": args.trim,
         "override_trim": args.trimbox_to_mediabox,
         "actually_trim": args.actually_trim,
+        "target_height": args.target_height,
+        "target_width": args.target_width,
     }
 
+    # Set the layer filter parameters
+    layer_params = {
+        "keep_ocs": args.keep.split(";") if args.keep else [],
+        "keep_non_oc": args.keep_non_oc,
+        "delete_ocgs": not args.hide_layers,
+        "line_props": None,  # Haven't figured out how to specify in CLI yet
+    }
+    if any(layer_params.values()):
+        main_process.toggle("LayerFilter", True)
+        main_process.set_params("LayerFilter", layer_params)
+
+        # make sure the layers actually exist
+        for layer in layer_params["keep_ocs"]:
+            if layer not in main_process.doc_info["layers"]:
+                print(_("Layer") + " " + layer + " " + _("not found in the document. Ignoring."))
+
+        if args.verbose:
+            pretty_print(layer_params, _("Layer Options"))
+
     if args.columns is None and args.rows is None:
-        if len(main_process.page_range) > 1:
-            print(
-                _(
-                    "Warning: No grid layout specified, will copy pages and save document without tiling."
-                )
-            )
         main_process.toggle("PageTiler", False)
         filter_params = {"margin": args.margin}
         main_process.set_params("PageFilter", filter_params)
-        pretty_print(filter_params, _("Options"))
+        if args.verbose:
+            pretty_print(filter_params, _("Options"))
     else:
         main_process.toggle("PageTiler", True)
         main_process.set_params("PageTiler", tile_params)
-        pretty_print(tile_params, _("Tile Options"))
+        if args.verbose:
+            pretty_print(tile_params, _("Tile Options"))
 
-    # Layer filter not yet implemented
     success = main_process.run()
 
     if success:
