@@ -269,6 +269,39 @@ def test_calc_shift():
     assert tiler._calc_shift(10, 10) == (10, -10)
 
 
+def test_compute_target_size(default_tiler, doc_mixed_layers):
+    # load the mixed layers document
+    default_tiler.load_doc(doc_mixed_layers)
+    default_tiler.out_doc = init_new_doc(default_tiler.in_doc)
+    default_tiler.page_range = "1-2"
+    default_tiler._set_output_user_unit()
+
+    # 2 rows, no trim, no rotation
+    default_tiler.p["rows"] = 2
+    default_tiler.p["cols"] = None
+    default_tiler._calc_rows_cols(2)
+    _, info = default_tiler._build_pagelist()
+    col_width, row_height = default_tiler._compute_target_size(info)
+    assert sum(col_width) == pytest.approx(1800.0)
+    assert sum(row_height) == pytest.approx(3240.0)
+
+    # 2 cols, no trim, no rotation
+    default_tiler.p["rows"] = None
+    default_tiler.p["cols"] = 2
+    default_tiler._calc_rows_cols(2)
+    _, info = default_tiler._build_pagelist()
+    col_width, row_height = default_tiler._compute_target_size(info)
+    assert sum(col_width) == pytest.approx(3240.0)
+    assert sum(row_height) == pytest.approx(1800.0)
+
+    # trim 10 inches on all sides
+    default_tiler.params["trim"] = [10, 10, 10, 10]
+    _, info = default_tiler._build_pagelist()
+    col_width, row_height = default_tiler._compute_target_size(info)
+    assert sum(col_width) == pytest.approx(3240.0 - (10 * 4 * 7.2))
+    assert sum(row_height) == pytest.approx(1800.0 - (10 * 2 * 7.2))
+
+
 def test_compute_T_matrix(default_tiler, doc_mixed_layers):
     # load the mixed layers document
     default_tiler.load_doc(doc_mixed_layers)

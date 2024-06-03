@@ -512,17 +512,17 @@ class PageTiler(ProcessingBase):
         Should never be called by the PDFStitcher GUI.
         """
 
-        if not (self.target_width and self.target_height):
-            print(_("Target height and width must be specified in scale-to-fit mode"))
-            return False
-
         # Define the target dimensions in points
-        self.target_width = Config.general["units"].units_to_pts(self.target_height)
-        self.target_height = Config.general["units"].units_to_pts(self.target_width)
+        target_width_pts = Config.general["units"].units_to_pts(
+            self.p["target_width"], self.output_uu
+        )
+        target_height_pts = Config.general["units"].units_to_pts(
+            self.p["target_height"], self.output_uu
+        )
 
         # determine size of each page based on requested dimensions
-        page_box_width = self.target_width / self.cols
-        page_box_height = self.target_height / self.rows
+        page_box_width = target_width_pts / self.cols
+        page_box_height = target_height_pts / self.rows
 
         # loop through all the page xobjects and place the non-empty ones
         content_txt = ""
@@ -548,7 +548,7 @@ class PageTiler(ProcessingBase):
             content_txt += "q " + " ".join([str(t) for t in T]) + " cm "
             content_txt += f"{page_info['pagekey']} Do Q "
 
-        return content_txt, (self.target_width, self.target_height)
+        return content_txt, (target_width_pts, target_height_pts)
 
     def _layout_no_scaling(self, info: list) -> tuple:
         """
@@ -575,7 +575,34 @@ class PageTiler(ProcessingBase):
 
         return content_txt, (width, height)
 
-    def run(self, progress_win=None, scaling=False) -> bool:
+    def _get_process_function(self) -> callable:
+        """
+        Returns the processing function to use based on the requested scaling mode.
+        """
+        if (
+            "target_height" in self.p
+            and self.p["target_height"]
+            or "target_width" in self.p
+            and self.p["target_width"]
+        ):
+            if not (self.p["target_width"] and self.p["target_height"]):
+                print(
+                    _("Error")
+                    + ": "
+                    + _("Target height and width must be specified in scale-to-fit mode")
+                )
+                return None
+
+            print(
+                _(
+                    "Target width and height specified, scaling pages to fit. Do not use this option for sewing patterns!"
+                )
+            )
+            return self._layout_scaled
+        else:
+            return self._layout_no_scaling
+
+    def run(self, progress_win=None) -> bool:
         """
         Create a new document for the output and place the pages in a tiled grid.
         Returns true if processing was successful, false otherwise.
@@ -584,6 +611,10 @@ class PageTiler(ProcessingBase):
         if self.in_doc is None:
             print(_("Input document not loaded"))
             return
+
+        process = self._get_process_function()
+        if process is None:
+            return False
 
         # initialize the output
         self.out_doc = utils.init_new_doc(self.in_doc)
@@ -599,11 +630,7 @@ class PageTiler(ProcessingBase):
 
         # after calculating rows/cols but before reordering trim, show the user the selected options
         self._show_options()
-
-        if scaling:
-            content_txt, dims = self._layout_scaled(info)
-        else:
-            content_txt, dims = self._layout_no_scaling(info)
+        content_txt, dims = process(info)
 
         # create a new document with a page big enough to contain all the tiled pages, plus requested margin
         margin = Config.general["units"].units_to_pts(self.p["margin"], self.output_uu)
@@ -629,48 +656,3 @@ class PageTiler(ProcessingBase):
         self.needs_run = False
 
         return True
-
-
-def main(args: argparse.Namespace) -> None:
-    utils.setup_locale()
-
-    # define the tiler
-    tiler = PageTiler(args.input)
-
-    if args.units == "cm":
-        Config.general["units"] = utils.UNITS.CENTIMETERS
-    else:
-        Config.general["units"] = utils.UNITS.INCHES
-
-    params = {
-        "rows": args.rows,
-        "cols": args.columns,
-        "col_major": args.col_major,
-        "right_to_left": args.right_to_left,
-        "bottom_to_top": args.bottom_to_top,
-        "rotation": SW_ROTATION(args.rotate // 90),
-        "margin": utils.txt_to_float(args.margin),
-        "trim": args.trim,
-        "override_trim": args.trimbox_to_mediabox,
-        "actually_trim": args.actually_trim,
-    }
-
-    tiler.params = params
-    tiler.page_range = args.pages
-
-    scaling = False
-    if args.target_height:
-        tiler.target_height = args.target_height
-        scaling = True
-
-    if args.target_width:
-        tiler.target_width = args.target_width
-        scaling = True
-
-    # run it!
-    success = tiler.run(scaling=scaling)
-    if success:
-        tiler.out_doc.save(args.output)
-        print(_("Successfully written to") + " " + args.output)
-    else:
-        print(_("Something went wrong"))
