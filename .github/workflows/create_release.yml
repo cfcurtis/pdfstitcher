@@ -105,9 +105,7 @@ jobs:
             pdfstitcher/resources=pdfstitcher/resources
             pdfstitcher/locale=pdfstitcher/locale
           include-package-data: pdf_mangler
-        
-      - name: Rename executable
-        run: mv build/app.exe build/pdfstitcher.exe
+          output-filename: pdfstitcher.exe
       
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.15
@@ -137,11 +135,25 @@ jobs:
         run: | 
           python3.10 -m venv venv
           source venv/bin/activate
-          pip3 install .
-          pip3 install pyinstaller
+          pip3 install ".[gui]"
           python3 pdfstitcher/update_loc.py --compile
-          pyinstaller pdfstitcher_mac.spec
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
+
+      - uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main
+          script-name: pdfstitcher/gui/app.py
+          standalone: true
+          macos-create-app-bundle: true
+          macos-app-icon: pdfstitcher/resources/stitcher-icon.icns
+          include-data-dir: |
+            pdfstitcher/resources=pdfstitcher/resources
+            pdfstitcher/locale=pdfstitcher/locale
+          include-package-data: pdf_mangler
+          output-filename: PDFStitcher
+
+      - name: Rename app bundle
+        run: mv build/app.app pdfstitcher.app
 
       - name: Create dmg
         run: |
