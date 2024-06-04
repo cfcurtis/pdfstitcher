@@ -156,7 +156,9 @@ jobs:
           --product-name="PDF Stitcher" \
           --macos-app-name="PDF Stitcher" \
           --macos-app-version="1.0.b1"
-          --output-filename=pdfstitcher.app
+
+      - name: Rename app
+        run: mv app.app pdfstitcher.app
           
       - name: Create dmg
         run: |
