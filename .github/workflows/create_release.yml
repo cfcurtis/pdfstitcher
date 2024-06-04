@@ -106,7 +106,6 @@ jobs:
           output-file: pdfstitcher.exe
           company-name: "Charlotte Curtis"
           product-name: "PDF Stitcher"
-          file-version: ${{ env.VERSION_STRING }}
           windows-console-mode: disable
           windows-icon-from-ico: pdfstitcher/resources/stitcher-icon.ico
 
@@ -158,7 +157,6 @@ jobs:
           product-name: "PDF Stitcher"
           macos-app-name: "PDF Stitcher"
           macos-app-version: ${{ env.VERSION_STRING }}
-          file-version: ${{ env.VERSION_STRING }}
 
       - name: Rename app bundle
         run: mv build/app.app pdfstitcher.app
