@@ -144,13 +144,13 @@ jobs:
         with:
           nuitka-version: main
           script-name: pdfstitcher/gui/app.py
+          standalone: true
           macos-create-app-bundle: true
           macos-app-icon: pdfstitcher/resources/stitcher-icon.icns
           include-data-dir: |
             pdfstitcher/resources=pdfstitcher/resources
             pdfstitcher/locale=pdfstitcher/locale
           include-package-data: pdf_mangler
-          output-file: pdfstitcher
           company-name: "Charlotte Curtis"
           product-name: "PDF Stitcher"
           macos-app-name: "PDF Stitcher"
