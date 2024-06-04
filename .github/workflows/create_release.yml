@@ -99,13 +99,13 @@ jobs:
           nuitka-version: main
           script-name: pdfstitcher/gui/app.py
           onefile: true
-          windows-console-module: force
+          windows-console-mode: force
           windows-icon-from-ico: pdfstitcher/resources/stitcher-icon.ico
           include-data-dir: |
             pdfstitcher/resources=pdfstitcher/resources
             pdfstitcher/locale=pdfstitcher/locale
           include-package-data: pdf_mangler
-          output-filename: pdfstitcher.exe
+          output-file: pdfstitcher.exe
       
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.15
@@ -126,7 +126,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install Python
-        if: ${{ matrix.os == 'macos-11' }}
         uses: actions/setup-python@v4
         with:
           python-version: "3.10" # better compatibility with pikepdf, it seems
@@ -150,7 +149,7 @@ jobs:
             pdfstitcher/resources=pdfstitcher/resources
             pdfstitcher/locale=pdfstitcher/locale
           include-package-data: pdf_mangler
-          output-filename: PDFStitcher
+          output-file: PDFStitcher
 
       - name: Rename app bundle
         run: mv build/app.app pdfstitcher.app
