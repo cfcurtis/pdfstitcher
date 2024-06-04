@@ -127,9 +127,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+        run:  brew install python@3.11
         
       - name: Compile translation files and build .app
         run: | 
@@ -168,7 +166,7 @@ jobs:
           --window-size 800 400 \
           --icon-size 100 \
           --icon "pdfstitcher.app" 145 185 \
-          --hide-extension "pdfstitcher.app" \
+          --no-internet-enable \
           --app-drop-link 595 185 \
           "PDFStitcher-Installer.dmg" \
           "pdfstitcher.app"
