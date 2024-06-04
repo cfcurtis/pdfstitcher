@@ -153,10 +153,10 @@ jobs:
           product-name: "PDF Stitcher"
           macos-app-name: "PDF Stitcher"
           macos-app-version: ${{ env.VERSION_STRING }}
-          output-dir: build
+          output-dir: "."
 
       - name: Rename app
-        run: mv build/app.app pdfstitcher.app
+        run: mv app.app pdfstitcher.app
           
       - name: Create dmg
         run: |
