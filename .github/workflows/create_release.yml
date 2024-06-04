@@ -99,13 +99,17 @@ jobs:
           nuitka-version: main
           script-name: pdfstitcher/gui/app.py
           onefile: true
-          windows-console-mode: force
-          windows-icon-from-ico: pdfstitcher/resources/stitcher-icon.ico
           include-data-dir: |
             pdfstitcher/resources=pdfstitcher/resources
             pdfstitcher/locale=pdfstitcher/locale
           include-package-data: pdf_mangler
           output-file: pdfstitcher.exe
+          company-name: "Charlotte Curtis"
+          product-name: "PDF Stitcher"
+          file-version: ${{ env.VERSION_STRING }}
+          windows-console-mode: disable
+          windows-icon-from-ico: pdfstitcher/resources/stitcher-icon.ico
+
       
       - name: GH Release
         uses: softprops/action-gh-release@v0.1.15
@@ -134,6 +138,7 @@ jobs:
         run: | 
           python3.10 -m venv venv
           source venv/bin/activate
+          brew install qpdf
           pip3 install ".[gui]"
           python3 pdfstitcher/update_loc.py --compile
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
@@ -142,14 +147,18 @@ jobs:
         with:
           nuitka-version: main
           script-name: pdfstitcher/gui/app.py
-          standalone: true
           macos-create-app-bundle: true
           macos-app-icon: pdfstitcher/resources/stitcher-icon.icns
           include-data-dir: |
             pdfstitcher/resources=pdfstitcher/resources
             pdfstitcher/locale=pdfstitcher/locale
           include-package-data: pdf_mangler
-          output-file: PDFStitcher
+          output-file: pdfstitcher
+          company-name: "Charlotte Curtis"
+          product-name: "PDF Stitcher"
+          macos-app-name: "PDF Stitcher"
+          macos-app-version: ${{ env.VERSION_STRING }}
+          file-version: ${{ env.VERSION_STRING }}
 
       - name: Rename app bundle
         run: mv build/app.app pdfstitcher.app
