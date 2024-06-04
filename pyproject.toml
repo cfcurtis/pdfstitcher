@@ -32,7 +32,7 @@ dev = [
 gui = [
     "wxPython >= 4.2",
     "requests",
-    "pdf-mangler >= 0.1.4",
+    "pdf-mangler",
     "psutil",
     "pyobjc ; platform_system=='Darwin'"
 ]

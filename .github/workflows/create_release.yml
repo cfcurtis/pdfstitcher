@@ -129,12 +129,10 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10" # better compatibility with pikepdf, it seems
+          python-version: "3.11"
         
       - name: Compile translation files and build .app
         run: | 
-          python3.10 -m venv venv
-          source venv/bin/activate
           brew install qpdf
           pip3 install ".[gui]"
           python3 pdfstitcher/update_loc.py --compile
@@ -158,7 +156,7 @@ jobs:
           --macos-app-version="1.0.b1"
 
       - name: Rename app
-        run: mv app.app pdfstitcher.app
+        run: mv build/app.app pdfstitcher.app
           
       - name: Create dmg
         run: |
