@@ -155,9 +155,10 @@ jobs:
           product-name: "PDF Stitcher"
           macos-app-name: "PDF Stitcher"
           macos-app-version: ${{ env.VERSION_STRING }}
+          output-dir: build
 
       - name: Rename app bundle
-        run: mv build/app.app pdfstitcher.app
+        run: mv build/app.app build/pdfstitcher.app
 
       - name: Create dmg
         run: |
@@ -172,7 +173,7 @@ jobs:
           --hide-extension "pdfstitcher.app" \
           --app-drop-link 595 185 \
           "PDFStitcher-Installer.dmg" \
-          "pdfstitcher.app/"
+          "build"
       
       - name: Rename with arch for X64
         if: ${{ runner.arch == 'X64' }}
