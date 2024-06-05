@@ -146,6 +146,7 @@ jobs:
           nuitka-version: main
           script-name: pdfstitcher/gui/app.py
           standalone: true
+          onefile: false
           macos-create-app-bundle: true
           macos-app-icon: pdfstitcher/resources/stitcher-icon.icns
           include-data-dir: |
@@ -172,7 +173,7 @@ jobs:
           --icon "pdfstitcher.app" 145 185 \
           --no-internet-enable \
           --app-drop-link 595 185 \
-          "PDFStitcher-Installer.dmg" \
+          "build/PDFStitcher-Installer.dmg" \
           "build/pdfstitcher.app"
       
       - name: Rename with arch for X64
@@ -184,11 +185,11 @@ jobs:
         run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerARM64.dmg"
       
       - name: Zip the app
-        run: zip -r pdfstitcher.app.zip build/pdfstitcher.app
+        run: cd build && zip -r pdfstitcher.app.zip pdfstitcher.app & cd ..
       
       - name: GH Release
         uses: softprops/action-gh-release@v2
         with:
-          files: "PDFStitcher-Installer*.dmg, pdfstitcher.app.zip"
+          files: "build/PDFStitcher-Installer*.dmg, build/pdfstitcher.app.zip"
           draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
