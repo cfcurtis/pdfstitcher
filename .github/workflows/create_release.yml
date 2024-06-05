@@ -140,6 +140,12 @@ jobs:
           python pdfstitcher/update_loc.py --compile
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
 
+      - name: Fix Python path for Intel
+        # From https://github.com/Nuitka/Nuitka/issues/2580
+        if: ${{ runner.arch == 'X64' }}
+        run: |
+          export PYTHONPATH=/usr/local/opt/qpdf/lib/:$PYTHONPATH
+
       - name: Build with Nuitka
         uses: Nuitka/Nuitka-Action@main
         with:
