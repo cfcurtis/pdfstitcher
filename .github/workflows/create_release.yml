@@ -146,6 +146,12 @@ jobs:
         run: |
           export PYTHONPATH=/usr/local/opt/qpdf/lib/:$PYTHONPATH
 
+      - name: Configure code signing
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.APPLE_SIGN_CERTIFICATE }}
+          p12-password: ${{ secrets.APPLE_SIGN_PASSWORD }}
+
       - name: Build with Nuitka
         uses: Nuitka/Nuitka-Action@main
         with:
@@ -163,6 +169,8 @@ jobs:
           product-name: "PDF Stitcher"
           macos-app-name: "PDF Stitcher"
           macos-app-version: ${{ env.VERSION_STRING }}
+          macos-signed-app-name: "com.charlottecurtis.pdfstitcher"
+          macos-sign-identity: ${{ secrets.APPLE_SIGN_IDENTITY}}
         
       - name: Rename app
         run: mv build/app.app build/pdfstitcher.app
