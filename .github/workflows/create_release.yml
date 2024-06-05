@@ -156,40 +156,37 @@ jobs:
           product-name: "PDF Stitcher"
           macos-app-name: "PDF Stitcher"
           macos-app-version: ${{ env.VERSION_STRING }}
+          output-file: pdfstitcher_gui
 
-      # - name: Rename app
-      #   run: mv app.app pdfstitcher.app
+      - name: Rename app
+        run: mv build/app.app build/pdfstitcher.app
           
-      # - name: Create dmg
-      #   run: |
-      #     brew install create-dmg
-      #     create-dmg \
-      #     --volname "PDFStitcher Installer" \
-      #     --background "pdfstitcher/resources/install_background.png" \
-      #     --window-pos 200 120 \
-      #     --window-size 800 400 \
-      #     --icon-size 100 \
-      #     --icon "pdfstitcher.app" 145 185 \
-      #     --no-internet-enable \
-      #     --app-drop-link 595 185 \
-      #     "PDFStitcher-Installer.dmg" \
-      #     "pdfstitcher.app"
-
-      - name: Zip the app
-        run: zip -r build/app.app.zip build/app.app
+      - name: Create dmg
+        run: |
+          brew install create-dmg
+          create-dmg \
+          --volname "PDFStitcher Installer" \
+          --background "pdfstitcher/resources/install_background.png" \
+          --window-pos 200 120 \
+          --window-size 800 400 \
+          --icon-size 100 \
+          --icon "pdfstitcher.app" 145 185 \
+          --no-internet-enable \
+          --app-drop-link 595 185 \
+          "PDFStitcher-Installer.dmg" \
+          "build/pdfstitcher.app"
       
-      # - name: Rename with arch for X64
-      #   if: ${{ runner.arch == 'X64' }}
-      #   run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerX64.dmg"
+      - name: Rename with arch for X64
+        if: ${{ runner.arch == 'X64' }}
+        run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerX64.dmg"
       
-      # - name: Rename with arch for ARM64
-      #   if: ${{ runner.arch == 'ARM64' }}
-      #   run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerARM64.dmg"
+      - name: Rename with arch for ARM64
+        if: ${{ runner.arch == 'ARM64' }}
+        run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerARM64.dmg"
       
       - name: GH Release
         uses: softprops/action-gh-release@v2
         with:
-          # files: "PDFStitcher-Installer*.dmg"
-          files: "build/app.app.zip"
+          files: "PDFStitcher-Installer*.dmg"
           draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
