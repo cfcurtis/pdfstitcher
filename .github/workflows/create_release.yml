@@ -156,11 +156,9 @@ jobs:
           product-name: "PDF Stitcher"
           macos-app-name: "PDF Stitcher"
           macos-app-version: ${{ env.VERSION_STRING }}
-          output-file: pdfstitcher_gui
-          output-dir: "."
-
+        
       - name: Rename app
-        run: mv app.app pdfstitcher.app
+        run: mv build/app.app build/pdfstitcher.app
           
       - name: Create dmg
         run: |
@@ -175,7 +173,7 @@ jobs:
           --no-internet-enable \
           --app-drop-link 595 185 \
           "PDFStitcher-Installer.dmg" \
-          "pdfstitcher.app"
+          "build/pdfstitcher.app"
       
       - name: Rename with arch for X64
         if: ${{ runner.arch == 'X64' }}
@@ -186,7 +184,7 @@ jobs:
         run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerARM64.dmg"
       
       - name: Zip the app
-        run: zip -r pdfstitcher.app.zip pdfstitcher.app
+        run: zip -r pdfstitcher.app.zip build/pdfstitcher.app
       
       - name: GH Release
         uses: softprops/action-gh-release@v2
