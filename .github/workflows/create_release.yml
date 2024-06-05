@@ -178,11 +178,11 @@ jobs:
       
       - name: Rename with arch for X64
         if: ${{ runner.arch == 'X64' }}
-        run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerX64.dmg"
+        run: mv build/PDFStitcher-Installer.dmg "build/PDFStitcher-InstallerX64.dmg"
       
       - name: Rename with arch for ARM64
         if: ${{ runner.arch == 'ARM64' }}
-        run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerARM64.dmg"
+        run: mv build/PDFStitcher-Installer.dmg "build/PDFStitcher-InstallerARM64.dmg"
       
       - name: Zip the app
         run: cd build && zip -r pdfstitcher.app.zip pdfstitcher.app & cd ..
