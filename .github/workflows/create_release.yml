@@ -174,6 +174,9 @@ jobs:
       #     --app-drop-link 595 185 \
       #     "PDFStitcher-Installer.dmg" \
       #     "pdfstitcher.app"
+
+      - name: Zip the app
+        run: zip -r build/app.app.zip build/app.app
       
       # - name: Rename with arch for X64
       #   if: ${{ runner.arch == 'X64' }}
@@ -187,6 +190,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           # files: "PDFStitcher-Installer*.dmg"
-          files: "build/app.app"
+          files: "build/app.app.zip"
           draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
