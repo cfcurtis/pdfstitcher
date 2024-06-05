@@ -126,67 +126,67 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Python
-        run: |
-          brew install python@3.11
-          python3 -m venv venv
-          source venv/bin/activate
+      - name: Setup Puthon
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          architecture: ${{ runner.arch }}
+          cache: 'pip'
         
-      - name: Compile translation files and build .app
+      - name: Install dependencies and compile translation files
         run: | 
-          source venv/bin/activate
           brew install qpdf
-          pip3 install ".[gui]"
-          python3 pdfstitcher/update_loc.py --compile
+          pip install ".[gui]"
+          python pdfstitcher/update_loc.py --compile
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
 
       - name: Build with Nuitka
-        run: |
-          source venv/bin/activate
-          pip3 install nuitka
-          python3 -m nuitka \
-          --assume-yes-for-downloads \
-          --script-name=pdfstitcher/gui/app.py \
-          --standalone \
-          --macos-create-app-bundle \
-          --macos-app-icon=pdfstitcher/resources/stitcher-icon.icns \
-          --include-data-dir=pdfstitcher/resources=pdfstitcher/resources \
-          --include-data-dir=pdfstitcher/locale=pdfstitcher/locale \
-          --include-package-data=pdf_mangler \
-          --company-name="Charlotte Curtis" \
-          --product-name="PDF Stitcher" \
-          --macos-app-name="PDF Stitcher" \
-          --macos-app-version="${{ env.VERSION_STRING }}"
+        uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main
+          script-name: pdfstitcher/gui/app.py
+          standalone: true
+          macos-create-app-bundle: true
+          macos-app-icon: pdfstitcher/resources/stitcher-icon.icns
+          include-data-dir: |
+            pdfstitcher/resources=pdfstitcher/resources
+            pdfstitcher/locale=pdfstitcher/locale
+          include-package-data: pdf_mangler
+          company-name: "Charlotte Curtis"
+          product-name: "PDF Stitcher"
+          macos-app-name: "PDF Stitcher"
+          macos-app-version: ${{ env.VERSION_STRING }}
 
-      - name: Rename app
-        run: mv app.app pdfstitcher.app
+      # - name: Rename app
+      #   run: mv app.app pdfstitcher.app
           
-      - name: Create dmg
-        run: |
-          brew install create-dmg
-          create-dmg \
-          --volname "PDFStitcher Installer" \
-          --background "pdfstitcher/resources/install_background.png" \
-          --window-pos 200 120 \
-          --window-size 800 400 \
-          --icon-size 100 \
-          --icon "pdfstitcher.app" 145 185 \
-          --no-internet-enable \
-          --app-drop-link 595 185 \
-          "PDFStitcher-Installer.dmg" \
-          "pdfstitcher.app"
+      # - name: Create dmg
+      #   run: |
+      #     brew install create-dmg
+      #     create-dmg \
+      #     --volname "PDFStitcher Installer" \
+      #     --background "pdfstitcher/resources/install_background.png" \
+      #     --window-pos 200 120 \
+      #     --window-size 800 400 \
+      #     --icon-size 100 \
+      #     --icon "pdfstitcher.app" 145 185 \
+      #     --no-internet-enable \
+      #     --app-drop-link 595 185 \
+      #     "PDFStitcher-Installer.dmg" \
+      #     "pdfstitcher.app"
       
-      - name: Rename with arch for X64
-        if: ${{ runner.arch == 'X64' }}
-        run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerX64.dmg"
+      # - name: Rename with arch for X64
+      #   if: ${{ runner.arch == 'X64' }}
+      #   run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerX64.dmg"
       
-      - name: Rename with arch for ARM64
-        if: ${{ runner.arch == 'ARM64' }}
-        run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerARM64.dmg"
+      # - name: Rename with arch for ARM64
+      #   if: ${{ runner.arch == 'ARM64' }}
+      #   run: mv PDFStitcher-Installer.dmg "PDFStitcher-InstallerARM64.dmg"
       
       - name: GH Release
         uses: softprops/action-gh-release@v2
         with:
-          files: "PDFStitcher-Installer*.dmg"
+          # files: "PDFStitcher-Installer*.dmg"
+          files: "build/app.app"
           draft: ${{ inputs.draft }}
           tag_name: ${{ env.VERSION_STRING }}
