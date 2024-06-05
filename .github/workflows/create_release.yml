@@ -182,7 +182,7 @@ jobs:
           --icon "pdfstitcher.app" 145 185 \
           --no-internet-enable \
           --app-drop-link 595 185 \
-          --codesign ${{ secrets.APPLE_SIGN_IDENTITY }} \
+          --codesign "${{ secrets.APPLE_SIGN_IDENTITY }}" \
           "build/PDFStitcher-Installer.dmg" \
           "build/pdfstitcher.app"
       
