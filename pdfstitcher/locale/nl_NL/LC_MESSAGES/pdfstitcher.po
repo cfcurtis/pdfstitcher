@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: 2023-03-13 11:37+0000\n"
-"Last-Translator: Kelly Gaarenstroom <k.gaarenstroom@hotmail.com>\n"
+"PO-Revision-Date: 2024-03-21 22:01+0000\n"
+"Last-Translator: Mikachu <micah.sh@proton.me>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/pdfstitcher/"
 "user-interface/nl/>\n"
 "Language: nl_NL\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: pdfstitcher/bug_info.py:28
@@ -228,6 +228,8 @@ msgid ""
 "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim half an inch "
 "from left and top)"
 msgstr ""
+"gegeven als links, rechts, boven, onder (bijvoorbeeld 0,5,0,0,5,0 zou een "
+"halve inch afsnijden van links en boven)"
 
 #: pdfstitcher/tile_pages.py:648
 msgid "Rotate pages (90, 180, or 270 degrees)"
@@ -321,7 +323,7 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:168
 msgid "Create mangled PDF (Beta)"
-msgstr ""
+msgstr "Beschadigde PDF maken (bèta)"
 
 #: pdfstitcher/ui/dialogs.py:179
 msgid "Report Via GitHub"
@@ -353,7 +355,7 @@ msgstr "Succes"
 
 #: pdfstitcher/ui/dialogs.py:240
 msgid "Failed to mangle PDF"
-msgstr ""
+msgstr "Kan PDF niet beschadigen"
 
 #: pdfstitcher/ui/dialogs.py:267
 msgid "Preferences"
