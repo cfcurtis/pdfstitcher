@@ -129,14 +129,12 @@ class IOTab(scrolled.ScrolledPanel):
 
         # checklist of features to enable/disable
         self.do_layers = wx.CheckBox(self, label=_("Process Layers"))
-        self.do_layers.SetValue(1)
         vert_sizer.Add(
             self.do_layers,
             flag=wx.TOP | wx.LEFT | wx.RIGHT,
             border=self.FromDIP(utils.BORDER * 2),
         )
         self.do_tile = wx.CheckBox(self, label=_("Tile pages"))
-        self.do_tile.SetValue(1)
         self.do_layers.Bind(wx.EVT_CHECKBOX, self.on_option_checked)
         self.do_tile.Bind(wx.EVT_CHECKBOX, self.on_option_checked)
         vert_sizer.Add(
@@ -158,10 +156,10 @@ class IOTab(scrolled.ScrolledPanel):
         self.SetupScrolling()
         self.SetBackgroundColour(parent.GetBackgroundColour())
 
-    def load_new(self, in_doc):
-        self.input_fname_display.ChangeValue(in_doc.filename)
+    def load_new(self, path: str, n_pages: int):
+        self.input_fname_display.ChangeValue(path)
         self.output_fname_display.ChangeValue("")
-        self.page_range_txt.ChangeValue("1-{}".format(len(in_doc.pages)))
+        self.page_range_txt.SetValue("1-{}".format(n_pages))
 
     def on_option_checked(self, event):
         do_layers = bool(self.do_layers.GetValue())

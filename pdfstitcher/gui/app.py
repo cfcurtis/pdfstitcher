@@ -9,7 +9,7 @@
 
 from pdfstitcher import utils
 from pdfstitcher.utils import Config
-from pdfstitcher.ui.main_frame import main as launch_gui
+from pdfstitcher.gui.main_frame import main as launch_gui
 
 
 def main():

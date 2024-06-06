@@ -15,7 +15,6 @@ import yaml
 
 # localization stuff
 import gettext
-import locale
 from babel import Locale
 from pathlib import Path
 
@@ -30,7 +29,7 @@ MAX_SIZE_PX = 14400
 
 # Constant widget sizes - used for all the different panels
 BORDER = 5
-NUM_ENTRY_SIZE = (40, -1)
+NUM_ENTRY_SIZE = (80, -1)
 PATH_ENTRY_SIZE = (250, -1)
 
 # language global variable
@@ -61,9 +60,9 @@ class UNITS(IntEnum):
         elif self == UNITS.POINTS:
             return _("pt")
 
-    def units_to_px(self, val: float, user_unit: float = 1):
+    def units_to_pts(self, val: float, user_unit: float = 1):
         """
-        Converts from current units to pixels.
+        Converts from current units to points.
         """
         if self == UNITS.INCHES:
             return val * 72 / user_unit
@@ -72,9 +71,9 @@ class UNITS(IntEnum):
         elif self == UNITS.POINTS:
             return val / user_unit
 
-    def px_to_units(self, val: float, user_unit: float = 1):
+    def pts_to_units(self, val: float, user_unit: float = 1):
         """
-        Converts from pixels to current units.
+        Converts from points to current units.
         """
         if self == UNITS.INCHES:
             return user_unit * val / 72
@@ -84,11 +83,11 @@ class UNITS(IntEnum):
             return user_unit * val
 
 
-def unit_representer(dumper, data):
+def unit_representer(dumper: yaml.Dumper, data: UNITS):
     return dumper.represent_scalar("!units", "%s" % data.name)
 
 
-def unit_constructor(loader, node):
+def unit_constructor(loader: yaml.Loader, node: yaml.Node):
     name = loader.construct_scalar(node)
     return UNITS[name]
 
@@ -155,7 +154,7 @@ class Config:
             print("Could not save configuration file.")
 
 
-def resource_path(relative_path):
+def resource_path(relative_path: str) -> str:
     """Get absolute path to resource, works for dev and for PyInstaller"""
     if hasattr(sys, "_MEIPASS"):
         # PyInstaller creates a temp folder and stores path in _MEIPASS
@@ -166,7 +165,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-def get_valid_langs():
+def get_valid_langs() -> list:
     """
     Get a list of valid languages for the UI.
     """
@@ -239,7 +238,7 @@ def setup_locale(lang: str = None) -> None:
     return language_warning
 
 
-def txt_to_float(txt):
+def txt_to_float(txt: str) -> float:
     """
     Convert a string to a float, or return None if it can't be converted.
     Supports decimal and comma as decimal separator.
@@ -256,7 +255,7 @@ def txt_to_float(txt):
     return txtnum
 
 
-def parse_page_range(ptext=""):
+def parse_page_range(ptext: str = "") -> list:
     """
     Parse out the requested pages.
     Allows for pages to be repeated and out of order.
@@ -276,7 +275,7 @@ def parse_page_range(ptext=""):
     return page_range
 
 
-def init_new_doc(pdf):
+def init_new_doc(pdf: pikepdf.Pdf) -> pikepdf.Pdf:
     """
     Initialize a new document and copy over the layer info (OCGs) if it exists.
     """
@@ -288,8 +287,7 @@ def init_new_doc(pdf):
         new_doc.Root.OCProperties = local_root.OCProperties
 
     if "/Metadata" in local_root:
-        for k in pdf.Root.Metadata.keys():
-            new_doc.Root.Metadata = local_root.Metadata
+        new_doc.Root.Metadata = local_root.Metadata
 
     with new_doc.open_metadata() as meta:
         # update the creator info
@@ -298,26 +296,32 @@ def init_new_doc(pdf):
     return new_doc
 
 
-def get_page_dims(page, global_rotation: float = 0, target_user_unit: float = 1) -> tuple:
+def get_page_dims(
+    page: pikepdf.Page, global_rotation: float = 0, page_uu: float = 1, output_uu: float = 1
+) -> tuple:
     """
     Helper function to calculate the page dimensions
-    Returns width, height in pixels as observed by the user
+    Returns width, height in points as observed by the user
     (taking rotation and UserUnit into account)
     """
+
+    if "/MediaBox" in page.keys():
+        mbox = page.MediaBox
+    else:
+        mbox = page.BBox
+
     # The mediabox is typically specified as
     # [lower left x, lower left y, upper left x, upper left y],
     # but per PDF reference any two opposite corners can be defined
-    mbox = page.MediaBox
     page_width = float(abs(mbox[2] - mbox[0]))
     page_height = float(abs(mbox[3] - mbox[1]))
 
-    page_uu = 1
     if "/UserUnit" in page.keys():
         page_uu = float(page.UserUnit)
 
     # scale according to the page and target user units
-    page_width *= page_uu / target_user_unit
-    page_height *= page_uu / target_user_unit
+    page_width *= page_uu / output_uu
+    page_height *= page_uu / output_uu
 
     # global_rotation is defined by the document root, but
     # may be overridden on a specific page
@@ -345,7 +349,7 @@ def print_media_box(media_box, user_unit: float = 1) -> None:
         print(62 * "*")
         print(
             _("Warning! Output is larger than {} {}, may not open correctly.").format(
-                round(Config.general["units"].px_to_units(MAX_SIZE_PX, user_unit)),
+                round(Config.general["units"].pts_to_units(MAX_SIZE_PX, user_unit)),
                 Config.general["units"],
             )
         )
@@ -354,14 +358,14 @@ def print_media_box(media_box, user_unit: float = 1) -> None:
     print(
         _("Output size:")
         + " {:0.2f} x {:0.2f} {}".format(
-            Config.general["units"].px_to_units(width, user_unit),
-            Config.general["units"].px_to_units(height, user_unit),
+            Config.general["units"].pts_to_units(width, user_unit),
+            Config.general["units"].pts_to_units(height, user_unit),
             Config.general["units"],
         )
     )
 
 
-def normalize_boxes(page):
+def normalize_boxes(page: pikepdf.Page) -> None:
     """
     Normalizes the various pdf boxes on the page so they follow the assumed
     [lower x, lower y, upper x, upper y] format
@@ -377,3 +381,56 @@ def normalize_boxes(page):
     if "/Resources" in page.keys() and "/XObject" in page.Resources.keys():
         for key in page.Resources.XObject.keys():
             normalize_boxes(page.Resources.XObject[key])
+
+
+def fix_utf16(string: str) -> str:
+    """
+    Helper function to put a band-aid on UTF-16 encoded strings.
+    """
+    new_string = string.replace("\x00", "")
+    if new_string.startswith("ÿþ"):
+        new_string = new_string[2:]
+    return new_string
+
+
+def add_name(ordered_names: list, name_object: pikepdf.Dictionary, depth: int = 0) -> None:
+    """
+    Add the name to the list of ordered names. Ignores duplicates.
+    """
+    if depth > 1:
+        return
+    for o in name_object:
+        if "/Name" in o.keys():
+            name = fix_utf16(str(o.Name))
+            if name not in ordered_names:
+                ordered_names.append(name)
+        else:
+            add_name(ordered_names, o, depth=depth + 1)
+
+
+def get_layer_names(doc: pikepdf.Pdf) -> list:
+    """
+    Reads through the root to parse out the layers present in the file, excluding duplicates.
+    Returns a list of layer names, or None if there are no layers
+    """
+    if "/OCProperties" in doc.Root.keys() and "/OCGs" in doc.Root.OCProperties.keys():
+        ocp = doc.Root.OCProperties
+    else:
+        return []
+
+    names = [str(oc.Name) for oc in ocp.OCGs]
+    ordered_names = []
+    if "/D" in ocp.keys() and "/Order" in ocp.D.keys():
+        add_name(ordered_names, ocp.D.Order)
+    for n in names:
+        real_n = fix_utf16(n)
+        if real_n not in ordered_names:
+            ordered_names.append(real_n)
+    return ordered_names
+
+
+# helper functions to dump page contents to file for debugging
+def write_page(fname: str, page: pikepdf.Page) -> None:
+    with open(fname, "w") as f:
+        commands = pikepdf.parse_content_stream(page)
+        f.write(pikepdf.unparse_content_stream(commands).decode("pdfdoc"))

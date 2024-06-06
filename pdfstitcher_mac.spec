@@ -6,6 +6,8 @@ from PyInstaller.utils.hooks import copy_metadata, collect_data_files
 import importlib.metadata
 __version__ = importlib.metadata.version("pdfstitcher")
 
+APPLE_SIGN_IDENTITY = os.environ["APPLE_SIGN_IDENTITY"]
+
 block_cipher = None
 locale_paths = []
 locales_full = next(os.walk("pdfstitcher/locale"))[1]
@@ -19,7 +21,7 @@ datas += copy_metadata('pdfstitcher', recursive=True)
 datas += collect_data_files('pdf_mangler')
 
 a = Analysis(
-    ["pdfstitcher/app.py"],
+    ["pdfstitcher/gui/app.py"],
     pathex=[],
     binaries=[],
     datas=datas,
@@ -49,12 +51,13 @@ exe = EXE(
     upx_exclude=[],
     runtime_tmpdir=None,
     console=False,
+    codesign_identity=APPLE_SIGN_IDENTITY
 )
 app = BUNDLE(
     exe,
     name="pdfstitcher.app",
     icon="pdfstitcher/resources/stitcher-icon.icns",
-    bundle_identifier="org.pdfstitcher",
+    bundle_identifier="com.charlottecurtis.pdfstitcher",
     version=f"{__version__}",
     info_plist={
         "NSPrincipalClass": "NSApplication",

@@ -32,9 +32,9 @@
 - name: Sinclair
   input: '{gdrive}/Sewing/Sinclair/Letter_SINCLAIR_S1065_PETITE-EI_Harper_knit_cardigan_and_duster_US0-US30_RL519.pdf'
   page_range: '1-44'
+  profile: True
   layer_filter:
     keep_ocs: ['PETITE US04-S','PETITE US06-S']
-    profile: True
     keep_non_oc_opts: [True, False]
     line_props:
       PETITE US04-S:
@@ -42,11 +42,10 @@
         style: 0
         rgb: [0,0,0]
   page_tiler:
-    profile: True
     rows: 4
     trim: [0,.59,0,.89]
 - name: Sinclair-reprocess
-  input: 'Sinclair-with-non-oc-with-fill.pdf'
+  input: '../integration/Sinclair-with-non-oc-with-fill.pdf'
   page_range: '1'
   layer_filter:
     keep_ocs: ['PETITE US04-S']
@@ -76,7 +75,7 @@
     trim: [0.5,0.5,0.5,0.5]
     margin: 12
 - name: P4P
-  input: '{gdrive}/Sewing/P4P/Wee-Lap-Tee-by-P4P-US-Letter.pdf'
+  input: '{gdrive}/Sewing/PatternsForPirates/Wee-Lap-Tee-by-P4P-US-Letter.pdf'
   page_range: 13-16
   layer_filter:
     keep_ocs: ['9 Month','12 Month','All Sizes']
@@ -159,9 +158,9 @@
     keep_ocs: ['Age 2','6-12m','Pattern Information']
   page_tiler:
     rows: 2
-    trim: [0, 0.45, 0.45, 0]
+    trim: [.15, .15, .15, .15]
 - name: MBJM-Reprocess
-  input: "MBJM-with-non-oc-with-fill.pdf"
+  input: "../integration/MBJM-with-non-oc-with-fill.pdf"
   page_range: '1'
   layer_filter:
     keep_ocs: 'all'

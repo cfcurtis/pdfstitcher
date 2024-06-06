@@ -1,29 +1,30 @@
-# Czech (Czechia) translations for pdfstitcher.
-# Copyright (C) 2021 Charlotte Curtis
+# Translations template for pdfstitcher.
+# Copyright (C) 2023 Charlotte Curtis
 # This file is distributed under the same license as the pdfstitcher
 # project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: 2024-01-16 16:06+0000\n"
-"Last-Translator: Lucie Holá <hola.lucka1@gmail.com>\n"
-"Language-Team: Czech <https://hosted.weblate.org/projects/pdfstitcher/"
-"user-interface/cs/>\n"
-"Language: cs_CZ\n"
+"PO-Revision-Date: 2024-03-21 22:01+0000\n"
+"Last-Translator: Eryk Michalak <gnu.ewm@protonmail.com>\n"
+"Language-Team: Polish <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.5-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: pdfstitcher/bug_info.py:28
 msgid "Error getting system info: {}"
-msgstr "Chyba při získávání informací o systému:{}"
+msgstr ""
 
 #: pdfstitcher/bug_info.py:54
 msgid "Mangling PDF. This may take some time."
@@ -35,7 +36,7 @@ msgstr ""
 
 #: pdfstitcher/layerfilter.py:328
 msgid "No layers selected, generated PDF would be blank."
-msgstr "Nebyly vybrány žádné vrstvy, vygenerované PDF bude prázdné."
+msgstr "Nie wybrano żadnej warstwy, wygenerowany PDF będzie pusty."
 
 #: pdfstitcher/layerfilter.py:516 pdfstitcher/layerfilter.py:545
 msgid "Failed writing stream to page with error type {}"
@@ -43,94 +44,93 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:105
 msgid "Invalid trim value specified, ignoring"
-msgstr "Byla zadána neplatná hodnota oříznutí, hodnota ignorována"
+msgstr ""
 
 #. translation_note: in = "inches", cm = "centimetres"
 #: pdfstitcher/tile_pages.py:111 pdfstitcher/ui/tile_tab.py:121
 msgid "None"
-msgstr "Žádné"
+msgstr "Brak"
 
 #: pdfstitcher/tile_pages.py:114 pdfstitcher/ui/tile_tab.py:122
 msgid "Clockwise"
-msgstr "O 90° doprava"
+msgstr ""
 
 #: pdfstitcher/tile_pages.py:116 pdfstitcher/ui/tile_tab.py:123
 msgid "Counterclockwise"
-msgstr "O 90° doleva"
+msgstr "Obrót w lewo"
 
 #. translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
 #: pdfstitcher/tile_pages.py:119 pdfstitcher/ui/tile_tab.py:124
 msgid "Turn Around"
-msgstr "O 180°"
+msgstr ""
 
 #: pdfstitcher/tile_pages.py:121 pdfstitcher/ui/tile_tab.py:73
 msgid "Rows then columns"
-msgstr "Nejprve řádky, pak sloupce"
+msgstr "Najpierw wiersze, potem kolumny"
 
 #: pdfstitcher/tile_pages.py:123 pdfstitcher/ui/tile_tab.py:73
 msgid "Columns then rows"
-msgstr "Nejprve sloupce, pak řádky"
+msgstr ""
 
 #: pdfstitcher/tile_pages.py:125 pdfstitcher/ui/tile_tab.py:74
 msgid "Left to right"
-msgstr "Zleva doprava"
+msgstr "Od lewej do prawej"
 
 #: pdfstitcher/tile_pages.py:127 pdfstitcher/ui/tile_tab.py:74
 msgid "Right to left"
-msgstr "Zprava doleva"
+msgstr "Od prawej do lewej"
 
 #: pdfstitcher/tile_pages.py:129 pdfstitcher/ui/tile_tab.py:75
 msgid "Top to bottom"
-msgstr "Shora dolů"
+msgstr ""
 
 #: pdfstitcher/tile_pages.py:131 pdfstitcher/ui/tile_tab.py:75
 msgid "Bottom to top"
-msgstr "Zdola nahoru"
+msgstr "Od dołu do góry"
 
 #: pdfstitcher/tile_pages.py:134 pdfstitcher/ui/tile_tab.py:290
 msgid "Bottom"
-msgstr "Dole"
+msgstr "Dół"
 
 #: pdfstitcher/tile_pages.py:136 pdfstitcher/tile_pages.py:143
-#, fuzzy
 msgid "Middle"
-msgstr "Skrýt"
+msgstr "Środek"
 
 #: pdfstitcher/tile_pages.py:138 pdfstitcher/ui/tile_tab.py:275
 msgid "Top"
-msgstr "Nahoře"
+msgstr "Góra"
 
 #: pdfstitcher/tile_pages.py:141 pdfstitcher/ui/tile_tab.py:245
 msgid "Left"
-msgstr "Vlevo"
+msgstr "Lewo"
 
 #: pdfstitcher/tile_pages.py:145 pdfstitcher/ui/tile_tab.py:260
 msgid "Right"
-msgstr "Vpravo"
+msgstr "Prawo"
 
 #: pdfstitcher/tile_pages.py:147
 msgid "Tiling with {} rows and {} columns"
-msgstr "Spojení {} řádků a {} sloupců"
+msgstr ""
 
 #: pdfstitcher/tile_pages.py:148 pdfstitcher/ui/main_frame.py:44
 msgid "Options"
-msgstr "Možnosti"
+msgstr "Opcje"
 
 #: pdfstitcher/tile_pages.py:149
 msgid "Margins"
-msgstr "Okraje"
+msgstr "Margines"
 
 #: pdfstitcher/tile_pages.py:150 pdfstitcher/ui/tile_tab.py:226
 msgid "Trim"
-msgstr "Oříznutí"
+msgstr ""
 
 #: pdfstitcher/tile_pages.py:151
 msgid "Rotation"
-msgstr "Otočení"
+msgstr "Rotacja"
 
 #: pdfstitcher/tile_pages.py:152 pdfstitcher/ui/tile_tab.py:78
 msgid "Page order"
-msgstr "Pořadí stránek"
+msgstr ""
 
 #: pdfstitcher/tile_pages.py:153
 msgid "Vertical alignment"
@@ -142,46 +142,37 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:185
 msgid "Only {} pages in document, skipping {}"
-msgstr "Jen {} stránek v dokumentu, vynechány {}"
+msgstr ""
 
 #: pdfstitcher/tile_pages.py:248
 msgid "Warning: The pages {} have a different size than the page before"
-msgstr "Varování: Stránky {} mají jinou velikost než předchozí stránky"
+msgstr "Uwaga: Strony {} mają inne wymiary niż poprzednia strona"
 
 #: pdfstitcher/tile_pages.py:269
 msgid "Input document not loaded"
-msgstr "Vstupní PDF nebylo načteno"
+msgstr ""
 
 #: pdfstitcher/tile_pages.py:309
-#, fuzzy
 msgid "Warning: requested {} columns, but there are only {} pages"
 msgstr ""
-"Varování: požadováno {} sloupců a {} řádků, ale je potřeba {} řádků s {} "
-"stránkami"
 
 #: pdfstitcher/tile_pages.py:319
-#, fuzzy
 msgid "Warning: requested {} rows, but there are only {} pages"
 msgstr ""
-"Varování: požadováno {} sloupců a {} řádků, ale je potřeba {} řádků s {} "
-"stránkami"
 
 #: pdfstitcher/tile_pages.py:514
 msgid ""
 "Warning: Some pages have been scaled because a target size was set. You "
 "should not see this warning if using the PDFStitcher GUI."
 msgstr ""
-"Varování: Některé stránky byly zmenšeny, protože byla nastavena cílová "
-"velikost. Pokud používáte GUI PDFStitcher, nemělo by se vám toto varování"
-" zobrazit."
 
 #: pdfstitcher/tile_pages.py:542
 msgid "Unable to open"
-msgstr "Nelze otevřít"
+msgstr "Otwieranie nie powiodło się"
 
 #: pdfstitcher/tile_pages.py:572
 msgid "Invalid rotation value"
-msgstr "Neplatná hodnota otočení"
+msgstr "Błędna wartość rotacji"
 
 #: pdfstitcher/tile_pages.py:597
 msgid "Tile PDF pages into one document."
@@ -193,7 +184,7 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:600
 msgid "To insert a blank page, include a zero in the page list."
-msgstr ""
+msgstr "Aby wstawić pustą stronę, dodaj zero do listy stron."
 
 #: pdfstitcher/tile_pages.py:605
 msgid "Input filename (pdf)"
@@ -214,17 +205,16 @@ msgid "Number of rows in tiled grid."
 msgstr ""
 
 #: pdfstitcher/tile_pages.py:628
-#, fuzzy
 msgid "Number of columns in tiled grid."
-msgstr "Počet sloupců"
+msgstr ""
 
 #: pdfstitcher/tile_pages.py:633
 msgid "Margin size in inches."
-msgstr ""
+msgstr "Margines w calach."
 
 #: pdfstitcher/tile_pages.py:638
 msgid "Amount to trim from edges"
-msgstr "Oříznutí z okrajů stránky"
+msgstr ""
 
 #: pdfstitcher/tile_pages.py:640
 msgid ""
@@ -234,13 +224,12 @@ msgstr ""
 
 #: pdfstitcher/tile_pages.py:648
 msgid "Rotate pages (90, 180, or 270 degrees)"
-msgstr ""
+msgstr "Obróć strony (90, 180 lub 270 stopni)"
 
-# Abbreviation for "inches" units
 #. translation_note: pt = "points", in = "inches", cm = "centimeters"
 #: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:58
 msgid "in"
-msgstr ""
+msgstr "w"
 
 #: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:60
 msgid "cm"
@@ -248,7 +237,7 @@ msgstr "cm"
 
 #: pdfstitcher/ui/layers_tab.py:141 pdfstitcher/utils.py:62
 msgid "pt"
-msgstr "b"
+msgstr ""
 
 #: pdfstitcher/utils.py:221
 msgid "Slovak translation not available, defaulting to Czech"
@@ -256,31 +245,31 @@ msgstr ""
 
 #: pdfstitcher/utils.py:257
 msgid "Invalid input"
-msgstr "Neplatný vstup"
+msgstr ""
 
 #: pdfstitcher/utils.py:257
 msgid "only numeric values allowed"
-msgstr "jsou povoleny jen číselné znaky"
+msgstr "dozwolone są tylko liczby"
 
 #: pdfstitcher/utils.py:277
 msgid "Please specify a page range"
-msgstr "Uveďte rozsah stránek"
+msgstr "Wybierz zakres stron"
 
 #: pdfstitcher/utils.py:343
 msgid "Warning! Output is larger than {} {}, may not open correctly."
-msgstr "Varování! Výstupní PDF je větší než {} {}, a nemusí se otevřít správně."
+msgstr ""
 
 #: pdfstitcher/utils.py:351
 msgid "Output size:"
-msgstr "Velikost výstupního PDF:"
+msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:25
 msgid "Checking for updates"
-msgstr "Probíhá kontrola aktualizací"
+msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:31
 msgid "Please wait..."
-msgstr ""
+msgstr "Proszę czekać..."
 
 #: pdfstitcher/ui/dialogs.py:53
 msgid "PDFStitcher is installed and managed via Flatpak."
@@ -288,11 +277,11 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:62
 msgid "No updates available, {} is the current version."
-msgstr ""
+msgstr "Brak aktualizacji, {} to obecna wersja."
 
 #: pdfstitcher/ui/dialogs.py:69
 msgid "Update available!"
-msgstr ""
+msgstr "Dostępna nowa wersja!"
 
 #: pdfstitcher/ui/dialogs.py:71
 msgid "Your version is {}, but the latest version is v{}."
@@ -304,15 +293,15 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:79
 msgid "Download Now"
-msgstr "Stáhnout teď"
+msgstr "Pobierz teraz"
 
 #: pdfstitcher/ui/dialogs.py:91
 msgid "Error checking for updates"
-msgstr "Chyba při kontrole aktualizací"
+msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:105 pdfstitcher/ui/main_frame.py:289
 msgid "Report a bug"
-msgstr ""
+msgstr "Zgłoś problem"
 
 #: pdfstitcher/ui/dialogs.py:115
 msgid ""
@@ -322,10 +311,6 @@ msgid ""
 "document - it will be saved to your Desktop and can be attached to the "
 "issue."
 msgstr ""
-"Níže popište kroky, které vedly ke vzniku problému. Pomocí tlačítek otevřete "
-"problém přes GitHub (preferováno, ale vyžaduje přihlášení), nebo odešlete "
-"hlášení e-mailem. Volitelně zahrňte pozměněnou verzi vstupního dokumentu – "
-"uloží se na vaši plochu a lze jej připojit k hlášení."
 
 #: pdfstitcher/ui/dialogs.py:168
 msgid "Create mangled PDF (Beta)"
@@ -333,19 +318,19 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:179
 msgid "Report Via GitHub"
-msgstr ""
+msgstr "Zgłoś przez GitHub"
 
 #: pdfstitcher/ui/dialogs.py:188
 msgid "Email to ccurtis@mtroyal.ca"
-msgstr "Napsat e-mail ccurtis@mtroyal.ca"
+msgstr "Wyślij email do ccurtis@mtroyal.ca"
 
 #: pdfstitcher/ui/dialogs.py:227
 msgid "Could not copy to clipboard"
-msgstr "Nelze zkopírovat do schránky"
+msgstr "Kopiowanie do schowka nie powiodło się"
 
 #: pdfstitcher/ui/dialogs.py:227 pdfstitcher/ui/dialogs.py:240
 msgid "Error"
-msgstr "Chyba"
+msgstr "Błąd"
 
 #: pdfstitcher/ui/dialogs.py:234
 msgid "Mangled PDF saved to {}."
@@ -357,7 +342,7 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:237
 msgid "Success"
-msgstr ""
+msgstr "Sukces"
 
 #: pdfstitcher/ui/dialogs.py:240
 msgid "Failed to mangle PDF"
@@ -365,277 +350,275 @@ msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:267
 msgid "Preferences"
-msgstr ""
+msgstr "Preferencje"
 
 #: pdfstitcher/ui/dialogs.py:272
 msgid "Language"
-msgstr ""
+msgstr "Język"
 
 #: pdfstitcher/ui/dialogs.py:287
 msgid "Check for updates on startup"
-msgstr "Zkontrolujte aktualizace při spuštění"
+msgstr "Sprawdź dostępne aktualizacje przy otwarciu aplikacji"
 
 #: pdfstitcher/ui/dialogs.py:297
 msgid "Save current margin and unit settings"
-msgstr ""
+msgstr "Zapisz obecne ustawienia marginesu i jednostki miary"
 
 #: pdfstitcher/ui/dialogs.py:307
-#, fuzzy
 msgid "Save current line properties"
-msgstr "Vyberte vlastnosti čáry, které chcete upravit"
+msgstr ""
 
 #: pdfstitcher/ui/dialogs.py:317
 msgid "Default open directory"
-msgstr "Výchozí adresář - Otevřít"
+msgstr "Domyślny folder"
 
 #: pdfstitcher/ui/dialogs.py:337
 msgid "Default save directory"
-msgstr "Výchozí adresář - Uložit"
+msgstr "Domyślny folder"
 
 #: pdfstitcher/ui/dialogs.py:358
 msgid "Save preferences"
-msgstr ""
+msgstr "Zapisz preferencje"
 
 #: pdfstitcher/ui/dialogs.py:373
 msgid "Choose a directory"
-msgstr "Vyberte adresář"
+msgstr "Wybierz folder"
 
 #: pdfstitcher/ui/dialogs.py:420
 msgid "Preferences saved to {}"
-msgstr ""
+msgstr "Preferencje zapisane w {}"
 
 #: pdfstitcher/ui/dialogs.py:422
 msgid "Please restart to switch to {}."
-msgstr ""
+msgstr "Restartuj aplikację, aby zmienić język na {}."
 
 #: pdfstitcher/ui/dialogs.py:424
 msgid "Preferences saved"
-msgstr ""
+msgstr "Zapisano preferencje"
 
 #: pdfstitcher/ui/io_tab.py:29 pdfstitcher/ui/main_frame.py:412
 msgid "Select input PDF"
-msgstr "Vybrat vstupní PDF"
+msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:47 pdfstitcher/ui/main_frame.py:357
 msgid "Save output as"
-msgstr "Uložit výstupní PDF jako"
+msgstr "Zapisz jako"
 
 #: pdfstitcher/ui/io_tab.py:70
 msgid "Output Options"
-msgstr "Možnosti výstupu"
+msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:77 pdfstitcher/ui/tile_tab.py:145
 msgid "Page Range"
-msgstr "Rozsah stránek"
+msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:82 pdfstitcher/ui/tile_tab.py:150
 msgid "Pages assemble in specified order. 0 inserts a blank page."
-msgstr "Stránky se sloučí v uvedeném pořadí. 0 vloží prázdnou stránku."
+msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:100 pdfstitcher/ui/tile_tab.py:178
 msgid "Margin to add to final output"
-msgstr "Okraj přidaný k hotovému výstupnímu PDF"
+msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:118 pdfstitcher/ui/tile_tab.py:196
 msgid "Inches"
-msgstr "Palce"
+msgstr "Cale"
 
 #: pdfstitcher/ui/io_tab.py:118 pdfstitcher/ui/tile_tab.py:196
 msgid "Centimetres"
-msgstr "Centimetry"
+msgstr "Centymetry"
 
 #: pdfstitcher/ui/io_tab.py:120 pdfstitcher/ui/tile_tab.py:198
 msgid "Units"
-msgstr "Jednotky"
+msgstr "Jednostka"
 
 #: pdfstitcher/ui/io_tab.py:131
 msgid "Process Layers"
-msgstr "Upravit vrstvy"
+msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:138
 msgid "Tile pages"
-msgstr "Spojit stránky"
+msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:171
 msgid "Process layers then tile pages and save"
-msgstr "Upravte vrstvy, pak spojte stránky a uložte"
+msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:174
 msgid "Process layers and save without tiling pages"
-msgstr "Upravte vrstvy a uložte bez spojení stránek"
+msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:177
 msgid "Tile pages and save without processing layers"
-msgstr "Spojte stránky a uložte bez úpravy stránek"
+msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:181
 msgid "Open the PDF and save selected page range without modifying"
-msgstr "Uložte vybrané stránky bez úprav"
+msgstr ""
 
 #: pdfstitcher/ui/io_tab.py:183
 msgid "Optionally, add margins to each page"
-msgstr ""
+msgstr "Opcjonalnie, dodaj marginesy na każdej stronie"
 
 #: pdfstitcher/ui/layers_tab.py:27
 msgid "Load PDF to view layers."
-msgstr "Nahrajte PDF pro zobrazení vrstev."
+msgstr "Załaduj PDF, aby zobaczyć warstwy"
 
 #: pdfstitcher/ui/layers_tab.py:42
 msgid "Deselected layers:"
-msgstr "Neoznačené vrstvy:"
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:42
 msgid "Delete"
-msgstr "Smazat"
+msgstr "Usuń"
 
 #: pdfstitcher/ui/layers_tab.py:42
 msgid "Hide"
-msgstr "Skrýt"
+msgstr "Schowaj"
 
 #: pdfstitcher/ui/layers_tab.py:51
 msgid "Include non-optional content"
-msgstr "Zahrnout uzamknuté vrstvy"
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:59 pdfstitcher/ui/layers_tab.py:342
 msgid "Deselect all"
-msgstr "Odoznačit vše"
+msgstr "Usuń zaznaczenie"
 
 #: pdfstitcher/ui/layers_tab.py:70
 msgid "Layer Name"
-msgstr "Jméno vrstvy"
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:71
 msgid "Line Properties"
-msgstr "Vlastnosti čáry"
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:91
 msgid "Select line properties to modify"
-msgstr "Vyberte vlastnosti čáry, které chcete upravit"
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:94
 msgid "Line Colour"
-msgstr "Barva čáry"
+msgstr "Kolor linii"
 
 #: pdfstitcher/ui/layers_tab.py:112
 msgid "Also modify fill colour"
-msgstr "Upravit i barvu výplně"
+msgstr "Zmień też kolor wypełnienia"
 
 #: pdfstitcher/ui/layers_tab.py:121
 msgid "Line Thickness"
-msgstr "Tloušťka čáry"
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:154
 msgid "Line Style"
-msgstr "Typ čáry"
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:161
 msgid "Solid"
-msgstr "Plná"
+msgstr "Ciągła"
 
 #: pdfstitcher/ui/layers_tab.py:161
 msgid "Dashed"
-msgstr "Přerušovaná"
+msgstr "Przerywana"
 
 #: pdfstitcher/ui/layers_tab.py:161
 msgid "Dotted"
-msgstr "Tečkovaná"
+msgstr "Kropkowana"
 
 #: pdfstitcher/ui/layers_tab.py:177
 msgid "Apply"
-msgstr "Použít"
+msgstr "Zastosuj"
 
 #: pdfstitcher/ui/layers_tab.py:179 pdfstitcher/ui/layers_tab.py:311
 msgid "Reset"
-msgstr "Resetovat"
+msgstr "Resetuj"
 
 #: pdfstitcher/ui/layers_tab.py:197
 msgid "Apply to checked"
-msgstr "Použít na označené"
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:199
 msgid "Reset checked"
-msgstr "Resetovat označené"
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:310
 msgid "Apply to"
-msgstr "Použít na"
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:316
 msgid "No layers found in input document."
-msgstr "Ve vstupním PDF nebyly nalezeny žádné vrstvy."
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:327
 msgid "Select layers to include in output document."
-msgstr "Vyberte vrstvy, které chcete zahrnout do výstupního PDF."
+msgstr ""
 
 #: pdfstitcher/ui/layers_tab.py:344
 msgid "Select all"
-msgstr "Označit vše"
+msgstr "Zaznacz wszystko"
 
 #: pdfstitcher/ui/main_frame.py:46
 msgid "Tile Pages"
-msgstr "Spojit stránky"
+msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:48
 msgid "Layers"
-msgstr "Vrstvy"
+msgstr "Warstwy"
 
 #: pdfstitcher/ui/main_frame.py:56
 msgid "Generate PDF"
-msgstr "Vytvořit PDF"
+msgstr "Wygeneruj PDF"
 
 #: pdfstitcher/ui/main_frame.py:142
 msgid "No page range specified, defaulting to all"
-msgstr "Nebyl vybrán rozsah stránek, byly použity všechny stránky"
+msgstr "Nie wybrano zakresu stron, domyślnie wybrano wszystkie strony"
 
 #: pdfstitcher/ui/main_frame.py:208
 msgid "Tiling successful"
-msgstr "Spojení stránek bylo úspěšné"
+msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:217 pdfstitcher/ui/main_frame.py:226
 msgid "Something went wrong"
-msgstr "Něco se pokazilo"
+msgstr "Coś poszło nie tak"
 
 #: pdfstitcher/ui/main_frame.py:223
 msgid "Successfully written to"
-msgstr "Úspěšně uloženo jako"
+msgstr "Zapisano w"
 
 #: pdfstitcher/ui/main_frame.py:226 pdfstitcher/ui/main_frame.py:393
 msgid "unable to write to"
-msgstr "nebylo možné uložit jako"
+msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:229
 msgid "Make sure  isn't open in another program"
 msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:263
-#, fuzzy
 msgid "File"
-msgstr "Skrýt"
+msgstr "Plik"
 
 #: pdfstitcher/ui/main_frame.py:268
 msgid "Check for updates"
-msgstr "Kontrola aktualizací"
+msgstr "Sprawdź czy dostępna jest aktualizacja"
 
 #: pdfstitcher/ui/main_frame.py:272
 msgid "Settings"
-msgstr ""
+msgstr "Ustawienia"
 
 #: pdfstitcher/ui/main_frame.py:279
 msgid "Documentation"
-msgstr "Dokumentace"
+msgstr "Dokumentacja"
 
 #: pdfstitcher/ui/main_frame.py:280
 msgid "Open the documentation in a web browser"
-msgstr ""
+msgstr "Otwórz dokumentację w przeglądarce internetowej"
 
 #: pdfstitcher/ui/main_frame.py:290
 msgid "Open the dialog to report a bug"
-msgstr ""
+msgstr "Otwórz oddzielne okno, aby zgłosić problem"
 
 #: pdfstitcher/ui/main_frame.py:294
 msgid "Help"
-msgstr ""
+msgstr "Pomoc"
 
 #: pdfstitcher/ui/main_frame.py:336
 msgid "The PDF Stitching app for sewists, by sewists."
@@ -643,45 +626,43 @@ msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:342
 msgid "Contributors"
-msgstr "Přispěvatelé"
+msgstr "Współtwórcy"
 
 #: pdfstitcher/ui/main_frame.py:381
-#, fuzzy
 msgid "Can't overwrite input file, please select a different file for output"
-msgstr "Nelze přepsat vstupní PDF, prosím vyberte jiný soubor pro výstupní PDF"
+msgstr ""
 
 #: pdfstitcher/ui/main_frame.py:390
-#, fuzzy
 msgid "File will be written to "
-msgstr "Úspěšně uloženo jako"
+msgstr "Plik zostanie zapisany w "
 
 #: pdfstitcher/ui/main_frame.py:432
 msgid "Opening"
-msgstr "Otevřeno"
+msgstr "Otwieranie"
 
 #: pdfstitcher/ui/main_frame.py:462
 msgid "PDF locked! Enter the correct password."
-msgstr ""
+msgstr "Plik PDF jest zablokowany! Wpisz poprawne hasło."
 
 #: pdfstitcher/ui/main_frame.py:465
 msgid "Password"
-msgstr ""
+msgstr "Hasło"
 
 #: pdfstitcher/ui/main_frame.py:465
 msgid "PDF file is locked"
-msgstr ""
+msgstr "Plik PDF jest zablokowany"
 
 #: pdfstitcher/ui/main_frame.py:472
 msgid "PDF will not open as you canceled the operation."
-msgstr ""
+msgstr "Otwieranie pliku PDF nie powiodło się, gdyż anulowałaś/eś operację."
 
 #: pdfstitcher/ui/main_frame.py:476
 msgid "Cannot open file"
-msgstr "Nemůže otevřít soubor"
+msgstr "Otwieranie pliku nie powiodło się"
 
 #: pdfstitcher/ui/main_frame.py:479
 msgid "PDF file loaded without errors."
-msgstr ""
+msgstr "Załadowano plik PDF bez problemów."
 
 #: pdfstitcher/ui/main_frame.py:483
 msgid "Warning: this PDF is encrypted with the following permissions:"
@@ -695,56 +676,38 @@ msgstr ""
 
 #: pdfstitcher/ui/tile_tab.py:32
 msgid "Required Parameters"
-msgstr "Povinné parametry"
+msgstr ""
 
 #: pdfstitcher/ui/tile_tab.py:39
 msgid "Number of Columns"
-msgstr "Počet sloupců"
+msgstr "Liczba kolumn"
 
 #: pdfstitcher/ui/tile_tab.py:54
 msgid "OR Number of Rows"
-msgstr "NEBO počet řádků"
+msgstr ""
 
 #: pdfstitcher/ui/tile_tab.py:127
 msgid "Page Rotation"
-msgstr "Otočení stránek"
+msgstr ""
 
 #: pdfstitcher/ui/tile_tab.py:171
 msgid "Optional Parameters"
-msgstr "Volitelné parametry"
+msgstr ""
 
 #. translation_note: TrimBox and MediaBox are PDF elements, so they likely
 #. won't translate nicely.
 #: pdfstitcher/ui/tile_tab.py:210
 msgid "Set TrimBox to MediaBox"
-msgstr "Nastavit TrimBox na MediaBox"
+msgstr ""
 
 #: pdfstitcher/ui/tile_tab.py:212
 msgid "May help fix things when output is not as expected"
-msgstr "Může pomoci opravit dokument, pokud výstupní pdf nevypadá podle očekávání"
+msgstr ""
 
 #: pdfstitcher/ui/tile_tab.py:223
 msgid "Amount to trim from each page"
-msgstr "Oříznutí z každé stránky"
+msgstr ""
 
 #: pdfstitcher/ui/tile_tab.py:226
 msgid "Overlap"
-msgstr "Překrytí"
-
-#~ msgid "PDF Stitcher"
-#~ msgstr ""
-
-#~ msgid "Exception"
-#~ msgstr "Výjimka"
-
-#~ msgid ""
-#~ "Mangled PDF saved to {}.\n"
-#~ "\n"
-#~ "Please attach to GitHub issue or email."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Please restart to switch to {}."
-#~ msgstr ""
+msgstr ""

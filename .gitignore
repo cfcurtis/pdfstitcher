@@ -10,7 +10,8 @@ build/*
 *.mo
 venv/*
 tests/*.pdf
-!tests/userunit*.pdf
+tests/integration/*.pdf
+.coverage
 
 # Distribution / packaging
 bin/
@@ -27,6 +28,7 @@ var/
 .installed.cfg
 *.egg
 .eggs
+app*
 
 # Installer logs
 pip-log.txt

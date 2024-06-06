@@ -232,7 +232,7 @@ class LayersTab(scrolled.ScrolledPanel):
 
             units = utils.UNITS(self.line_thick_units.GetSelection())
             line_str += f"{line_thick} {units} "
-            line_thick = units.units_to_px(line_thick)
+            line_thick = units.units_to_pts(line_thick)
             self.line_props[layer]["thickness"] = line_thick
 
         if self.enable_style.IsChecked():
@@ -327,6 +327,9 @@ class LayersTab(scrolled.ScrolledPanel):
         self.status_txt.SetLabel(_("Select layers to include in output document."))
         self.layer_splitter.Show()
         self.Layout()
+
+        # reset the line properties dictionary
+        self.line_props = {}
         return True
 
     def set_all_checked(self, select=True):

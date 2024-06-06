@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-02-24 10:30-0700\n"
-"PO-Revision-Date: 2023-06-23 01:47+0000\n"
-"Last-Translator: Érika Baëna <erika.baena.1@gmail.com>\n"
+"PO-Revision-Date: 2024-03-05 09:01+0000\n"
+"Last-Translator: Lucas Mouazan <lucasmzn_pro@protonmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/pdfstitcher/"
 "user-interface/fr/>\n"
 "Language: fr_FR\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.18.1\n"
+"X-Generator: Weblate 5.5-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: pdfstitcher/bug_info.py:28
@@ -28,11 +28,11 @@ msgstr "Erreur lors de la récupération des paramètres système"
 
 #: pdfstitcher/bug_info.py:54
 msgid "Mangling PDF. This may take some time."
-msgstr ""
+msgstr "Réorganisation du PDF. Cela peut prendre un moment"
 
 #: pdfstitcher/bug_info.py:60
 msgid "Error mangling PDF: {}"
-msgstr ""
+msgstr "Erreur lors de la réorganisation du PDF: {]"
 
 #: pdfstitcher/layerfilter.py:328
 msgid "No layers selected, generated PDF would be blank."
@@ -326,10 +326,16 @@ msgid ""
 "document - it will be saved to your Desktop and can be attached to the "
 "issue."
 msgstr ""
+"Décrivez les étapes afin de reproduire le problème ci-dessous. Cliquez sur "
+"les boutons pour ouvrir un ticket sur GitHub (méthode préférée, mais "
+"requiert une connexion), ou envoyez un rapport par e-mail. Optionnellement, "
+"vous pouvez inclure une version assemblée du document source - elle sera "
+"enregistrée sur votre Bureau et pourra être jointe au ticket."
 
 #: pdfstitcher/ui/dialogs.py:168
+#, fuzzy
 msgid "Create mangled PDF (Beta)"
-msgstr ""
+msgstr "Créer un PDF déformé (Bêta)."
 
 #: pdfstitcher/ui/dialogs.py:179
 msgid "Report Via GitHub"

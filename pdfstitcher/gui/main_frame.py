@@ -8,15 +8,13 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 import wx
-from pdfstitcher.tile_pages import PageTiler
-from pdfstitcher.layerfilter import LayerFilter
-from pdfstitcher.pagefilter import PageFilter
+from pdfstitcher.processing.mainproc import MainProcess
 from pdfstitcher import utils
 from pdfstitcher.utils import Config
-from pdfstitcher.ui.dialogs import PrefsDialog, UpdateDialog, BugReporter
-from pdfstitcher.ui.io_tab import IOTab
-from pdfstitcher.ui.tile_tab import TileTab
-from pdfstitcher.ui.layers_tab import LayersTab
+from pdfstitcher.gui.dialogs import PrefsDialog, UpdateDialog, BugReporter
+from pdfstitcher.gui.io_tab import IOTab
+from pdfstitcher.gui.tile_tab import TileTab
+from pdfstitcher.gui.layers_tab import LayersTab
 from pathlib import Path
 import os
 import sys
@@ -69,10 +67,7 @@ class PDFStitcherFrame(wx.Frame):
         self.splitter.SplitHorizontally(nb, pnl)
         self.splitter.SetMinimumPaneSize(40)
 
-        self.in_doc = None
-        self.out_doc_path = None
-        self.tiler = None
-        self.layer_filter = None
+        self.main_process = MainProcess()
 
         self.make_menu_bar()
         # connect the on_close event
@@ -120,108 +115,106 @@ class PDFStitcherFrame(wx.Frame):
         elif event.GetId() == self.tt.unit_box.GetId():
             self.io.unit_box.SetSelection(self.tt.unit_box.GetSelection())
 
-    def on_go_pressed(self, event):
-        # retrieve the selected options
-        do_tile = bool(self.io.do_tile.GetValue())
-        do_layers = bool(self.io.do_layers.GetValue())
+    def get_tile_opts(self):
+        """
+        Helper function to pack up the tiling options
+        """
+        # define trim options
+        trim = [0.0] * 4
+        trim[0] = utils.txt_to_float(self.tt.left_trim_txt.GetValue())
+        trim[1] = utils.txt_to_float(self.tt.right_trim_txt.GetValue())
+        trim[2] = utils.txt_to_float(self.tt.top_trim_txt.GetValue())
+        trim[3] = utils.txt_to_float(self.tt.bottom_trim_txt.GetValue())
 
-        if (do_tile and self.tiler is None) or (do_layers and self.layer_filter is None):
+        # rows/cols
+        cols = self.tt.columns_txt.GetValue().strip()
+        cols = int(cols) if cols else None
+        rows = self.tt.rows_txt.GetValue().strip()
+        rows = int(rows) if rows else None
+
+        return {
+            # The bare minimum rows/columns (only one should be defined)
+            "rows": rows,
+            "cols": cols,
+            # set all the various options of the tiler
+            "col_major": bool(self.tt.col_row_order_combo.GetSelection()),
+            "right_to_left": bool(self.tt.left_right_combo.GetSelection()),
+            "bottom_to_top": bool(self.tt.top_bottom_combo.GetSelection()),
+            # set the optional stuff
+            "rotation": self.tt.rotate_combo.GetSelection(),
+            # margins, margins!
+            "margin": utils.txt_to_float(self.tt.margin_txt.GetValue()),
+            # trim related stuff
+            "trim": trim,
+            "actually_trim": bool(self.tt.trim_overlap_combo.GetSelection()),
+            "override_trim": bool(self.tt.override_trim.GetValue()),
+        }
+
+    def get_layer_opts(self):
+        """
+        Helper function to pack up the layer options
+        """
+        return {
+            "keep_ocs": self.lt.get_selected_layers(),
+            "line_props": self.lt.line_props,
+            "keep_non_oc": bool(self.lt.include_nonoc.GetValue()),
+            "delete_ocgs": bool(self.lt.delete_ocgs.GetSelection() == 0),
+        }
+
+    def on_go_pressed(self, event):
+        if self.main_process.in_doc is None:
+            print(_("No PDF loaded"))
             return
 
+        # make sure an output path is defined
         if self.out_doc_path is None:
             self.on_output(event)
 
             if self.out_doc_path is None:
+                # user probably cancelled?
                 return
 
         # global options
-        page_range = utils.parse_page_range(self.io.page_range_txt.GetValue())
+        self.main_process.page_range = self.io.page_range_txt.GetValue()
         Config.general["units"] = utils.UNITS(self.io.unit_box.GetSelection())
 
-        if page_range is None:
-            print(_("No page range specified, defaulting to all"))
-            page_range = list(range(1, len(self.in_doc.pages) + 1))
+        # define the selected processing options
+        self.main_process.toggle("LayerFilter", bool(self.io.do_layers.GetValue()))
+        self.main_process.toggle("PageTiler", bool(self.io.do_tile.GetValue()))
+        # Page Filter is active if PageTiler is not active, and vice versa
 
-        if do_layers:
-            # set up the layer filter
-            self.layer_filter.keep_ocs = self.lt.get_selected_layers()
-            self.layer_filter.line_props = self.lt.line_props
-            self.layer_filter.keep_non_oc = bool(self.lt.include_nonoc.GetValue())
-            self.layer_filter.delete_ocgs = bool(self.lt.delete_ocgs.GetSelection() == 0)
-            self.layer_filter.page_range = page_range
+        self.main_process.set_params("LayerFilter", self.get_layer_opts())
+        self.main_process.set_params("PageTiler", self.get_tile_opts())
+        self.main_process.set_params(
+            "PageFilter", {"margin": utils.txt_to_float(self.io.margin_txt.GetValue())}
+        )
 
-        if do_tile:
-            # set all the various options of the tiler
-            # define the page order
-            self.tiler.col_major = bool(self.tt.col_row_order_combo.GetSelection())
-            self.tiler.right_to_left = bool(self.tt.left_right_combo.GetSelection())
-            self.tiler.bottom_to_top = bool(self.tt.top_bottom_combo.GetSelection())
-            self.tiler.page_range = page_range
+        progress_win = None
+        if self.main_process.active["LayerFilter"]:
+            # create the progress window if layer processing is selected
+            progress_win = wx.ProgressDialog(
+                _("Processing"),
+                _("Processing, please wait"),
+                style=wx.PD_CAN_ABORT | wx.PD_AUTO_HIDE,
+            )
 
-            # set the optional stuff
-            self.tiler.rotation = self.tt.rotate_combo.GetSelection()
-
-            # margins
-            self.tiler.margin = utils.txt_to_float(self.tt.margin_txt.GetValue())
-
-            # trim
-            trim = [0.0] * 4
-            trim[0] = utils.txt_to_float(self.tt.left_trim_txt.GetValue())
-            trim[1] = utils.txt_to_float(self.tt.right_trim_txt.GetValue())
-            trim[2] = utils.txt_to_float(self.tt.top_trim_txt.GetValue())
-            trim[3] = utils.txt_to_float(self.tt.bottom_trim_txt.GetValue())
-            self.tiler.trim = trim
-            self.tiler.actually_trim = bool(self.tt.trim_overlap_combo.GetSelection())
-            self.tiler.override_trim = self.tt.override_trim.GetValue()
-
-            # rows/cols
-            cols = self.tt.columns_txt.GetValue().strip()
-            cols = int(cols) if cols else None
-            rows = self.tt.rows_txt.GetValue().strip()
-            rows = int(rows) if rows else None
-
-        # do it
+        # run the processing
         try:
-            if do_layers:
-                progress_win = wx.ProgressDialog(
-                    _("Processing layers"),
-                    _("Processing layers, please wait"),
-                    style=wx.PD_CAN_ABORT | wx.PD_AUTO_HIDE,
-                )
-                filtered = self.layer_filter.run(progress_win)
+            complete = self.main_process.run(progress_win)
+            if not complete:
+                print(_("Processing cancelled"))
             else:
-                filtered = self.in_doc
-
-            if filtered is None:
-                return
-
-            if do_tile:
-                self.tiler.in_doc = filtered
-                new_doc = self.tiler.run(rows, cols)
-                if new_doc:
-                    print(_("Tiling successful"))
-            else:
-                # extract the requested pages
-                page_filter = PageFilter(filtered)
-                page_filter.page_range = page_range
-                page_filter.margin = utils.txt_to_float(self.io.margin_txt.GetValue())
-                new_doc = page_filter.run()
-
-        except Exception as e:
-            print(_("Something went wrong"))
-            traceback.print_exc()
-            return
-
-        try:
-            if new_doc:
-                new_doc.save(self.out_doc_path)
+                self.main_process.save(self.out_doc_path)
                 print(_("Successfully written to") + " " + self.out_doc_path)
-        except Exception as e:
+        except IOError as e:
             print(
                 _("Something went wrong") + ", " + _("unable to write to") + " " + self.out_doc_path
             )
             print(e)
             print(_("Make sure " + self.out_doc_path + " isn't open in another program"))
+        except Exception as e:
+            print(_("Something went wrong"))
+            traceback.print_exc()
 
     def make_menu_bar(self):
         """
@@ -352,7 +345,7 @@ class PDFStitcherFrame(wx.Frame):
         pathname = pathname.strip()
         Config.general["save_dir"] = str(Path(pathname).parent)
 
-        if pathname == self.in_doc.filename:
+        if self.main_process.in_doc and pathname == self.main_process.in_doc.filename:
             wx.MessageBox(
                 _("Can't overwrite input file, " + "please select a different file for output"),
                 "Error",
@@ -366,7 +359,7 @@ class PDFStitcherFrame(wx.Frame):
                 print(_("File will be written to " + pathname))
 
             except IOError:
-                wx.LogError(_("unable to write to") + pathname)
+                print(_("unable to write to") + pathname)
 
     def on_input_change(self, event):
         """
@@ -397,52 +390,57 @@ class PDFStitcherFrame(wx.Frame):
             pathname = fileDialog.GetPath()
             self.load_file(pathname)
 
+    def update_gui_options(self):
+        """
+        Update the GUI options based on the loaded file.
+        """
+        if not self.main_process.in_doc:
+            return
+
+        Config.general["open_dir"] = str(Path(self.main_process.in_doc.filename).parent)
+
+        # update the page range
+        self.io.page_range_txt.ChangeValue("1-{}".format(self.main_process.doc_info["n_pages"]))
+        if self.main_process.doc_info["n_pages"] == 1:
+            self.io.do_tile.SetValue(0)
+            self.io.do_tile.Disable()
+            self.tt.Disable()
+        else:
+            self.io.do_tile.Enable()
+            self.tt.Enable()
+
+            # check how big the pages are, and default to no tiling if they're over A3
+            w, h = self.main_process.doc_info["first_page_dims"]
+            if w > 11.7 * 72 or h > 16.5 * 72:
+                self.io.do_tile.SetValue(0)
+            else:
+                self.io.do_tile.SetValue(1)
+
+        # update the layer options
+        self.lt.load_new(self.main_process.doc_info["layers"])
+        if self.main_process.doc_info["layers"]:
+            self.io.do_layers.SetValue(1)
+            self.io.do_layers.Enable()
+            self.lt.Enable()
+        else:
+            self.io.do_layers.SetValue(0)
+            self.io.do_layers.Disable()
+            self.lt.Disable()
+
+        # update the processing description
+        self.io.on_option_checked(None)
+
+        # reset the output path
+        self.out_doc_path = None
+
     def load_file(self, pathname, password=""):
         """
         Open the pdf and enable/disable options based on the file.
         """
+        # open the pdf
+        pathname = pathname.strip()
         try:
-            # open the pdf
-            pathname = pathname.strip()
-            print(_("Opening") + " " + pathname)
-            self.in_doc = pikepdf.Pdf.open(pathname, password=password)
-            self.io.load_new(self.in_doc)
-
-            # create the processing objects
-            self.layer_filter = LayerFilter(self.in_doc)
-            if not self.lt.load_new(self.layer_filter.get_layer_names()):
-                self.lt.Disable()
-                self.io.do_layers.SetValue(0)
-                self.io.do_layers.Disable()
-            else:
-                self.io.do_layers.SetValue(1)
-                self.io.do_layers.Enable()
-                self.lt.Enable()
-
-            # only enable tiling if there are more than one page
-            if len(self.in_doc.pages) > 1:
-                self.tiler = PageTiler()
-                self.io.do_tile.Enable()
-                self.tt.Enable()
-
-                # check how big the pages are, and default to no tiling if they're over A3
-                first_page = self.in_doc.pages[0]
-                w, h = utils.get_page_dims(first_page, target_user_unit=1)
-                if w > 11.7 * 72 or h > 16.5 * 72:
-                    self.io.do_tile.SetValue(0)
-                else:
-                    self.io.do_tile.SetValue(1)
-            else:
-                self.io.do_tile.SetValue(0)
-                self.io.do_tile.Disable()
-                self.tt.Disable()
-
-            # update the processing description
-            self.io.on_option_checked(None)
-
-            # clear the output if it's already set
-            self.out_doc_path = None
-
+            self.main_process.load_doc(pathname, password=password)
         except pikepdf.PasswordError:
             print(_("PDF locked! Enter the correct password."))
 
@@ -454,23 +452,29 @@ class PDFStitcherFrame(wx.Frame):
                 password_dialog.Destroy()
                 self.load_file(pathname, password)
             else:
-                wx.LogError(_("PDF will not open as you canceled the operation."))
+                print(_("PDF will not open as you canceled the operation."))
                 password_dialog.Destroy()
+                return
 
-        except IOError:
-            wx.LogError(_("Cannot open file") + " " + pathname)
+        except IOError as e:
+            print(_("Cannot open file") + " " + pathname)
+            print(_("Error message") + f": {e}")
+            return
 
-        else:
-            print(_("PDF file loaded without errors."))
-            # Check for permissions
-            if self.in_doc.is_encrypted:
-                permissions = self.in_doc.allow
-                print(_("Warning: this PDF is encrypted with the following permissions:"))
-                for perm, allowed in permissions._asdict().items():
-                    print(f"{perm}: {allowed}")
+        print(_("Opening") + " " + pathname)
+        self.io.load_new(self.main_process.in_doc.filename, self.main_process.doc_info["n_pages"])
+        # If we got this far, we should be good
+        print(_("PDF file loaded without errors."))
 
-            print(_("Please be respectful of the author and only use this tool for personal use."))
-            Config.general["open_dir"] = str(Path(pathname).parent)
+        # Check for permissions
+        if self.main_process.in_doc.is_encrypted:
+            permissions = self.main_process.in_doc.allow
+            print(_("This PDF is encrypted with the following permissions:"))
+            for perm, allowed in permissions._asdict().items():
+                print(f"{perm}: {allowed}")
+
+        print(_("Please be respectful of the author and only use this tool for personal use."))
+        self.update_gui_options()
 
 
 def main(language_warning: str):
