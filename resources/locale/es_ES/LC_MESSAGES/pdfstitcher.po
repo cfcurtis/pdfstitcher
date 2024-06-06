@@ -9,16 +9,17 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-06-06 15:23-0600\n"
-"PO-Revision-Date: 2023-04-10 21:13+0000\n"
+"PO-Revision-Date: 2024-06-07 20:22+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/es/>\n"
 "Language: es_ES\n"
-"Language-Team: Spanish <https://hosted.weblate.org/projects/pdfstitcher"
-"/user-interface/es/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.15.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.6-dev\n"
+"Generated-By: Babel 2.12.1\n"
 
 #: pdfstitcher/bug_info.py:28
 msgid "Error getting system info: {}"
@@ -67,9 +68,8 @@ msgid "Output size:"
 msgstr "Tamaño de salida:"
 
 #: pdfstitcher/cli/app.py:19 pdfstitcher/cli/app.py:293
-#, fuzzy
 msgid "Tile Options"
-msgstr "Opciones"
+msgstr "Opciones del mosaico"
 
 #: pdfstitcher/cli/app.py:20
 msgid ""
@@ -87,7 +87,7 @@ msgstr "Número de columnas en la cuadrícula de mosaicos."
 
 #: pdfstitcher/cli/app.py:47
 msgid "Units for margin and trim values."
-msgstr ""
+msgstr "Unidades de los valores de margen y recorte."
 
 #: pdfstitcher/cli/app.py:53
 #, fuzzy
@@ -109,13 +109,14 @@ msgstr ""
 "recortaría media pulgada de la izquierda y la parte superior)"
 
 #: pdfstitcher/cli/app.py:70
-#, fuzzy
 msgid "Rotate pages"
-msgstr "Juntar paginas"
+msgstr "Girar las páginas"
 
 #: pdfstitcher/cli/app.py:76
 msgid "Fill columns before rows (default is rows first)"
 msgstr ""
+"Complete las columnas antes de las filas (el valor predeterminado es las "
+"filas primero)"
 
 #: pdfstitcher/cli/app.py:82
 msgid "Fill columns right to left (default is left to right)"
@@ -179,7 +180,7 @@ msgstr ""
 
 #: pdfstitcher/cli/app.py:154
 msgid "Stitch PDF pages together, add margins, remove layers, and more."
-msgstr ""
+msgstr "Une las páginas del PDF, añade márgenes, elimina capas y mucho más."
 
 #: pdfstitcher/cli/app.py:160
 msgid "Input filename (pdf)"
@@ -200,7 +201,7 @@ msgstr ""
 
 #: pdfstitcher/cli/app.py:181
 msgid "Print verbose output"
-msgstr ""
+msgstr "Imprimir salida detallada"
 
 #: pdfstitcher/cli/app.py:190
 msgid "Ignoring unknown arguments:"
@@ -322,9 +323,8 @@ msgid "Mangling PDF with {} pages"
 msgstr "Error al manipular PDF: {}"
 
 #: pdfstitcher/gui/dialogs.py:251
-#, fuzzy
 msgid "This may take some time, please wait"
-msgstr "Manipulando el PDF. Esto puede llevar algún tiempo."
+msgstr "Esto puede llevar algún tiempo, por favor espere"
 
 #: pdfstitcher/gui/dialogs.py:257
 msgid "Mangling PDF cancelled by user."
@@ -570,15 +570,15 @@ msgstr "Generar PDF"
 
 #: pdfstitcher/gui/main_frame.py:196
 msgid "Processing"
-msgstr ""
+msgstr "Procesando"
 
 #: pdfstitcher/gui/main_frame.py:197
 msgid "Processing, please wait"
-msgstr ""
+msgstr "En proceso, por favor espere"
 
 #: pdfstitcher/gui/main_frame.py:205
 msgid "Processing cancelled"
-msgstr ""
+msgstr "Procesamiento anulado"
 
 #: pdfstitcher/gui/main_frame.py:211 pdfstitcher/gui/main_frame.py:216
 msgid "Something went wrong"
@@ -671,9 +671,8 @@ msgid "PDF file loaded without errors."
 msgstr "Archivo PDF cargado sin errores."
 
 #: pdfstitcher/gui/main_frame.py:472
-#, fuzzy
 msgid "This PDF is encrypted with the following permissions:"
-msgstr "Advertencia: este PDF está encriptado con los siguientes permisos:"
+msgstr "Este PDF está encriptado con los siguientes permisos:"
 
 #: pdfstitcher/gui/main_frame.py:476
 msgid ""
@@ -799,7 +798,7 @@ msgstr "No hay capas seleccionadas, el PDF generado estara en blanco."
 
 #: pdfstitcher/processing/mainproc.py:58 pdfstitcher/processing/mainproc.py:76
 msgid "Unknown processing unit: {}"
-msgstr ""
+msgstr "Unidad de procesamiento desconocida: {}"
 
 #: pdfstitcher/processing/pagefilter.py:47
 msgid "Page"
@@ -809,7 +808,7 @@ msgstr ""
 #: pdfstitcher/processing/pagetiler.py:49
 #: pdfstitcher/processing/pagetiler.py:65
 msgid "Unknown"
-msgstr ""
+msgstr "Desconocido"
 
 #: pdfstitcher/processing/pagetiler.py:45
 #: pdfstitcher/processing/pagetiler.py:61
@@ -879,12 +878,16 @@ msgstr ""
 #: pdfstitcher/processing/pagetiler.py:592
 msgid "Target height and width must be specified in scale-to-fit mode"
 msgstr ""
+"La altura y la anchura del objetivo deben especificarse en el modo de ajuste "
+"a escala"
 
 #: pdfstitcher/processing/pagetiler.py:597
 msgid ""
 "Target width and height specified, scaling pages to fit. Do not use this "
 "option for sewing patterns!"
 msgstr ""
+"Se especifica la anchura y la altura deseadas y se ajusta la escala de las "
+"páginas.¡ No utilice esta opción para patrones de costura!"
 
 #: pdfstitcher/processing/pagetiler.py:612
 msgid "Input document not loaded"
@@ -896,7 +899,7 @@ msgstr "No se especifico un rango de paginas, se usaran todas"
 
 #: pdfstitcher/processing/procbase.py:112
 msgid "Page {} is out of range. Removing from page list."
-msgstr ""
+msgstr "Página {} fuera de rango. Eliminar de la lista de páginas."
 
 #~ msgid "Warning! Output is larger than 200 in, may not open correctly."
 #~ msgstr ""
@@ -965,4 +968,3 @@ msgstr ""
 
 #~ msgid "Tiling successful"
 #~ msgstr "Combinación exitosa"
-
