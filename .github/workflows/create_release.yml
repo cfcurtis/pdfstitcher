@@ -63,7 +63,7 @@ jobs:
       
       - name: Compile translation files and build distribution
         run: |
-          python3 pdfstitcher/update_loc.py --compile
+          python3 build/update_loc.py --compile
           pip3 install build
           python3 -m build
       
@@ -91,7 +91,7 @@ jobs:
       - name: Install dependencies
         run: | 
           pip install .[gui]
-          python pdfstitcher/update_loc.py --compile
+          python build/update_loc.py --compile
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
 
       - uses: Nuitka/Nuitka-Action@main
@@ -100,13 +100,11 @@ jobs:
           script-name: pdfstitcher/gui/app.py
           onefile: true
           include-data-dir: |
-            pdfstitcher/resources=pdfstitcher/resources
-            pdfstitcher/locale=pdfstitcher/locale
+            resources/locale=resources/locale
           include-package-data: pdf_mangler
           output-file: pdfstitcher.exe
           windows-console-mode: disable
-          windows-icon-from-ico: pdfstitcher/resources/stitcher-icon.ico
-
+          windows-icon-from-ico: resources/stitcher-icon.ico
       
       - name: GH Release
         uses: softprops/action-gh-release@v2
@@ -137,7 +135,7 @@ jobs:
         run: | 
           brew install qpdf
           pip install ".[gui]"
-          python pdfstitcher/update_loc.py --compile
+          python build/update_loc.py --compile
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
 
       - name: Configure code signing
@@ -146,19 +144,20 @@ jobs:
           p12-file-base64: ${{ secrets.APPLE_SIGN_CERTIFICATE }}
           p12-password: ${{ secrets.APPLE_SIGN_PASSWORD }}
 
-      - name: Build with Pyinstaller
+      - name: Build with Nuitka
         env:
           APPLE_SIGN_IDENTITY: ${{ secrets.APPLE_SIGN_IDENTITY }}
         run: |
-          pip install pyinstaller
-          pyinstaller pdfstitcher_mac.spec
+          pip install nuitka
+          chmod +x build/mac_build_and_sign.sh
+          ./build/mac_build_and_sign.sh
           
       - name: Create dmg
         run: |
           brew install create-dmg
           create-dmg \
           --volname "PDFStitcher Installer" \
-          --background "pdfstitcher/resources/install_background.png" \
+          --background "resources/install_background.png" \
           --window-pos 200 120 \
           --window-size 800 400 \
           --icon-size 100 \
@@ -167,7 +166,7 @@ jobs:
           --app-drop-link 595 185 \
           --codesign "${{ secrets.APPLE_SIGN_IDENTITY }}" \
           "PDFStitcher-Installer.dmg" \
-          "dist/pdfstitcher.app"
+          "build/pdfstitcher.app"
       
       - name: Rename with arch
         run: mv PDFStitcher-Installer.dmg "PDFStitcher-Installer${{ runner.arch }}.dmg"
