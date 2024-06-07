@@ -34,7 +34,6 @@ gui = [
     "requests",
     "pdf-mangler",
     "psutil",
-    "pyobjc ; platform_system=='Darwin'"
 ]
 
 [project.urls]
@@ -46,6 +45,9 @@ pdfstitcher-gui = "pdfstitcher.gui.app:main"
 
 [project.scripts]
 pdfstitcher = "pdfstitcher.cli.app:main"
+
+[tool.setuptools.packages.find]
+include = ["pdfstitcher"]
 
 [build-system]
 requires = ["setuptools", "Babel"]

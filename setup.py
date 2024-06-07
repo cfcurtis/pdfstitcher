@@ -8,7 +8,7 @@ from babel.messages.frontend import compile_catalog
 def run_compile(cmdclass):
     # Shamelessly copied from https://stackoverflow.com/a/41120180
     compiler = compile_catalog(cmdclass.distribution)
-    compiler.directory = "pdfstitcher/locale"
+    compiler.directory = "resources/locale"
     compiler.domain = ["pdfstitcher"]
     compiler.run()
 

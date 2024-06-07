@@ -154,26 +154,29 @@ class Config:
             print("Could not save configuration file.")
 
 
-def resource_path(relative_path: str) -> str:
-    """Get absolute path to resource, works for dev and for PyInstaller"""
+def resource_path(relative_path: str) -> Path:
+    """
+    Get absolute path to resources dir. Works for dev, PyInstaller, and Nuitka.
+    """
     if hasattr(sys, "_MEIPASS"):
         # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
+        base_path = Path(sys._MEIPASS) / "resources"
     else:
-        base_path = str(Path(__file__).parent.absolute())
+        # Nuitka places resources adjacent to the executable
+        base_path = Path(__file__).parent.absolute() / "resources"
+    
+    # If we're running from source, the resources are in the parent directory
+    if not base_path.exists():
+        base_path = Path(__file__).parent.parent.absolute() / "resources"
 
-    return os.path.join(base_path, relative_path)
+    return str(base_path / relative_path)
 
 
 def get_valid_langs() -> list:
     """
     Get a list of valid languages for the UI.
     """
-    langs = ["en"]
-    for lang in os.listdir(resource_path("locale")):
-        if lang != "pdfstitcher.pot":
-            langs.append(lang)
-    return langs
+    return ["en"] + [f.name for f in os.scandir(resource_path("locale")) if f.is_dir()]
 
 
 def setup_locale(lang: str = None) -> None:
@@ -188,20 +191,9 @@ def setup_locale(lang: str = None) -> None:
     if lang is None:
         try:
             lang = os.getenv("LANG").split(".")[0]
-        except:
-            try:
-                # try the Apple way
-                from Foundation import NSUserDefaults
-
-                defaults = NSUserDefaults.standardUserDefaults()
-                globalDomain = defaults.persistentDomainForName_("NSGlobalDomain")
-                languages = globalDomain.objectForKey_("AppleLanguages")
-
-                # just take the first one
-                lang = languages[0]
-            except Exception as e:
-                language_warning = "Could not detect system language, defaulting to English"
-                lang = "en"
+        except Exception as e:
+            language_warning = "Could not detect system language, defaulting to English"
+            lang = "en"
 
     # First check if the language is defined as-is
     if lang in valid_langs:
