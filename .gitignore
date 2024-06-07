@@ -6,7 +6,6 @@ __pycache__
 .DS_Store
 */*.pyc
 .vscode/*
-build/*
 *.mo
 venv/*
 tests/*.pdf
@@ -15,7 +14,6 @@ tests/integration/*.pdf
 
 # Distribution / packaging
 bin/
-build/
 develop-eggs/
 dist/
 eggs/
@@ -28,7 +26,10 @@ var/
 .installed.cfg
 *.egg
 .eggs
-app*
+
+*.app
+*.build
+*.dist
 
 # Installer logs
 pip-log.txt

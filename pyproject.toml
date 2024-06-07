@@ -1,9 +1,9 @@
 [project]
 name = "pdfstitcher"
-version = "1.0b1"
+version = "1.0b2"
 description = "The open source PDF stitching software for sewists, by sewists."
 readme = "README.md"
-requires-python = ">=3.8, <3.12"
+requires-python = ">=3.8, <=3.12"
 license = {file = "LICENSE"}
 keywords = ["pdf", "sewing", "utility", "stitch", "n-up", "page imposition"]
 authors = [
@@ -34,7 +34,6 @@ gui = [
     "requests",
     "pdf-mangler",
     "psutil",
-    "pyobjc ; platform_system=='Darwin'"
 ]
 
 [project.urls]
@@ -46,6 +45,9 @@ pdfstitcher-gui = "pdfstitcher.gui.app:main"
 
 [project.scripts]
 pdfstitcher = "pdfstitcher.cli.app:main"
+
+[tool.setuptools.packages.find]
+include = ["pdfstitcher"]
 
 [build-system]
 requires = ["setuptools", "Babel"]

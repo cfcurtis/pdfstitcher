@@ -10,16 +10,20 @@ For up-to-date information, also check out https://www.pdfstitcher.org.
 * [macOS - Intel Processor](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/PDFStitcher-InstallerX64.dmg)
 * [macOS - M1/M2 Processor](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/PDFStitcher-InstallerARM64.dmg)
 * <a href='https://flathub.org/apps/details/com.github.cfcurtis.pdfstitcher'><img width='120' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/></a>
-* Using pip: `pip install pdfstitcher` **Note: Requires Python <= 3.11**. As of November 2022, there is no wheel available for wxPython for 3.11+.
+* Using pip: `pip install pdfstitcher[gui]` **Requires Python between 3.8 and 3.12**. 
+    * Running `pip installl pdfstitcher` without the `[gui]` option will install the command line version only. The `pdfstitcher` command is installed as a command line script, while the GUI is installed as a separate script called `pdfstitcher-gui`.
+    * To run as a Python module, use `python -m pdfstitcher.cli` or `python -m pdfstitcher.gui`
+    * As of June 2024, there is a known issue with building the wxPython wheel on systems with GCC 14 (e.g. Fedora 40). If the installation fails, try using Python 3.11 and installing a wheel manually from https://wxpython.org/pages/downloads/index.html.
+
+
+> Previous versions can be found by clicking on the "releases" link to the right.
 
 ## Translations:
 
 <a href="https://hosted.weblate.org/engage/pdfstitcher/">
 <img src="https://hosted.weblate.org/widgets/pdfstitcher/-/287x66-grey.png" alt="Translation status" /></a>
 
-PDFStitcher will detect system language settings and change localisation if supported. 
-
-Previous versions can be found by clicking on the "releases" link to the right.
+PDFStitcher will detect system language settings and change localisation if supported. The default language can be changed in the settings menu ("Preferences" in the menu bar on macOS).
 
 Want to contribute a translation? PDFStitcher is now on [weblate!](https://hosted.weblate.org/engage/pdfstitcher/).
 
@@ -37,7 +41,7 @@ Want to contribute a translation? PDFStitcher is now on [weblate!](https://hoste
 Most people probably want to just use the executable links above. However, to edit the code, clone this repo and install in editable mode using the command:
 
 ```console
-$ pip install -e ".[dev]"
+$ pip install -e ".[dev,gui]"
 ```
 
 ## Help!

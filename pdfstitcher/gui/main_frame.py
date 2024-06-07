@@ -74,7 +74,7 @@ class PDFStitcherFrame(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.on_exit)
 
         if sys.platform == "win32" or sys.platform == "linux":
-            self.SetIcon(wx.Icon(utils.resource_path("resources/stitcher-icon.ico")))
+            self.SetIcon(wx.Icon(utils.resource_path("stitcher-icon.ico")))
 
         if len(sys.argv) > 1:
             self.load_file(sys.argv[1])
@@ -300,7 +300,7 @@ class PDFStitcherFrame(wx.Frame):
         Show the about info.
         """
         about_info = wx.adv.AboutDialogInfo()
-        about_info.SetIcon(wx.Icon(utils.resource_path("resources/stitcher-icon.ico")))
+        about_info.SetIcon(wx.Icon(utils.resource_path("stitcher-icon.ico")))
         about_info.SetName("PDFStitcher")
         about_info.SetVersion(utils.VERSION_STRING)
         about_info.SetDescription(_("The PDF Stitching app for sewists, by sewists."))
