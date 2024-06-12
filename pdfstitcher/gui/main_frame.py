@@ -404,10 +404,8 @@ class PDFStitcherFrame(wx.Frame):
         if self.main_process.doc_info["n_pages"] == 1:
             self.io.do_tile.SetValue(0)
             self.io.do_tile.Disable()
-            self.tt.Disable()
         else:
             self.io.do_tile.Enable()
-            self.tt.Enable()
 
             # check how big the pages are, and default to no tiling if they're over A3
             w, h = self.main_process.doc_info["first_page_dims"]
@@ -421,11 +419,9 @@ class PDFStitcherFrame(wx.Frame):
         if self.main_process.doc_info["layers"]:
             self.io.do_layers.SetValue(1)
             self.io.do_layers.Enable()
-            self.lt.Enable()
         else:
             self.io.do_layers.SetValue(0)
             self.io.do_layers.Disable()
-            self.lt.Disable()
 
         # update the processing description
         self.io.on_option_checked(None)
