@@ -415,13 +415,7 @@ class PDFStitcherFrame(wx.Frame):
                 self.io.do_tile.SetValue(1)
 
         # update the layer options
-        self.lt.load_new(self.main_process.doc_info["layers"])
-        if self.main_process.doc_info["layers"]:
-            self.io.do_layers.SetValue(1)
-            self.io.do_layers.Enable()
-        else:
-            self.io.do_layers.SetValue(0)
-            self.io.do_layers.Disable()
+        self.io.do_layers.SetValue(self.lt.load_new(self.main_process.doc_info["layers"]))
 
         # update the processing description
         self.io.on_option_checked(None)
