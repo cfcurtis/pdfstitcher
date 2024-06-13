@@ -154,12 +154,23 @@ class PDFStitcherFrame(wx.Frame):
         """
         Helper function to pack up the layer options
         """
-        return {
-            "keep_ocs": self.lt.get_selected_layers(),
-            "line_props": self.lt.line_props,
-            "keep_non_oc": bool(self.lt.include_nonoc.GetValue()),
-            "delete_ocgs": bool(self.lt.delete_ocgs.GetSelection() == 0),
-        }
+        # no layers in document
+        if not self.main_process.doc_info["layers"]:
+            layer_opts = {
+                "keep_ocs": "no_ocgs",
+                "line_props": self.lt.line_props,
+                "keep_non_oc": True,
+                "delete_ocgs": True,
+            }
+        else:
+            layer_opts = {
+                "keep_ocs": self.lt.get_selected_layers(),
+                "line_props": self.lt.line_props,
+                "keep_non_oc": bool(self.lt.include_nonoc.GetValue()),
+                "delete_ocgs": bool(self.lt.delete_ocgs.GetSelection() == 0),
+            }
+
+        return layer_opts
 
     def on_go_pressed(self, event):
         if self.main_process.in_doc is None:

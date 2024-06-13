@@ -86,7 +86,6 @@ class LayersTab(scrolled.ScrolledPanel):
 
         # line properties
         # colour
-        line_prop_sizer.AddSpacer(100)
         line_prop_sizer.Add(
             wx.StaticText(self.line_prop_pane, label=_("Select line properties to modify"))
         )
@@ -221,11 +220,20 @@ class LayersTab(scrolled.ScrolledPanel):
         self.SetSizer(vert_sizer)
         self.SetupScrolling()
         self.SetBackgroundColour(parent.GetBackgroundColour())
-        self.line_props = {}
+        self._line_props = {}
+
+    @property
+    def line_props(self):
+        if self.apply_reset_pane.IsShown():
+            return self._line_props
+        else:
+            # No layers, but pass on selections
+            self.apply_ls("no_ocgs")
+            return self._line_props
 
     def apply_ls(self, layer):
         line_str = ""
-        self.line_props[layer] = {}
+        self._line_props[layer] = {}
 
         if self.enable_thickness.IsChecked():
             line_thick = utils.txt_to_float(self.line_thick_ctrl.GetValue())
@@ -236,18 +244,18 @@ class LayersTab(scrolled.ScrolledPanel):
             units = utils.UNITS(self.line_thick_units.GetSelection())
             line_str += f"{line_thick} {units} "
             line_thick = units.units_to_pts(line_thick)
-            self.line_props[layer]["thickness"] = line_thick
+            self._line_props[layer]["thickness"] = line_thick
 
         if self.enable_style.IsChecked():
             line_str += f"{self.style_names[self.line_style_ctrl.GetSelection()]}"
-            self.line_props[layer]["style"] = self.line_style_ctrl.GetSelection()
+            self._line_props[layer]["style"] = self.line_style_ctrl.GetSelection()
 
         if self.enable_colour.IsChecked():
             colour = self.line_colour_ctrl.GetColour()
             # ignore alpha
             rgb = [val / 255 for val in colour.Get()[:3]]
-            self.line_props[layer]["rgb"] = rgb
-            self.line_props[layer]["fill_colour"] = self.do_fill_colour.IsChecked()
+            self._line_props[layer]["rgb"] = rgb
+            self._line_props[layer]["fill_colour"] = self.do_fill_colour.IsChecked()
         else:
             colour = None
 
@@ -290,8 +298,8 @@ class LayersTab(scrolled.ScrolledPanel):
 
         layer = self.layer_list.GetItemText(sel, 0)
 
-        if layer in self.line_props:
-            del self.line_props[layer]
+        if layer in self._line_props:
+            del self._line_props[layer]
 
         self.layer_list.SetItem(sel, 1, "")
         self.layer_list.SetItemTextColour(sel, wx.Colour(0, 0, 0))
@@ -303,8 +311,8 @@ class LayersTab(scrolled.ScrolledPanel):
             if self.layer_list.IsItemChecked(sel):
                 layer = self.layer_list.GetItemText(sel, 0)
 
-                if layer in self.line_props:
-                    del self.line_props[layer]
+                if layer in self._line_props:
+                    del self._line_props[layer]
 
                 self.layer_list.SetItem(sel, 1, "")
                 self.layer_list.SetItemTextColour(sel, wx.Colour(0, 0, 0))
@@ -314,9 +322,16 @@ class LayersTab(scrolled.ScrolledPanel):
         self.reset_ls_btn.SetLabel(_("Reset") + " " + event.Label)
 
     def load_new(self, layers):
+        maybe_spacer = self.layer_pane.GetSizer().GetItem(0)
         if not layers:
-            self.status_txt.SetLabel(_("No layers found in input document."))
+            self.status_txt.SetLabel(
+                _("No layers found in input document.")
+                + "\n"
+                + _("Selected properties will apply to all lines in the document.")
+            )
             self.layer_splitter.Unsplit(self.layer_pane)
+            if maybe_spacer.IsSpacer():
+                self.layer_pane.GetSizer().Remove(0)
             self.apply_reset_pane.Hide()
             self.Layout()
             return False
@@ -331,11 +346,13 @@ class LayersTab(scrolled.ScrolledPanel):
 
         self.status_txt.SetLabel(_("Select layers to include in output document."))
         self.layer_splitter.SplitVertically(self.layer_pane, self.line_prop_pane)
+        if not maybe_spacer.IsSpacer():
+            self.layer_pane.GetSizer().InsertSpacer(0, 100)
         self.apply_reset_pane.Show()
         self.Layout()
 
         # reset the line properties dictionary
-        self.line_props = {}
+        self._line_props = {}
         return True
 
     def set_all_checked(self, select=True):
@@ -353,13 +370,16 @@ class LayersTab(scrolled.ScrolledPanel):
             self.select_all.SetLabel(_("Select all"))
 
     def get_selected_layers(self):
+        if not self.apply_reset_pane.IsShown():
+            return []
+
         n_layers = self.layer_list.GetItemCount()
         selected = []
         for i in range(n_layers):
             if self.layer_list.IsItemChecked(i):
                 selected.append(self.layer_list.GetItemText(i, col=0))
 
-        if n_layers == len(selected) and len(self.line_props) == 0:
+        if n_layers == len(selected) and len(self._line_props) == 0:
             return "all"
 
         return selected
