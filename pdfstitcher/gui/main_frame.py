@@ -154,12 +154,23 @@ class PDFStitcherFrame(wx.Frame):
         """
         Helper function to pack up the layer options
         """
-        return {
-            "keep_ocs": self.lt.get_selected_layers(),
-            "line_props": self.lt.line_props,
-            "keep_non_oc": bool(self.lt.include_nonoc.GetValue()),
-            "delete_ocgs": bool(self.lt.delete_ocgs.GetSelection() == 0),
-        }
+        # no layers in document
+        if not self.main_process.doc_info["layers"]:
+            layer_opts = {
+                "keep_ocs": "no_ocgs",
+                "line_props": self.lt.line_props,
+                "keep_non_oc": True,
+                "delete_ocgs": True,
+            }
+        else:
+            layer_opts = {
+                "keep_ocs": self.lt.get_selected_layers(),
+                "line_props": self.lt.line_props,
+                "keep_non_oc": bool(self.lt.include_nonoc.GetValue()),
+                "delete_ocgs": bool(self.lt.delete_ocgs.GetSelection() == 0),
+            }
+
+        return layer_opts
 
     def on_go_pressed(self, event):
         if self.main_process.in_doc is None:
@@ -404,10 +415,8 @@ class PDFStitcherFrame(wx.Frame):
         if self.main_process.doc_info["n_pages"] == 1:
             self.io.do_tile.SetValue(0)
             self.io.do_tile.Disable()
-            self.tt.Disable()
         else:
             self.io.do_tile.Enable()
-            self.tt.Enable()
 
             # check how big the pages are, and default to no tiling if they're over A3
             w, h = self.main_process.doc_info["first_page_dims"]
@@ -417,15 +426,7 @@ class PDFStitcherFrame(wx.Frame):
                 self.io.do_tile.SetValue(1)
 
         # update the layer options
-        self.lt.load_new(self.main_process.doc_info["layers"])
-        if self.main_process.doc_info["layers"]:
-            self.io.do_layers.SetValue(1)
-            self.io.do_layers.Enable()
-            self.lt.Enable()
-        else:
-            self.io.do_layers.SetValue(0)
-            self.io.do_layers.Disable()
-            self.lt.Disable()
+        self.io.do_layers.SetValue(self.lt.load_new(self.main_process.doc_info["layers"]))
 
         # update the processing description
         self.io.on_option_checked(None)

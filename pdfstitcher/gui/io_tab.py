@@ -21,6 +21,7 @@ class IOTab(scrolled.ScrolledPanel):
     def __init__(self, parent, main_gui):
         super(IOTab, self).__init__(parent)
 
+        self.main_gui = main_gui
         vert_sizer = wx.BoxSizer(wx.VERTICAL)
 
         # add the various parameter inputs
@@ -150,7 +151,6 @@ class IOTab(scrolled.ScrolledPanel):
             flag=wx.TOP | wx.LEFT | wx.RIGHT,
             border=self.FromDIP(utils.BORDER * 2),
         )
-        self.on_option_checked(event=None)
 
         self.SetSizer(vert_sizer)
         self.SetupScrolling()
@@ -180,3 +180,6 @@ class IOTab(scrolled.ScrolledPanel):
                 + "\n"
                 + _("Optionally, add margins to each page")
             )
+
+        self.main_gui.tt.Enable(do_tile)
+        self.main_gui.lt.Enable(do_layers)

@@ -21,10 +21,10 @@ SKIP_KEYS = ["/Parent", "/Thumb", "/PieceInfo"]
 DEFAULT_STATE = {
     # PDF defaults from v1.7 reference.
     "w": [1.0],
-    "RG": [0, 0, 0],
-    "rg": [0, 0, 0],
     "K": pdf_ops.rgb_to_cmyk([0, 0, 0]),
     "k": pdf_ops.rgb_to_cmyk([0, 0, 0]),
+    "RG": [0, 0, 0],
+    "rg": [0, 0, 0],
     "d": pdf_ops.line_style_arr[0],
 }
 
@@ -92,6 +92,10 @@ class LayerFilter(ProcessingBase):
             self.p["keep_ocs"] = utils.get_layer_names(self.in_doc)
             return
 
+        if self.p["keep_ocs"] == "no_ocgs":
+            # no OCGs in document, and hopefully nobody names a layer this
+            return
+
         # edit the OCG listing in the root
         On = [
             oc for oc in self.out_doc.Root.OCProperties.OCGs if str(oc.Name) in self.p["keep_ocs"]
@@ -136,12 +140,12 @@ class LayerFilter(ProcessingBase):
 
             # assign the colour for both cmyk and rgb
             if "rgb" in lp.keys():
-                clp["RG"] = [Decimal(rg) for rg in lp["rgb"]]
                 clp["K"] = [Decimal(k) for k in pdf_ops.rgb_to_cmyk(lp["rgb"])]
+                clp["RG"] = [Decimal(rg) for rg in lp["rgb"]]
                 # Modify the nonstroking colour if fill_colour is checked
                 if "fill_colour" in lp and lp["fill_colour"]:
-                    clp["rg"] = clp["RG"]
                     clp["k"] = clp["K"]
+                    clp["rg"] = clp["RG"]
 
             self.pdf_line_props[layer] = clp
 
@@ -173,6 +177,7 @@ class LayerFilter(ProcessingBase):
             if transparency and op in ("rg", "k"):
                 # transparency messes up fill colour modification
                 continue
+
             if list(self.current_state[-1][op]) != operands:
                 commands.append((operands, pikepdf.Operator(op)))
                 self.current_state[-1][op] = operands
@@ -319,6 +324,10 @@ class LayerFilter(ProcessingBase):
                 elif op in self.pdf_line_props[current_layer_name]:
                     # and check if the current operator is one we need to modify
                     operands = self.pdf_line_props[current_layer_name][op]
+                elif op in ("G", "g") and "RG" in self.pdf_line_props[current_layer_name]:
+                    # G/g sets the colourspace to greyscale, so override it if colour selected
+                    operands = self.pdf_line_props[current_layer_name]["RG"]
+                    operator = pikepdf.Operator("RG") if op.isupper() else pikepdf.Operator("rg")
 
             if keeping or op in STATE_OPS or op == "Do":
                 # if we're keeping this command, write it out
@@ -449,12 +458,6 @@ class LayerFilter(ProcessingBase):
         self.current_state = []
         self.user_unit = 1
 
-        # TODO: allow for line thickness modifications even without layers
-        if "/OCProperties" not in self.in_doc.Root.keys():
-            self.out_doc = self.in_doc
-            progress_win and progress_win.Update(1)
-            return True
-
         # check if the user requested no modifications
         if self.p["keep_non_oc"] and self.p["keep_ocs"] == "all" and len(self.p["line_props"]) == 0:
             # nothing to do, just return the input document
@@ -477,10 +480,8 @@ class LayerFilter(ProcessingBase):
         # initialize the progress window
         progress_win and progress_win.SetRange(n_page)  # don't run if the callback is None
 
-        # update the OC dictionaries if we're actually modifying them
-        parse_streams = (self.p["delete_ocgs"] and self.p["keep_ocs"] != "all") or not self.p[
-            "keep_non_oc"
-        ]
+        # We don't need to parse the streams if we're just hiding OCGs
+        parse_streams = self.p["delete_ocgs"] or not self.p["keep_non_oc"]
         # update_ocs modifies the keep_ocs list if it was previously 'all'!
         self._update_ocs()
 
@@ -494,7 +495,14 @@ class LayerFilter(ProcessingBase):
             for p in unique_pages:
                 # reset the graphics state before each page, then filter
                 self._initialize_state()
-                self._process_content(self.out_doc.pages[p - 1])
+
+                if self.p["keep_ocs"] == "no_ocgs":
+                    self._process_content(
+                        self.out_doc.pages[p - 1], current_layer_name="no_ocgs", do_filter=True
+                    )
+                else:
+                    self._process_content(self.out_doc.pages[p - 1])
+
                 # update the progress bar for each page, then check if user cancelled
                 progress_win and progress_win.Update(unique_pages.index(p))
                 if progress_win and progress_win.WasCancelled():

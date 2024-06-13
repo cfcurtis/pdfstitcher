@@ -33,13 +33,13 @@ class LayersTab(scrolled.ScrolledPanel):
 
         # the main splitter for the layer stuff
         self.layer_splitter = wx.SplitterWindow(self, style=wx.SP_LIVE_UPDATE)
-        layer_pane = wx.Panel(self.layer_splitter)
+        self.layer_pane = wx.Panel(self.layer_splitter)
         layer_sizer = wx.BoxSizer(wx.VERTICAL)
-        layer_pane.SetSizer(layer_sizer)
+        self.layer_pane.SetSizer(layer_sizer)
 
         # delete or hide deselected layers
         self.delete_ocgs = wx.RadioBox(
-            layer_pane, label=_("Deselected layers:"), choices=[_("Delete"), _("Hide")]
+            self.layer_pane, label=_("Deselected layers:"), choices=[_("Delete"), _("Hide")]
         )
         layer_sizer.Add(
             self.delete_ocgs,
@@ -48,7 +48,7 @@ class LayersTab(scrolled.ScrolledPanel):
         )
 
         # check all, background, etc
-        self.include_nonoc = wx.CheckBox(layer_pane, label=_("Include non-optional content"))
+        self.include_nonoc = wx.CheckBox(self.layer_pane, label=_("Include non-optional content"))
         self.include_nonoc.SetValue(1)
         layer_sizer.Add(
             self.include_nonoc,
@@ -56,7 +56,7 @@ class LayersTab(scrolled.ScrolledPanel):
             border=self.FromDIP(utils.BORDER),
         )
 
-        self.select_all = wx.CheckBox(layer_pane, label=_("Deselect all"))
+        self.select_all = wx.CheckBox(self.layer_pane, label=_("Deselect all"))
         self.select_all.Bind(wx.EVT_CHECKBOX, self.on_select_all)
         layer_sizer.Add(
             self.select_all,
@@ -65,7 +65,7 @@ class LayersTab(scrolled.ScrolledPanel):
         )
 
         # the main list box for layers
-        self.layer_list = wx.ListCtrl(layer_pane, style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
+        self.layer_list = wx.ListCtrl(self.layer_pane, style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
         self.layer_list.EnableCheckBoxes(True)
         self.layer_list.InsertColumn(0, _("Layer Name"))
         self.layer_list.InsertColumn(1, _("Line Properties"))
@@ -79,19 +79,18 @@ class LayersTab(scrolled.ScrolledPanel):
         )
         self.layer_list.Bind(wx.EVT_LIST_ITEM_SELECTED, self.on_layer_selected)
 
-        # build the set of controls for layer options
-        layer_opt_pane = wx.Panel(self.layer_splitter)
-        layer_opt_sizer = wx.BoxSizer(wx.VERTICAL)
-        layer_opt_pane.SetSizer(layer_opt_sizer)
+        # build the set of controls for line properties
+        self.line_prop_pane = wx.Panel(self.layer_splitter)
+        line_prop_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.line_prop_pane.SetSizer(line_prop_sizer)
 
         # line properties
         # colour
-        layer_opt_sizer.AddSpacer(100)
-        layer_opt_sizer.Add(
-            wx.StaticText(layer_opt_pane, label=_("Select line properties to modify"))
+        line_prop_sizer.Add(
+            wx.StaticText(self.line_prop_pane, label=_("Select line properties to modify"))
         )
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        self.enable_colour = wx.CheckBox(layer_opt_pane, label=_("Line Colour") + ":")
+        self.enable_colour = wx.CheckBox(self.line_prop_pane, label=_("Line Colour") + ":")
         self.enable_colour.SetValue(Config.line_props["colour"]["enable"])
         newline.Add(
             self.enable_colour,
@@ -99,26 +98,26 @@ class LayersTab(scrolled.ScrolledPanel):
             border=self.FromDIP(utils.BORDER * 2),
         )
         self.line_colour_ctrl = wx.ColourPickerCtrl(
-            layer_opt_pane, colour=Config.line_props["colour"]["value"]
+            self.line_prop_pane, colour=Config.line_props["colour"]["value"]
         )
         newline.Add(
             self.line_colour_ctrl,
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
             border=self.FromDIP(utils.BORDER),
         )
-        layer_opt_sizer.Add(newline, flag=wx.TOP, border=self.FromDIP(utils.BORDER * 2))
+        line_prop_sizer.Add(newline, flag=wx.TOP, border=self.FromDIP(utils.BORDER * 2))
 
         # Fill colour
-        self.do_fill_colour = wx.CheckBox(layer_opt_pane, label=_("Also modify fill colour"))
+        self.do_fill_colour = wx.CheckBox(self.line_prop_pane, label=_("Also modify fill colour"))
         self.do_fill_colour.SetValue(Config.line_props["colour"]["fill"])
-        layer_opt_sizer.AddSpacer(self.FromDIP(utils.BORDER * 2))
-        layer_opt_sizer.Add(
+        line_prop_sizer.AddSpacer(self.FromDIP(utils.BORDER * 2))
+        line_prop_sizer.Add(
             self.do_fill_colour, flag=wx.LEFT, border=self.FromDIP(utils.BORDER * 5)
         )
 
         # thickness
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        self.enable_thickness = wx.CheckBox(layer_opt_pane, label=_("Line Thickness") + ":")
+        self.enable_thickness = wx.CheckBox(self.line_prop_pane, label=_("Line Thickness") + ":")
         self.enable_thickness.SetValue(Config.line_props["thickness"]["enable"])
         newline.Add(
             self.enable_thickness,
@@ -126,7 +125,7 @@ class LayersTab(scrolled.ScrolledPanel):
             border=self.FromDIP(utils.BORDER * 2),
         )
         self.line_thick_ctrl = wx.TextCtrl(
-            layer_opt_pane,
+            self.line_prop_pane,
             size=self.FromDIP(utils.NUM_ENTRY_SIZE),
             value=Config.line_props["thickness"]["value"],
         )
@@ -139,7 +138,7 @@ class LayersTab(scrolled.ScrolledPanel):
         # Extra note for pybabel to make translations make sense (particularly for inches)
         # translation_note: pt = "points", in = "inches", cm = "centimeters"
         unit_choice = [_("in"), _("cm"), _("pt")]
-        self.line_thick_units = wx.ComboBox(layer_opt_pane, choices=unit_choice)
+        self.line_thick_units = wx.ComboBox(self.line_prop_pane, choices=unit_choice)
         self.line_thick_units.SetSelection(Config.line_props["thickness"]["units"])
 
         newline.Add(
@@ -147,11 +146,11 @@ class LayersTab(scrolled.ScrolledPanel):
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
             border=self.FromDIP(utils.BORDER),
         )
-        layer_opt_sizer.Add(newline, flag=wx.TOP, border=self.FromDIP(utils.BORDER * 2))
+        line_prop_sizer.Add(newline, flag=wx.TOP, border=self.FromDIP(utils.BORDER * 2))
 
         # style
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        self.enable_style = wx.CheckBox(layer_opt_pane, label=_("Line Style") + ":")
+        self.enable_style = wx.CheckBox(self.line_prop_pane, label=_("Line Style") + ":")
         self.enable_style.SetValue(Config.line_props["style"]["enable"])
         newline.Add(
             self.enable_style,
@@ -160,7 +159,7 @@ class LayersTab(scrolled.ScrolledPanel):
         )
         self.style_names = (_("Solid"), _("Dashed"), _("Dotted"))
         self.line_style_ctrl = wx.ComboBox(
-            layer_opt_pane,
+            self.line_prop_pane,
             choices=self.style_names,
             style=wx.CB_READONLY,
         )
@@ -170,13 +169,15 @@ class LayersTab(scrolled.ScrolledPanel):
             flag=wx.LEFT | wx.ALIGN_CENTER_VERTICAL,
             border=self.FromDIP(utils.BORDER),
         )
-        layer_opt_sizer.Add(newline, flag=wx.TOP, border=self.FromDIP(utils.BORDER * 2))
+        line_prop_sizer.Add(newline, flag=wx.TOP, border=self.FromDIP(utils.BORDER * 2))
 
         # apply/reset buttons
+        self.apply_reset_pane = wx.Panel(self.line_prop_pane)
+        apply_sizer = wx.BoxSizer(wx.VERTICAL)
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        self.apply_ls_btn = wx.Button(layer_opt_pane, label=_("Apply"))
+        self.apply_ls_btn = wx.Button(self.apply_reset_pane, label=_("Apply"))
         self.apply_ls_btn.Bind(wx.EVT_BUTTON, self.apply_ls_pressed)
-        self.reset_ls_btn = wx.Button(layer_opt_pane, label=_("Reset"))
+        self.reset_ls_btn = wx.Button(self.apply_reset_pane, label=_("Reset"))
         self.reset_ls_btn.Bind(wx.EVT_BUTTON, self.reset_ls_pressed)
         newline.Add(
             self.apply_ls_btn,
@@ -190,21 +191,25 @@ class LayersTab(scrolled.ScrolledPanel):
             flag=wx.EXPAND | wx.LEFT,
             border=self.FromDIP(utils.BORDER),
         )
-        layer_opt_sizer.Add(newline, flag=wx.TOP | wx.EXPAND, border=self.FromDIP(utils.BORDER * 2))
+        apply_sizer.Add(newline, flag=wx.TOP | wx.EXPAND, border=self.FromDIP(utils.BORDER * 2))
 
         # apply to checked
         newline = wx.BoxSizer(wx.HORIZONTAL)
-        self.apply_ls_all = wx.Button(layer_opt_pane, label=_("Apply to checked"))
+        self.apply_ls_all = wx.Button(self.apply_reset_pane, label=_("Apply to checked"))
         self.apply_ls_all.Bind(wx.EVT_BUTTON, self.apply_all_pressed)
-        self.reset_all = wx.Button(layer_opt_pane, label=_("Reset checked"))
+        self.reset_all = wx.Button(self.apply_reset_pane, label=_("Reset checked"))
         self.reset_all.Bind(wx.EVT_BUTTON, self.reset_all_pressed)
         newline.Add(self.apply_ls_all, flag=wx.LEFT, border=self.FromDIP(utils.BORDER))
         newline.Add(self.reset_all, flag=wx.LEFT, border=self.FromDIP(utils.BORDER))
-        layer_opt_sizer.Add(newline, flag=wx.TOP, border=self.FromDIP(utils.BORDER))
+        apply_sizer.Add(newline, flag=wx.TOP, border=self.FromDIP(utils.BORDER))
+        self.apply_reset_pane.SetSizer(apply_sizer)
+        line_prop_sizer.Add(
+            self.apply_reset_pane, flag=wx.TOP, border=self.FromDIP(utils.BORDER * 2)
+        )
 
         # Final assembly
-        self.layer_splitter.SplitVertically(layer_pane, layer_opt_pane)
         self.layer_splitter.SetSashGravity(0.5)
+        self.layer_splitter.SplitVertically(self.layer_pane, self.line_prop_pane)
         vert_sizer.Add(
             self.layer_splitter,
             proportion=1,
@@ -212,17 +217,23 @@ class LayersTab(scrolled.ScrolledPanel):
             border=self.FromDIP(utils.BORDER * 2),
         )
 
-        # hide controls until a PDF with layers is loaded
-        self.layer_splitter.Hide()
-
         self.SetSizer(vert_sizer)
         self.SetupScrolling()
         self.SetBackgroundColour(parent.GetBackgroundColour())
-        self.line_props = {}
+        self._line_props = {}
+
+    @property
+    def line_props(self):
+        if self.apply_reset_pane.IsShown():
+            return self._line_props
+        else:
+            # No layers, but pass on selections
+            self.apply_ls("no_ocgs")
+            return self._line_props
 
     def apply_ls(self, layer):
         line_str = ""
-        self.line_props[layer] = {}
+        self._line_props[layer] = {}
 
         if self.enable_thickness.IsChecked():
             line_thick = utils.txt_to_float(self.line_thick_ctrl.GetValue())
@@ -233,18 +244,18 @@ class LayersTab(scrolled.ScrolledPanel):
             units = utils.UNITS(self.line_thick_units.GetSelection())
             line_str += f"{line_thick} {units} "
             line_thick = units.units_to_pts(line_thick)
-            self.line_props[layer]["thickness"] = line_thick
+            self._line_props[layer]["thickness"] = line_thick
 
         if self.enable_style.IsChecked():
             line_str += f"{self.style_names[self.line_style_ctrl.GetSelection()]}"
-            self.line_props[layer]["style"] = self.line_style_ctrl.GetSelection()
+            self._line_props[layer]["style"] = self.line_style_ctrl.GetSelection()
 
         if self.enable_colour.IsChecked():
             colour = self.line_colour_ctrl.GetColour()
             # ignore alpha
             rgb = [val / 255 for val in colour.Get()[:3]]
-            self.line_props[layer]["rgb"] = rgb
-            self.line_props[layer]["fill_colour"] = self.do_fill_colour.IsChecked()
+            self._line_props[layer]["rgb"] = rgb
+            self._line_props[layer]["fill_colour"] = self.do_fill_colour.IsChecked()
         else:
             colour = None
 
@@ -287,8 +298,8 @@ class LayersTab(scrolled.ScrolledPanel):
 
         layer = self.layer_list.GetItemText(sel, 0)
 
-        if layer in self.line_props:
-            del self.line_props[layer]
+        if layer in self._line_props:
+            del self._line_props[layer]
 
         self.layer_list.SetItem(sel, 1, "")
         self.layer_list.SetItemTextColour(sel, wx.Colour(0, 0, 0))
@@ -300,8 +311,8 @@ class LayersTab(scrolled.ScrolledPanel):
             if self.layer_list.IsItemChecked(sel):
                 layer = self.layer_list.GetItemText(sel, 0)
 
-                if layer in self.line_props:
-                    del self.line_props[layer]
+                if layer in self._line_props:
+                    del self._line_props[layer]
 
                 self.layer_list.SetItem(sel, 1, "")
                 self.layer_list.SetItemTextColour(sel, wx.Colour(0, 0, 0))
@@ -311,9 +322,18 @@ class LayersTab(scrolled.ScrolledPanel):
         self.reset_ls_btn.SetLabel(_("Reset") + " " + event.Label)
 
     def load_new(self, layers):
+        maybe_spacer = self.line_prop_pane.GetSizer().GetItem(0)
         if not layers:
-            self.layer_splitter.Hide()
-            self.status_txt.SetLabel(_("No layers found in input document."))
+            self.status_txt.SetLabel(
+                _("No layers found in input document.")
+                + "\n"
+                + _("Selected properties will apply to all lines in the document.")
+            )
+            self.layer_splitter.Unsplit(self.layer_pane)
+            if maybe_spacer.IsSpacer():
+                self.line_prop_pane.GetSizer().Remove(0)
+            self.apply_reset_pane.Hide()
+            self.Layout()
             return False
 
         self.layer_list.DeleteAllItems()
@@ -325,11 +345,14 @@ class LayersTab(scrolled.ScrolledPanel):
         self.set_all_checked(True)
 
         self.status_txt.SetLabel(_("Select layers to include in output document."))
-        self.layer_splitter.Show()
+        self.layer_splitter.SplitVertically(self.layer_pane, self.line_prop_pane)
+        if not maybe_spacer.IsSpacer():
+            self.line_prop_pane.GetSizer().InsertSpacer(0, 100)
+        self.apply_reset_pane.Show()
         self.Layout()
 
         # reset the line properties dictionary
-        self.line_props = {}
+        self._line_props = {}
         return True
 
     def set_all_checked(self, select=True):
@@ -347,13 +370,16 @@ class LayersTab(scrolled.ScrolledPanel):
             self.select_all.SetLabel(_("Select all"))
 
     def get_selected_layers(self):
+        if not self.apply_reset_pane.IsShown():
+            return []
+
         n_layers = self.layer_list.GetItemCount()
         selected = []
         for i in range(n_layers):
             if self.layer_list.IsItemChecked(i):
                 selected.append(self.layer_list.GetItemText(i, col=0))
 
-        if n_layers == len(selected) and len(self.line_props) == 0:
+        if n_layers == len(selected) and len(self._line_props) == 0:
             return "all"
 
         return selected
