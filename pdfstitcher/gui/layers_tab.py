@@ -322,7 +322,7 @@ class LayersTab(scrolled.ScrolledPanel):
         self.reset_ls_btn.SetLabel(_("Reset") + " " + event.Label)
 
     def load_new(self, layers):
-        maybe_spacer = self.layer_pane.GetSizer().GetItem(0)
+        maybe_spacer = self.line_prop_pane.GetSizer().GetItem(0)
         if not layers:
             self.status_txt.SetLabel(
                 _("No layers found in input document.")
@@ -331,7 +331,7 @@ class LayersTab(scrolled.ScrolledPanel):
             )
             self.layer_splitter.Unsplit(self.layer_pane)
             if maybe_spacer.IsSpacer():
-                self.layer_pane.GetSizer().Remove(0)
+                self.line_prop_pane.GetSizer().Remove(0)
             self.apply_reset_pane.Hide()
             self.Layout()
             return False
@@ -347,7 +347,7 @@ class LayersTab(scrolled.ScrolledPanel):
         self.status_txt.SetLabel(_("Select layers to include in output document."))
         self.layer_splitter.SplitVertically(self.layer_pane, self.line_prop_pane)
         if not maybe_spacer.IsSpacer():
-            self.layer_pane.GetSizer().InsertSpacer(0, 100)
+            self.line_prop_pane.GetSizer().InsertSpacer(0, 100)
         self.apply_reset_pane.Show()
         self.Layout()
 
