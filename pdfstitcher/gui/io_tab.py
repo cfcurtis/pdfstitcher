@@ -79,9 +79,6 @@ class IOTab(scrolled.ScrolledPanel):
             flag=wx.ALIGN_CENTRE_VERTICAL,
         )
         self.page_range_txt = wx.TextCtrl(self)
-        self.page_range_txt.SetToolTip(
-            wx.ToolTip(_("Pages assemble in specified order. 0 inserts a blank page."))
-        )
         self.page_range_txt.Bind(wx.EVT_TEXT, main_gui.page_range_updated)
         newline.Add(
             self.page_range_txt,
@@ -92,6 +89,13 @@ class IOTab(scrolled.ScrolledPanel):
         vert_sizer.Add(
             newline,
             flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+        vert_sizer.Add(
+            wx.StaticText(
+                self, label=_("Pages assemble in specified order. 0 inserts a blank page.")
+            ),
+            flag=wx.TOP | wx.LEFT | wx.RIGHT,
             border=self.FromDIP(utils.BORDER * 2),
         )
 
