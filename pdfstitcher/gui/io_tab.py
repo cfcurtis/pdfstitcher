@@ -93,7 +93,12 @@ class IOTab(scrolled.ScrolledPanel):
         )
         vert_sizer.Add(
             wx.StaticText(
-                self, label=_("Pages assemble in specified order. 0 inserts a blank page.")
+                self,
+                label=_(
+                    "Pages assemble in specified order. 0 inserts a blank page."
+                    + "\n"
+                    + _("Use - for ranges. Example: 1-3, 0, 4, 0, 5-10.")
+                ),
             ),
             flag=wx.TOP | wx.LEFT | wx.RIGHT,
             border=self.FromDIP(utils.BORDER * 2),
