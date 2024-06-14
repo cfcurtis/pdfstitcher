@@ -101,6 +101,7 @@ jobs:
           onefile: true
           include-data-dir: |
             resources/locale=resources/locale
+          include-data-files: resources/stitcher-icon.ico=resources/stitcher-icon.ico
           include-package-data: pdf_mangler
           output-file: pdfstitcher.exe
           windows-console-mode: disable
