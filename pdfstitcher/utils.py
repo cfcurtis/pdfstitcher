@@ -164,7 +164,7 @@ def resource_path(relative_path: str) -> Path:
     else:
         # Nuitka places resources adjacent to the executable
         base_path = Path(__file__).parent.absolute() / "resources"
-    
+
     # If we're running from source, the resources are in the parent directory
     if not base_path.exists():
         base_path = Path(__file__).parent.parent.absolute() / "resources"
@@ -238,10 +238,18 @@ def txt_to_float(txt: str) -> float:
     if txt is None or not txt.strip():
         return 0
 
+    txt = txt.replace(",", ".")
+    if any([c not in "0123456789.+-*/" for c in txt]):
+        print(_("Invalid input") + " " + txt + " , " + _("only numeric values allowed"))
+        return None
+
     try:
-        txtnum = float(txt.replace(",", "."))
-    except ValueError:
-        print(_("Invalid input") + txt + " , " + _("only numeric values allowed"))
+        txtnum = eval(txt)
+    except ZeroDivisionError:
+        print(_("Division by zero is not allowed"))
+        return None
+    except Exception as e:
+        print(_("Invalid input") + " " + txt + " , " + _("only numeric values allowed"))
         return None
 
     return txtnum

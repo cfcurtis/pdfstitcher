@@ -204,7 +204,7 @@ class LayersTab(scrolled.ScrolledPanel):
         apply_sizer.Add(newline, flag=wx.TOP, border=self.FromDIP(utils.BORDER))
         self.apply_reset_pane.SetSizer(apply_sizer)
         line_prop_sizer.Add(
-            self.apply_reset_pane, flag=wx.TOP, border=self.FromDIP(utils.BORDER * 2)
+            self.apply_reset_pane, flag=wx.TOP | wx.EXPAND, border=self.FromDIP(utils.BORDER * 2)
         )
 
         # Final assembly
