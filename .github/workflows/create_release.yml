@@ -60,14 +60,11 @@ jobs:
           libtiff-dev \
           libwebkit2gtk-4.0-dev \
           libxtst-dev
-      
-      - name: Copy resources directory
-        # PyPi needs to have resources in the same directory as the package
-        run: cp -r resources pdfstitcher/resources
   
       - name: Compile translation files and build distribution
         run: |
           python3 build/update_loc.py --compile
+          cp -r resources pdfstitcher/resources
           pip3 install build
           python3 -m build
       
