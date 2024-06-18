@@ -162,21 +162,28 @@ def resource_path(relative_path: str) -> Path:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = Path(sys._MEIPASS) / "resources"
     else:
-        # Nuitka places resources adjacent to the executable
+        # Nuitka and PyPi place resources adjacent to the executable
         base_path = Path(__file__).parent.absolute() / "resources"
 
     # If we're running from source, the resources are in the parent directory
     if not base_path.exists():
         base_path = Path(__file__).parent.parent.absolute() / "resources"
 
-    return str(base_path / relative_path)
+    return base_path / relative_path
 
 
 def get_valid_langs() -> list:
     """
     Get a list of valid languages for the UI.
     """
-    return ["en"] + [f.name for f in os.scandir(resource_path("locale")) if f.is_dir()]
+    valid = ["en"]
+    try:
+        valid += [f.name for f in os.scandir(resource_path("locale")) if f.is_dir()]
+    except FileNotFoundError:
+        # Something weird with resources, but don't crash
+        pass
+
+    return valid
 
 
 def setup_locale(lang: str = None) -> None:

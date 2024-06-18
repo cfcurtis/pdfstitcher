@@ -1,3 +1,3 @@
-recursive-include resources *.ico
-recursive-include resources *.mo
-recursive-include resources *.po
+recursive-include pdfstitcher/resources *.ico
+recursive-include pdfstitcher/resources *.mo
+recursive-include pdfstitcher/resources *.po
