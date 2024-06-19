@@ -23,15 +23,15 @@
   </description>
   <screenshots>
   	<screenshot type="default">
-    <image type="source">https://github.com/cfcurtis/pdfstitcher/blob/2ced66198a65d5a4ff41c4060b87dec97b71ce11/screenshots/options-tab.png</image>
+    <image type="source">https://raw.githubusercontent.com/cfcurtis/pdfstitcher/main/screenshots/options-tab.png</image>
     <caption>Options tab</caption>
     </screenshot>
     <screenshot>
-    <image type="source">https://github.com/cfcurtis/pdfstitcher/blob/2ced66198a65d5a4ff41c4060b87dec97b71ce11/screenshots/tile-tab.png</image>
+    <image type="source">https://raw.githubusercontent.com/cfcurtis/pdfstitcher/main/screenshots/tile-tab.png</image>
     <caption>Tile pages tab</caption>
     </screenshot>
     <screenshot>
-    <image type="source">https://github.com/cfcurtis/pdfstitcher/blob/2ced66198a65d5a4ff41c4060b87dec97b71ce11/screenshots/layers-tab.png</image>
+    <image type="source">https://raw.githubusercontent.com/cfcurtis/pdfstitcher/main/screenshots/layers-tab.png</image>
     <caption>Layers tab</caption>
     </screenshot>
   </screenshots>
