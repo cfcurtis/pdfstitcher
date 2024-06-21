@@ -6,9 +6,9 @@
   <project_license>MPL-2.0</project_license>
   <developer_name>Charlotte Curtis</developer_name>
   <name>PDF Stitcher</name>
-  <summary>PDF Stitcher is a utility to stitch together and modify line properties of PDF sewing patterns</summary>
+  <summary>Modify PDF sewing patterns</summary>
   <description>
-    <p>PDFStitcher was developed to help sewists convert print-at-home PDF sewing patterns into a single large file suitable for use with a projector. Just like printing and taping together a paper pattern, PDFStitcher takes the specified page range, amount to trim from each page, and number of rows or columns and assembles the pages together to form a complete pattern.</p>
+    <p>PDF Stitcher was developed to help sewists convert print-at-home PDF sewing patterns into a single large file suitable for use with a projector. Just like printing and taping together a paper pattern, PDF Stitcher takes the specified page range, amount to trim from each page, and number of rows or columns and assembles the pages together to form a complete pattern.</p>
     <p>Features</p>
     <ul>
       <li>Stitch together pages in any order with specified number of rows/columns</li>
