@@ -92,7 +92,7 @@ class LayerFilter(ProcessingBase):
             self.p["keep_ocs"] = utils.get_layer_names(self.in_doc)
             return
 
-        if self.p["keep_ocs"] == "no_ocgs":
+        if self.p["keep_ocs"] == "no_ocgs" or "/OCProperties" not in self.out_doc.Root.keys():
             # no OCGs in document, and hopefully nobody names a layer this
             return
 

@@ -268,14 +268,20 @@ def main():
         "delete_ocgs": not args.hide_layers,
         "line_props": None,  # Haven't figured out how to specify in CLI yet
     }
-    if any(layer_params.values()):
+
+    if layer_params["keep_ocs"] or not layer_params["keep_non_oc"]:
         main_process.toggle("LayerFilter", True)
         main_process.set_params("LayerFilter", layer_params)
 
         # make sure the layers actually exist
-        for layer in layer_params["keep_ocs"]:
+        to_remove = []
+        for index, layer in enumerate(layer_params["keep_ocs"]):
             if layer not in main_process.doc_info["layers"]:
                 print(_("Layer") + " " + layer + " " + _("not found in the document. Ignoring."))
+                to_remove.append(index)
+
+        for index in to_remove:
+            del layer_params["keep_ocs"][index]
 
         if args.verbose:
             pretty_print(layer_params, _("Layer Options"))
