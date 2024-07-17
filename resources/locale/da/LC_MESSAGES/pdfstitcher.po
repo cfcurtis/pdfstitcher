@@ -8,16 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-17 15:47-0600\n"
+"POT-Creation-Date: 2024-06-06 15:23-0600\n"
 "PO-Revision-Date: 2024-07-16 21:09+0000\n"
 "Last-Translator: Anne Lindholt <anne@annelo.dk>\n"
+"Language-Team: Danish <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/da/>\n"
 "Language: da\n"
-"Language-Team: Danish <https://hosted.weblate.org/projects/pdfstitcher"
-"/user-interface/da/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.7-dev\n"
 "Generated-By: Babel 2.15.0\n"
 
 #: pdfstitcher/bug_info.py:28
@@ -101,8 +102,8 @@ msgid ""
 "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim 0.5 from left"
 " and top)"
 msgstr ""
-"skrevet som venstre, højre, top, bund (f.eks. ville 0,5, 0, 0,5, 0 skære "
-"0,5 af venstre side og toppen)"
+"skrevet som venstre, højre, top, bund (f.eks. ville 0,5, 0, 0,5, 0 skære 0,5 "
+"af venstre side og toppen)"
 
 #: pdfstitcher/cli/app.py:70
 msgid "Rotate pages"
@@ -115,8 +116,8 @@ msgstr "Fyld kolonner før rækker (standardindstilling er rækker først)"
 #: pdfstitcher/cli/app.py:82
 msgid "Fill columns right to left (default is left to right)"
 msgstr ""
-"Fyld kolonner fra højre mod venstre (standardindstilling er fra venstre "
-"mod højre)"
+"Fyld kolonner fra højre mod venstre (standardindstilling er fra venstre mod "
+"højre)"
 
 #: pdfstitcher/cli/app.py:88
 msgid "Fill rows bottom to top (default is top to bottom)"
@@ -144,11 +145,11 @@ msgstr "Brug mediabox frem for trimbox"
 msgid "Actually trim the pages (default is overlap)"
 msgstr "Skære/trimme kanten af siderne af (standardindstilling er overlap)"
 
-#: pdfstitcher/cli/app.py:126 pdfstitcher/cli/app.py:283
+#: pdfstitcher/cli/app.py:125 pdfstitcher/cli/app.py:281
 msgid "Layer Options"
 msgstr "Lag-indstillinger"
 
-#: pdfstitcher/cli/app.py:127
+#: pdfstitcher/cli/app.py:126
 msgid "Options for handling layers in the document."
 msgstr "Indstillinger for at håndtere lag i dokumentet."
 
@@ -161,7 +162,7 @@ msgstr ""
 "Navne på lag, som skal beholdes, adskilt af semikoloner med apostroffer "
 "omkring (f.eks. 'Layer1;Layer2')"
 
-#: pdfstitcher/cli/app.py:140
+#: pdfstitcher/cli/app.py:138
 msgid "Keep non-optional (background) content."
 msgstr "Inkludér grundlæggende baggrundsinformationer"
 
@@ -170,8 +171,8 @@ msgid ""
 "Hide layers. If set, layer visibility is set to Off instead of removing "
 "content."
 msgstr ""
-"Skjul lag. Hvis valgt, sættes synlighed på lagene til Off i stedet for at"
-" fjerne lagene."
+"Skjul lag. Hvis valgt, sættes synlighed på lagene til Off i stedet for at "
+"fjerne lagene."
 
 #: pdfstitcher/cli/app.py:155
 msgid "PDF Stitcher"
@@ -189,14 +190,14 @@ msgstr "Input-filnavn (PDF)"
 msgid "Output filename (pdf)"
 msgstr "Output-filnavn (PDF)"
 
-#: pdfstitcher/cli/app.py:174
+#: pdfstitcher/cli/app.py:172
 msgid ""
 "Pages to Process. May be range or list (e.g. 1-5 or 1,3,5-7, etc). "
 "Default: entire document. Use 0 values to add blank pages."
 msgstr ""
 "Sider der skal samles. Kan være rækkefølge eller liste (f.eks. 1-5 eller "
-"1,3,5-7, osv). Hvis feltet er tomt, bruges hele dokumentet. Brug 0 for at"
-" tilføje blanke sider."
+"1,3,5-7, osv). Hvis feltet er tomt, bruges hele dokumentet. Brug 0 for at "
+"tilføje blanke sider."
 
 #: pdfstitcher/cli/app.py:183
 msgid "Print verbose output"
@@ -214,11 +215,11 @@ msgstr "Afskæring/trim-værdi er ugyldig, ignorerer"
 msgid "No output file specified, showing input document info and exiting."
 msgstr "Ingen output-fil valgt. Viser info om input-dokument og lukker."
 
-#: pdfstitcher/cli/app.py:280
+#: pdfstitcher/cli/app.py:278
 msgid "Layer"
 msgstr "Lag"
 
-#: pdfstitcher/cli/app.py:280
+#: pdfstitcher/cli/app.py:278
 msgid "not found in the document. Ignoring."
 msgstr "ikke fundet i dokumentet. Ignorerer."
 
@@ -279,11 +280,10 @@ msgid ""
 "document - it will be saved to your Desktop and can be attached to the "
 "issue."
 msgstr ""
-"Beskriv trinene for at genskabe problemet nedenfor. Følg knapperne for at"
-" indberette via GitHub (foretrukket, men kræver login), eller send "
-"rapporten via e-mail. Inkluder eventuelt en ødelagt version af "
-"inputdokumentet - det vil blive gemt på dit Skrivebord og kan vedhæftes "
-"problemet."
+"Beskriv trinene for at genskabe problemet nedenfor. Følg knapperne for at "
+"indberette via GitHub (foretrukket, men kræver login), eller send rapporten "
+"via e-mail. Inkluder eventuelt en ødelagt version af inputdokumentet - det "
+"vil blive gemt på dit Skrivebord og kan vedhæftes problemet."
 
 #. translation_note: A "mangled" pdf is a version of the input that has been
 #. modified to
@@ -326,6 +326,14 @@ msgstr "\"Ødelægger\" PDF med {} sider"
 msgid "This may take some time, please wait"
 msgstr "Dette kan vare lidt tid, vent venligst"
 
+#: pdfstitcher/gui/dialogs.py:257
+msgid "Mangling PDF cancelled by user."
+msgstr "\"Ødelæggelse\" af PDF afbrudt af bruger."
+
+#: pdfstitcher/gui/dialogs.py:263
+msgid "Mangled PDF saved to {}."
+msgstr "Ødelagt PDF gemt i {}."
+
 #: pdfstitcher/gui/dialogs.py:265
 msgid "Mangled PDF saved to {}."
 msgstr "Ødelagt PDF gemt i {}."
@@ -358,7 +366,7 @@ msgstr "Tjek for opdateringer ved opstart"
 msgid "Save current margin and unit settings"
 msgstr "Gem nuværende margin- og enhedsindstillinger (cm eller in)"
 
-#: pdfstitcher/gui/dialogs.py:338
+#: pdfstitcher/gui/dialogs.py:336
 msgid "Save current line properties"
 msgstr "Gem nuværende linjeegenskaber"
 
@@ -378,13 +386,17 @@ msgstr "Gem indstillinger"
 msgid "Choose a directory"
 msgstr "Vælg en folder"
 
-#: pdfstitcher/gui/dialogs.py:451
+#: pdfstitcher/gui/dialogs.py:449
 msgid "Preferences saved to {}"
 msgstr "Indstillinger gemt på {}"
 
-#: pdfstitcher/gui/dialogs.py:453
+#: pdfstitcher/gui/dialogs.py:451
 msgid "Please restart to switch to {}."
 msgstr "Genstart venligst for at skifte til {}."
+
+#: pdfstitcher/gui/dialogs.py:453
+msgid "Preferences saved"
+msgstr "Indstillinger gemt"
 
 #: pdfstitcher/gui/dialogs.py:455
 msgid "Preferences saved"
@@ -596,7 +608,7 @@ msgstr "kan ikke skrive til"
 msgid "Make sure  isn't open in another program"
 msgstr "Kontrollér at  ikke er åben i et andet program"
 
-#: pdfstitcher/gui/main_frame.py:246
+#: pdfstitcher/gui/main_frame.py:233
 msgid "File"
 msgstr "Fil"
 
@@ -632,11 +644,12 @@ msgstr ""
 msgid "Contributors"
 msgstr "Bidragydere"
 
-#: pdfstitcher/gui/main_frame.py:365
+#: pdfstitcher/gui/main_frame.py:350
 msgid "Can't overwrite input file, please select a different file for output"
-msgstr "Kan ikke overskrive input-PDF, vælg venligst en anden fil til output-PDF"
+msgstr ""
+"Kan ikke overskrive input-PDF, vælg venligst en anden fil til output-PDF"
 
-#: pdfstitcher/gui/main_frame.py:374
+#: pdfstitcher/gui/main_frame.py:359
 msgid "File will be written to "
 msgstr "Filen vil blive skrevet til "
 
@@ -651,6 +664,10 @@ msgstr "Kodeord"
 #: pdfstitcher/gui/main_frame.py:453
 msgid "PDF file is locked"
 msgstr "PDF'en er låst"
+
+#: pdfstitcher/gui/main_frame.py:455
+msgid "PDF will not open as you canceled the operation."
+msgstr "PDF'en åbnes ikke, fordi du afbrød."
 
 #: pdfstitcher/gui/main_frame.py:460
 msgid "PDF will not open as you canceled the operation."
@@ -668,7 +685,7 @@ msgstr "Fejlbesked"
 msgid "Opening"
 msgstr "Åbner"
 
-#: pdfstitcher/gui/main_frame.py:472
+#: pdfstitcher/gui/main_frame.py:467
 msgid "PDF file loaded without errors."
 msgstr "PDF'en er indlæst uden fejl."
 
