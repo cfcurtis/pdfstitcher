@@ -414,7 +414,7 @@ class LayerFilter(ProcessingBase):
             try:
                 page_stream = pikepdf.unparse_content_stream(commands)
             except Exception as e:
-                print(_("Failed writing stream to page with error type {}").format(type(e)))
+                print("Failed writing stream to page with error type {}").format(type(e))
                 pass
 
             # get the dictionary of xobjects to process as well
@@ -445,7 +445,7 @@ class LayerFilter(ProcessingBase):
                 # Probably a form xobject
                 content.write(page_stream)
         except Exception as e:
-            print(_("Failed writing stream to page with error type {}").format(type(e)))
+            print("Failed writing stream to page with error type {}").format(type(e))
             pass
 
     def run(self, progress_win=None) -> bool:
