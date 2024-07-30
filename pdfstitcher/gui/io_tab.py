@@ -95,7 +95,7 @@ class IOTab(scrolled.ScrolledPanel):
             wx.StaticText(
                 self,
                 label=_(
-                    "Pages assemble in specified order. 0 inserts a blank page."
+                    _("Pages assemble in specified order. 0 inserts a blank page.")
                     + "\n"
                     + _("Use - for ranges. Example: 1-3, 0, 4, 0, 5-10.")
                 ),
