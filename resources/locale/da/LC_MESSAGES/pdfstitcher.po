@@ -9,15 +9,16 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-07-17 16:14-0600\n"
-"PO-Revision-Date: 2024-07-16 21:09+0000\n"
+"PO-Revision-Date: 2024-07-30 22:05+0000\n"
 "Last-Translator: Anne Lindholt <anne@annelo.dk>\n"
+"Language-Team: Danish <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/da/>\n"
 "Language: da\n"
-"Language-Team: Danish <https://hosted.weblate.org/projects/pdfstitcher"
-"/user-interface/da/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.7-dev\n"
 "Generated-By: Babel 2.15.0\n"
 
 #: pdfstitcher/bug_info.py:28
@@ -50,7 +51,7 @@ msgstr "kun talværdier er tilladt"
 
 #: pdfstitcher/utils.py:256
 msgid "Division by zero is not allowed"
-msgstr ""
+msgstr "Man kan ikke dividere med 0."
 
 #: pdfstitcher/utils.py:279
 msgid "Please specify a page range"
@@ -86,7 +87,7 @@ msgstr "Antal kolonner i gitteret."
 
 #: pdfstitcher/cli/app.py:47
 msgid "Units for margin and trim values."
-msgstr "Enhed til margin og trim-værdier"
+msgstr "Enhed (cm eller in) til margin og trim-værdier"
 
 #: pdfstitcher/cli/app.py:53
 msgid "Margin size in selected units."
@@ -94,15 +95,15 @@ msgstr "Marginstørrelse/-bredde i valgte enhed (cm eller in)."
 
 #: pdfstitcher/cli/app.py:60
 msgid "Amount to trim from edges in selected units"
-msgstr "Hvor meget der skæres/trimmes fra kanterne i valgte enhed"
+msgstr "Hvor meget der skæres/trimmes fra kanterne i valgte enhed (cm eller in)"
 
 #: pdfstitcher/cli/app.py:62
 msgid ""
 "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim 0.5 from left"
 " and top)"
 msgstr ""
-"skrevet som venstre, højre, top, bund (f.eks. ville 0,5, 0, 0,5, 0 skære "
-"0,5 af venstre side og toppen)"
+"skrevet som venstre, højre, top, bund (f.eks. ville 0,5,0,0,5, 0 skære 0,5 "
+"af venstre side og toppen)"
 
 #: pdfstitcher/cli/app.py:70
 msgid "Rotate pages"
@@ -124,7 +125,7 @@ msgstr "Fyld rækker fra bund til top (standardindstilling er fra top til bund)"
 
 #: pdfstitcher/cli/app.py:93
 msgid "Height of output document in selected units."
-msgstr "Høde på output-dokument i valgte enhed."
+msgstr "Højde på output-dokument i valgte enhed (cm eller in)."
 
 #. translation_note: This message only appears in the CLI when the user
 #. specifies a target size for the output document.
@@ -134,7 +135,7 @@ msgstr "Advarsel: Resulterer i skalering af sider"
 
 #: pdfstitcher/cli/app.py:102
 msgid "Width of output document in selected units."
-msgstr "Bredde af output-PDF i valgte enhed."
+msgstr "Bredde af output-PDF i valgte enhed (cm eller in)."
 
 #: pdfstitcher/cli/app.py:110
 msgid "Override trimbox with mediabox"
@@ -291,7 +292,7 @@ msgstr ""
 #. debugging purposes.
 #: pdfstitcher/gui/dialogs.py:171
 msgid "Create mangled PDF (Beta)"
-msgstr "Lav ødelagt PDF (Beta)"
+msgstr "Lav \"ødelagt\" PDF (Beta)"
 
 #: pdfstitcher/gui/dialogs.py:182
 msgid "Report Via GitHub"
@@ -316,7 +317,7 @@ msgstr "Ingen PDF indlæst"
 
 #: pdfstitcher/gui/dialogs.py:242
 msgid "Choose a location to save the mangled PDF"
-msgstr "Vælg et sted at gemme den ødelagte PDF."
+msgstr "Vælg et sted at gemme den \"ødelagte\" PDF."
 
 #: pdfstitcher/gui/dialogs.py:252
 msgid "Mangling PDF with {} pages"
@@ -328,7 +329,7 @@ msgstr "Dette kan vare lidt tid, vent venligst"
 
 #: pdfstitcher/gui/dialogs.py:265
 msgid "Mangled PDF saved to {}."
-msgstr "Ødelagt PDF gemt i {}."
+msgstr "\"Ødelagt\" PDF gemt i {}."
 
 #: pdfstitcher/gui/dialogs.py:267
 msgid "Please attach to GitHub issue or email."
@@ -407,13 +408,12 @@ msgid "Page Range"
 msgstr "Sideområde / valgte sider"
 
 #: pdfstitcher/gui/io_tab.py:97
-#, fuzzy
 msgid "Pages assemble in specified order. 0 inserts a blank page.\n"
-msgstr "Siderne samles i angivet rækkefølge. 0 sætter en blank side ind."
+msgstr "Siderne samles i angivet rækkefølge. 0 sætter en blank side ind.\n"
 
 #: pdfstitcher/gui/io_tab.py:100
 msgid "Use - for ranges. Example: 1-3, 0, 4, 0, 5-10."
-msgstr ""
+msgstr "Brug ved rækkefølge. Eksempel: 1-3, 0, 4, 0, 5-10."
 
 #: pdfstitcher/gui/io_tab.py:110 pdfstitcher/gui/tile_tab.py:178
 msgid "Margin to add to final output"
@@ -548,9 +548,8 @@ msgid "No layers found in input document."
 msgstr "Ingen lag fundet i input-PDF."
 
 #: pdfstitcher/gui/layers_tab.py:330
-#, fuzzy
 msgid "Selected properties will apply to all lines in the document."
-msgstr "Vælg lag, der skal gemmes i output-PDF."
+msgstr "Valgte egenskaber vil gælde for alle linjer i dokumentet."
 
 #: pdfstitcher/gui/layers_tab.py:347
 msgid "Select layers to include in output document."
@@ -860,7 +859,7 @@ msgstr "Fejl: Kan ikke samle sider med {} rækker og {} kolonner"
 
 #: pdfstitcher/processing/pagetiler.py:383
 msgid "filling columns first, the last column would be empty."
-msgstr "Ved at fylde kolonner først bliver den sidste kolonne tom."
+msgstr "ved at fylde kolonner først bliver den sidste kolonne tom."
 
 #: pdfstitcher/processing/pagetiler.py:385
 msgid "filling rows first, the last row would be empty."
@@ -963,4 +962,3 @@ msgstr "Side {} er uden for rækkefølge. Fjerner fra sidelisten."
 
 #~ msgid "Unknown processing unit: {}"
 #~ msgstr "Ukendt enhed: {}"
-
