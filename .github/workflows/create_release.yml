@@ -101,12 +101,12 @@ jobs:
           script-name: pdfstitcher/gui/app.py
           onefile: true
           include-data-dir: |
-            resources/locale=resources/locale
-          include-data-files: resources/stitcher-icon.ico=resources/stitcher-icon.ico
+            resources\\locale=resources\\locale
+          include-data-files: resources\\stitcher-icon.ico=resources\\stitcher-icon.ico
           include-package-data: pdf_mangler
           output-file: pdfstitcher.exe
           windows-console-mode: disable
-          windows-icon-from-ico: resources/stitcher-icon.ico
+          windows-icon-from-ico: resources\\stitcher-icon.ico
       
       - name: GH Release
         uses: softprops/action-gh-release@v2
