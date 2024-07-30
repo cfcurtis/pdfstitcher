@@ -63,6 +63,7 @@ jobs:
   
       - name: Compile translation files and build distribution
         run: |
+          pip3 install tomli
           python3 build/update_loc.py --compile
           cp -r resources pdfstitcher/resources
           pip3 install build
@@ -92,6 +93,7 @@ jobs:
       - name: Install dependencies
         run: | 
           pip install .[gui]
+          pip install tomli
           python build/update_loc.py --compile
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
 
@@ -137,6 +139,7 @@ jobs:
         run: | 
           brew install qpdf
           pip install ".[gui]"
+          pip install tomli
           python build/update_loc.py --compile
           echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
 
