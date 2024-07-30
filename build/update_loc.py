@@ -6,11 +6,17 @@ from subprocess import run
 from os import listdir
 from pathlib import Path
 
-import importlib.metadata
+# can't use importlib in github build pipeline, so read the toml directly
+import tomli
 
-pdfstitcher_version = importlib.metadata.version("pdfstitcher")
+root_dir = Path(__file__).parent.parent
 
-locale_path = Path(__file__).parent.parent / "resources" / "locale"
+with open(root_dir / "pyproject.toml", mode="rb") as f:
+    toml_file = tomli.load(f)
+
+pdfstitcher_version = toml_file["project"]["version"]
+
+locale_path = root_dir / "resources" / "locale"
 
 
 def parse_args():
