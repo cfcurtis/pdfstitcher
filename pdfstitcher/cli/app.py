@@ -90,8 +90,9 @@ def add_tile_args(parser: argparse.ArgumentParser) -> None:
     t_parser.add_argument(
         "--target-height",
         type=float,
-        help=_("Height of output document in selected units.")
-        + " "
+        help=_("Height of output document in selected units.") + " "
+        # translation_note: This message only appears in the CLI when the user
+        # specifies a target size for the output document.
         + _("Caution: results in scaling of pages"),
         default=None,
     )
@@ -129,6 +130,7 @@ def add_layer_args(parser: argparse.ArgumentParser) -> None:
         "-k",
         "--keep",
         type=str,
+        # translation_note: These are CLI arguments, punctuation must be preserved
         help=_("List of layer names to keep, separated by semicolons (e.g. 'Layer1;Layer2')"),
         default=[],
     )

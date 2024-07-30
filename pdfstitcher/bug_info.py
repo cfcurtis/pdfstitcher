@@ -59,7 +59,7 @@ def mangle_pdf(pdf: pikepdf.Pdf, save_path: Path, progress_win: None) -> Path:
         raise InterruptedError
 
     except Exception as e:
-        print(_("Error mangling PDF: {}").format(e))
+        print("Error mangling PDF: {}").format(e)
         return None
 
 

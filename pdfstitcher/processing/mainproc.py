@@ -55,7 +55,7 @@ class MainProcess(ProcessingBase):
         Switches the active state of the given processing unit.
         """
         if name not in self.pipeline:
-            print(_("Unknown processing unit: {}".format(name)))
+            print("Unknown processing unit: {}".format(name))
             return
 
         self.active[name] = active
@@ -73,7 +73,7 @@ class MainProcess(ProcessingBase):
         Returns true if successfully added or updated.
         """
         if name not in self.pipeline:
-            print(_("Unknown processing unit: {}".format(name)))
+            print("Unknown processing unit: {}".format(name))
             return False
 
         self.pipeline[name].params = params

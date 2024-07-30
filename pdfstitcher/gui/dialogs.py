@@ -166,6 +166,8 @@ class BugReporter(wx.Dialog):
         self.bug_report.SetInsertionPoint(0)
 
         # button to create mangled pdf
+        # translation_note: A "mangled" pdf is a version of the input that has been modified to
+        # make the content meaningless, but still have the same structure for debugging purposes.
         self.include_pdf = wx.Button(self, label=_("Create mangled PDF (Beta)"))
         self.include_pdf.Bind(wx.EVT_BUTTON, self.create_mangled_pdf)
         vert_sizer.Add(
@@ -254,7 +256,7 @@ class BugReporter(wx.Dialog):
         try:
             pdf_path = bug_info.mangle_pdf(pdf, save_path, progress_win)
         except InterruptedError:
-            print(_("Mangling PDF cancelled by user."))
+            print("Mangling PDF cancelled by user.")
             progress_win.Update(progress_win.GetRange())
             return
 

@@ -6,6 +6,9 @@ from subprocess import run
 from os import listdir
 from pathlib import Path
 
+import importlib.metadata
+
+pdfstitcher_version = importlib.metadata.version("pdfstitcher")
 
 locale_path = Path(__file__).parent.parent / "resources" / "locale"
 
@@ -38,8 +41,15 @@ def parse_args():
 def extract():
     print("**extract**")
     run(
-        f'pybabel extract -F babel.cfg -o {locale_path / "pdfstitcher.pot" } --add-comments="translation_note" '
-        + '--copyright-holder="Charlotte Curtis" --project=pdfstitcher .',
+        "pybabel extract "
+        f'-F {locale_path / "babel.cfg"} '
+        f'-o {locale_path / "pdfstitcher.pot" } '
+        "--project=pdfstitcher . "
+        '--add-comments="translation_note" '
+        "-w 100 "
+        '--copyright-holder="Charlotte Curtis" '
+        "--msgid-bugs-address=ccurtis@mtroyal.ca "
+        f"--version={pdfstitcher_version} ",
         shell=True,
     )
 
@@ -50,7 +60,9 @@ def update():
     print(locales)
 
     for lang in locales:
-        invoke_args = f' -D pdfstitcher -d {locale_path} -i {locale_path / "pdfstitcher.pot"} -l {lang}'
+        invoke_args = (
+            f' -D pdfstitcher -d {locale_path} -i {locale_path / "pdfstitcher.pot"} -l {lang}'
+        )
         if (locale_path / lang / "LC_MESSAGES" / "pdfstitcher.po").exists():
             cmd = "pybabel update" + invoke_args
         else:
