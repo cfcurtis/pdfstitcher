@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-17 16:14-0600\n"
+"POT-Creation-Date: 2024-08-12 08:24-0600\n"
 "PO-Revision-Date: 2024-05-08 04:07+0000\n"
 "Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
 "Language: hi\n"
@@ -18,7 +18,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.15.0\n"
+"Generated-By: Babel 2.16.0\n"
 
 #: pdfstitcher/bug_info.py:28
 msgid "Error getting system info: {}"
@@ -27,42 +27,42 @@ msgstr "सिस्टम जानकारी प्राप्त करन
 #. translation_note: pt = "points", in = "inches", cm = "centimeters"
 #: pdfstitcher/cli/app.py:45 pdfstitcher/cli/app.py:46
 #: pdfstitcher/cli/app.py:230 pdfstitcher/gui/layers_tab.py:140
-#: pdfstitcher/utils.py:57
+#: pdfstitcher/utils.py:58
 msgid "in"
 msgstr "in"
 
 #: pdfstitcher/cli/app.py:45 pdfstitcher/gui/layers_tab.py:140
-#: pdfstitcher/utils.py:59
+#: pdfstitcher/utils.py:60
 msgid "cm"
 msgstr "cm"
 
-#: pdfstitcher/gui/layers_tab.py:140 pdfstitcher/utils.py:61
+#: pdfstitcher/gui/layers_tab.py:140 pdfstitcher/utils.py:62
 msgid "pt"
 msgstr ""
 
-#: pdfstitcher/utils.py:250 pdfstitcher/utils.py:259
+#: pdfstitcher/utils.py:251 pdfstitcher/utils.py:260
 msgid "Invalid input"
 msgstr "अमान्य इनपुट"
 
-#: pdfstitcher/utils.py:250 pdfstitcher/utils.py:259
+#: pdfstitcher/utils.py:251 pdfstitcher/utils.py:260
 msgid "only numeric values allowed"
 msgstr "केवल संख्यात्मक मानों की अनुमति है"
 
-#: pdfstitcher/utils.py:256
+#: pdfstitcher/utils.py:257
 msgid "Division by zero is not allowed"
 msgstr ""
 
-#: pdfstitcher/utils.py:279
+#: pdfstitcher/utils.py:280
 msgid "Please specify a page range"
 msgstr "कृपया एक पेज श्रेणी निर्दिष्ट करें"
 
-#: pdfstitcher/utils.py:358
-msgid "Warning! Output is larger than {} {}, may not open correctly."
-msgstr "चेतावनी! आउटपुट {} {} से बड़ा है, हो सकता है कि ठीक से न खुले।"
-
-#: pdfstitcher/utils.py:366
+#: pdfstitcher/utils.py:357
 msgid "Output size:"
 msgstr "आउटपुट आकार:"
+
+#: pdfstitcher/utils.py:366
+msgid "Warning! Output is larger than {} {}, may not open correctly."
+msgstr "चेतावनी! आउटपुट {} {} से बड़ा है, हो सकता है कि ठीक से न खुले।"
 
 #: pdfstitcher/cli/app.py:19 pdfstitcher/cli/app.py:295
 #, fuzzy
@@ -230,7 +230,7 @@ msgstr "इनपुट दस्तावेज़ में कोई पर�
 msgid "Options"
 msgstr "विकल्प"
 
-#: pdfstitcher/cli/app.py:301 pdfstitcher/gui/main_frame.py:221
+#: pdfstitcher/cli/app.py:301 pdfstitcher/gui/main_frame.py:222
 msgid "Successfully written to"
 msgstr "यहाँ सफलतापूर्वक लिखा गया"
 
@@ -270,7 +270,7 @@ msgstr "अभी डाउनलोड करें"
 msgid "Error checking for updates"
 msgstr "अपडेट की जाँच करने में त्रुटि"
 
-#: pdfstitcher/gui/dialogs.py:106 pdfstitcher/gui/main_frame.py:272
+#: pdfstitcher/gui/dialogs.py:106 pdfstitcher/gui/main_frame.py:273
 msgid "Report a bug"
 msgstr "किसी बग की रिपोर्ट करें"
 
@@ -313,7 +313,7 @@ msgstr "क्लिपबोर्ड पर कॉपी नहीं कि�
 msgid "Error"
 msgstr "त्रुटि"
 
-#: pdfstitcher/gui/dialogs.py:236 pdfstitcher/gui/main_frame.py:179
+#: pdfstitcher/gui/dialogs.py:236 pdfstitcher/gui/main_frame.py:180
 msgid "No PDF loaded"
 msgstr ""
 
@@ -395,11 +395,11 @@ msgstr "कृपया {} पर स्विच करने के लिए 
 msgid "Preferences saved"
 msgstr "प्राथमिकताएँ सहेजी गईं"
 
-#: pdfstitcher/gui/io_tab.py:30 pdfstitcher/gui/main_frame.py:396
+#: pdfstitcher/gui/io_tab.py:30 pdfstitcher/gui/main_frame.py:397
 msgid "Select input PDF"
 msgstr "इनपुट PDF का चयन करें"
 
-#: pdfstitcher/gui/io_tab.py:48 pdfstitcher/gui/main_frame.py:342
+#: pdfstitcher/gui/io_tab.py:48 pdfstitcher/gui/main_frame.py:343
 msgid "Save output as"
 msgstr "आउटपुट को इस रूप में सहेजें"
 
@@ -411,9 +411,8 @@ msgstr "आउटपुट विकल्प"
 msgid "Page Range"
 msgstr "पेज रेंज"
 
-#: pdfstitcher/gui/io_tab.py:97
-#, fuzzy
-msgid "Pages assemble in specified order. 0 inserts a blank page.\n"
+#: pdfstitcher/gui/io_tab.py:98 pdfstitcher/gui/tile_tab.py:150
+msgid "Pages assemble in specified order. 0 inserts a blank page."
 msgstr "पन्ने निर्दिष्ट क्रम में इकट्ठे होते हैं। 0 एक रिक्त पेज सम्मिलित करता है।"
 
 #: pdfstitcher/gui/io_tab.py:100
@@ -577,114 +576,114 @@ msgstr "परतें"
 msgid "Generate PDF"
 msgstr "PDF जनरेट करें"
 
-#: pdfstitcher/gui/main_frame.py:209
+#: pdfstitcher/gui/main_frame.py:210
 msgid "Processing"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:210
+#: pdfstitcher/gui/main_frame.py:211
 msgid "Processing, please wait"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:218
+#: pdfstitcher/gui/main_frame.py:219
 msgid "Processing cancelled"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:224 pdfstitcher/gui/main_frame.py:229
+#: pdfstitcher/gui/main_frame.py:225 pdfstitcher/gui/main_frame.py:230
 msgid "Something went wrong"
 msgstr "कुछ गलत हो गया"
 
-#: pdfstitcher/gui/main_frame.py:224 pdfstitcher/gui/main_frame.py:377
+#: pdfstitcher/gui/main_frame.py:225 pdfstitcher/gui/main_frame.py:378
 msgid "unable to write to"
 msgstr "यहाँ लिखने में असमर्थ"
 
-#: pdfstitcher/gui/main_frame.py:227
+#: pdfstitcher/gui/main_frame.py:228
 msgid "Make sure  isn't open in another program"
 msgstr "सुनिश्चित करें   कि यह किसी अन्य प्रोग्राम में खुला नहीं है"
 
-#: pdfstitcher/gui/main_frame.py:246
+#: pdfstitcher/gui/main_frame.py:247
 msgid "File"
 msgstr "फाइल"
 
-#: pdfstitcher/gui/main_frame.py:251
+#: pdfstitcher/gui/main_frame.py:252
 msgid "Check for updates"
 msgstr "अपडेट के लिए जांचें"
 
-#: pdfstitcher/gui/main_frame.py:255
+#: pdfstitcher/gui/main_frame.py:256
 msgid "Settings"
 msgstr "सेटिंग्स"
 
-#: pdfstitcher/gui/main_frame.py:262
+#: pdfstitcher/gui/main_frame.py:263
 msgid "Documentation"
 msgstr "दस्तावेज़ीकरण"
 
-#: pdfstitcher/gui/main_frame.py:263
+#: pdfstitcher/gui/main_frame.py:264
 msgid "Open the documentation in a web browser"
 msgstr "वेब ब्राउज़र में दस्तावेज़ खोलें"
 
-#: pdfstitcher/gui/main_frame.py:273
+#: pdfstitcher/gui/main_frame.py:274
 msgid "Open the dialog to report a bug"
 msgstr "बग की रिपोर्ट करने के लिए संवाद खोलें"
 
-#: pdfstitcher/gui/main_frame.py:277
+#: pdfstitcher/gui/main_frame.py:278
 msgid "Help"
 msgstr "सहायता"
 
-#: pdfstitcher/gui/main_frame.py:321
+#: pdfstitcher/gui/main_frame.py:322
 msgid "The PDF Stitching app for sewists, by sewists."
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:327
+#: pdfstitcher/gui/main_frame.py:328
 msgid "Contributors"
 msgstr "योगदानकर्ता"
 
-#: pdfstitcher/gui/main_frame.py:365
+#: pdfstitcher/gui/main_frame.py:366
 msgid "Can't overwrite input file, please select a different file for output"
 msgstr ""
 "इनपुट फाइल को अधिलेखित नहीं किया जा सकता, कृपया आउटपुट के लिए एक अलग फाइल"
 " का चयन करें"
 
-#: pdfstitcher/gui/main_frame.py:374
+#: pdfstitcher/gui/main_frame.py:375
 msgid "File will be written to "
 msgstr "यहाँ पर फाइल लिखी जाएगी "
 
-#: pdfstitcher/gui/main_frame.py:450
+#: pdfstitcher/gui/main_frame.py:451
 msgid "PDF locked! Enter the correct password."
 msgstr "PDF लॉक हो गया! सही पासवर्ड दर्ज करें।"
 
-#: pdfstitcher/gui/main_frame.py:453
+#: pdfstitcher/gui/main_frame.py:454
 msgid "Password"
 msgstr "पासवर्ड"
 
-#: pdfstitcher/gui/main_frame.py:453
+#: pdfstitcher/gui/main_frame.py:454
 msgid "PDF file is locked"
 msgstr "PDF फाइल लॉक है"
 
-#: pdfstitcher/gui/main_frame.py:460
+#: pdfstitcher/gui/main_frame.py:461
 msgid "PDF will not open as you canceled the operation."
 msgstr "जैसे ही आपने ऑपरेशन रद्द किया, PDF नहीं खुलेगा।"
 
-#: pdfstitcher/gui/main_frame.py:465
+#: pdfstitcher/gui/main_frame.py:466
 msgid "Cannot open file"
 msgstr "फाइल खोलने में असमर्थ"
 
-#: pdfstitcher/gui/main_frame.py:466
+#: pdfstitcher/gui/main_frame.py:467
 msgid "Error message"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:469
+#: pdfstitcher/gui/main_frame.py:470
 msgid "Opening"
 msgstr "प्रारंभिक"
 
-#: pdfstitcher/gui/main_frame.py:472
+#: pdfstitcher/gui/main_frame.py:473
 msgid "PDF file loaded without errors."
 msgstr "PDF फाइल बिना किसी त्रुटि के लोड हुई।"
 
-#: pdfstitcher/gui/main_frame.py:477
+#: pdfstitcher/gui/main_frame.py:478
 #, fuzzy
 msgid "This PDF is encrypted with the following permissions:"
 msgstr "चेतावनी: यह PDF निम्नलिखित अनुमतियों के साथ एन्क्रिप्ट किया गया है:"
 
-#: pdfstitcher/gui/main_frame.py:481
+#: pdfstitcher/gui/main_frame.py:482
 msgid ""
 "Please be respectful of the author and only use this tool for personal "
 "use."
@@ -752,10 +751,6 @@ msgstr "मुडे"
 #: pdfstitcher/gui/tile_tab.py:127
 msgid "Page Rotation"
 msgstr "पेज रोटेशन"
-
-#: pdfstitcher/gui/tile_tab.py:150
-msgid "Pages assemble in specified order. 0 inserts a blank page."
-msgstr "पन्ने निर्दिष्ट क्रम में इकट्ठे होते हैं। 0 एक रिक्त पेज सम्मिलित करता है।"
 
 #: pdfstitcher/gui/tile_tab.py:171
 msgid "Optional Parameters"
@@ -848,7 +843,8 @@ msgid "No input document loaded"
 msgstr "इनपुट दस्तावेज़ लोड नहीं हुआ"
 
 #: pdfstitcher/processing/pagetiler.py:251
-msgid "Warning: The pages {} have a different size than the page before"
+#, fuzzy
+msgid "Warning: pages {} have a different size than the page before"
 msgstr "चेतावनी: पेज {} का आकार पहले वाले पेज से भिन्न है"
 
 #: pdfstitcher/processing/pagetiler.py:341
@@ -890,11 +886,11 @@ msgstr ""
 msgid "Input document not loaded"
 msgstr "इनपुट दस्तावेज़ लोड नहीं हुआ"
 
-#: pdfstitcher/processing/procbase.py:83
+#: pdfstitcher/processing/procbase.py:86
 msgid "No page range specified, defaulting to all"
 msgstr "कोई पेज श्रेणी निर्दिष्ट नहीं, सभी के लिए डिफ़ॉल्ट"
 
-#: pdfstitcher/processing/procbase.py:112
+#: pdfstitcher/processing/procbase.py:115
 msgid "Page {} is out of range. Removing from page list."
 msgstr ""
 
@@ -952,4 +948,10 @@ msgstr ""
 
 #~ msgid "Unknown processing unit: {}"
 #~ msgstr ""
+
+#~ msgid "Pages assemble in specified order. 0 inserts a blank page.\n"
+#~ msgstr ""
+#~ "पन्ने निर्दिष्ट क्रम में इकट्ठे होते "
+#~ "हैं। 0 एक रिक्त पेज सम्मिलित करता"
+#~ " है।"
 
