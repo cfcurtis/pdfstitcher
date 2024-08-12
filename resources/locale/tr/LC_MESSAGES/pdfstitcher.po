@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-17 16:14-0600\n"
+"POT-Creation-Date: 2024-08-12 08:24-0600\n"
 "PO-Revision-Date: 2024-01-29 14:01+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language: tr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.15.0\n"
+"Generated-By: Babel 2.16.0\n"
 
 #: pdfstitcher/bug_info.py:28
 msgid "Error getting system info: {}"
@@ -27,42 +27,42 @@ msgstr "Sistem bilgileri alınırken hata oluştu: {}"
 #. translation_note: pt = "points", in = "inches", cm = "centimeters"
 #: pdfstitcher/cli/app.py:45 pdfstitcher/cli/app.py:46
 #: pdfstitcher/cli/app.py:230 pdfstitcher/gui/layers_tab.py:140
-#: pdfstitcher/utils.py:57
+#: pdfstitcher/utils.py:58
 msgid "in"
 msgstr "in"
 
 #: pdfstitcher/cli/app.py:45 pdfstitcher/gui/layers_tab.py:140
-#: pdfstitcher/utils.py:59
+#: pdfstitcher/utils.py:60
 msgid "cm"
 msgstr "cm"
 
-#: pdfstitcher/gui/layers_tab.py:140 pdfstitcher/utils.py:61
+#: pdfstitcher/gui/layers_tab.py:140 pdfstitcher/utils.py:62
 msgid "pt"
 msgstr "pt"
 
-#: pdfstitcher/utils.py:250 pdfstitcher/utils.py:259
+#: pdfstitcher/utils.py:251 pdfstitcher/utils.py:260
 msgid "Invalid input"
 msgstr "Geçersiz girdi"
 
-#: pdfstitcher/utils.py:250 pdfstitcher/utils.py:259
+#: pdfstitcher/utils.py:251 pdfstitcher/utils.py:260
 msgid "only numeric values allowed"
 msgstr "yalnızca sayısal değerlere izin verilir"
 
-#: pdfstitcher/utils.py:256
+#: pdfstitcher/utils.py:257
 msgid "Division by zero is not allowed"
 msgstr ""
 
-#: pdfstitcher/utils.py:279
+#: pdfstitcher/utils.py:280
 msgid "Please specify a page range"
 msgstr "Lütfen bir sayfa aralığı belirtin"
 
-#: pdfstitcher/utils.py:358
-msgid "Warning! Output is larger than {} {}, may not open correctly."
-msgstr "Uyarı! Çıktı, {} {} boyutundan büyük, doğru açılmayabilir."
-
-#: pdfstitcher/utils.py:366
+#: pdfstitcher/utils.py:357
 msgid "Output size:"
 msgstr "Çıktı boyutu:"
+
+#: pdfstitcher/utils.py:366
+msgid "Warning! Output is larger than {} {}, may not open correctly."
+msgstr "Uyarı! Çıktı, {} {} boyutundan büyük, doğru açılmayabilir."
 
 #: pdfstitcher/cli/app.py:19 pdfstitcher/cli/app.py:295
 #, fuzzy
@@ -230,7 +230,7 @@ msgstr "Girdi belgesinde katman bulunamadı."
 msgid "Options"
 msgstr "Seçenekler"
 
-#: pdfstitcher/cli/app.py:301 pdfstitcher/gui/main_frame.py:221
+#: pdfstitcher/cli/app.py:301 pdfstitcher/gui/main_frame.py:222
 msgid "Successfully written to"
 msgstr "Başarıyla yazıldı"
 
@@ -270,7 +270,7 @@ msgstr "Şimdi İndir"
 msgid "Error checking for updates"
 msgstr "Güncellemeler denetlenirken hata oluştu"
 
-#: pdfstitcher/gui/dialogs.py:106 pdfstitcher/gui/main_frame.py:272
+#: pdfstitcher/gui/dialogs.py:106 pdfstitcher/gui/main_frame.py:273
 msgid "Report a bug"
 msgstr "Hata bildir"
 
@@ -313,7 +313,7 @@ msgstr "Panoya kopyalanamadı"
 msgid "Error"
 msgstr "Hata"
 
-#: pdfstitcher/gui/dialogs.py:236 pdfstitcher/gui/main_frame.py:179
+#: pdfstitcher/gui/dialogs.py:236 pdfstitcher/gui/main_frame.py:180
 msgid "No PDF loaded"
 msgstr ""
 
@@ -395,11 +395,11 @@ msgstr "{} geçişi için lütfen yeniden başlatın."
 msgid "Preferences saved"
 msgstr "Tercihler kaydedildi"
 
-#: pdfstitcher/gui/io_tab.py:30 pdfstitcher/gui/main_frame.py:396
+#: pdfstitcher/gui/io_tab.py:30 pdfstitcher/gui/main_frame.py:397
 msgid "Select input PDF"
 msgstr "Girdi PDF'sini seç"
 
-#: pdfstitcher/gui/io_tab.py:48 pdfstitcher/gui/main_frame.py:342
+#: pdfstitcher/gui/io_tab.py:48 pdfstitcher/gui/main_frame.py:343
 msgid "Save output as"
 msgstr "Çıktıyı farklı kaydet"
 
@@ -411,9 +411,8 @@ msgstr "Çıktı Seçenekleri"
 msgid "Page Range"
 msgstr "Sayfa Aralığı"
 
-#: pdfstitcher/gui/io_tab.py:97
-#, fuzzy
-msgid "Pages assemble in specified order. 0 inserts a blank page.\n"
+#: pdfstitcher/gui/io_tab.py:98 pdfstitcher/gui/tile_tab.py:150
+msgid "Pages assemble in specified order. 0 inserts a blank page."
 msgstr "Sayfalar belirtilen sırada bir araya getirilir. 0 boş bir sayfa ekler."
 
 #: pdfstitcher/gui/io_tab.py:100
@@ -577,114 +576,114 @@ msgstr "Katmanlar"
 msgid "Generate PDF"
 msgstr "PDF oluştur"
 
-#: pdfstitcher/gui/main_frame.py:209
+#: pdfstitcher/gui/main_frame.py:210
 msgid "Processing"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:210
+#: pdfstitcher/gui/main_frame.py:211
 msgid "Processing, please wait"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:218
+#: pdfstitcher/gui/main_frame.py:219
 msgid "Processing cancelled"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:224 pdfstitcher/gui/main_frame.py:229
+#: pdfstitcher/gui/main_frame.py:225 pdfstitcher/gui/main_frame.py:230
 msgid "Something went wrong"
 msgstr "Bir şeyler yanlış gitti"
 
-#: pdfstitcher/gui/main_frame.py:224 pdfstitcher/gui/main_frame.py:377
+#: pdfstitcher/gui/main_frame.py:225 pdfstitcher/gui/main_frame.py:378
 msgid "unable to write to"
 msgstr "yazılamıyor"
 
-#: pdfstitcher/gui/main_frame.py:227
+#: pdfstitcher/gui/main_frame.py:228
 msgid "Make sure  isn't open in another program"
 msgstr "Başka bir programda açık olmadığından emin olun"
 
-#: pdfstitcher/gui/main_frame.py:246
+#: pdfstitcher/gui/main_frame.py:247
 msgid "File"
 msgstr "Dosya"
 
-#: pdfstitcher/gui/main_frame.py:251
+#: pdfstitcher/gui/main_frame.py:252
 msgid "Check for updates"
 msgstr "Güncellemeleri kontrol et"
 
-#: pdfstitcher/gui/main_frame.py:255
+#: pdfstitcher/gui/main_frame.py:256
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: pdfstitcher/gui/main_frame.py:262
+#: pdfstitcher/gui/main_frame.py:263
 msgid "Documentation"
 msgstr "Belgeler"
 
-#: pdfstitcher/gui/main_frame.py:263
+#: pdfstitcher/gui/main_frame.py:264
 msgid "Open the documentation in a web browser"
 msgstr "Belgeleri tarayıcıda aç."
 
-#: pdfstitcher/gui/main_frame.py:273
+#: pdfstitcher/gui/main_frame.py:274
 msgid "Open the dialog to report a bug"
 msgstr "Hata bildirmek için iletişim kutusunu aç."
 
-#: pdfstitcher/gui/main_frame.py:277
+#: pdfstitcher/gui/main_frame.py:278
 msgid "Help"
 msgstr "Yardım"
 
-#: pdfstitcher/gui/main_frame.py:321
+#: pdfstitcher/gui/main_frame.py:322
 msgid "The PDF Stitching app for sewists, by sewists."
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:327
+#: pdfstitcher/gui/main_frame.py:328
 msgid "Contributors"
 msgstr "Katkıda bulunanlar"
 
-#: pdfstitcher/gui/main_frame.py:365
+#: pdfstitcher/gui/main_frame.py:366
 msgid "Can't overwrite input file, please select a different file for output"
 msgstr ""
 "Girdi dosyasının üzerine yazılamıyor, lütfen çıktı için farklı bir dosya "
 "seçin"
 
-#: pdfstitcher/gui/main_frame.py:374
+#: pdfstitcher/gui/main_frame.py:375
 msgid "File will be written to "
 msgstr "Dosya şuraya yazılacak: "
 
-#: pdfstitcher/gui/main_frame.py:450
+#: pdfstitcher/gui/main_frame.py:451
 msgid "PDF locked! Enter the correct password."
 msgstr "PDF kilitli! Doğru parolayı girin."
 
-#: pdfstitcher/gui/main_frame.py:453
+#: pdfstitcher/gui/main_frame.py:454
 msgid "Password"
 msgstr "Parola"
 
-#: pdfstitcher/gui/main_frame.py:453
+#: pdfstitcher/gui/main_frame.py:454
 msgid "PDF file is locked"
 msgstr "PDF dosyası kilitli"
 
-#: pdfstitcher/gui/main_frame.py:460
+#: pdfstitcher/gui/main_frame.py:461
 msgid "PDF will not open as you canceled the operation."
 msgstr "İşlemi iptal ettiğiniz için PDF açılmayacak."
 
-#: pdfstitcher/gui/main_frame.py:465
+#: pdfstitcher/gui/main_frame.py:466
 msgid "Cannot open file"
 msgstr "Dosya açılamıyor"
 
-#: pdfstitcher/gui/main_frame.py:466
+#: pdfstitcher/gui/main_frame.py:467
 msgid "Error message"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:469
+#: pdfstitcher/gui/main_frame.py:470
 msgid "Opening"
 msgstr "Açılıyor"
 
-#: pdfstitcher/gui/main_frame.py:472
+#: pdfstitcher/gui/main_frame.py:473
 msgid "PDF file loaded without errors."
 msgstr "PDF dosyası hatasız yüklendi."
 
-#: pdfstitcher/gui/main_frame.py:477
+#: pdfstitcher/gui/main_frame.py:478
 #, fuzzy
 msgid "This PDF is encrypted with the following permissions:"
 msgstr "Uyarı: Bu PDF şu izinlerle şifrelendi:"
 
-#: pdfstitcher/gui/main_frame.py:481
+#: pdfstitcher/gui/main_frame.py:482
 msgid ""
 "Please be respectful of the author and only use this tool for personal "
 "use."
@@ -750,10 +749,6 @@ msgstr "Ters Döndür"
 #: pdfstitcher/gui/tile_tab.py:127
 msgid "Page Rotation"
 msgstr "Sayfa Döndürme"
-
-#: pdfstitcher/gui/tile_tab.py:150
-msgid "Pages assemble in specified order. 0 inserts a blank page."
-msgstr "Sayfalar belirtilen sırada bir araya getirilir. 0 boş bir sayfa ekler."
 
 #: pdfstitcher/gui/tile_tab.py:171
 msgid "Optional Parameters"
@@ -848,7 +843,8 @@ msgid "No input document loaded"
 msgstr "Girdi belgesi yüklenmedi"
 
 #: pdfstitcher/processing/pagetiler.py:251
-msgid "Warning: The pages {} have a different size than the page before"
+#, fuzzy
+msgid "Warning: pages {} have a different size than the page before"
 msgstr "Uyarı: {} sayfaları önceki sayfadan farklı bir boyuta sahip"
 
 #: pdfstitcher/processing/pagetiler.py:341
@@ -890,11 +886,11 @@ msgstr ""
 msgid "Input document not loaded"
 msgstr "Girdi belgesi yüklenmedi"
 
-#: pdfstitcher/processing/procbase.py:83
+#: pdfstitcher/processing/procbase.py:86
 msgid "No page range specified, defaulting to all"
 msgstr "Sayfa aralığı belirtilmedi, öntanımlı olarak tümü alınıyor"
 
-#: pdfstitcher/processing/procbase.py:112
+#: pdfstitcher/processing/procbase.py:115
 msgid "Page {} is out of range. Removing from page list."
 msgstr ""
 
@@ -962,4 +958,7 @@ msgstr ""
 
 #~ msgid "Unknown processing unit: {}"
 #~ msgstr ""
+
+#~ msgid "Pages assemble in specified order. 0 inserts a blank page.\n"
+#~ msgstr "Sayfalar belirtilen sırada bir araya getirilir. 0 boş bir sayfa ekler."
 

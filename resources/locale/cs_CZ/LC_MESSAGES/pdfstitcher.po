@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-17 16:14-0600\n"
+"POT-Creation-Date: 2024-08-12 08:24-0600\n"
 "PO-Revision-Date: 2024-01-16 16:06+0000\n"
 "Last-Translator: Lucie Holá <hola.lucka1@gmail.com>\n"
 "Language: cs_CZ\n"
@@ -18,7 +18,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.15.0\n"
+"Generated-By: Babel 2.16.0\n"
 
 #: pdfstitcher/bug_info.py:28
 msgid "Error getting system info: {}"
@@ -28,42 +28,42 @@ msgstr "Chyba při získávání informací o systému:{}"
 #. translation_note: pt = "points", in = "inches", cm = "centimeters"
 #: pdfstitcher/cli/app.py:45 pdfstitcher/cli/app.py:46
 #: pdfstitcher/cli/app.py:230 pdfstitcher/gui/layers_tab.py:140
-#: pdfstitcher/utils.py:57
+#: pdfstitcher/utils.py:58
 msgid "in"
 msgstr ""
 
 #: pdfstitcher/cli/app.py:45 pdfstitcher/gui/layers_tab.py:140
-#: pdfstitcher/utils.py:59
+#: pdfstitcher/utils.py:60
 msgid "cm"
 msgstr "cm"
 
-#: pdfstitcher/gui/layers_tab.py:140 pdfstitcher/utils.py:61
+#: pdfstitcher/gui/layers_tab.py:140 pdfstitcher/utils.py:62
 msgid "pt"
 msgstr "b"
 
-#: pdfstitcher/utils.py:250 pdfstitcher/utils.py:259
+#: pdfstitcher/utils.py:251 pdfstitcher/utils.py:260
 msgid "Invalid input"
 msgstr "Neplatný vstup"
 
-#: pdfstitcher/utils.py:250 pdfstitcher/utils.py:259
+#: pdfstitcher/utils.py:251 pdfstitcher/utils.py:260
 msgid "only numeric values allowed"
 msgstr "jsou povoleny jen číselné znaky"
 
-#: pdfstitcher/utils.py:256
+#: pdfstitcher/utils.py:257
 msgid "Division by zero is not allowed"
 msgstr ""
 
-#: pdfstitcher/utils.py:279
+#: pdfstitcher/utils.py:280
 msgid "Please specify a page range"
 msgstr "Uveďte rozsah stránek"
 
-#: pdfstitcher/utils.py:358
-msgid "Warning! Output is larger than {} {}, may not open correctly."
-msgstr "Varování! Výstupní PDF je větší než {} {}, a nemusí se otevřít správně."
-
-#: pdfstitcher/utils.py:366
+#: pdfstitcher/utils.py:357
 msgid "Output size:"
 msgstr "Velikost výstupního PDF:"
+
+#: pdfstitcher/utils.py:366
+msgid "Warning! Output is larger than {} {}, may not open correctly."
+msgstr "Varování! Výstupní PDF je větší než {} {}, a nemusí se otevřít správně."
 
 #: pdfstitcher/cli/app.py:19 pdfstitcher/cli/app.py:295
 #, fuzzy
@@ -225,7 +225,7 @@ msgstr "Ve vstupním PDF nebyly nalezeny žádné vrstvy."
 msgid "Options"
 msgstr "Možnosti"
 
-#: pdfstitcher/cli/app.py:301 pdfstitcher/gui/main_frame.py:221
+#: pdfstitcher/cli/app.py:301 pdfstitcher/gui/main_frame.py:222
 msgid "Successfully written to"
 msgstr "Úspěšně uloženo jako"
 
@@ -265,7 +265,7 @@ msgstr "Stáhnout teď"
 msgid "Error checking for updates"
 msgstr "Chyba při kontrole aktualizací"
 
-#: pdfstitcher/gui/dialogs.py:106 pdfstitcher/gui/main_frame.py:272
+#: pdfstitcher/gui/dialogs.py:106 pdfstitcher/gui/main_frame.py:273
 msgid "Report a bug"
 msgstr ""
 
@@ -307,7 +307,7 @@ msgstr "Nelze zkopírovat do schránky"
 msgid "Error"
 msgstr "Chyba"
 
-#: pdfstitcher/gui/dialogs.py:236 pdfstitcher/gui/main_frame.py:179
+#: pdfstitcher/gui/dialogs.py:236 pdfstitcher/gui/main_frame.py:180
 msgid "No PDF loaded"
 msgstr ""
 
@@ -388,11 +388,11 @@ msgstr ""
 msgid "Preferences saved"
 msgstr ""
 
-#: pdfstitcher/gui/io_tab.py:30 pdfstitcher/gui/main_frame.py:396
+#: pdfstitcher/gui/io_tab.py:30 pdfstitcher/gui/main_frame.py:397
 msgid "Select input PDF"
 msgstr "Vybrat vstupní PDF"
 
-#: pdfstitcher/gui/io_tab.py:48 pdfstitcher/gui/main_frame.py:342
+#: pdfstitcher/gui/io_tab.py:48 pdfstitcher/gui/main_frame.py:343
 msgid "Save output as"
 msgstr "Uložit výstupní PDF jako"
 
@@ -404,9 +404,8 @@ msgstr "Možnosti výstupu"
 msgid "Page Range"
 msgstr "Rozsah stránek"
 
-#: pdfstitcher/gui/io_tab.py:97
-#, fuzzy
-msgid "Pages assemble in specified order. 0 inserts a blank page.\n"
+#: pdfstitcher/gui/io_tab.py:98 pdfstitcher/gui/tile_tab.py:150
+msgid "Pages assemble in specified order. 0 inserts a blank page."
 msgstr "Stránky se sloučí v uvedeném pořadí. 0 vloží prázdnou stránku."
 
 #: pdfstitcher/gui/io_tab.py:100
@@ -570,114 +569,114 @@ msgstr "Vrstvy"
 msgid "Generate PDF"
 msgstr "Vytvořit PDF"
 
-#: pdfstitcher/gui/main_frame.py:209
+#: pdfstitcher/gui/main_frame.py:210
 msgid "Processing"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:210
+#: pdfstitcher/gui/main_frame.py:211
 msgid "Processing, please wait"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:218
+#: pdfstitcher/gui/main_frame.py:219
 msgid "Processing cancelled"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:224 pdfstitcher/gui/main_frame.py:229
+#: pdfstitcher/gui/main_frame.py:225 pdfstitcher/gui/main_frame.py:230
 msgid "Something went wrong"
 msgstr "Něco se pokazilo"
 
-#: pdfstitcher/gui/main_frame.py:224 pdfstitcher/gui/main_frame.py:377
+#: pdfstitcher/gui/main_frame.py:225 pdfstitcher/gui/main_frame.py:378
 msgid "unable to write to"
 msgstr "nebylo možné uložit jako"
 
-#: pdfstitcher/gui/main_frame.py:227
+#: pdfstitcher/gui/main_frame.py:228
 msgid "Make sure  isn't open in another program"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:246
+#: pdfstitcher/gui/main_frame.py:247
 #, fuzzy
 msgid "File"
 msgstr "Skrýt"
 
-#: pdfstitcher/gui/main_frame.py:251
+#: pdfstitcher/gui/main_frame.py:252
 msgid "Check for updates"
 msgstr "Kontrola aktualizací"
 
-#: pdfstitcher/gui/main_frame.py:255
+#: pdfstitcher/gui/main_frame.py:256
 msgid "Settings"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:262
+#: pdfstitcher/gui/main_frame.py:263
 msgid "Documentation"
 msgstr "Dokumentace"
 
-#: pdfstitcher/gui/main_frame.py:263
+#: pdfstitcher/gui/main_frame.py:264
 msgid "Open the documentation in a web browser"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:273
+#: pdfstitcher/gui/main_frame.py:274
 msgid "Open the dialog to report a bug"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:277
+#: pdfstitcher/gui/main_frame.py:278
 msgid "Help"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:321
+#: pdfstitcher/gui/main_frame.py:322
 msgid "The PDF Stitching app for sewists, by sewists."
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:327
+#: pdfstitcher/gui/main_frame.py:328
 msgid "Contributors"
 msgstr "Přispěvatelé"
 
-#: pdfstitcher/gui/main_frame.py:365
+#: pdfstitcher/gui/main_frame.py:366
 #, fuzzy
 msgid "Can't overwrite input file, please select a different file for output"
 msgstr "Nelze přepsat vstupní PDF, prosím vyberte jiný soubor pro výstupní PDF"
 
-#: pdfstitcher/gui/main_frame.py:374
+#: pdfstitcher/gui/main_frame.py:375
 #, fuzzy
 msgid "File will be written to "
 msgstr "Úspěšně uloženo jako"
 
-#: pdfstitcher/gui/main_frame.py:450
+#: pdfstitcher/gui/main_frame.py:451
 msgid "PDF locked! Enter the correct password."
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:453
+#: pdfstitcher/gui/main_frame.py:454
 msgid "Password"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:453
+#: pdfstitcher/gui/main_frame.py:454
 msgid "PDF file is locked"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:460
+#: pdfstitcher/gui/main_frame.py:461
 msgid "PDF will not open as you canceled the operation."
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:465
+#: pdfstitcher/gui/main_frame.py:466
 msgid "Cannot open file"
 msgstr "Nemůže otevřít soubor"
 
-#: pdfstitcher/gui/main_frame.py:466
+#: pdfstitcher/gui/main_frame.py:467
 msgid "Error message"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:469
+#: pdfstitcher/gui/main_frame.py:470
 msgid "Opening"
 msgstr "Otevřeno"
 
-#: pdfstitcher/gui/main_frame.py:472
+#: pdfstitcher/gui/main_frame.py:473
 msgid "PDF file loaded without errors."
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:477
+#: pdfstitcher/gui/main_frame.py:478
 msgid "This PDF is encrypted with the following permissions:"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:481
+#: pdfstitcher/gui/main_frame.py:482
 msgid ""
 "Please be respectful of the author and only use this tool for personal "
 "use."
@@ -743,10 +742,6 @@ msgstr "O 180°"
 #: pdfstitcher/gui/tile_tab.py:127
 msgid "Page Rotation"
 msgstr "Otočení stránek"
-
-#: pdfstitcher/gui/tile_tab.py:150
-msgid "Pages assemble in specified order. 0 inserts a blank page."
-msgstr "Stránky se sloučí v uvedeném pořadí. 0 vloží prázdnou stránku."
 
 #: pdfstitcher/gui/tile_tab.py:171
 msgid "Optional Parameters"
@@ -840,7 +835,8 @@ msgid "No input document loaded"
 msgstr "Vstupní PDF nebylo načteno"
 
 #: pdfstitcher/processing/pagetiler.py:251
-msgid "Warning: The pages {} have a different size than the page before"
+#, fuzzy
+msgid "Warning: pages {} have a different size than the page before"
 msgstr "Varování: Stránky {} mají jinou velikost než předchozí stránky"
 
 #: pdfstitcher/processing/pagetiler.py:341
@@ -888,11 +884,11 @@ msgstr ""
 msgid "Input document not loaded"
 msgstr "Vstupní PDF nebylo načteno"
 
-#: pdfstitcher/processing/procbase.py:83
+#: pdfstitcher/processing/procbase.py:86
 msgid "No page range specified, defaulting to all"
 msgstr "Nebyl vybrán rozsah stránek, byly použity všechny stránky"
 
-#: pdfstitcher/processing/procbase.py:112
+#: pdfstitcher/processing/procbase.py:115
 msgid "Page {} is out of range. Removing from page list."
 msgstr ""
 
@@ -984,4 +980,7 @@ msgstr ""
 
 #~ msgid "Unknown processing unit: {}"
 #~ msgstr ""
+
+#~ msgid "Pages assemble in specified order. 0 inserts a blank page.\n"
+#~ msgstr "Stránky se sloučí v uvedeném pořadí. 0 vloží prázdnou stránku."
 
