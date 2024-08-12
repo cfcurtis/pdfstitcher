@@ -7,6 +7,7 @@
 
 import sys
 import os
+from typing import Union
 import pikepdf
 from enum import IntEnum
 
@@ -344,23 +345,13 @@ def get_page_dims(
     return page_width, page_height
 
 
-def print_media_box(media_box, user_unit: float = 1) -> None:
+def print_media_box(media_box, user_unit: float = 1) -> Union[None, str]:
     """
     Display the media box in the requested units.
     Also checks to see if the size exceeds Adobe's max size.
     """
     width = abs(float(media_box[2]) - float(media_box[0]))
     height = abs(float(media_box[3]) - float(media_box[1]))
-    if width > MAX_SIZE_PX or height > MAX_SIZE_PX:
-        # check if it exceeds Adobe's 200 inch maximum size
-        print(62 * "*")
-        print(
-            _("Warning! Output is larger than {} {}, may not open correctly.").format(
-                round(Config.general["units"].pts_to_units(MAX_SIZE_PX, user_unit)),
-                Config.general["units"],
-            )
-        )
-        print(62 * "*")
     # just print it out for info
     print(
         _("Output size:")
@@ -370,6 +361,12 @@ def print_media_box(media_box, user_unit: float = 1) -> None:
             Config.general["units"],
         )
     )
+    if width > MAX_SIZE_PX or height > MAX_SIZE_PX:
+        # check if it exceeds Adobe's 200 inch maximum size
+        return _("Warning! Output is larger than {} {}, may not open correctly.").format(
+            round(Config.general["units"].pts_to_units(MAX_SIZE_PX, user_unit)),
+            Config.general["units"],
+        )
 
 
 def normalize_boxes(page: pikepdf.Page) -> None:

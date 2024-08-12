@@ -25,9 +25,9 @@ class MainProcess(ProcessingBase):
         super().__init__(*args, **kw)
 
         self.pipeline = {
-            "LayerFilter": LayerFilter(),
-            "PageTiler": PageTiler(),
-            "PageFilter": PageFilter(),
+            "LayerFilter": LayerFilter(warning_win=self.warning_win),
+            "PageTiler": PageTiler(warning_win=self.warning_win),
+            "PageFilter": PageFilter(warning_win=self.warning_win),
         }
         self.active = {
             "LayerFilter": False,

@@ -247,8 +247,8 @@ class PageTiler(ProcessingBase):
             prev_height = info[-1]["height"]
 
         if len(different_size) > 0:
-            print(
-                _("Warning: The pages {} have a different size than the page before").format(
+            self._warn(
+                _("Warning: pages {} have a different size than the page before").format(
                     different_size
                 )
             )
@@ -345,7 +345,7 @@ class PageTiler(ProcessingBase):
             self.cols = self.p["cols"]
             self.rows = math.ceil(n_tiles / self.cols)
             if self.rows == 1 and self.cols > n_tiles:
-                print(
+                self._warn(
                     _("Warning: requested {} columns, but there are only {} pages").format(
                         self.cols, n_tiles
                     )
@@ -356,7 +356,7 @@ class PageTiler(ProcessingBase):
             self.rows = self.p["rows"]
             self.cols = math.ceil(n_tiles / self.rows)
             if self.cols == 1 and self.rows > n_tiles:
-                print(
+                self._warn(
                     _("Warning: requested {} rows, but there are only {} pages").format(
                         self.rows, n_tiles
                     )
@@ -642,7 +642,9 @@ class PageTiler(ProcessingBase):
             dims[1] + margin,
         ]
 
-        utils.print_media_box(media_box, self.output_uu)
+        size_warning = utils.print_media_box(media_box, self.output_uu)
+        if size_warning:
+            self._warn(size_warning)
 
         # add the new page to the document
         tiled_page = pikepdf.Dictionary(

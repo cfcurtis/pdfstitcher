@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-07-17 16:14-0600\n"
+"POT-Creation-Date: 2024-08-12 08:24-0600\n"
 "PO-Revision-Date: 2023-07-22 07:02+0000\n"
 "Last-Translator: Eric Luo <luolitao@gmail.com>\n"
 "Language: zh_Hans\n"
@@ -19,7 +19,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.15.0\n"
+"Generated-By: Babel 2.16.0\n"
 
 #: pdfstitcher/bug_info.py:28
 msgid "Error getting system info: {}"
@@ -28,42 +28,42 @@ msgstr "获取系统信息时出错：{}"
 #. translation_note: pt = "points", in = "inches", cm = "centimeters"
 #: pdfstitcher/cli/app.py:45 pdfstitcher/cli/app.py:46
 #: pdfstitcher/cli/app.py:230 pdfstitcher/gui/layers_tab.py:140
-#: pdfstitcher/utils.py:57
+#: pdfstitcher/utils.py:58
 msgid "in"
 msgstr "在"
 
 #: pdfstitcher/cli/app.py:45 pdfstitcher/gui/layers_tab.py:140
-#: pdfstitcher/utils.py:59
+#: pdfstitcher/utils.py:60
 msgid "cm"
 msgstr "厘米"
 
-#: pdfstitcher/gui/layers_tab.py:140 pdfstitcher/utils.py:61
+#: pdfstitcher/gui/layers_tab.py:140 pdfstitcher/utils.py:62
 msgid "pt"
 msgstr ""
 
-#: pdfstitcher/utils.py:250 pdfstitcher/utils.py:259
+#: pdfstitcher/utils.py:251 pdfstitcher/utils.py:260
 msgid "Invalid input"
 msgstr "无效输入"
 
-#: pdfstitcher/utils.py:250 pdfstitcher/utils.py:259
+#: pdfstitcher/utils.py:251 pdfstitcher/utils.py:260
 msgid "only numeric values allowed"
 msgstr "只允许使用数字值"
 
-#: pdfstitcher/utils.py:256
+#: pdfstitcher/utils.py:257
 msgid "Division by zero is not allowed"
 msgstr ""
 
-#: pdfstitcher/utils.py:279
+#: pdfstitcher/utils.py:280
 msgid "Please specify a page range"
 msgstr "请指定页面范围"
 
-#: pdfstitcher/utils.py:358
-msgid "Warning! Output is larger than {} {}, may not open correctly."
-msgstr "警告！输出大于 {} {}，可能无法正确打开。"
-
-#: pdfstitcher/utils.py:366
+#: pdfstitcher/utils.py:357
 msgid "Output size:"
 msgstr "输出尺寸："
+
+#: pdfstitcher/utils.py:366
+msgid "Warning! Output is larger than {} {}, may not open correctly."
+msgstr "警告！输出大于 {} {}，可能无法正确打开。"
 
 #: pdfstitcher/cli/app.py:19 pdfstitcher/cli/app.py:295
 #, fuzzy
@@ -227,7 +227,7 @@ msgstr "在输入文件中没有发现任何图层。"
 msgid "Options"
 msgstr "选项"
 
-#: pdfstitcher/cli/app.py:301 pdfstitcher/gui/main_frame.py:221
+#: pdfstitcher/cli/app.py:301 pdfstitcher/gui/main_frame.py:222
 msgid "Successfully written to"
 msgstr "成功写入"
 
@@ -267,7 +267,7 @@ msgstr "立即下载"
 msgid "Error checking for updates"
 msgstr "检查更新时出错"
 
-#: pdfstitcher/gui/dialogs.py:106 pdfstitcher/gui/main_frame.py:272
+#: pdfstitcher/gui/dialogs.py:106 pdfstitcher/gui/main_frame.py:273
 msgid "Report a bug"
 msgstr "报告错误"
 
@@ -307,7 +307,7 @@ msgstr "无法复制到剪贴板"
 msgid "Error"
 msgstr "错误"
 
-#: pdfstitcher/gui/dialogs.py:236 pdfstitcher/gui/main_frame.py:179
+#: pdfstitcher/gui/dialogs.py:236 pdfstitcher/gui/main_frame.py:180
 msgid "No PDF loaded"
 msgstr ""
 
@@ -389,11 +389,11 @@ msgstr "请重新启动以切换到 {}。"
 msgid "Preferences saved"
 msgstr "已保存偏好设置"
 
-#: pdfstitcher/gui/io_tab.py:30 pdfstitcher/gui/main_frame.py:396
+#: pdfstitcher/gui/io_tab.py:30 pdfstitcher/gui/main_frame.py:397
 msgid "Select input PDF"
 msgstr "选择输入 PDF"
 
-#: pdfstitcher/gui/io_tab.py:48 pdfstitcher/gui/main_frame.py:342
+#: pdfstitcher/gui/io_tab.py:48 pdfstitcher/gui/main_frame.py:343
 msgid "Save output as"
 msgstr "将输出保存为"
 
@@ -405,9 +405,8 @@ msgstr "输出选项"
 msgid "Page Range"
 msgstr "页码范围"
 
-#: pdfstitcher/gui/io_tab.py:97
-#, fuzzy
-msgid "Pages assemble in specified order. 0 inserts a blank page.\n"
+#: pdfstitcher/gui/io_tab.py:98 pdfstitcher/gui/tile_tab.py:150
+msgid "Pages assemble in specified order. 0 inserts a blank page."
 msgstr "页面按指定顺序组合。0 插入空白页。"
 
 #: pdfstitcher/gui/io_tab.py:100
@@ -571,112 +570,112 @@ msgstr "分层"
 msgid "Generate PDF"
 msgstr "生成PDF"
 
-#: pdfstitcher/gui/main_frame.py:209
+#: pdfstitcher/gui/main_frame.py:210
 msgid "Processing"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:210
+#: pdfstitcher/gui/main_frame.py:211
 msgid "Processing, please wait"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:218
+#: pdfstitcher/gui/main_frame.py:219
 msgid "Processing cancelled"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:224 pdfstitcher/gui/main_frame.py:229
+#: pdfstitcher/gui/main_frame.py:225 pdfstitcher/gui/main_frame.py:230
 msgid "Something went wrong"
 msgstr "出了些问题"
 
-#: pdfstitcher/gui/main_frame.py:224 pdfstitcher/gui/main_frame.py:377
+#: pdfstitcher/gui/main_frame.py:225 pdfstitcher/gui/main_frame.py:378
 msgid "unable to write to"
 msgstr "无法写入"
 
-#: pdfstitcher/gui/main_frame.py:227
+#: pdfstitcher/gui/main_frame.py:228
 msgid "Make sure  isn't open in another program"
 msgstr "确保没有在其他程序中打开"
 
-#: pdfstitcher/gui/main_frame.py:246
+#: pdfstitcher/gui/main_frame.py:247
 msgid "File"
 msgstr "文件"
 
-#: pdfstitcher/gui/main_frame.py:251
+#: pdfstitcher/gui/main_frame.py:252
 msgid "Check for updates"
 msgstr "检查更新"
 
-#: pdfstitcher/gui/main_frame.py:255
+#: pdfstitcher/gui/main_frame.py:256
 msgid "Settings"
 msgstr "设置"
 
-#: pdfstitcher/gui/main_frame.py:262
+#: pdfstitcher/gui/main_frame.py:263
 msgid "Documentation"
 msgstr "文档"
 
-#: pdfstitcher/gui/main_frame.py:263
+#: pdfstitcher/gui/main_frame.py:264
 msgid "Open the documentation in a web browser"
 msgstr "在浏览器中打开文件"
 
-#: pdfstitcher/gui/main_frame.py:273
+#: pdfstitcher/gui/main_frame.py:274
 msgid "Open the dialog to report a bug"
 msgstr "打开对话框以报告错误"
 
-#: pdfstitcher/gui/main_frame.py:277
+#: pdfstitcher/gui/main_frame.py:278
 msgid "Help"
 msgstr "帮助"
 
-#: pdfstitcher/gui/main_frame.py:321
+#: pdfstitcher/gui/main_frame.py:322
 msgid "The PDF Stitching app for sewists, by sewists."
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:327
+#: pdfstitcher/gui/main_frame.py:328
 msgid "Contributors"
 msgstr "贡献者"
 
-#: pdfstitcher/gui/main_frame.py:365
+#: pdfstitcher/gui/main_frame.py:366
 msgid "Can't overwrite input file, please select a different file for output"
 msgstr "无法覆盖输入文件，请选择不同的文件进行输出"
 
-#: pdfstitcher/gui/main_frame.py:374
+#: pdfstitcher/gui/main_frame.py:375
 msgid "File will be written to "
 msgstr "文件将被写入 "
 
-#: pdfstitcher/gui/main_frame.py:450
+#: pdfstitcher/gui/main_frame.py:451
 msgid "PDF locked! Enter the correct password."
 msgstr "PDF锁定！输入正确的密码。"
 
-#: pdfstitcher/gui/main_frame.py:453
+#: pdfstitcher/gui/main_frame.py:454
 msgid "Password"
 msgstr "密码"
 
-#: pdfstitcher/gui/main_frame.py:453
+#: pdfstitcher/gui/main_frame.py:454
 msgid "PDF file is locked"
 msgstr "PDF文件被锁定"
 
-#: pdfstitcher/gui/main_frame.py:460
+#: pdfstitcher/gui/main_frame.py:461
 msgid "PDF will not open as you canceled the operation."
 msgstr "由于您取消了操作，PDF 将无法打开。"
 
-#: pdfstitcher/gui/main_frame.py:465
+#: pdfstitcher/gui/main_frame.py:466
 msgid "Cannot open file"
 msgstr "无法打开文件"
 
-#: pdfstitcher/gui/main_frame.py:466
+#: pdfstitcher/gui/main_frame.py:467
 msgid "Error message"
 msgstr ""
 
-#: pdfstitcher/gui/main_frame.py:469
+#: pdfstitcher/gui/main_frame.py:470
 msgid "Opening"
 msgstr "打开"
 
-#: pdfstitcher/gui/main_frame.py:472
+#: pdfstitcher/gui/main_frame.py:473
 msgid "PDF file loaded without errors."
 msgstr "PDF文件加载无误。"
 
-#: pdfstitcher/gui/main_frame.py:477
+#: pdfstitcher/gui/main_frame.py:478
 #, fuzzy
 msgid "This PDF is encrypted with the following permissions:"
 msgstr "警告：此 PDF 使用以下权限进行加密："
 
-#: pdfstitcher/gui/main_frame.py:481
+#: pdfstitcher/gui/main_frame.py:482
 msgid ""
 "Please be respectful of the author and only use this tool for personal "
 "use."
@@ -742,10 +741,6 @@ msgstr "翻转"
 #: pdfstitcher/gui/tile_tab.py:127
 msgid "Page Rotation"
 msgstr "页面旋转"
-
-#: pdfstitcher/gui/tile_tab.py:150
-msgid "Pages assemble in specified order. 0 inserts a blank page."
-msgstr "页面按指定顺序组合。0 插入空白页。"
 
 #: pdfstitcher/gui/tile_tab.py:171
 msgid "Optional Parameters"
@@ -838,7 +833,8 @@ msgid "No input document loaded"
 msgstr "未加载输入文件"
 
 #: pdfstitcher/processing/pagetiler.py:251
-msgid "Warning: The pages {} have a different size than the page before"
+#, fuzzy
+msgid "Warning: pages {} have a different size than the page before"
 msgstr "警告：页面 {} 的尺寸与之前的页面不同"
 
 #: pdfstitcher/processing/pagetiler.py:341
@@ -880,11 +876,11 @@ msgstr ""
 msgid "Input document not loaded"
 msgstr "未加载输入文件"
 
-#: pdfstitcher/processing/procbase.py:83
+#: pdfstitcher/processing/procbase.py:86
 msgid "No page range specified, defaulting to all"
 msgstr "没有指定页面范围，默认为全部"
 
-#: pdfstitcher/processing/procbase.py:112
+#: pdfstitcher/processing/procbase.py:115
 msgid "Page {} is out of range. Removing from page list."
 msgstr ""
 
@@ -933,4 +929,7 @@ msgstr ""
 
 #~ msgid "Unknown processing unit: {}"
 #~ msgstr ""
+
+#~ msgid "Pages assemble in specified order. 0 inserts a blank page.\n"
+#~ msgstr "页面按指定顺序组合。0 插入空白页。"
 
