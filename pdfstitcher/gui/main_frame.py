@@ -67,7 +67,8 @@ class PDFStitcherFrame(wx.Frame):
         self.splitter.SplitHorizontally(nb, pnl)
         self.splitter.SetMinimumPaneSize(40)
 
-        self.main_process = MainProcess()
+        warning_win = wx.MessageDialog(self, message="", style=wx.OK | wx.ICON_WARNING)
+        self.main_process = MainProcess(warning_win=warning_win)
 
         self.make_menu_bar()
         # connect the on_close event

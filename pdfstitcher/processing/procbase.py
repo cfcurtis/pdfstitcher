@@ -17,7 +17,9 @@ class ProcessingBase(ABC):
     Base class for processing units.
     """
 
-    def __init__(self, params: dict = {}, doc: Union[Pdf, str, Path] = None) -> None:
+    def __init__(
+        self, params: dict = {}, doc: Union[Pdf, str, Path] = None, warning_win=None
+    ) -> None:
         self.p = None
         self._in_doc = None
         self._page_range = None
@@ -27,6 +29,7 @@ class ProcessingBase(ABC):
 
         # keep track of whether the unit needs to run
         self.needs_run = True
+        self.warning_win = warning_win
 
     # ---------------------------------------------------------------------
     # Property getters and setters
@@ -111,6 +114,17 @@ class ProcessingBase(ABC):
         for p in no_good:
             print(_("Page {} is out of range. Removing from page list.".format(p)))
             self._page_range.remove(p)
+
+    def _warn(self, message: str) -> None:
+        """
+        Displays a warning message to the user.
+        Assumes either a wx.MessageDialog or console output.
+        """
+        if self.warning_win:
+            self.warning_win.SetMessage(message)
+            self.warning_win.ShowModal()
+        else:
+            print(message)
 
     def load_doc(self, doc: Union[Pdf, str, Path], password: str = "") -> None:
         if isinstance(doc, Pdf):

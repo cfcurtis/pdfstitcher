@@ -45,7 +45,10 @@ class PageFilter(ProcessingBase):
                     float(self.out_doc.pages[-1].MediaBox[3]) + margin,
                 ]
                 print(_("Page" + f" {p}: "), end="")
-                utils.print_media_box(media_box, user_unit)
+
+                size_warning = utils.print_media_box(media_box, user_unit)
+                if size_warning:
+                    self._warn(size_warning)
 
                 self.out_doc.pages[-1].MediaBox = media_box
                 self.out_doc.pages[-1].CropBox = media_box
