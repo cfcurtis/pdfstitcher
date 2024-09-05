@@ -9,15 +9,16 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-08-12 08:24-0600\n"
-"PO-Revision-Date: 2023-11-03 05:14+0000\n"
+"PO-Revision-Date: 2024-09-06 14:09+0000\n"
 "Last-Translator: albanobattistella <albano_battistella@hotmail.com>\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/it/>\n"
 "Language: it\n"
-"Language-Team: Italian <https://hosted.weblate.org/projects/pdfstitcher"
-"/user-interface/it/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.8-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: pdfstitcher/bug_info.py:28
@@ -50,7 +51,7 @@ msgstr "Permessi solo valori numerici"
 
 #: pdfstitcher/utils.py:257
 msgid "Division by zero is not allowed"
-msgstr ""
+msgstr "La divisione per zero non è consentita"
 
 #: pdfstitcher/utils.py:280
 msgid "Please specify a page range"
@@ -67,15 +68,16 @@ msgstr ""
 "correttamente."
 
 #: pdfstitcher/cli/app.py:19 pdfstitcher/cli/app.py:295
-#, fuzzy
 msgid "Tile Options"
-msgstr "Opzioni"
+msgstr "Opzioni del mosaico"
 
 #: pdfstitcher/cli/app.py:20
 msgid ""
 "Options for tiling pages. If no grid layout is specified, pages will be "
 "copied without tiling."
 msgstr ""
+"Opzioni per le pagine a mosaico. Se non viene specificato un layout a "
+"griglia, le pagine verranno copiate senza affiancamento."
 
 #: pdfstitcher/cli/app.py:31
 msgid "Number of rows in tiled grid."
@@ -87,76 +89,77 @@ msgstr "Numero di colonne nella griglia."
 
 #: pdfstitcher/cli/app.py:47
 msgid "Units for margin and trim values."
-msgstr ""
+msgstr "Unità per i valori di margine e rifilatura."
 
 #: pdfstitcher/cli/app.py:53
-#, fuzzy
 msgid "Margin size in selected units."
-msgstr "Dimensione del margine in pollici."
+msgstr "Dimensione del margine in unità selezionate."
 
 #: pdfstitcher/cli/app.py:60
-#, fuzzy
 msgid "Amount to trim from edges in selected units"
-msgstr "Quantità da ritagliare dai bordi"
+msgstr "Quantità da ritagliare dai bordi nelle unità selezionate"
 
 #: pdfstitcher/cli/app.py:62
-#, fuzzy
 msgid ""
 "given as left,right,top,bottom (e.g. 0.5,0,0.5,0 would trim 0.5 from left"
 " and top)"
 msgstr ""
-"espresso come sinistra, destra, alto, basso (per esempio, 0.5,0,0.5,0 "
-"rimuoverebbe mezzo pollice da sinistra e dall'alto)"
+"dato come sinistra, destra, alto, basso (ad esempio 0,5,0,0,5,0 taglierebbe "
+"0,5 da sinistra e dall'alto)"
 
 #: pdfstitcher/cli/app.py:70
-#, fuzzy
 msgid "Rotate pages"
-msgstr "Unisci pagine"
+msgstr "Ruota pagine"
 
 #: pdfstitcher/cli/app.py:76
 msgid "Fill columns before rows (default is rows first)"
 msgstr ""
+"Riempi le colonne prima delle righe (l'impostazione predefinita è prima le "
+"righe)"
 
 #: pdfstitcher/cli/app.py:82
 msgid "Fill columns right to left (default is left to right)"
 msgstr ""
+"Riempi le colonne da destra a sinistra (l'impostazione predefinita è da "
+"sinistra a destra)"
 
 #: pdfstitcher/cli/app.py:88
 msgid "Fill rows bottom to top (default is top to bottom)"
 msgstr ""
+"Riempi le righe dal basso verso l'alto (l'impostazione predefinita è "
+"dall'alto verso il basso)"
 
 #: pdfstitcher/cli/app.py:93
 msgid "Height of output document in selected units."
-msgstr ""
+msgstr "Altezza del documento di output nelle unità selezionate."
 
 #. translation_note: This message only appears in the CLI when the user
 #. specifies a target size for the output document.
 #: pdfstitcher/cli/app.py:96 pdfstitcher/cli/app.py:104
 msgid "Caution: results in scaling of pages"
-msgstr ""
+msgstr "Attenzione: i risultati comportano il ridimensionamento delle pagine"
 
 #: pdfstitcher/cli/app.py:102
 msgid "Width of output document in selected units."
-msgstr ""
+msgstr "Larghezza del documento di output nelle unità selezionate."
 
 #: pdfstitcher/cli/app.py:110
-#, fuzzy
 msgid "Override trimbox with mediabox"
-msgstr "Imposta TrimBox come MediaBox"
+msgstr "Sostituisci trimbox con mediabox"
 
 #: pdfstitcher/cli/app.py:116
 msgid "Actually trim the pages (default is overlap)"
 msgstr ""
+"Ritaglia effettivamente le pagine (l'impostazione predefinita è "
+"sovrapposizione)"
 
 #: pdfstitcher/cli/app.py:126 pdfstitcher/cli/app.py:283
-#, fuzzy
 msgid "Layer Options"
-msgstr "Opzioni"
+msgstr "Opzioni livello"
 
 #: pdfstitcher/cli/app.py:127
-#, fuzzy
 msgid "Options for handling layers in the document."
-msgstr "Questo documento non ha alcun livello."
+msgstr "Opzioni per la gestione dei livelli nel documento."
 
 #. translation_note: These are CLI arguments, punctuation must be preserved
 #: pdfstitcher/cli/app.py:134
@@ -164,25 +167,28 @@ msgid ""
 "List of layer names to keep, separated by semicolons (e.g. "
 "'Layer1;Layer2')"
 msgstr ""
+"Elenco dei nomi dei livelli da mantenere, separati da punto e virgola (ad "
+"esempio 'Layer1;Layer2')"
 
 #: pdfstitcher/cli/app.py:140
-#, fuzzy
 msgid "Keep non-optional (background) content."
-msgstr "Includi contenuto non opzionale"
+msgstr "Mantieni i contenuti non facoltativi (sfondo)."
 
 #: pdfstitcher/cli/app.py:146
 msgid ""
 "Hide layers. If set, layer visibility is set to Off instead of removing "
 "content."
 msgstr ""
+"Nascondi livelli. Se impostato, la visibilità del livello è impostata su Off "
+"invece di rimuovere il contenuto."
 
 #: pdfstitcher/cli/app.py:155
 msgid "PDF Stitcher"
-msgstr ""
+msgstr "PDF Stitcher"
 
 #: pdfstitcher/cli/app.py:156
 msgid "Stitch PDF pages together, add margins, remove layers, and more."
-msgstr ""
+msgstr "Unisci pagine PDF, aggiungi margini, rimuovi livelli e altro ancora."
 
 #: pdfstitcher/cli/app.py:162
 msgid "Input filename (pdf)"
@@ -193,21 +199,21 @@ msgid "Output filename (pdf)"
 msgstr "Nome file risultato (pdf)"
 
 #: pdfstitcher/cli/app.py:174
-#, fuzzy
 msgid ""
 "Pages to Process. May be range or list (e.g. 1-5 or 1,3,5-7, etc). "
 "Default: entire document. Use 0 values to add blank pages."
 msgstr ""
-"Pagine da unire. Può essere una selezione o una lista (esempio: 1-5 "
-"oppure 1,3,5-7, etc.). Default: l'intero documento."
+"Pagine da elaborare. Può essere un intervallo o un elenco (ad esempio 1-5 o "
+"1,3,5-7, ecc.). Predefinito: intero documento. Utilizzare valori 0 per "
+"aggiungere pagine vuote."
 
 #: pdfstitcher/cli/app.py:183
 msgid "Print verbose output"
-msgstr ""
+msgstr "Stampa output dettagliato"
 
 #: pdfstitcher/cli/app.py:192
 msgid "Ignoring unknown arguments:"
-msgstr ""
+msgstr "Ignorando gli argomenti sconosciuti:"
 
 #: pdfstitcher/cli/app.py:204
 msgid "Invalid trim value specified, ignoring"
@@ -216,16 +222,16 @@ msgstr "Valore di ritaglio non valido, verrà ignorato"
 #: pdfstitcher/cli/app.py:235
 msgid "No output file specified, showing input document info and exiting."
 msgstr ""
+"Nessun file di output specificato, vengono visualizzate le informazioni del "
+"documento di input e si esce."
 
 #: pdfstitcher/cli/app.py:280
-#, fuzzy
 msgid "Layer"
-msgstr "Livelli"
+msgstr "Livello"
 
 #: pdfstitcher/cli/app.py:280
-#, fuzzy
 msgid "not found in the document. Ignoring."
-msgstr "Questo documento non ha alcun livello."
+msgstr "non presente nel documento. Ignorare."
 
 #: pdfstitcher/cli/app.py:290 pdfstitcher/gui/main_frame.py:42
 #: pdfstitcher/processing/pagetiler.py:102
@@ -317,21 +323,19 @@ msgstr "Errore"
 
 #: pdfstitcher/gui/dialogs.py:236 pdfstitcher/gui/main_frame.py:180
 msgid "No PDF loaded"
-msgstr ""
+msgstr "Nessun PDF caricato"
 
 #: pdfstitcher/gui/dialogs.py:242
 msgid "Choose a location to save the mangled PDF"
-msgstr ""
+msgstr "Scegli una posizione in cui salvare il PDF danneggiato"
 
 #: pdfstitcher/gui/dialogs.py:252
-#, fuzzy
 msgid "Mangling PDF with {} pages"
-msgstr "Errore durante la distruzione del PDF: {}"
+msgstr "Mancanza di PDF con {} pagine"
 
 #: pdfstitcher/gui/dialogs.py:253
-#, fuzzy
 msgid "This may take some time, please wait"
-msgstr "Manipolazione del PDF. L'operazione potrebbe richiedere del tempo."
+msgstr "L'operazione potrebbe richiedere del tempo, ti preghiamo di attendere"
 
 #: pdfstitcher/gui/dialogs.py:265
 msgid "Mangled PDF saved to {}."
@@ -421,7 +425,7 @@ msgstr ""
 
 #: pdfstitcher/gui/io_tab.py:100
 msgid "Use - for ranges. Example: 1-3, 0, 4, 0, 5-10."
-msgstr ""
+msgstr "Utilizzare - per intervalli. Esempio: 1-3, 0, 4, 0, 5-10."
 
 #: pdfstitcher/gui/io_tab.py:110 pdfstitcher/gui/tile_tab.py:178
 msgid "Margin to add to final output"
@@ -556,9 +560,9 @@ msgid "No layers found in input document."
 msgstr "Questo documento non ha alcun livello."
 
 #: pdfstitcher/gui/layers_tab.py:330
-#, fuzzy
 msgid "Selected properties will apply to all lines in the document."
-msgstr "Selezionare i livelli da includere nel documento finale."
+msgstr ""
+"Le proprietà selezionate verranno applicate a tutte le righe del documento."
 
 #: pdfstitcher/gui/layers_tab.py:347
 msgid "Select layers to include in output document."
@@ -582,15 +586,15 @@ msgstr "Generare PDF"
 
 #: pdfstitcher/gui/main_frame.py:210
 msgid "Processing"
-msgstr ""
+msgstr "Elaborazione"
 
 #: pdfstitcher/gui/main_frame.py:211
 msgid "Processing, please wait"
-msgstr ""
+msgstr "Elaborazione in corso, attendere prego"
 
 #: pdfstitcher/gui/main_frame.py:219
 msgid "Processing cancelled"
-msgstr ""
+msgstr "Elaborazione annullata"
 
 #: pdfstitcher/gui/main_frame.py:225 pdfstitcher/gui/main_frame.py:230
 msgid "Something went wrong"
@@ -672,7 +676,7 @@ msgstr "Impossibile aprire il file"
 
 #: pdfstitcher/gui/main_frame.py:467
 msgid "Error message"
-msgstr ""
+msgstr "Messaggio di errore"
 
 #: pdfstitcher/gui/main_frame.py:470
 msgid "Opening"
@@ -683,9 +687,8 @@ msgid "PDF file loaded without errors."
 msgstr "File PDF caricato senza errori."
 
 #: pdfstitcher/gui/main_frame.py:478
-#, fuzzy
 msgid "This PDF is encrypted with the following permissions:"
-msgstr "Attenzione: questo PDF è crittografato con le seguenti autorizzazioni:"
+msgstr "Questo PDF è crittografato con le seguenti autorizzazioni:"
 
 #: pdfstitcher/gui/main_frame.py:482
 msgid ""
@@ -804,13 +807,13 @@ msgstr "Nessun livello selezionato, il PDF generato risulterà bianco."
 
 #: pdfstitcher/processing/pagefilter.py:47
 msgid "Page"
-msgstr ""
+msgstr "Pagina"
 
 #: pdfstitcher/processing/pagetiler.py:32
 #: pdfstitcher/processing/pagetiler.py:49
 #: pdfstitcher/processing/pagetiler.py:65
 msgid "Unknown"
-msgstr ""
+msgstr "Sconosciuto"
 
 #: pdfstitcher/processing/pagetiler.py:45
 #: pdfstitcher/processing/pagetiler.py:61
@@ -839,23 +842,20 @@ msgstr "Allineamento orizzontale"
 
 #: pdfstitcher/processing/pagetiler.py:208
 msgid "No valid pages included in range"
-msgstr ""
+msgstr "Nessuna pagina valida inclusa nell'intervallo"
 
 #: pdfstitcher/processing/pagetiler.py:220
-#, fuzzy
 msgid "No input document loaded"
-msgstr "Documento di origine non caricato"
+msgstr "Nessun documento di input caricato"
 
 #: pdfstitcher/processing/pagetiler.py:251
-#, fuzzy
 msgid "Warning: pages {} have a different size than the page before"
 msgstr ""
-"Attenzione: le pagine {} hanno una dimensione diversa dalla pagina "
-"precedente"
+"Attenzione: le pagine {} hanno una dimensione diversa dalla pagina precedente"
 
 #: pdfstitcher/processing/pagetiler.py:341
 msgid "No pages to tile"
-msgstr ""
+msgstr "Nessuna pagina da affiancare"
 
 #: pdfstitcher/processing/pagetiler.py:349
 msgid "Warning: requested {} columns, but there are only {} pages"
@@ -866,27 +866,30 @@ msgid "Warning: requested {} rows, but there are only {} pages"
 msgstr "Attenzione: richieste {} righe, ma ci sono solo {} pagine"
 
 #: pdfstitcher/processing/pagetiler.py:378
-#, fuzzy
 msgid "Error: cannot tile {} pages with {} rows and {} columns"
-msgstr "Unione con {} righe e {} colonne"
+msgstr "Errore: non è possibile affiancare {} pagine con {} righe e {} colonne"
 
 #: pdfstitcher/processing/pagetiler.py:383
 msgid "filling columns first, the last column would be empty."
-msgstr ""
+msgstr "riempiendo prima le colonne, l'ultima colonna sarebbe vuota."
 
 #: pdfstitcher/processing/pagetiler.py:385
 msgid "filling rows first, the last row would be empty."
-msgstr ""
+msgstr "riempiendo prima le righe, l'ultima riga sarebbe vuota."
 
 #: pdfstitcher/processing/pagetiler.py:592
 msgid "Target height and width must be specified in scale-to-fit mode"
 msgstr ""
+"L'altezza e la larghezza della destinazione devono essere specificate in "
+"modalità scala-per-adattamento"
 
 #: pdfstitcher/processing/pagetiler.py:597
 msgid ""
 "Target width and height specified, scaling pages to fit. Do not use this "
 "option for sewing patterns!"
 msgstr ""
+"Larghezza e altezza di destinazione specificate, ridimensionamento delle "
+"pagine per adattarle. Non usare questa opzione per cucire cartamodelli!"
 
 #: pdfstitcher/processing/pagetiler.py:612
 msgid "Input document not loaded"
@@ -900,7 +903,7 @@ msgstr ""
 
 #: pdfstitcher/processing/procbase.py:115
 msgid "Page {} is out of range. Removing from page list."
-msgstr ""
+msgstr "La pagina {} è fuori intervallo. Rimozione dall'elenco delle pagine."
 
 #~ msgid "Exception"
 #~ msgstr "Eccezione"
@@ -981,4 +984,3 @@ msgstr ""
 #~ "Le pagine vengono assemblate secondo "
 #~ "l'ordine specificato. Usare 0 per "
 #~ "inserire una pagina bianca."
-
