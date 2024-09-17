@@ -99,7 +99,7 @@ jobs:
 
       - uses: Nuitka/Nuitka-Action@main
         with:
-          nuitka-version: 2.4.5
+          nuitka-version: main
           script-name: pdfstitcher/gui/app.py
           onefile: true
           include-data-dir: |
@@ -138,6 +138,7 @@ jobs:
       - name: Install dependencies and compile translation files
         run: | 
           brew install qpdf
+          pip install wxPython==4.2.1
           pip install ".[gui]"
           pip install tomli
           python build/update_loc.py --compile
@@ -153,7 +154,7 @@ jobs:
         env:
           APPLE_SIGN_IDENTITY: ${{ secrets.APPLE_SIGN_IDENTITY }}
         run: |
-          pip install nuitka==2.4.5
+          pip install nuitka
           chmod +x build/mac_build_and_sign.sh
           ./build/mac_build_and_sign.sh
           
