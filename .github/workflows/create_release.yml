@@ -99,7 +99,7 @@ jobs:
 
       - uses: Nuitka/Nuitka-Action@main
         with:
-          nuitka-version: main
+          nuitka-version: 2.4.5
           script-name: pdfstitcher/gui/app.py
           onefile: true
           include-data-dir: |
@@ -153,7 +153,7 @@ jobs:
         env:
           APPLE_SIGN_IDENTITY: ${{ secrets.APPLE_SIGN_IDENTITY }}
         run: |
-          pip install nuitka
+          pip install nuitka==2.4.5
           chmod +x build/mac_build_and_sign.sh
           ./build/mac_build_and_sign.sh
           
