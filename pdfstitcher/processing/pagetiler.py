@@ -169,9 +169,11 @@ class PageTiler(ProcessingBase):
         # Case 2: page UU is 1, output UU is 10 -> scale by 1/10
         # Case 3: page UU is 10, output UU is 1 -> no scaling (matrix is already scaled)
         # Case 4: page UU is 10, output UU is 10 -> scale by 1/10 (avoid double scaling)
-        content_dict[pagekey].Matrix = matrix.scaled(
-            1 / self.output_uu, 1 / self.output_uu
-        ).shorthand
+        matrix = matrix.scaled(1 / self.output_uu, 1 / self.output_uu)
+
+        # also translate the matrix by the non-rotated trim value (scaled to the output UU)
+        page_trim = self._get_page_trim(self.output_uu, 0)
+        content_dict[pagekey].Matrix = matrix.translated(-page_trim[0], -page_trim[1]).shorthand
 
         # update the info dictionary with the page dimensions
         # page rotation needs to be passed as global because it isn't copied into the XObject
@@ -184,9 +186,6 @@ class PageTiler(ProcessingBase):
 
         # if we're not actually trimming, subtract the trim from the page size
         if not self.p["actually_trim"]:
-            # width and height are rotated, as are the trim values
-            page_trim = self._get_page_trim(page_uu, 0)
-            page_trim = [p * page_uu / self.output_uu for p in page_trim]
             p_width -= page_trim[0] + page_trim[2]
             p_height -= page_trim[1] + page_trim[3]
 
