@@ -451,6 +451,7 @@ class LayerFilter(ProcessingBase):
     def run(self, progress_win=None) -> bool:
         """
         Process the layers. Progress window is optional, but a good idea as this can take a while.
+        Returns True on successful completion.
         """
         # initialize the state-tracking stuff
         self.processed_objects = set()
@@ -462,12 +463,14 @@ class LayerFilter(ProcessingBase):
         if self.p["keep_non_oc"] and self.p["keep_ocs"] == "all" and len(self.p["line_props"]) == 0:
             # nothing to do, just return the input document
             self.out_doc = self.in_doc
+            progress_win and progress_win.SetRange(1)
             progress_win and progress_win.Update(1)
             return True
 
         # check if the user requested no layers
         if len(self.p["keep_ocs"]) == 0 and self.p["keep_non_oc"] == False:
             print(_("No layers selected, generated PDF would be blank."))
+            progress_win and progress_win.SetRange(1)
             progress_win and progress_win.Update(1)
             return False
 
