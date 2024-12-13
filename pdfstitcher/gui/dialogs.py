@@ -43,8 +43,24 @@ class UpdateDialog(wx.Dialog):
             border=self.FromDIP(utils.BORDER * 2),
         )
 
+        self.keep_checking = wx.CheckBox(self, label=_("Check for updates on startup"))
+        self.keep_checking.SetValue(Config.general["check_updates"])
+        self.keep_checking.Bind(wx.EVT_CHECKBOX, self.on_keep_checking)
+        self.vert_sizer.Add(
+            self.keep_checking,
+            flag=wx.ALL,
+            border=self.FromDIP(utils.BORDER * 2),
+        )
+
         self.SetSizerAndFit(self.vert_sizer)
         self.check_updates()
+
+    def on_keep_checking(self, event):
+        """
+        Update the config file with the new check for updates setting.
+        """
+        Config.general["check_updates"] = self.keep_checking.IsChecked()
+        Config.save()
 
     def check_updates(self):
         """

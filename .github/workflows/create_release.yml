@@ -138,6 +138,7 @@ jobs:
       - name: Install dependencies and compile translation files
         run: | 
           brew install qpdf
+          pip install wxPython==4.2.1
           pip install ".[gui]"
           pip install tomli
           python build/update_loc.py --compile
