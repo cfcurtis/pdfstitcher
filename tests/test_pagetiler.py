@@ -66,23 +66,6 @@ def test_get_trim(default_tiler, doc_mixed_layers):
     assert default_tiler._get_trim(default_tiler.output_uu) == [pytest.approx(7.2 / 2.54)] * 4
 
 
-def test_get_first_page_dims(doc_mixed_layers, default_tiler):
-    """
-    Test getting the dimensions of the first page.
-    """
-    default_tiler.load_doc(doc_mixed_layers)
-    default_tiler.page_range = [1]
-    default_tiler._set_output_user_unit()
-    dims = default_tiler._get_first_page_dims()
-    assert dims == (pytest.approx(1800.0), pytest.approx(1800.0))
-
-    # second page only
-    default_tiler.page_range = [2]
-    default_tiler._set_output_user_unit()
-    dims = default_tiler._get_first_page_dims()
-    assert dims == (pytest.approx(14400.0), pytest.approx(14400.0))
-
-
 def test_process_page(doc_mixed_layers, default_tiler):
     """
     Test the page processing. Relies on previous functions.

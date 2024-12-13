@@ -333,10 +333,7 @@ def get_page_dims(
 
     # global_rotation is defined by the document root, but
     # may be overridden on a specific page
-    if "/Rotate" in page.keys():
-        rotation = page.Rotate
-    else:
-        rotation = global_rotation
+    rotation = page.Rotate if "/Rotate" in page.keys() else global_rotation
 
     # swap height and width if there is rotation
     if (rotation // 90) % 2 != 0:

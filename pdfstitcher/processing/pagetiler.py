@@ -79,6 +79,7 @@ class PageTiler(ProcessingBase):
 
         # define a few attributes that will be overwritten on run
         self.output_uu = 1
+        self.doc_rot = 0
         self.cols = 0
         self.rows = 0
 
@@ -118,7 +119,7 @@ class PageTiler(ProcessingBase):
     ) -> Union[None, str]:
         """
         Extracts page number p from the input document and adds it to the page_dict,
-        performs trimming if requested, and stores page dimensions. Lots going on.
+        performs trimming if requested, and stores (trimmed) page dimensions. Lots going on.
         """
         pagekey = f"/Page{p}"
         # Check if it's already been copied (in case of duplicate page numbers)
@@ -130,17 +131,12 @@ class PageTiler(ProcessingBase):
 
         # magic sauce to copy the info to the new document as an XOBject
         content_dict[pagekey] = self.out_doc.copy_foreign(
-            in_doc_page.as_form_xobject(handle_transformations=False)
+            in_doc_page.as_form_xobject(handle_transformations=True)
         )
 
         # get the page rotation and user unit
-        page_rot = 0
-        if "/Rotate" in in_doc_page.keys():
-            page_rot = in_doc_page.Rotate % 360
-
-        page_uu = 1
-        if "/UserUnit" in in_doc_page.keys():
-            page_uu = float(in_doc_page.UserUnit)
+        page_rot = in_doc_page.Rotate % 360 if "/Rotate" in in_doc_page.keys() else self.doc_rot
+        page_uu = float(in_doc_page.UserUnit) if "/UserUnit" in in_doc_page.keys() else 1
 
         # lowercase trimbox returns TrimBox if it exists, MediaBox otherwise
         # overriding trimbox will use the media box instead, sometimes fixes weird things
@@ -149,9 +145,10 @@ class PageTiler(ProcessingBase):
         else:
             bbox = copy.copy(in_doc_page.trimbox)
 
-        # set the trim box to cut off content if requested
-        page_trim = self._get_page_trim(page_uu, page_rot)
         if self.p["actually_trim"]:
+            # set the trim box to cut off content if requested
+            # trim needs to be rotated as it's defined in the rotated space, but the bbox is not
+            page_trim = self._get_page_trim(page_uu, page_rot)
             bbox = [
                 float(bbox[0]) + page_trim[0],
                 float(bbox[1]) + page_trim[1],
@@ -160,25 +157,35 @@ class PageTiler(ProcessingBase):
             ]
         content_dict[pagekey].BBox = bbox
 
-        # also apply the rotation to the target matrix
-        if "/Matrix" in content_dict[pagekey].keys():
-            xobj_matrix = pikepdf.Matrix(content_dict[pagekey].Matrix).rotated(page_rot)
-        else:
-            xobj_matrix = pikepdf.Matrix().rotated(page_rot)
+        # define the matrix in case it doesn't exist (assumed identity)
+        matrix = (
+            pikepdf.Matrix(content_dict[pagekey].Matrix)
+            if "/Matrix" in content_dict[pagekey].keys()
+            else pikepdf.Matrix()
+        )
 
-        # Scale the form xobject by the target document user unit relative to the page.
-        # This is why we're not letting pikepdf handle the transformation!
-        content_dict[pagekey].Matrix = xobj_matrix.scaled(
-            page_uu / self.output_uu, page_uu / self.output_uu
+        # Scale the matrix by the output user unit
+        # Case 1: page UU and output UU are both 1 -> no scaling
+        # Case 2: page UU is 1, output UU is 10 -> scale by 1/10
+        # Case 3: page UU is 10, output UU is 1 -> no scaling (matrix is already scaled)
+        # Case 4: page UU is 10, output UU is 10 -> scale by 1/10 (avoid double scaling)
+        content_dict[pagekey].Matrix = matrix.scaled(
+            1 / self.output_uu, 1 / self.output_uu
         ).shorthand
 
         # update the info dictionary with the page dimensions
+        # page rotation needs to be passed as global because it isn't copied into the XObject
         p_width, p_height = utils.get_page_dims(
-            content_dict[pagekey], page_rot, page_uu=page_uu, output_uu=self.output_uu
+            content_dict[pagekey],
+            global_rotation=page_rot,
+            page_uu=page_uu,
+            output_uu=self.output_uu,
         )
 
         # if we're not actually trimming, subtract the trim from the page size
         if not self.p["actually_trim"]:
+            # width and height are rotated, as are the trim values
+            page_trim = self._get_page_trim(page_uu, 0)
             page_trim = [p * page_uu / self.output_uu for p in page_trim]
             p_width -= page_trim[0] + page_trim[2]
             p_height -= page_trim[1] + page_trim[3]
@@ -186,30 +193,6 @@ class PageTiler(ProcessingBase):
         # append the page info
         info.append({"width": p_width, "height": p_height, "pagekey": pagekey})
         return pagekey
-
-    def _get_first_page_dims(self) -> tuple:
-        """
-        Get the dimensions of the first page in the document. Returns a tuple of (width, height).
-        Mainly useful if the first page specified is blank (0).
-        """
-        # initialize the width/height indices based on page rotation
-        page_rot = 0
-
-        if "/Rotate" in self.in_doc.Root.Pages.keys():
-            page_rot = self.in_doc.Root.Pages.Rotate % 360
-
-        # find the first non-zero page number
-        p = None
-        for p in self.page_range:
-            if p > 0:
-                break
-
-        if not p:
-            raise ValueError(_("No valid pages included in range"))
-
-        # get a pointer to the reference page and parse out the width and height
-        ref_page = self.in_doc.pages[p - 1]
-        return utils.get_page_dims(ref_page, page_rot, output_uu=self.output_uu)
 
     def _build_pagelist(self) -> tuple:
         """
@@ -226,7 +209,8 @@ class PageTiler(ProcessingBase):
 
         # keep track of any pages that are different from the previous one
         different_size = set()
-        prev_width, prev_height = self._get_first_page_dims()
+        prev_width = None
+        prev_height = None
 
         for p in self.page_range:
             if p == 0:
@@ -239,12 +223,25 @@ class PageTiler(ProcessingBase):
             if pagekey is None:
                 continue
 
-            if abs(info[-1]["width"] - prev_width) > 1 or abs(info[-1]["height"] - prev_height) > 1:
+            if prev_width is not None and (
+                abs(info[-1]["width"] - prev_width) > 1 or abs(info[-1]["height"] - prev_height) > 1
+            ):
                 different_size.add(p)
 
             # update the reference handles to be the current page
             prev_width = info[-1]["width"]
             prev_height = info[-1]["height"]
+
+        # go back and update any zero pages with the first non-zero dimension
+        first_non_zero = next((p for p in self.page_range if p > 0), None)
+        if first_non_zero is None:
+            self.warn(_("No pages selected!"))
+            return None
+
+        for p in filter(lambda p: p == 0, self.page_range):
+            if info[p]["width"] is None:
+                info[p]["width"] = info[first_non_zero]["width"]
+                info[p]["height"] = info[first_non_zero]["height"]
 
         if len(different_size) > 0:
             self._warn(
@@ -618,6 +615,10 @@ class PageTiler(ProcessingBase):
 
         # initialize the output
         self.out_doc = utils.init_new_doc(self.in_doc)
+        # store the document rotation, if any
+        self.doc_rot = (
+            self.in_doc.Root.Pages.Rotate % 360 if "/Rotate" in self.in_doc.Root.Pages.keys() else 0
+        )
 
         # set the target userunit
         self._set_output_user_unit()
