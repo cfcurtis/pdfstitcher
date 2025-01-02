@@ -10,15 +10,16 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-08-12 08:24-0600\n"
-"PO-Revision-Date: 2022-02-16 22:57+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"PO-Revision-Date: 2025-01-03 20:02+0000\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/pdfstitcher/"
+"user-interface/de/>\n"
 "Language: de_DE\n"
-"Language-Team: German <https://hosted.weblate.org/projects/pdfstitcher"
-"/user-interface/de/>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: pdfstitcher/bug_info.py:28
@@ -51,7 +52,7 @@ msgstr "Nur Ganzzahlen sind erlaubt"
 
 #: pdfstitcher/utils.py:257
 msgid "Division by zero is not allowed"
-msgstr ""
+msgstr "Division durch Null ist nicht erlaubt"
 
 #: pdfstitcher/utils.py:280
 msgid "Please specify a page range"
@@ -68,9 +69,8 @@ msgstr ""
 "richtig geöffnet werden."
 
 #: pdfstitcher/cli/app.py:19 pdfstitcher/cli/app.py:295
-#, fuzzy
 msgid "Tile Options"
-msgstr "Optionen"
+msgstr "Kacheloptionen"
 
 #: pdfstitcher/cli/app.py:20
 msgid ""
@@ -992,4 +992,3 @@ msgstr ""
 #~ "Die Seiten werden in der angegebenen "
 #~ "Reihenfolge zusammengesetzt. 0 fügt eine "
 #~ "leere Seite ein."
-
