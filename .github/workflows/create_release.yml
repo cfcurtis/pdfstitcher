@@ -131,7 +131,8 @@ jobs:
         run: |
           ls build
           mv build/pdfstitcher.exe build/pdfstitcher-unsigned.exe
-          unzip build/pdfstitcher.exe.zip -d build
+          unzip build/artifact.zip -d build
+          ls build
 
       # - name: GH Release
       #   uses: softprops/action-gh-release@v2
