@@ -109,13 +109,36 @@ jobs:
           output-file: pdfstitcher.exe
           windows-console-mode: disable
           windows-icon-from-ico: resources\\stitcher-icon.ico
-      
-      - name: GH Release
-        uses: softprops/action-gh-release@v2
+
+      - name: Upload unsigned executable
+        id: upload-unsigned-artifact
+        uses: actions/upload-artifact@v4
+        with: 
+          path: build/pdfstitcher.exe
+
+      - name: Submit to SignPath
+        uses: signpath/github-action-submit-signing-request@v1.1
         with:
-          files: build/pdfstitcher.exe
-          draft: ${{ inputs.draft }}
-          tag_name: ${{ env.VERSION_STRING }}
+          api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+          organization-id: 'd00d3416-bacb-46df-97c6-8179d3dcbf87'
+          project-slug: 'pdfstitcher'
+          signing-policy-slug: 'test-signing'
+          github-artifact-id: '${{ steps.upload-unsigned-artifact.outputs.artifact-id }}'
+          wait-for-completion: true
+          output-artifact-directory: 'build'
+      
+      - name: Unzip signed artifact
+        run: |
+          ls build
+          mv build/pdfstitcher.exe build/pdfstitcher-unsigned.exe
+          unzip build/pdfstitcher.exe.zip -d build
+
+      # - name: GH Release
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     files: build/pdfstitcher.exe
+      #     draft: ${{ inputs.draft }}
+      #     tag_name: ${{ env.VERSION_STRING }}
 
   mac-build:
     if: ${{ inputs.mac }}
