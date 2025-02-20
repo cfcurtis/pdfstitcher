@@ -101,7 +101,7 @@ jobs:
         with:
           nuitka-version: main
           script-name: pdfstitcher/gui/app.py
-          onefile: true
+          mode: onefile
           include-data-dir: |
             resources\\locale=resources\\locale
           include-data-files: resources\\stitcher-icon.ico=resources\\stitcher-icon.ico
