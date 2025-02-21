@@ -125,19 +125,12 @@ jobs:
           signing-policy-slug: 'test-signing'
           github-artifact-id: '${{ steps.upload-unsigned-artifact.outputs.artifact-id }}'
           wait-for-completion: true
-          output-artifact-directory: 'build'
-      
-      - name: Unzip signed artifact
-        run: |
-          ls build
-          mv build/pdfstitcher.exe build/pdfstitcher-unsigned.exe
-          unzip build/artifact.zip -d build
-          ls build
+          output-artifact-directory: 'signed'
 
       # - name: GH Release
       #   uses: softprops/action-gh-release@v2
       #   with:
-      #     files: build/pdfstitcher.exe
+      #     files: signed/pdfstitcher.exe
       #     draft: ${{ inputs.draft }}
       #     tag_name: ${{ env.VERSION_STRING }}
 
