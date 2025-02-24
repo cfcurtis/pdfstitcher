@@ -122,17 +122,17 @@ jobs:
           api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
           organization-id: 'd00d3416-bacb-46df-97c6-8179d3dcbf87'
           project-slug: 'pdfstitcher'
-          signing-policy-slug: 'test-signing'
+          signing-policy-slug: 'release-signing'
           github-artifact-id: '${{ steps.upload-unsigned-artifact.outputs.artifact-id }}'
           wait-for-completion: true
           output-artifact-directory: 'signed'
 
-      # - name: GH Release
-      #   uses: softprops/action-gh-release@v2
-      #   with:
-      #     files: signed/pdfstitcher.exe
-      #     draft: ${{ inputs.draft }}
-      #     tag_name: ${{ env.VERSION_STRING }}
+      - name: GH Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: signed/pdfstitcher.exe
+          draft: ${{ inputs.draft }}
+          tag_name: ${{ env.VERSION_STRING }}
 
   mac-build:
     if: ${{ inputs.mac }}
