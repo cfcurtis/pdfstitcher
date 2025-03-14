@@ -9,7 +9,7 @@ python -m nuitka \
     --company-name="Charlotte Curtis" \
     --product-name="PDF Stitcher" \
     --macos-app-name="PDF Stitcher" \
-    --macos-app-version=v1.0b1 \
+    --macos-app-version=v1.1 \
     --macos-signed-app-name=com.charlottecurtis.pdfstitcher \
     --macos-sign-identity="$APPLE_SIGN_IDENTITY" \
     --macos-sign-notarization \

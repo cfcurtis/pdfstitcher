@@ -1,6 +1,6 @@
 [project]
 name = "pdfstitcher"
-version = "1.0.5"
+version = "1.1"
 description = "The open source PDF stitching software for sewists, by sewists."
 readme = "README.md"
 requires-python = ">=3.8"
