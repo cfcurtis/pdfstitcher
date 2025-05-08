@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-08-12 08:24-0600\n"
-"PO-Revision-Date: 2023-07-22 07:02+0000\n"
+"PO-Revision-Date: 2025-05-09 04:01+0000\n"
 "Last-Translator: Eric Luo <luolitao@gmail.com>\n"
+"Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
+"projects/pdfstitcher/user-interface/zh_Hans/>\n"
 "Language: zh_Hans\n"
-"Language-Team: Chinese (Simplified) "
-"<https://hosted.weblate.org/projects/pdfstitcher/user-interface/zh_Hans/>"
-"\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: pdfstitcher/bug_info.py:28
@@ -51,7 +51,7 @@ msgstr "只允许使用数字值"
 
 #: pdfstitcher/utils.py:257
 msgid "Division by zero is not allowed"
-msgstr ""
+msgstr "不允许除以零"
 
 #: pdfstitcher/utils.py:280
 msgid "Please specify a page range"
@@ -86,7 +86,7 @@ msgstr "平铺网格中的列数。"
 
 #: pdfstitcher/cli/app.py:47
 msgid "Units for margin and trim values."
-msgstr ""
+msgstr "裕度和修剪值的单位。"
 
 #: pdfstitcher/cli/app.py:53
 #, fuzzy
@@ -124,17 +124,17 @@ msgstr ""
 
 #: pdfstitcher/cli/app.py:93
 msgid "Height of output document in selected units."
-msgstr ""
+msgstr "输出文档的高度（以选定的单位表示）"
 
 #. translation_note: This message only appears in the CLI when the user
 #. specifies a target size for the output document.
 #: pdfstitcher/cli/app.py:96 pdfstitcher/cli/app.py:104
 msgid "Caution: results in scaling of pages"
-msgstr ""
+msgstr "注意:页数扩大的结果"
 
 #: pdfstitcher/cli/app.py:102
 msgid "Width of output document in selected units."
-msgstr ""
+msgstr "选定单位的产出文件."
 
 #: pdfstitcher/cli/app.py:110
 #, fuzzy
@@ -932,4 +932,3 @@ msgstr ""
 
 #~ msgid "Pages assemble in specified order. 0 inserts a blank page.\n"
 #~ msgstr "页面按指定顺序组合。0 插入空白页。"
-
