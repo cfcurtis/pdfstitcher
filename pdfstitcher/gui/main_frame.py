@@ -144,7 +144,7 @@ class PDFStitcherFrame(wx.Frame):
             "right_to_left": bool(self.tt.left_right_combo.GetSelection()),
             "bottom_to_top": bool(self.tt.top_bottom_combo.GetSelection()),
             # set the optional stuff
-            "rotation": self.tt.rotate_combo.GetSelection(),
+            "rotation": utils.SW_ROTATION(self.tt.rotate_combo.GetSelection() * 90),
             # margins, margins!
             "margin": utils.txt_to_float(self.tt.margin_txt.GetValue()),
             # trim related stuff

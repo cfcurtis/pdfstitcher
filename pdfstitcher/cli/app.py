@@ -255,7 +255,7 @@ def main():
         "col_major": args.col_major,
         "right_to_left": args.right_to_left,
         "bottom_to_top": args.bottom_to_top,
-        "rotation": args.rotate,
+        "rotation": utils.SW_ROTATION(args.rotate),
         "margin": args.margin,
         "trim": args.trim,
         "override_trim": args.trimbox_to_mediabox,

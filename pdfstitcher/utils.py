@@ -46,6 +46,29 @@ PYPI_HOME = "https://pypi.org/pypi/pdfstitcher"
 FLATHUB_HOME = "https://flathub.org/apps/details/com.github.cfcurtis.pdfstitcher"
 
 
+class SW_ROTATION(IntEnum):
+    def __str__(self) -> str:
+        if self == SW_ROTATION.NONE:
+            return _("None")
+        elif self == SW_ROTATION.CLOCKWISE:
+            return _("Clockwise")
+        elif self == SW_ROTATION.COUNTERCLOCKWISE:
+            return _("Counterclockwise")
+        elif self == SW_ROTATION.TURNAROUND:
+            # translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
+            return _("Turn Around")
+        elif self == SW_ROTATION.UNSET:
+            return _("Unset")
+        else:
+            return _("Unknown")
+
+    NONE = 0
+    CLOCKWISE = 90
+    COUNTERCLOCKWISE = 270
+    TURNAROUND = 180
+    UNSET = -1
+
+
 class UNITS(IntEnum):
     INCHES = 0
     CENTIMETERS = 1
@@ -247,8 +270,9 @@ def txt_to_float(txt: str) -> float:
     if txt is None or not txt.strip():
         return 0
 
+    # allow comma as decimal
     txt = txt.replace(",", ".")
-    if any([c not in "0123456789.+-*/" for c in txt]):
+    if any([c.strip() not in "0123456789.+-*/" for c in txt]):
         print(_("Invalid input") + " " + txt + " , " + _("only numeric values allowed"))
         return None
 
@@ -301,57 +325,41 @@ def parse_page_range_with_rotation(ptext: str = "") -> list:
     if not ptext:
         print(_("Please specify a page range"))
         return None
-    
+
     # Pattern to match page numbers or ranges with optional rotation
     # Matches: "1", "1-3", "1r90", "1-3r180", etc.
-    pattern = r'(\d+)(?:-(\d+))?(?:[rR](\d+))?'
-    
+    pattern = r"(\d+)(?:-(\d+))?(?:[rR](\d+))?"
+
     for segment in ptext.split(","):
         segment = segment.strip()
         match = re.fullmatch(pattern, segment)
-        
+
         if not match:
             print(_("Invalid page range format: ") + segment)
             return None
-        
+
         start_page = int(match.group(1))
         end_page = int(match.group(2)) if match.group(2) else start_page
-        rotation = int(match.group(3)) if match.group(3) else 0
-        
+        rotation = int(match.group(3)) if match.group(3) else -1
+
         # Validate rotation value
-        if rotation not in [0, 90, 180, 270]:
-            print(_("Invalid rotation value: ") + str(rotation) + _(" (must be 0, 90, 180, or 270)"))
+        try:
+            rotation = SW_ROTATION(rotation)
+        except ValueError:
+            print(
+                _("Invalid rotation value: ") + str(rotation) + _(" (must be 0, 90, 180, or 270)")
+            )
             return None
-        
+
         # Add pages to range
         for page in range(start_page, end_page + 1):
             page_range.append({"page": page, "rotation": rotation})
-    
+
     return page_range
-
-
-def degrees_to_sw_rotation(degrees: int):
-    """Convert degrees (0, 90, 180, 270) to SW_ROTATION enum values"""
-    # Import here to avoid circular import
-    from pdfstitcher.processing.pagetiler import SW_ROTATION
-    
-    if degrees == 0:
-        return SW_ROTATION.NONE
-    elif degrees == 90:
-        return SW_ROTATION.CLOCKWISE
-    elif degrees == 180:
-        return SW_ROTATION.TURNAROUND
-    elif degrees == 270:
-        return SW_ROTATION.COUNTERCLOCKWISE
-    else:
-        raise ValueError(f"Invalid rotation degrees: {degrees}")
 
 
 def get_rotation_matrix(rotation) -> list:
     """Get the 2x2 rotation matrix for given rotation"""
-    # Import here to avoid circular import
-    from pdfstitcher.processing.pagetiler import SW_ROTATION
-    
     if rotation == SW_ROTATION.NONE:
         return [1, 0, 0, 1]
     elif rotation == SW_ROTATION.CLOCKWISE:
@@ -366,9 +374,6 @@ def get_rotation_matrix(rotation) -> list:
 
 def apply_rotation_to_dimensions(width: float, height: float, rotation) -> tuple:
     """Calculate new dimensions after rotation"""
-    # Import here to avoid circular import
-    from pdfstitcher.processing.pagetiler import SW_ROTATION
-    
     if rotation in [SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE]:
         # 90 or 270 degree rotation swaps dimensions
         return height, width

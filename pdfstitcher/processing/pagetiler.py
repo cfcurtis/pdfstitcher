@@ -13,28 +13,8 @@ import argparse
 import math
 import copy
 import pdfstitcher.utils as utils
-from pdfstitcher.utils import Config
+from pdfstitcher.utils import Config, SW_ROTATION
 from pdfstitcher.processing.procbase import ProcessingBase
-
-
-class SW_ROTATION(IntEnum):
-    def __str__(self) -> str:
-        if self == SW_ROTATION.NONE:
-            return _("None")
-        elif self == SW_ROTATION.CLOCKWISE:
-            return _("Clockwise")
-        elif self == SW_ROTATION.COUNTERCLOCKWISE:
-            return _("Counterclockwise")
-        elif self == SW_ROTATION.TURNAROUND:
-            # translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
-            return _("Turn Around")
-        else:
-            return _("Unknown")
-
-    NONE = 0
-    CLOCKWISE = 1
-    COUNTERCLOCKWISE = 2
-    TURNAROUND = 3
 
 
 class SW_ALIGN_V(IntEnum):
@@ -115,8 +95,8 @@ class PageTiler(ProcessingBase):
             )
 
     def _process_page(
-        self, content_dict: pikepdf.Dictionary, p: int, info: list, page_rotation: int = 0
-    ) -> Union[None, str]:
+        self, content_dict: pikepdf.Dictionary, p: int, info: list, user_rotation: int
+    ) -> None:
         """
         Extracts page number p from the input document and adds it to the page_dict,
         performs trimming if requested, and stores (trimmed) page dimensions. Lots going on.
@@ -130,9 +110,9 @@ class PageTiler(ProcessingBase):
                     p_info = p_info.copy()
                     break
             # could be the same page with different rotation
-            p_info["rotation"] = page_rotation
+            p_info["rotation"] = user_rotation
             info.append(p_info)
-            return None
+            return
 
         # get a convenient reference to the page
         in_doc_page = self.in_doc.pages[p - 1]
@@ -199,9 +179,9 @@ class PageTiler(ProcessingBase):
 
         # append the page info
         info.append(
-            {"width": p_width, "height": p_height, "pagekey": pagekey, "rotation": page_rotation}
+            {"width": p_width, "height": p_height, "pagekey": pagekey, "rotation": user_rotation}
         )
-        return pagekey
+        return
 
     def _build_pagelist(self) -> tuple:
         """
@@ -221,10 +201,14 @@ class PageTiler(ProcessingBase):
         prev_width = None
         prev_height = None
 
-        for idx, page_info in enumerate(self.page_range_with_rotation):
+        for page_info in self.page_range_with_rotation:
             p = page_info["page"]
-            page_rotation = page_info["rotation"]
-
+            # set the rotation as either page-specific or global
+            user_rotation = (
+                page_info["rotation"]
+                if page_info["rotation"] != SW_ROTATION.UNSET
+                else self.p["rotation"]
+            )
             if p == 0:
                 # blank page: append a placeholder to the info list
                 info.append(
@@ -232,14 +216,12 @@ class PageTiler(ProcessingBase):
                         "width": prev_width,
                         "height": prev_height,
                         "pagekey": None,
-                        "rotation": page_rotation,
+                        "rotation": user_rotation,
                     }
                 )
                 continue
 
-            pagekey = self._process_page(content_dict, p, info, page_rotation)
-            if pagekey is None:
-                continue
+            self._process_page(content_dict, p, info, user_rotation)
 
             if prev_width is not None and (
                 abs(info[-1]["width"] - prev_width) > 1 or abs(info[-1]["height"] - prev_height) > 1
@@ -256,10 +238,10 @@ class PageTiler(ProcessingBase):
             self.warn(_("No pages selected!"))
             return None
 
-        for p in filter(lambda p: p == 0, self.page_range):
-            if info[p]["width"] is None:
-                info[p]["width"] = info[first_non_zero]["width"]
-                info[p]["height"] = info[first_non_zero]["height"]
+        for p_info in info:
+            if p_info["width"] is None:
+                p_info["width"] = info[first_non_zero]["width"]
+                p_info["height"] = info[first_non_zero]["height"]
 
         if len(different_size) > 0:
             self._warn(
@@ -270,34 +252,17 @@ class PageTiler(ProcessingBase):
 
         return content_dict, info
 
-    def _get_trim(self, user_unit: float = 1) -> list:
-        """
-        Rearranges the trim order based on requested rotation, handling any necessary scaling.
-        """
-        # swap the trim order
-        # default: left,right,top,bottom
-        order = [0, 1, 2, 3]
-
-        if self.p["rotation"] == SW_ROTATION.CLOCKWISE:
-            order = [3, 2, 0, 1]
-        if self.p["rotation"] == SW_ROTATION.COUNTERCLOCKWISE:
-            order = [2, 3, 1, 0]
-        if self.p["rotation"] == SW_ROTATION.TURNAROUND:
-            order = [1, 0, 3, 2]
-
-        return [Config.general["units"].units_to_pts(self.p["trim"][o], user_unit) for o in order]
-
     def _get_page_trim(self, page_uu: float, rotation: int) -> list:
         """
-        Rearranges the trim order based on page rotation.
-        This is different from _get_trim because it provides the order in PDF format (left, bottom, right, top).
+        Rearranges the trim order based on (PDF-defined) page rotation.
+        Provides the order in PDF format (left, bottom, right, top).
         Note that the rotation is in degrees as specified by the PDF (opaque to the user), NOT the requested rotation.
         """
         # things get tricky if there's rotation, because the user sees top/bottom as right/left
         # Rotation is in clockwise degrees, so we need to adjust the trim order accordingly
         # trim: left, right, top, bottom as defined visually
         # trimbox: left, bottom, right, top (absolute coordinates)
-        page_trim = self._get_trim(page_uu)
+        page_trim = [Config.general["units"].units_to_pts(t, page_uu) for t in self.p["trim"]]
 
         # PDF rotation should be in increments of 90 degrees, but I've actually seen 360
         rotation = rotation % 360
@@ -322,8 +287,18 @@ class PageTiler(ProcessingBase):
         row_height = [0] * self.rows
 
         # extract the page dimensions from the info list
-        pw = [i["width"] for i in info]
-        ph = [i["height"] for i in info]
+        pw = [
+            i["height"]
+            if i["rotation"] in [SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE]
+            else i["width"]
+            for i in info
+        ]
+        ph = [
+            i["width"]
+            if i["rotation"] in [SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE]
+            else i["height"]
+            for i in info
+        ]
         n_tiles = len(info)
 
         if self.p["col_major"]:
@@ -483,14 +458,7 @@ class PageTiler(ProcessingBase):
         Returns a list of 6 elements representing the matrix.
         """
 
-        # Use per-page rotation if available, otherwise fall back to global rotation
-        if "rotation" in page_info and page_info["rotation"] != 0:
-            # Convert degrees to SW_ROTATION enum
-            page_rotation = utils.degrees_to_sw_rotation(page_info["rotation"])
-        else:
-            page_rotation = self.p["rotation"]
-
-        if page_rotation in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
+        if page_info["rotation"] in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
             # swap width and height of pages if rotated
             page_info["width"], page_info["height"] = page_info["height"], page_info["width"]
 
@@ -505,22 +473,24 @@ class PageTiler(ProcessingBase):
         vertical_space = row_height[r] - page_info["height"] * scale
 
         # apply shift
-        shift_right, shift_up = self._calc_shift(horizontal_space, vertical_space, page_rotation)
+        shift_right, shift_up = self._calc_shift(
+            horizontal_space, vertical_space, page_info["rotation"]
+        )
         x0 += shift_right
         y0 += shift_up
 
-        if page_rotation == SW_ROTATION.NONE:
+        if page_info["rotation"] == SW_ROTATION.NONE:
             # R is the rotation matrix (default to identity)
             R = [1, 0, 0, 1]
         else:
             # We need to account for the shift in origin if page rotation is applied
-            if page_rotation == SW_ROTATION.CLOCKWISE:
+            if page_info["rotation"] == SW_ROTATION.CLOCKWISE:
                 R = [0, -1, 1, 0]
                 y0 += page_info["height"]
-            elif page_rotation == SW_ROTATION.COUNTERCLOCKWISE:
+            elif page_info["rotation"] == SW_ROTATION.COUNTERCLOCKWISE:
                 R = [0, 1, -1, 0]
                 x0 += page_info["width"]
-            elif page_rotation == SW_ROTATION.TURNAROUND:
+            elif page_info["rotation"] == SW_ROTATION.TURNAROUND:
                 R = [-1, 0, 0, -1]
                 x0 += page_info["width"]
                 y0 += page_info["height"]
