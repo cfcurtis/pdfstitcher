@@ -100,13 +100,6 @@ class TestRotationUtilities:
         with pytest.raises(ValueError):
             SW_ROTATION(45)
 
-    def test_get_rotation_matrix(self):
-        """Test rotation matrix generation"""
-        assert utils.get_rotation_matrix(SW_ROTATION.NONE) == [1, 0, 0, 1]
-        assert utils.get_rotation_matrix(SW_ROTATION.CLOCKWISE) == [0, -1, 1, 0]
-        assert utils.get_rotation_matrix(SW_ROTATION.COUNTERCLOCKWISE) == [0, 1, -1, 0]
-        assert utils.get_rotation_matrix(SW_ROTATION.TURNAROUND) == [-1, 0, 0, -1]
-
 
 class TestProcessingBaseRotation:
     """Test ProcessingBase API changes for rotation"""

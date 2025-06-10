@@ -358,20 +358,6 @@ def parse_page_range_with_rotation(ptext: str = "") -> list:
     return page_range
 
 
-def get_rotation_matrix(rotation) -> list:
-    """Get the 2x2 rotation matrix for given rotation"""
-    if rotation == SW_ROTATION.NONE:
-        return [1, 0, 0, 1]
-    elif rotation == SW_ROTATION.CLOCKWISE:
-        return [0, -1, 1, 0]
-    elif rotation == SW_ROTATION.COUNTERCLOCKWISE:
-        return [0, 1, -1, 0]
-    elif rotation == SW_ROTATION.TURNAROUND:
-        return [-1, 0, 0, -1]
-    else:
-        raise ValueError(f"Invalid rotation: {rotation}")
-
-
 def init_new_doc(pdf: pikepdf.Pdf) -> pikepdf.Pdf:
     """
     Initialize a new document and copy over the layer info (OCGs) if it exists.
