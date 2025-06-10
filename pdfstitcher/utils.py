@@ -7,6 +7,7 @@
 
 import sys
 import os
+import re
 from typing import Union
 import pikepdf
 from enum import IntEnum
@@ -281,6 +282,99 @@ def parse_page_range(ptext: str = "") -> list:
         return None
 
     return page_range
+
+
+def parse_page_range_with_rotation(ptext: str = "") -> list:
+    """
+    Parse page ranges with optional rotation suffixes.
+    Format: "1,2,4r90,5-7r180"
+    Returns: [
+        {"page": 1, "rotation": 0},
+        {"page": 2, "rotation": 0},
+        {"page": 4, "rotation": 90},
+        {"page": 5, "rotation": 180},
+        {"page": 6, "rotation": 180},
+        {"page": 7, "rotation": 180}
+    ]
+    """
+    page_range = []
+    if not ptext:
+        print(_("Please specify a page range"))
+        return None
+    
+    # Pattern to match page numbers or ranges with optional rotation
+    # Matches: "1", "1-3", "1r90", "1-3r180", etc.
+    pattern = r'(\d+)(?:-(\d+))?(?:[rR](\d+))?'
+    
+    for segment in ptext.split(","):
+        segment = segment.strip()
+        match = re.fullmatch(pattern, segment)
+        
+        if not match:
+            print(_("Invalid page range format: ") + segment)
+            return None
+        
+        start_page = int(match.group(1))
+        end_page = int(match.group(2)) if match.group(2) else start_page
+        rotation = int(match.group(3)) if match.group(3) else 0
+        
+        # Validate rotation value
+        if rotation not in [0, 90, 180, 270]:
+            print(_("Invalid rotation value: ") + str(rotation) + _(" (must be 0, 90, 180, or 270)"))
+            return None
+        
+        # Add pages to range
+        for page in range(start_page, end_page + 1):
+            page_range.append({"page": page, "rotation": rotation})
+    
+    return page_range
+
+
+def degrees_to_sw_rotation(degrees: int):
+    """Convert degrees (0, 90, 180, 270) to SW_ROTATION enum values"""
+    # Import here to avoid circular import
+    from pdfstitcher.processing.pagetiler import SW_ROTATION
+    
+    if degrees == 0:
+        return SW_ROTATION.NONE
+    elif degrees == 90:
+        return SW_ROTATION.CLOCKWISE
+    elif degrees == 180:
+        return SW_ROTATION.TURNAROUND
+    elif degrees == 270:
+        return SW_ROTATION.COUNTERCLOCKWISE
+    else:
+        raise ValueError(f"Invalid rotation degrees: {degrees}")
+
+
+def get_rotation_matrix(rotation) -> list:
+    """Get the 2x2 rotation matrix for given rotation"""
+    # Import here to avoid circular import
+    from pdfstitcher.processing.pagetiler import SW_ROTATION
+    
+    if rotation == SW_ROTATION.NONE:
+        return [1, 0, 0, 1]
+    elif rotation == SW_ROTATION.CLOCKWISE:
+        return [0, -1, 1, 0]
+    elif rotation == SW_ROTATION.COUNTERCLOCKWISE:
+        return [0, 1, -1, 0]
+    elif rotation == SW_ROTATION.TURNAROUND:
+        return [-1, 0, 0, -1]
+    else:
+        raise ValueError(f"Invalid rotation: {rotation}")
+
+
+def apply_rotation_to_dimensions(width: float, height: float, rotation) -> tuple:
+    """Calculate new dimensions after rotation"""
+    # Import here to avoid circular import
+    from pdfstitcher.processing.pagetiler import SW_ROTATION
+    
+    if rotation in [SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE]:
+        # 90 or 270 degree rotation swaps dimensions
+        return height, width
+    else:
+        # 0 or 180 degree rotation keeps dimensions
+        return width, height
 
 
 def init_new_doc(pdf: pikepdf.Pdf) -> pikepdf.Pdf:

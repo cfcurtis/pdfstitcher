@@ -96,6 +96,10 @@ class LayerFilter(ProcessingBase):
             # no OCGs in document, and hopefully nobody names a layer this
             return
 
+        # Check if OCProperties exists and has OCGs
+        if "/OCProperties" not in self.out_doc.Root.keys() or "/OCGs" not in self.out_doc.Root.OCProperties.keys():
+            return
+
         # edit the OCG listing in the root
         On = [
             oc for oc in self.out_doc.Root.OCProperties.OCGs if str(oc.Name) in self.p["keep_ocs"]

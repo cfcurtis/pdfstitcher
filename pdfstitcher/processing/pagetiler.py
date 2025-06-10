@@ -115,16 +115,20 @@ class PageTiler(ProcessingBase):
             )
 
     def _process_page(
-        self, content_dict: pikepdf.Dictionary, p: int, info: dict
+        self, content_dict: pikepdf.Dictionary, p: int, info: dict, page_rotation: int = 0, idx: int = None
     ) -> Union[None, str]:
         """
         Extracts page number p from the input document and adds it to the page_dict,
         performs trimming if requested, and stores (trimmed) page dimensions. Lots going on.
         """
-        pagekey = f"/Page{p}"
-        # Check if it's already been copied (in case of duplicate page numbers)
-        if pagekey in content_dict.keys():
-            return None
+        # Use index if provided to ensure unique keys for duplicate pages
+        if idx is not None:
+            pagekey = f"/Page{idx}"
+        else:
+            pagekey = f"/Page{p}"
+            # Check if it's already been copied (in case of duplicate page numbers)
+            if pagekey in content_dict.keys():
+                return None
 
         # get a convenient reference to the page
         in_doc_page = self.in_doc.pages[p - 1]
@@ -190,7 +194,7 @@ class PageTiler(ProcessingBase):
             p_height -= page_trim[1] + page_trim[3]
 
         # append the page info
-        info.append({"width": p_width, "height": p_height, "pagekey": pagekey})
+        info.append({"width": p_width, "height": p_height, "pagekey": pagekey, "rotation": page_rotation})
         return pagekey
 
     def _build_pagelist(self) -> tuple:
@@ -211,14 +215,17 @@ class PageTiler(ProcessingBase):
         prev_width = None
         prev_height = None
 
-        for p in self.page_range:
+        for idx, page_info in enumerate(self.page_range_with_rotation):
+            p = page_info["page"]
+            page_rotation = page_info["rotation"]
+            
             if p == 0:
                 # blank page: append a placeholder to the info list
-                info.append({"width": prev_width, "height": prev_height, "pagekey": None})
+                info.append({"width": prev_width, "height": prev_height, "pagekey": None, "rotation": page_rotation})
                 continue
 
-            # if we've already added this page to the dictionary, skip it
-            pagekey = self._process_page(content_dict, p, info)
+            # Pass index to ensure unique keys for duplicate pages
+            pagekey = self._process_page(content_dict, p, info, page_rotation, idx)
             if pagekey is None:
                 continue
 
@@ -402,7 +409,7 @@ class PageTiler(ProcessingBase):
 
         return r, c
 
-    def _calc_shift(self, horizontal_space: float, vertical_space: float) -> tuple:
+    def _calc_shift(self, horizontal_space: float, vertical_space: float, rotation=None) -> tuple:
         """
         Calculates the shift needed to align the tile in the grid.
         Returns a tuple of (shift_right, shift_up).
@@ -432,14 +439,17 @@ class PageTiler(ProcessingBase):
             shift_up = round(vertical_space)
 
         # invert shift if we are rotating
-        if "rotation" in self.p:
-            if self.p["rotation"] == SW_ROTATION.CLOCKWISE:
-                shift_up *= -1
-            elif self.p["rotation"] == SW_ROTATION.COUNTERCLOCKWISE:
-                shift_right *= -1
-            elif self.p["rotation"] == SW_ROTATION.TURNAROUND:
-                shift_right *= -1
-                shift_up *= -1
+        # Use passed rotation if available, otherwise use global rotation
+        if rotation is None:
+            rotation = self.p.get("rotation", SW_ROTATION.NONE)
+            
+        if rotation == SW_ROTATION.CLOCKWISE:
+            shift_up *= -1
+        elif rotation == SW_ROTATION.COUNTERCLOCKWISE:
+            shift_right *= -1
+        elif rotation == SW_ROTATION.TURNAROUND:
+            shift_right *= -1
+            shift_up *= -1
 
         return shift_right, shift_up
 
@@ -460,8 +470,15 @@ class PageTiler(ProcessingBase):
         Calculates the transformation matrix for page i (zero indexed).
         Returns a list of 6 elements representing the matrix.
         """
+        
+        # Use per-page rotation if available, otherwise fall back to global rotation
+        if "rotation" in page_info and page_info["rotation"] != 0:
+            # Convert degrees to SW_ROTATION enum
+            page_rotation = utils.degrees_to_sw_rotation(page_info["rotation"])
+        else:
+            page_rotation = self.p["rotation"]
 
-        if self.p["rotation"] in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
+        if page_rotation in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
             # swap width and height of pages if rotated
             page_info["width"], page_info["height"] = page_info["height"], page_info["width"]
 
@@ -476,22 +493,22 @@ class PageTiler(ProcessingBase):
         vertical_space = row_height[r] - page_info["height"] * scale
 
         # apply shift
-        shift_right, shift_up = self._calc_shift(horizontal_space, vertical_space)
+        shift_right, shift_up = self._calc_shift(horizontal_space, vertical_space, page_rotation)
         x0 += shift_right
         y0 += shift_up
 
-        if self.p["rotation"] == SW_ROTATION.NONE:
+        if page_rotation == SW_ROTATION.NONE:
             # R is the rotation matrix (default to identity)
             R = [1, 0, 0, 1]
         else:
             # We need to account for the shift in origin if page rotation is applied
-            if self.p["rotation"] == SW_ROTATION.CLOCKWISE:
+            if page_rotation == SW_ROTATION.CLOCKWISE:
                 R = [0, -1, 1, 0]
                 y0 += page_info["height"]
-            elif self.p["rotation"] == SW_ROTATION.COUNTERCLOCKWISE:
+            elif page_rotation == SW_ROTATION.COUNTERCLOCKWISE:
                 R = [0, 1, -1, 0]
                 x0 += page_info["width"]
-            elif self.p["rotation"] == SW_ROTATION.TURNAROUND:
+            elif page_rotation == SW_ROTATION.TURNAROUND:
                 R = [-1, 0, 0, -1]
                 x0 += page_info["width"]
                 y0 += page_info["height"]

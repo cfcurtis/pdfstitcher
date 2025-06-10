@@ -67,7 +67,7 @@ def add_tile_args(parser: argparse.ArgumentParser) -> None:
         type=int,
         default=0,
         choices=[0, 90, 180, 270],
-        help=_("Rotate pages"),
+        help=_("Rotate all pages (overridden by per-page rotation in -p/--pages)"),
     )
     t_parser.add_argument(
         "--col-major",
@@ -172,7 +172,8 @@ def parse_arguments() -> argparse.Namespace:
         "-p",
         "--pages",
         help=_(
-            "Pages to Process. May be range or list (e.g. 1-5 or 1,3,5-7, etc). "
+            "Pages to Process. May be range or list (e.g. 1-5 or 1,3,5-7, etc) with optional rotation "
+            "(e.g. 1-3,4r90,5-7r180 rotates page 4 by 90° and pages 5-7 by 180°). "
             "Default: entire document. Use 0 values to add blank pages."
         ),
     )
