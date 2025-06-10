@@ -115,20 +115,24 @@ class PageTiler(ProcessingBase):
             )
 
     def _process_page(
-        self, content_dict: pikepdf.Dictionary, p: int, info: dict, page_rotation: int = 0, idx: int = None
+        self, content_dict: pikepdf.Dictionary, p: int, info: list, page_rotation: int = 0
     ) -> Union[None, str]:
         """
         Extracts page number p from the input document and adds it to the page_dict,
         performs trimming if requested, and stores (trimmed) page dimensions. Lots going on.
         """
-        # Use index if provided to ensure unique keys for duplicate pages
-        if idx is not None:
-            pagekey = f"/Page{idx}"
-        else:
-            pagekey = f"/Page{p}"
-            # Check if it's already been copied (in case of duplicate page numbers)
-            if pagekey in content_dict.keys():
-                return None
+        pagekey = f"/Page{p}"
+        # Check if it's already been copied (in case of duplicate page numbers)
+        if pagekey in content_dict.keys():
+            # append a duplicate of this page's info
+            for p_info in info:
+                if p_info["pagekey"] == pagekey:
+                    p_info = p_info.copy()
+                    break
+            # could be the same page with different rotation
+            p_info["rotation"] = page_rotation
+            info.append(p_info)
+            return None
 
         # get a convenient reference to the page
         in_doc_page = self.in_doc.pages[p - 1]
@@ -194,7 +198,9 @@ class PageTiler(ProcessingBase):
             p_height -= page_trim[1] + page_trim[3]
 
         # append the page info
-        info.append({"width": p_width, "height": p_height, "pagekey": pagekey, "rotation": page_rotation})
+        info.append(
+            {"width": p_width, "height": p_height, "pagekey": pagekey, "rotation": page_rotation}
+        )
         return pagekey
 
     def _build_pagelist(self) -> tuple:
@@ -218,14 +224,20 @@ class PageTiler(ProcessingBase):
         for idx, page_info in enumerate(self.page_range_with_rotation):
             p = page_info["page"]
             page_rotation = page_info["rotation"]
-            
+
             if p == 0:
                 # blank page: append a placeholder to the info list
-                info.append({"width": prev_width, "height": prev_height, "pagekey": None, "rotation": page_rotation})
+                info.append(
+                    {
+                        "width": prev_width,
+                        "height": prev_height,
+                        "pagekey": None,
+                        "rotation": page_rotation,
+                    }
+                )
                 continue
 
-            # Pass index to ensure unique keys for duplicate pages
-            pagekey = self._process_page(content_dict, p, info, page_rotation, idx)
+            pagekey = self._process_page(content_dict, p, info, page_rotation)
             if pagekey is None:
                 continue
 
@@ -442,7 +454,7 @@ class PageTiler(ProcessingBase):
         # Use passed rotation if available, otherwise use global rotation
         if rotation is None:
             rotation = self.p.get("rotation", SW_ROTATION.NONE)
-            
+
         if rotation == SW_ROTATION.CLOCKWISE:
             shift_up *= -1
         elif rotation == SW_ROTATION.COUNTERCLOCKWISE:
@@ -470,7 +482,7 @@ class PageTiler(ProcessingBase):
         Calculates the transformation matrix for page i (zero indexed).
         Returns a list of 6 elements representing the matrix.
         """
-        
+
         # Use per-page rotation if available, otherwise fall back to global rotation
         if "rotation" in page_info and page_info["rotation"] != 0:
             # Convert degrees to SW_ROTATION enum
