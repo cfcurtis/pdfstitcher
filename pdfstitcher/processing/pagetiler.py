@@ -59,7 +59,6 @@ class PageTiler(ProcessingBase):
 
         # define a few attributes that will be overwritten on run
         self.output_uu = 1
-        self.doc_rot = 0
         self.cols = 0
         self.rows = 0
 
@@ -123,7 +122,11 @@ class PageTiler(ProcessingBase):
         )
 
         # get the page rotation and user unit
-        page_rot = in_doc_page.Rotate % 360 if "/Rotate" in in_doc_page.keys() else self.doc_rot
+        page_rot = (
+            in_doc_page.Rotate % 360
+            if "/Rotate" in in_doc_page.keys()
+            else self.doc_info["root_rotation"]
+        )
         page_uu = float(in_doc_page.UserUnit) if "/UserUnit" in in_doc_page.keys() else 1
 
         # lowercase trimbox returns TrimBox if it exists, MediaBox otherwise
@@ -288,15 +291,19 @@ class PageTiler(ProcessingBase):
 
         # extract the page dimensions from the info list
         pw = [
-            i["height"]
-            if i["rotation"] in [SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE]
-            else i["width"]
+            (
+                i["height"]
+                if i["rotation"] in [SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE]
+                else i["width"]
+            )
             for i in info
         ]
         ph = [
-            i["width"]
-            if i["rotation"] in [SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE]
-            else i["height"]
+            (
+                i["width"]
+                if i["rotation"] in [SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE]
+                else i["height"]
+            )
             for i in info
         ]
         n_tiles = len(info)
@@ -613,10 +620,6 @@ class PageTiler(ProcessingBase):
 
         # initialize the output
         self.out_doc = utils.init_new_doc(self.in_doc)
-        # store the document rotation, if any
-        self.doc_rot = (
-            self.in_doc.Root.Pages.Rotate % 360 if "/Rotate" in self.in_doc.Root.Pages.keys() else 0
-        )
 
         # set the target userunit
         self._set_output_user_unit()

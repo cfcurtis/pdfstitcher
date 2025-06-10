@@ -67,6 +67,11 @@ class ProcessingBase(ABC):
                 "n_pages": len(self.in_doc.pages),
                 "layers": utils.get_layer_names(self.in_doc),
                 "first_page_dims": utils.get_page_dims(self.in_doc.pages[0]),
+                "root_rotation": utils.SW_ROTATION(
+                    self.in_doc.Root.Pages.Rotate % 360
+                    if "/Rotate" in self.in_doc.Root.Pages.keys()
+                    else 0
+                ),
             }
 
         if not self.page_range:
@@ -107,7 +112,9 @@ class ProcessingBase(ABC):
                 parsed_range = pr
         elif self.page_range is None and self.in_doc is not None:
             print(_("No page range specified, defaulting to all"))
-            parsed_range = [{"page": p, "rotation": 0} for p in range(1, len(self.in_doc.pages) + 1)]
+            parsed_range = [
+                {"page": p, "rotation": 0} for p in range(1, len(self.in_doc.pages) + 1)
+            ]
         else:
             parsed_range = []
 
@@ -130,14 +137,14 @@ class ProcessingBase(ABC):
 
         n_pages = len(self.in_doc.pages)
         no_good = []
-        
+
         for i, p in enumerate(self._page_range):
             # Handle both dict and int formats
             page_num = p["page"] if isinstance(p, dict) else p
             if page_num < 0 or page_num > n_pages:
                 no_good.append(i)
                 print(_("Page {} is out of range. Removing from page list.".format(page_num)))
-        
+
         # Remove invalid pages in reverse order to maintain indices
         for i in reversed(no_good):
             self._page_range.pop(i)

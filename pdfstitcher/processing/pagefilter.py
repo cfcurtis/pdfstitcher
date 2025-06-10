@@ -26,29 +26,37 @@ class PageFilter(ProcessingBase):
 
         for page_info in self.page_range_with_rotation:
             p = page_info["page"]
-            rotation = page_info["rotation"]
+            user_rotation = page_info["rotation"]
             user_unit = 1
-            
+
             if p == 0:
-                mbox = self.in_doc.pages[-1].MediaBox
-                self.out_doc.add_blank_page(page_size=(mbox[2], mbox[3]))
+                # make the new page the same size as the previous one
+                if len(self.out_doc.pages) > 0:
+                    mbox = self.out_doc.pages[-1].MediaBox
+                else:
+                    mbox = self._in_doc.pages[0].MediaBox
+                self.out_doc.add_blank_page(
+                    page_size=(abs(mbox[2] - mbox[0]), abs(mbox[3] - mbox[1]))
+                )
             else:
                 self.out_doc.pages.extend([self.in_doc.pages[p - 1]])
-                if "/UserUnit" in self.in_doc.pages[p - 1].keys():
-                    user_unit = float(self.in_doc.pages[p - 1].UserUnit)
 
-            # Apply rotation if specified
-            if rotation != 0:
-                self._apply_rotation_to_page(self.out_doc.pages[-1], rotation, user_unit)
+            # grab a convenient handle to the new page we just added
+            new_page = self.out_doc.pages[-1]
+
+            if "/UserUnit" in self.in_doc.pages[p - 1].keys():
+                user_unit = float(self.in_doc.pages[p - 1].UserUnit)
+
+            self._apply_rotation(new_page, self.in_doc.pages[p - 1], user_rotation)
 
             if self.p["margin"]:
                 # if margins were added, expand the new page boxes
                 margin = Config.general["units"].units_to_pts(self.p["margin"], user_unit)
                 media_box = [
-                    float(self.out_doc.pages[-1].MediaBox[0]) - margin,
-                    float(self.out_doc.pages[-1].MediaBox[1]) - margin,
-                    float(self.out_doc.pages[-1].MediaBox[2]) + margin,
-                    float(self.out_doc.pages[-1].MediaBox[3]) + margin,
+                    float(new_page.MediaBox[0]) - margin,
+                    float(new_page.MediaBox[1]) - margin,
+                    float(new_page.MediaBox[2]) + margin,
+                    float(new_page.MediaBox[3]) + margin,
                 ]
                 print(_("Page" + f" {p}: "), end="")
 
@@ -56,56 +64,22 @@ class PageFilter(ProcessingBase):
                 if size_warning:
                     self._warn(size_warning)
 
-                self.out_doc.pages[-1].MediaBox = media_box
-                self.out_doc.pages[-1].CropBox = media_box
+                new_page.MediaBox = media_box
+                new_page.CropBox = media_box
 
         return self.out_doc
 
-    def _apply_rotation_to_page(self, page: pikepdf.Page, rotation_degrees: int, user_unit: float) -> None:
+    def _apply_rotation(
+        self, new_page: pikepdf.Page, og_page: pikepdf.Page, user_rotation: utils.SW_ROTATION
+    ) -> None:
         """
-        Apply rotation to a page by converting it to XObject and applying transformation matrix.
+        Rotates the page relative to the user-perceived original rotation.
+        We need to fetch rotation from the original page in case of duplicate page copies.
         """
-        # Convert degrees to SW_ROTATION enum
-        sw_rotation = utils.degrees_to_sw_rotation(rotation_degrees)
-        
-        # Get rotation matrix
-        rotation_matrix = utils.get_rotation_matrix(sw_rotation)
-        
-        # Get page dimensions
-        media_box = page.MediaBox
-        width = float(media_box[2] - media_box[0])
-        height = float(media_box[3] - media_box[1])
-        
-        # Calculate new dimensions after rotation
-        new_width, new_height = utils.apply_rotation_to_dimensions(width, height, sw_rotation)
-        
-        # Convert page to XObject
-        xobj = page.as_form_xobject()
-        
-        # Calculate translation based on rotation
-        from pdfstitcher.processing.pagetiler import SW_ROTATION
-        if sw_rotation == SW_ROTATION.CLOCKWISE:
-            tx, ty = new_width, 0
-        elif sw_rotation == SW_ROTATION.COUNTERCLOCKWISE:
-            tx, ty = 0, new_height
-        elif sw_rotation == SW_ROTATION.TURNAROUND:
-            tx, ty = new_width, new_height
+
+        rotation = og_page.Rotate if "/Rotate" in og_page.keys() else self.doc_info["root_rotation"]
+        if user_rotation == utils.SW_ROTATION.UNSET:
+            new_page["/Rotate"] = rotation
         else:
-            tx, ty = 0, 0
-        
-        # Create transformation matrix (rotation + translation)
-        cm_matrix = rotation_matrix + [tx, ty]
-        
-        # Create new page content with transformation
-        cm_op = pikepdf.Stream(page._f, b" ".join([str(val).encode() for val in cm_matrix]) + b" cm")
-        do_op = pikepdf.Stream(page._f, b"/Page Do")
-        q_op = pikepdf.Stream(page._f, b"q")
-        Q_op = pikepdf.Stream(page._f, b"Q")
-        
-        # Replace page content
-        page.Contents = pikepdf.Array([q_op, cm_op, do_op, Q_op])
-        page.Resources["/XObject"] = pikepdf.Dictionary({"/Page": xobj})
-        
-        # Update MediaBox and CropBox with new dimensions
-        page.MediaBox = [0, 0, new_width, new_height]
-        page.CropBox = [0, 0, new_width, new_height]
+            rotation += user_rotation.value % 360
+            new_page["/Rotate"] = rotation
