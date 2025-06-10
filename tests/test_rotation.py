@@ -107,19 +107,6 @@ class TestRotationUtilities:
         assert utils.get_rotation_matrix(SW_ROTATION.COUNTERCLOCKWISE) == [0, 1, -1, 0]
         assert utils.get_rotation_matrix(SW_ROTATION.TURNAROUND) == [-1, 0, 0, -1]
 
-    def test_apply_rotation_to_dimensions(self):
-        """Test dimension calculations after rotation"""
-        # No rotation
-        assert utils.apply_rotation_to_dimensions(100, 200, SW_ROTATION.NONE) == (100, 200)
-        assert utils.apply_rotation_to_dimensions(100, 200, SW_ROTATION.TURNAROUND) == (100, 200)
-
-        # 90/270 degree rotation swaps dimensions
-        assert utils.apply_rotation_to_dimensions(100, 200, SW_ROTATION.CLOCKWISE) == (200, 100)
-        assert utils.apply_rotation_to_dimensions(100, 200, SW_ROTATION.COUNTERCLOCKWISE) == (
-            200,
-            100,
-        )
-
 
 class TestProcessingBaseRotation:
     """Test ProcessingBase API changes for rotation"""

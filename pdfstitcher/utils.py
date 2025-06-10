@@ -372,16 +372,6 @@ def get_rotation_matrix(rotation) -> list:
         raise ValueError(f"Invalid rotation: {rotation}")
 
 
-def apply_rotation_to_dimensions(width: float, height: float, rotation) -> tuple:
-    """Calculate new dimensions after rotation"""
-    if rotation in [SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE]:
-        # 90 or 270 degree rotation swaps dimensions
-        return height, width
-    else:
-        # 0 or 180 degree rotation keeps dimensions
-        return width, height
-
-
 def init_new_doc(pdf: pikepdf.Pdf) -> pikepdf.Pdf:
     """
     Initialize a new document and copy over the layer info (OCGs) if it exists.
