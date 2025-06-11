@@ -110,5 +110,6 @@ class MainProcess(ProcessingBase):
         if self.out_doc is None:
             return
 
+        self.out_doc.remove_unreferenced_resources()
         # handle exceptions in the calling scope
         self.out_doc.save(out_path)

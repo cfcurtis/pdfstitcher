@@ -522,5 +522,4 @@ class LayerFilter(ProcessingBase):
 
         # done, update progress and strip out unused stuff
         progress_win and progress_win.Update(n_page)
-        self.out_doc.remove_unreferenced_resources()
         return True
