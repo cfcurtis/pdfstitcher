@@ -428,6 +428,7 @@ class PageTiler(ProcessingBase):
 
         # account for shift in origin if we are rotating
         if page_info["rotation"] == SW_ROTATION.CLOCKWISE:
+            # CW/CCW seems backwards because we are rotating the coordinate system, not the object
             shift_up += page_info["width"]
         elif page_info["rotation"] == SW_ROTATION.COUNTERCLOCKWISE:
             shift_right += page_info["height"]

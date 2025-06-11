@@ -233,7 +233,21 @@ def test_calc_shift():
     tiler.params["horizontal_align"] = SW_ALIGN_H.RIGHT
     assert tiler._calc_shift(110, 60, info) == (10, 10)
 
-    # TODO: verify and write tests for rotated pages
+    # reset alignment
+    tiler.params["vertical_align"] = SW_ALIGN_V.MID
+    tiler.params["horizontal_align"] = SW_ALIGN_H.MID
+
+    # test with rotation
+    rotated_cases = [
+        (SW_ROTATION.NONE, (0, 25)),
+        (SW_ROTATION.CLOCKWISE, (25, 100)),
+        (SW_ROTATION.COUNTERCLOCKWISE, (75, 0)),
+        (SW_ROTATION.TURNAROUND, (100, 75)),
+    ]
+    for rotation, expected in rotated_cases:
+        info["rotation"] = rotation
+        shift = tiler._calc_shift(100, 100, info)
+        assert shift == expected
 
 
 def test_compute_target_size(default_tiler, doc_mixed_layers):
