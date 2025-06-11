@@ -100,6 +100,19 @@ class TestRotationUtilities:
         with pytest.raises(ValueError):
             SW_ROTATION(45)
 
+    def test_get_apparent_page_dims(self):
+        """Test dimension calculations after rotation"""
+        # Test all rotations for get_apparent_page_dims
+        for rotation, expected in [
+            (SW_ROTATION.UNSET, (100, 200)),
+            (SW_ROTATION.NONE, (100, 200)),
+            (SW_ROTATION.CLOCKWISE, (200, 100)),
+            (SW_ROTATION.TURNAROUND, (100, 200)),
+            (SW_ROTATION.COUNTERCLOCKWISE, (200, 100)),
+        ]:
+            info = {"width": 100, "height": 200, "rotation": rotation}
+            assert utils.get_apparent_page_dims(info) == expected
+
 
 class TestProcessingBaseRotation:
     """Test ProcessingBase API changes for rotation"""

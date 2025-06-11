@@ -290,22 +290,7 @@ class PageTiler(ProcessingBase):
         row_height = [0] * self.rows
 
         # extract the page dimensions from the info list
-        pw = [
-            (
-                i["height"]
-                if i["rotation"] in [SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE]
-                else i["width"]
-            )
-            for i in info
-        ]
-        ph = [
-            (
-                i["width"]
-                if i["rotation"] in [SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE]
-                else i["height"]
-            )
-            for i in info
-        ]
+        pw, ph = list(zip(*[utils.get_apparent_page_dims(p_info) for p_info in info]))
         n_tiles = len(info)
 
         if self.p["col_major"]:
@@ -328,6 +313,16 @@ class PageTiler(ProcessingBase):
             row_height.reverse()
 
         return col_width, row_height
+
+    def _set_output_user_unit(self):
+        """
+        Find the maximum user_unit defined in the document, then use this for the new document.
+        """
+        self.output_uu = 1
+        for p in self.page_range:
+            page = self.in_doc.pages[p - 1]
+            if "/UserUnit" in page.keys() and page.UserUnit > self.output_uu:
+                self.output_uu = float(page.UserUnit)
 
     def _calc_rows_cols(self, n_tiles: int) -> bool:
         """
@@ -403,59 +398,44 @@ class PageTiler(ProcessingBase):
 
         return r, c
 
-    def _calc_shift(self, horizontal_space: float, vertical_space: float, rotation=None) -> tuple:
+    def _calc_shift(
+        self, col_width: float, row_height: float, page_info: dict, scale: float = 1
+    ) -> tuple:
         """
-        Calculates the shift needed to align the tile in the grid.
+        Calculates the shift needed to align the tile in the grid, accounting for rotation.
         Returns a tuple of (shift_right, shift_up).
-        Only used if a tile is smaller than the grid space.
         """
 
-        if "horizontal_align" in self.p:
-            h_align = self.p["horizontal_align"]
-        else:
-            h_align = SW_ALIGN_H.MID
+        h_align = self.p["horizontal_align"] if "horizontal_align" in self.p else SW_ALIGN_H.MID
+        v_align = self.p["vertical_align"] if "vertical_align" in self.p else SW_ALIGN_V.MID
 
-        if "vertical_align" in self.p:
-            v_align = self.p["vertical_align"]
-        else:
-            v_align = SW_ALIGN_V.MID
+        # The gap is just the difference between the grid dimension and page dimensions
+        width, height = utils.get_apparent_page_dims(page_info)
+        h_space = col_width - width * scale
+        v_space = row_height - height * scale
 
         shift_right = 0
         shift_up = 0
-        if h_align is SW_ALIGN_H.MID:
-            shift_right = round(horizontal_space / 2)
-        elif h_align is SW_ALIGN_H.RIGHT:
-            shift_right = round(horizontal_space)
+        if h_align == SW_ALIGN_H.MID:
+            shift_right = h_space / 2
+        elif h_align == SW_ALIGN_H.RIGHT:
+            shift_right = h_space
 
-        if v_align is SW_ALIGN_V.MID:
-            shift_up = round(vertical_space / 2)
-        elif v_align is SW_ALIGN_V.TOP:
-            shift_up = round(vertical_space)
+        if v_align == SW_ALIGN_V.MID:
+            shift_up = v_space / 2
+        elif v_align == SW_ALIGN_V.TOP:
+            shift_up = v_space
 
-        # invert shift if we are rotating
-        # Use passed rotation if available, otherwise use global rotation
-        if rotation is None:
-            rotation = self.p.get("rotation", SW_ROTATION.NONE)
-
-        if rotation == SW_ROTATION.CLOCKWISE:
-            shift_up *= -1
-        elif rotation == SW_ROTATION.COUNTERCLOCKWISE:
-            shift_right *= -1
-        elif rotation == SW_ROTATION.TURNAROUND:
-            shift_right *= -1
-            shift_up *= -1
+        # account for shift in origin if we are rotating
+        if page_info["rotation"] == SW_ROTATION.CLOCKWISE:
+            shift_up += page_info["width"]
+        elif page_info["rotation"] == SW_ROTATION.COUNTERCLOCKWISE:
+            shift_right += page_info["height"]
+        elif page_info["rotation"] == SW_ROTATION.TURNAROUND:
+            shift_up += height
+            shift_right += width
 
         return shift_right, shift_up
-
-    def _set_output_user_unit(self):
-        """
-        Find the maximum user_unit defined in the document, then use this for the new document.
-        """
-        self.output_uu = 1
-        for p in self.page_range:
-            page = self.in_doc.pages[p - 1]
-            if "/UserUnit" in page.keys() and page.UserUnit > self.output_uu:
-                self.output_uu = float(page.UserUnit)
 
     def _compute_T_matrix(
         self, i: int, col_width: list, row_height: list, page_info: dict, scale: float = 1
@@ -464,43 +444,26 @@ class PageTiler(ProcessingBase):
         Calculates the transformation matrix for page i (zero indexed).
         Returns a list of 6 elements representing the matrix.
         """
-
-        if page_info["rotation"] in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
-            # swap width and height of pages if rotated
-            page_info["width"], page_info["height"] = page_info["height"], page_info["width"]
-
         r, c = self._grid_position(i)
 
         # the origin is the sum of all the sizes before the current one
+        # where should the top-left corner of the page be positioned?
         x0 = sum(col_width[:c])
         y0 = sum(row_height[r + 1 :])
 
-        # the XObject may be smaller than the grid space, so calculate the shift needed
-        horizontal_space = col_width[c] - page_info["width"] * scale
-        vertical_space = row_height[r] - page_info["height"] * scale
-
-        # apply shift
-        shift_right, shift_up = self._calc_shift(
-            horizontal_space, vertical_space, page_info["rotation"]
-        )
-        x0 += shift_right
-        y0 += shift_up
+        # might need to shift within the grid cell
+        shift = self._calc_shift(col_width[c], row_height[r], page_info, scale)
+        x0 += shift[0]
+        y0 += shift[1]
 
         if page_info["rotation"] == SW_ROTATION.NONE:
-            # R is the rotation matrix (default to identity)
             R = [1, 0, 0, 1]
-        else:
-            # We need to account for the shift in origin if page rotation is applied
-            if page_info["rotation"] == SW_ROTATION.CLOCKWISE:
-                R = [0, -1, 1, 0]
-                y0 += page_info["height"]
-            elif page_info["rotation"] == SW_ROTATION.COUNTERCLOCKWISE:
-                R = [0, 1, -1, 0]
-                x0 += page_info["width"]
-            elif page_info["rotation"] == SW_ROTATION.TURNAROUND:
-                R = [-1, 0, 0, -1]
-                x0 += page_info["width"]
-                y0 += page_info["height"]
+        elif page_info["rotation"] == SW_ROTATION.CLOCKWISE:
+            R = [0, -1, 1, 0]
+        elif page_info["rotation"] == SW_ROTATION.COUNTERCLOCKWISE:
+            R = [0, 1, -1, 0]
+        elif page_info["rotation"] == SW_ROTATION.TURNAROUND:
+            R = [-1, 0, 0, -1]
 
         # not quite matrix multiplication but works for a scalar scale factor
         R = [R[i] * scale for i in range(len(R))]

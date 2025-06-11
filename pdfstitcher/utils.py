@@ -417,6 +417,17 @@ def get_page_dims(
     return page_width, page_height
 
 
+def get_apparent_page_dims(info: dict) -> tuple:
+    """
+    Based on the page's actual width/height and specified rotation,
+    return a tuple containing the apparent width/height.
+    """
+    if info["rotation"] in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
+        return info["height"], info["width"]
+    else:
+        return info["width"], info["height"]
+
+
 def print_media_box(media_box, user_unit: float = 1) -> Union[None, str]:
     """
     Display the media box in the requested units.
