@@ -67,7 +67,7 @@ def add_tile_args(parser: argparse.ArgumentParser) -> None:
         type=int,
         default=0,
         choices=[0, 90, 180, 270],
-        help=_("Rotate pages"),
+        help=_("Rotate all pages (overridden by per-page rotation in -p/--pages)"),
     )
     t_parser.add_argument(
         "--col-major",
@@ -172,7 +172,8 @@ def parse_arguments() -> argparse.Namespace:
         "-p",
         "--pages",
         help=_(
-            "Pages to Process. May be range or list (e.g. 1-5 or 1,3,5-7, etc). "
+            "Pages to Process. May be range or list (e.g. 1-5 or 1,3,5-7, etc) with optional rotation "
+            "(e.g. 1-3,4r90,5-7r180 rotates page 4 by 90° and pages 5-7 by 180°). "
             "Default: entire document. Use 0 values to add blank pages."
         ),
     )
@@ -254,7 +255,7 @@ def main():
         "col_major": args.col_major,
         "right_to_left": args.right_to_left,
         "bottom_to_top": args.bottom_to_top,
-        "rotation": args.rotate,
+        "rotation": utils.SW_ROTATION(args.rotate),
         "margin": args.margin,
         "trim": args.trim,
         "override_trim": args.trimbox_to_mediabox,
@@ -270,7 +271,7 @@ def main():
         "delete_ocgs": not args.hide_layers,
         "line_props": None,  # Haven't figured out how to specify in CLI yet
     }
-    if any(layer_params.values()):
+    if any(layer_params["keep_ocs"]) or not layer_params["keep_non_oc"]:
         main_process.toggle("LayerFilter", True)
         main_process.set_params("LayerFilter", layer_params)
 

@@ -98,6 +98,8 @@ class IOTab(scrolled.ScrolledPanel):
                     _("Pages assemble in specified order. 0 inserts a blank page.")
                     + "\n"
                     + _("Use - for ranges. Example: 1-3, 0, 4, 0, 5-10.")
+                    + "\n"
+                    + _("Add r and degrees to rotate pages. Example: 1-3, 4r90, 5-7r180.")
                 ),
             ),
             flag=wx.TOP | wx.LEFT | wx.RIGHT,

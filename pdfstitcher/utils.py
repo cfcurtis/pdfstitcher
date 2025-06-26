@@ -7,6 +7,7 @@
 
 import sys
 import os
+import re
 from typing import Union
 import pikepdf
 from enum import IntEnum
@@ -43,6 +44,29 @@ DOWNLOAD_PAGE = WEB_HOME + "/docs/download"
 GIT_HOME = "https://github.com/cfcurtis/pdfstitcher"
 PYPI_HOME = "https://pypi.org/pypi/pdfstitcher"
 FLATHUB_HOME = "https://flathub.org/apps/details/com.github.cfcurtis.pdfstitcher"
+
+
+class SW_ROTATION(IntEnum):
+    def __str__(self) -> str:
+        if self == SW_ROTATION.NONE:
+            return _("None")
+        elif self == SW_ROTATION.CLOCKWISE:
+            return _("Clockwise")
+        elif self == SW_ROTATION.COUNTERCLOCKWISE:
+            return _("Counterclockwise")
+        elif self == SW_ROTATION.TURNAROUND:
+            # translation_note: Rotates 180 degrees. Not exposed in PDFStitcher GUI
+            return _("Turn Around")
+        elif self == SW_ROTATION.UNSET:
+            return _("Unset")
+        else:
+            return _("Unknown")
+
+    NONE = 0
+    CLOCKWISE = 90
+    COUNTERCLOCKWISE = 270
+    TURNAROUND = 180
+    UNSET = -1
 
 
 class UNITS(IntEnum):
@@ -246,8 +270,9 @@ def txt_to_float(txt: str) -> float:
     if txt is None or not txt.strip():
         return 0
 
+    # allow comma as decimal
     txt = txt.replace(",", ".")
-    if any([c not in "0123456789.+-*/" for c in txt]):
+    if any([c.strip() not in "0123456789.+-*/" for c in txt]):
         print(_("Invalid input") + " " + txt + " , " + _("only numeric values allowed"))
         return None
 
@@ -279,6 +304,56 @@ def parse_page_range(ptext: str = "") -> list:
     else:
         print(_("Please specify a page range"))
         return None
+
+    return page_range
+
+
+def parse_page_range_with_rotation(ptext: str = "") -> list:
+    """
+    Parse page ranges with optional rotation suffixes.
+    Format: "1,2,4r90,5-7r180"
+    Returns: [
+        {"page": 1, "rotation": 0},
+        {"page": 2, "rotation": 0},
+        {"page": 4, "rotation": 90},
+        {"page": 5, "rotation": 180},
+        {"page": 6, "rotation": 180},
+        {"page": 7, "rotation": 180}
+    ]
+    """
+    page_range = []
+    if not ptext:
+        print(_("Please specify a page range"))
+        return None
+
+    # Pattern to match page numbers or ranges with optional rotation
+    # Matches: "1", "1-3", "1r90", "1-3r180", etc.
+    pattern = r"(\d+)(?:-(\d+))?(?:[rR](\d+))?"
+
+    for segment in ptext.split(","):
+        segment = segment.strip()
+        match = re.fullmatch(pattern, segment)
+
+        if not match:
+            print(_("Invalid page range format: ") + segment)
+            return None
+
+        start_page = int(match.group(1))
+        end_page = int(match.group(2)) if match.group(2) else start_page
+        rotation = int(match.group(3)) if match.group(3) else -1
+
+        # Validate rotation value
+        try:
+            rotation = SW_ROTATION(rotation)
+        except ValueError:
+            print(
+                _("Invalid rotation value: ") + str(rotation) + _(" (must be 0, 90, 180, or 270)")
+            )
+            return None
+
+        # Add pages to range
+        for page in range(start_page, end_page + 1):
+            page_range.append({"page": page, "rotation": rotation})
 
     return page_range
 
@@ -340,6 +415,17 @@ def get_page_dims(
         page_width, page_height = page_height, page_width
 
     return page_width, page_height
+
+
+def get_apparent_page_dims(info: dict) -> tuple:
+    """
+    Based on the page's actual width/height and specified rotation,
+    return a tuple containing the apparent width/height.
+    """
+    if info["rotation"] in (SW_ROTATION.CLOCKWISE, SW_ROTATION.COUNTERCLOCKWISE):
+        return info["height"], info["width"]
+    else:
+        return info["width"], info["height"]
 
 
 def print_media_box(media_box, user_unit: float = 1) -> Union[None, str]:

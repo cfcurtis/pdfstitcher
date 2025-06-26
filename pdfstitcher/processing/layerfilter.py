@@ -96,6 +96,14 @@ class LayerFilter(ProcessingBase):
             # no OCGs in document, and hopefully nobody names a layer this
             return
 
+        # Check if OCProperties exists and has OCGs - set to no_ocgs if not
+        if (
+            "/OCProperties" not in self.out_doc.Root.keys()
+            or "/OCGs" not in self.out_doc.Root.OCProperties.keys()
+        ):
+            self.p["keep_ocs"] = "no_ocgs"
+            return
+
         # edit the OCG listing in the root
         On = [
             oc for oc in self.out_doc.Root.OCProperties.OCGs if str(oc.Name) in self.p["keep_ocs"]
@@ -379,7 +387,8 @@ class LayerFilter(ProcessingBase):
         Entry point for filtering content, usually starting with a page.
         Recursively filters any placed forms.
 
-        The "do_filter" parameter flips to true if the page has OC blocks or placed forms, but also needs to be set as true if we're already inside an OC block.
+        The "do_filter" parameter flips to true if the page has OC blocks or placed forms,
+        but also needs to be set as true if we're already inside an OC block.
         """
         # First check the id of the object and don't re-filter if we've seen it before
         obid = content.unparse()
@@ -513,5 +522,4 @@ class LayerFilter(ProcessingBase):
 
         # done, update progress and strip out unused stuff
         progress_win and progress_win.Update(n_page)
-        self.out_doc.remove_unreferenced_resources()
         return True

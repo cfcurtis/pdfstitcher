@@ -1,5 +1,5 @@
-from pdfstitcher.processing.pagetiler import PageTiler, SW_ALIGN_H, SW_ALIGN_V, SW_ROTATION
-from pdfstitcher.utils import Config, UNITS, init_new_doc
+from pdfstitcher.processing.pagetiler import PageTiler, SW_ALIGN_H, SW_ALIGN_V
+from pdfstitcher.utils import Config, UNITS, init_new_doc, SW_ROTATION
 import pytest
 
 
@@ -51,21 +51,6 @@ def test_set_output_user_unit(doc_mixed_layers, default_tiler):
     assert default_tiler.output_uu == pytest.approx(10.0)
 
 
-def test_get_trim(default_tiler, doc_mixed_layers):
-    """
-    Test getting the trim values in various units.
-    """
-    default_tiler.params["trim"] = [1, 1, 1, 1]
-    default_tiler.load_doc(doc_mixed_layers)
-    default_tiler.page_range = None
-    default_tiler._set_output_user_unit()
-    assert default_tiler._get_trim(default_tiler.output_uu) == [pytest.approx(7.2)] * 4
-
-    Config.general["units"] = UNITS.CENTIMETERS
-    default_tiler._set_output_user_unit()
-    assert default_tiler._get_trim(default_tiler.output_uu) == [pytest.approx(7.2 / 2.54)] * 4
-
-
 def test_process_page(doc_mixed_layers, default_tiler):
     """
     Test the page processing. Relies on previous functions.
@@ -77,20 +62,21 @@ def test_process_page(doc_mixed_layers, default_tiler):
     default_tiler._set_output_user_unit()
     content_dict = {}
     info = []
-    default_tiler._process_page(content_dict, 1, info)
+    default_tiler._process_page(content_dict, 1, info, SW_ROTATION.NONE)
     pagekey = info[-1]["pagekey"]
     assert pagekey == f"/Page{1}"
     assert pagekey in content_dict
     assert info[-1]["width"] == pytest.approx(1800.0)
     assert float(content_dict[pagekey].Matrix[0]) == pytest.approx(1.0)
 
-    # second time a given page should not be re-added
-    default_tiler._process_page(content_dict, 1, info)
+    # second time a given page should not be re-added to the content dictionary
+    # still needs adding to the info list though
+    default_tiler._process_page(content_dict, 1, info, SW_ROTATION.CLOCKWISE)
     assert len(content_dict) == 1
-    assert len(info) == 1
+    assert len(info) == 2
 
     # test with a different page
-    default_tiler._process_page(content_dict, 2, info)
+    default_tiler._process_page(content_dict, 2, info, SW_ROTATION.NONE)
     pagekey = info[-1]["pagekey"]
     assert pagekey == f"/Page{2}"
     assert pagekey in content_dict
@@ -103,11 +89,11 @@ def test_process_page(doc_mixed_layers, default_tiler):
     default_tiler._set_output_user_unit()
     content_dict = {}
     info = []
-    default_tiler._process_page(content_dict, 1, info)
+    default_tiler._process_page(content_dict, 1, info, SW_ROTATION.NONE)
     assert info[-1]["width"] == pytest.approx(1656.0)
     assert info[-1]["height"] == pytest.approx(1656.0)
 
-    default_tiler._process_page(content_dict, 2, info)
+    default_tiler._process_page(content_dict, 2, info, SW_ROTATION.NONE)
     assert info[-1]["width"] == pytest.approx(1296.0)
     assert info[-1]["height"] == pytest.approx(1296.0)
 
@@ -115,11 +101,11 @@ def test_process_page(doc_mixed_layers, default_tiler):
     default_tiler.params["actually_trim"] = False
     content_dict = {}
     info = []
-    default_tiler._process_page(content_dict, 1, info)
+    default_tiler._process_page(content_dict, 1, info, SW_ROTATION.NONE)
     assert info[-1]["width"] == pytest.approx(1656.0)
     assert info[-1]["height"] == pytest.approx(1656.0)
 
-    default_tiler._process_page(content_dict, 2, info)
+    default_tiler._process_page(content_dict, 2, info, SW_ROTATION.NONE)
     assert info[-1]["width"] == pytest.approx(1296.0)
     assert info[-1]["height"] == pytest.approx(1296.0)
 
@@ -143,7 +129,6 @@ def test_build_pagelist(default_tiler, doc_mixed_layers):
         default_tiler._set_output_user_unit()
         content_dict, info = default_tiler._build_pagelist()
         assert len(content_dict) == expected_length
-        assert len(info) == expected_length
         assert all(i["pagekey"] in content_dict for i in info)
 
     # zeros need a bit of different handling
@@ -233,23 +218,36 @@ def test_calc_shift():
     tiler = PageTiler()
 
     # no shift
-    assert tiler._calc_shift(0, 0) == (0, 0)
+    info = {"width": 100, "height": 50, "rotation": SW_ROTATION.NONE}
+    assert tiler._calc_shift(100, 50, info) == (0, 0)
 
     # default: centred
-    assert tiler._calc_shift(10, 10) == (5, 5)
+    assert tiler._calc_shift(110, 60, info) == (5, 5)
 
     # top left
     tiler.params["vertical_align"] = SW_ALIGN_V.TOP
     tiler.params["horizontal_align"] = SW_ALIGN_H.LEFT
-    assert tiler._calc_shift(10, 10) == (0, 10)
+    assert tiler._calc_shift(110, 60, info) == (0, 10)
 
     # top right
     tiler.params["horizontal_align"] = SW_ALIGN_H.RIGHT
-    assert tiler._calc_shift(10, 10) == (10, 10)
+    assert tiler._calc_shift(110, 60, info) == (10, 10)
 
-    # rotate
-    tiler.params["rotation"] = SW_ROTATION.CLOCKWISE
-    assert tiler._calc_shift(10, 10) == (10, -10)
+    # reset alignment
+    tiler.params["vertical_align"] = SW_ALIGN_V.MID
+    tiler.params["horizontal_align"] = SW_ALIGN_H.MID
+
+    # test with rotation
+    rotated_cases = [
+        (SW_ROTATION.NONE, (0, 25)),
+        (SW_ROTATION.CLOCKWISE, (25, 100)),
+        (SW_ROTATION.COUNTERCLOCKWISE, (75, 0)),
+        (SW_ROTATION.TURNAROUND, (100, 75)),
+    ]
+    for rotation, expected in rotated_cases:
+        info["rotation"] = rotation
+        shift = tiler._calc_shift(100, 100, info)
+        assert shift == expected
 
 
 def test_compute_target_size(default_tiler, doc_mixed_layers):

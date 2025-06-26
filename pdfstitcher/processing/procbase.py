@@ -67,6 +67,11 @@ class ProcessingBase(ABC):
                 "n_pages": len(self.in_doc.pages),
                 "layers": utils.get_layer_names(self.in_doc),
                 "first_page_dims": utils.get_page_dims(self.in_doc.pages[0]),
+                "root_rotation": utils.SW_ROTATION(
+                    self.in_doc.Root.Pages.Rotate % 360
+                    if "/Rotate" in self.in_doc.Root.Pages.keys()
+                    else 0
+                ),
             }
 
         if not self.page_range:
@@ -74,17 +79,42 @@ class ProcessingBase(ABC):
 
     @property
     def page_range(self) -> list:
-        return self._page_range
+        """Returns list of page numbers for backward compatibility"""
+        if self._page_range is None:
+            return None
+        return [p["page"] if isinstance(p, dict) else p for p in self._page_range]
+
+    @property
+    def page_range_with_rotation(self) -> list:
+        """Returns full page range with rotation info"""
+        if self._page_range is None:
+            return None
+        # Ensure all entries are in dict format
+        result = []
+        for p in self._page_range:
+            if isinstance(p, dict):
+                result.append(p)
+            else:
+                result.append({"page": p, "rotation": 0})
+        return result
 
     @page_range.setter
     def page_range(self, pr: Union[str, list]) -> None:
-        if isinstance(pr, list):
-            parsed_range = pr
-        elif isinstance(pr, str):
-            parsed_range = utils.parse_page_range(pr)
+        if isinstance(pr, str):
+            # Use the new parser that supports rotation
+            parsed_range = utils.parse_page_range_with_rotation(pr)
+        elif isinstance(pr, list):
+            # Handle both old format (list of ints) and new format (list of dicts)
+            if pr and all(isinstance(p, int) for p in pr):
+                # Convert old format to new format
+                parsed_range = [{"page": p, "rotation": 0} for p in pr]
+            else:
+                parsed_range = pr
         elif self.page_range is None and self.in_doc is not None:
             print(_("No page range specified, defaulting to all"))
-            parsed_range = list(range(1, len(self.in_doc.pages) + 1))
+            parsed_range = [
+                {"page": p, "rotation": 0} for p in range(1, len(self.in_doc.pages) + 1)
+            ]
         else:
             parsed_range = []
 
@@ -102,18 +132,22 @@ class ProcessingBase(ABC):
         Compares the page range to the number of pages in the document.
         If any pages are out of range, removes them and warns the user.
         """
-        if not self.page_range or not self.in_doc:
+        if not self._page_range or not self.in_doc:
             return
 
         n_pages = len(self.in_doc.pages)
-        no_good = set()
-        for p in self._page_range:
-            if p < 0 or p > n_pages:
-                no_good.add(p)
+        no_good = []
 
-        for p in no_good:
-            print(_("Page {} is out of range. Removing from page list.".format(p)))
-            self._page_range.remove(p)
+        for i, p in enumerate(self._page_range):
+            # Handle both dict and int formats
+            page_num = p["page"] if isinstance(p, dict) else p
+            if page_num < 0 or page_num > n_pages:
+                no_good.append(i)
+                print(_("Page {} is out of range. Removing from page list.".format(page_num)))
+
+        # Remove invalid pages in reverse order to maintain indices
+        for i in reversed(no_good):
+            self._page_range.pop(i)
 
     def _warn(self, message: str) -> None:
         """
