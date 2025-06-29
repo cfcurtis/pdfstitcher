@@ -9,7 +9,7 @@ python -m nuitka \
     --company-name="Charlotte Curtis" \
     --product-name="PDF Stitcher" \
     --macos-app-name="PDF Stitcher" \
-    --macos-app-version=v1.1 \
+    --macos-app-version=v1.2 \
     --macos-signed-app-name=com.charlottecurtis.pdfstitcher \
     --macos-sign-identity="$APPLE_SIGN_IDENTITY" \
     --macos-sign-notarization \
@@ -26,6 +26,9 @@ for dir in "resources" "babel" "pdf_mangler" "certifi"; do
     ln -s "../Resources/$dir" "."
     cd -
 done
+
+# should be executable, but just in case, set it before redoing code signing
+chmod +x build/app.app/Contents/MacOS/pdfstitcher
 
 # rename the app. Running "mv build/app.app build/pdfstitcher.app" doesn't work, 
 # it seems to treat app.app like a file and moves it inside pdfstitcher.app
