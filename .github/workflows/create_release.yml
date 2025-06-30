@@ -95,7 +95,7 @@ jobs:
           pip install .[gui]
           pip install tomli
           python build/update_loc.py --compile
-          echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
+          echo "VERSION_STRING=v$(sed -n 's/^version = //p' pyproject.toml)" >> $GITHUB_ENV
 
       - uses: Nuitka/Nuitka-Action@main
         with:
@@ -159,7 +159,7 @@ jobs:
           pip install ".[gui]"
           pip install tomli
           python build/update_loc.py --compile
-          echo "VERSION_STRING=v$(grep 'version' pyproject.toml | awk '{print $3}' | sed 's/\"//g')" >> $GITHUB_ENV
+          echo "VERSION_STRING=v$(sed -n 's/^version = //p' pyproject.toml)" >> $GITHUB_ENV
 
       - name: Configure code signing
         uses: apple-actions/import-codesign-certs@v3

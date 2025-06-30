@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+# assume this script is run from the root dir as in create_release.yml
+VERSION=$(sed -n 's/^version = //p' pyproject.toml)
+
 python -m nuitka \
     --standalone \
     --macos-create-app-bundle \
@@ -9,7 +12,7 @@ python -m nuitka \
     --company-name="Charlotte Curtis" \
     --product-name="PDF Stitcher" \
     --macos-app-name="PDF Stitcher" \
-    --macos-app-version=v1.2 \
+    --macos-app-version="v$VERSION" \
     --macos-signed-app-name=com.charlottecurtis.pdfstitcher \
     --macos-sign-identity="$APPLE_SIGN_IDENTITY" \
     --macos-sign-notarization \
