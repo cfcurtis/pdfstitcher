@@ -344,8 +344,9 @@ msgid "Please attach to GitHub issue or email."
 msgstr "Vänligen bifoga GitHub problemet eller e-postmeddelandet."
 
 #: pdfstitcher/gui/dialogs.py:268
+#, fuzzy
 msgid "Success"
-msgstr ""
+msgstr "Framgång"
 
 #: pdfstitcher/gui/dialogs.py:271
 msgid "Failed to mangle PDF"
@@ -381,7 +382,7 @@ msgstr ""
 
 #: pdfstitcher/gui/dialogs.py:389
 msgid "Save preferences"
-msgstr ""
+msgstr "Spara inställningar"
 
 #: pdfstitcher/gui/dialogs.py:404
 msgid "Choose a directory"
@@ -400,12 +401,13 @@ msgid "Preferences saved"
 msgstr "Inställningar sparade"
 
 #: pdfstitcher/gui/io_tab.py:30 pdfstitcher/gui/main_frame.py:397
+#, fuzzy
 msgid "Select input PDF"
-msgstr ""
+msgstr "Välj indata-PDF"
 
 #: pdfstitcher/gui/io_tab.py:48 pdfstitcher/gui/main_frame.py:343
 msgid "Save output as"
-msgstr "Spara resutat som"
+msgstr "Spara resultat som"
 
 #: pdfstitcher/gui/io_tab.py:71
 msgid "Output Options"
@@ -503,7 +505,7 @@ msgstr "Linjeegenskaper"
 
 #: pdfstitcher/gui/layers_tab.py:90
 msgid "Select line properties to modify"
-msgstr ""
+msgstr "Välj linje egenskaper att ändra"
 
 #: pdfstitcher/gui/layers_tab.py:93
 msgid "Line Colour"
@@ -568,7 +570,7 @@ msgstr "Välj lager att ta med i projektorfilen"
 
 #: pdfstitcher/gui/layers_tab.py:370
 msgid "Select all"
-msgstr ""
+msgstr "Välj alla"
 
 #: pdfstitcher/gui/main_frame.py:44
 msgid "Tile Pages"
@@ -763,7 +765,7 @@ msgstr "Valfria parametrar"
 #. won't translate nicely.
 #: pdfstitcher/gui/tile_tab.py:210
 msgid "Set TrimBox to MediaBox"
-msgstr ""
+msgstr "Ställ TrimBox till MediaBox"
 
 #: pdfstitcher/gui/tile_tab.py:212
 msgid "May help fix things when output is not as expected"
