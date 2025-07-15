@@ -365,11 +365,11 @@ msgstr "Kontrollera om det finns uppdateringar vid uppstart"
 
 #: pdfstitcher/gui/dialogs.py:328
 msgid "Save current margin and unit settings"
-msgstr ""
+msgstr "Spara nuvarande marginal- och enhetsinställningar"
 
 #: pdfstitcher/gui/dialogs.py:338
 msgid "Save current line properties"
-msgstr ""
+msgstr "Spara nuvarande linje egenskaper"
 
 #: pdfstitcher/gui/dialogs.py:348
 msgid "Default open directory"
@@ -405,7 +405,7 @@ msgstr ""
 
 #: pdfstitcher/gui/io_tab.py:48 pdfstitcher/gui/main_frame.py:343
 msgid "Save output as"
-msgstr ""
+msgstr "Spara resutat som"
 
 #: pdfstitcher/gui/io_tab.py:71
 msgid "Output Options"
@@ -708,7 +708,7 @@ msgstr "Eller antal Rows"
 
 #: pdfstitcher/gui/tile_tab.py:73 pdfstitcher/processing/pagetiler.py:89
 msgid "Rows then columns"
-msgstr ""
+msgstr "Rader sedan kolumner"
 
 #: pdfstitcher/gui/tile_tab.py:73 pdfstitcher/processing/pagetiler.py:91
 msgid "Columns then rows"
@@ -720,7 +720,7 @@ msgstr "Vänster till höger"
 
 #: pdfstitcher/gui/tile_tab.py:74 pdfstitcher/processing/pagetiler.py:95
 msgid "Right to left"
-msgstr ""
+msgstr "Höger till vänster"
 
 #: pdfstitcher/gui/tile_tab.py:75 pdfstitcher/processing/pagetiler.py:97
 msgid "Top to bottom"
@@ -786,8 +786,9 @@ msgid "Left"
 msgstr "Vänster"
 
 #: pdfstitcher/gui/tile_tab.py:260 pdfstitcher/processing/pagetiler.py:63
+#, fuzzy
 msgid "Right"
-msgstr ""
+msgstr "Höger"
 
 #: pdfstitcher/gui/tile_tab.py:275 pdfstitcher/processing/pagetiler.py:47
 msgid "Top"
@@ -826,7 +827,7 @@ msgstr "Marginaler"
 
 #: pdfstitcher/processing/pagetiler.py:105
 msgid "Rotation"
-msgstr ""
+msgstr "Rotation"
 
 #: pdfstitcher/processing/pagetiler.py:110
 msgid "Vertical alignment"
