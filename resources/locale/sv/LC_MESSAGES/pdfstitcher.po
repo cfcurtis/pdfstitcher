@@ -31,7 +31,7 @@ msgstr "Fel vid hämtning av systeminformation: {}"
 #: pdfstitcher/cli/app.py:230 pdfstitcher/gui/layers_tab.py:140
 #: pdfstitcher/utils.py:58
 msgid "in"
-msgstr "in i"
+msgstr "i"
 
 #: pdfstitcher/cli/app.py:45 pdfstitcher/gui/layers_tab.py:140
 #: pdfstitcher/utils.py:60
@@ -87,7 +87,7 @@ msgstr "Antal rader i det kaklade rutnätet."
 
 #: pdfstitcher/cli/app.py:38
 msgid "Number of columns in tiled grid."
-msgstr "Antal kolumner i kaklad rutnät."
+msgstr "Antal kolumner i kaklat rutnät."
 
 #: pdfstitcher/cli/app.py:47
 msgid "Units for margin and trim values."
@@ -186,7 +186,7 @@ msgstr "Sy ihop PDF-sidor, lägg till marginaler, ta bort lager och mer."
 
 #: pdfstitcher/cli/app.py:162
 msgid "Input filename (pdf)"
-msgstr "Inmatningsfilnamn (pdf)"
+msgstr "Input filename (pdf)"
 
 #: pdfstitcher/cli/app.py:167
 msgid "Output filename (pdf)"
@@ -226,12 +226,12 @@ msgstr "Lager"
 
 #: pdfstitcher/cli/app.py:280
 msgid "not found in the document. Ignoring."
-msgstr ""
+msgstr "hittades inte i dokumentet. Ignorerar."
 
 #: pdfstitcher/cli/app.py:290 pdfstitcher/gui/main_frame.py:42
 #: pdfstitcher/processing/pagetiler.py:102
 msgid "Options"
-msgstr ""
+msgstr "Alternativ"
 
 #: pdfstitcher/cli/app.py:301 pdfstitcher/gui/main_frame.py:222
 msgid "Successfully written to"
@@ -243,15 +243,15 @@ msgstr "Söker efter uppdateringar"
 
 #: pdfstitcher/gui/dialogs.py:32
 msgid "Please wait..."
-msgstr ""
+msgstr "Vänligen vänta..."
 
 #: pdfstitcher/gui/dialogs.py:54
 msgid "PDFStitcher is installed and managed via Flatpak."
-msgstr ""
+msgstr "PDFStitcher installeras och hanteras via Flatpak."
 
 #: pdfstitcher/gui/dialogs.py:63
 msgid "No updates available, {} is the current version."
-msgstr ""
+msgstr "Inga uppdateringar tillgängliga, {} är den aktuella versionen."
 
 #: pdfstitcher/gui/dialogs.py:70
 msgid "Update available!"
@@ -275,7 +275,7 @@ msgstr "Fel vid sökandet efter uppdateringar"
 
 #: pdfstitcher/gui/dialogs.py:106 pdfstitcher/gui/main_frame.py:273
 msgid "Report a bug"
-msgstr ""
+msgstr "Rapportera en bug"
 
 #: pdfstitcher/gui/dialogs.py:116
 msgid ""
@@ -302,7 +302,7 @@ msgstr "Skapa manglade PDF-filer (beta)"
 
 #: pdfstitcher/gui/dialogs.py:182
 msgid "Report Via GitHub"
-msgstr ""
+msgstr "Rapport Via GitHub"
 
 #: pdfstitcher/gui/dialogs.py:191
 msgid "Email to ccurtis@mtroyal.ca"
@@ -319,7 +319,7 @@ msgstr "Fel"
 
 #: pdfstitcher/gui/dialogs.py:236 pdfstitcher/gui/main_frame.py:180
 msgid "No PDF loaded"
-msgstr ""
+msgstr "Ingen PDF laddad"
 
 #: pdfstitcher/gui/dialogs.py:242
 #, fuzzy
@@ -328,7 +328,7 @@ msgstr "Välj en plats att spara den förvrängda PDF-filen"
 
 #: pdfstitcher/gui/dialogs.py:252
 msgid "Mangling PDF with {} pages"
-msgstr ""
+msgstr "Mangling PDF med {} sidor"
 
 #: pdfstitcher/gui/dialogs.py:253
 msgid "This may take some time, please wait"
@@ -336,11 +336,12 @@ msgstr ""
 
 #: pdfstitcher/gui/dialogs.py:265
 msgid "Mangled PDF saved to {}."
-msgstr ""
+msgstr "Mangled PDF sparad till {}."
 
 #: pdfstitcher/gui/dialogs.py:267
+#, fuzzy
 msgid "Please attach to GitHub issue or email."
-msgstr ""
+msgstr "Vänligen bifoga GitHub problemet eller e-postmeddelandet."
 
 #: pdfstitcher/gui/dialogs.py:268
 msgid "Success"
@@ -352,11 +353,11 @@ msgstr "Misslyckades med att mangla PDF"
 
 #: pdfstitcher/gui/dialogs.py:298
 msgid "Preferences"
-msgstr ""
+msgstr "Inställningar"
 
 #: pdfstitcher/gui/dialogs.py:303
 msgid "Language"
-msgstr ""
+msgstr "Språk"
 
 #: pdfstitcher/gui/dialogs.py:318
 msgid "Check for updates on startup"
@@ -388,15 +389,15 @@ msgstr "Välj en katalog"
 
 #: pdfstitcher/gui/dialogs.py:451
 msgid "Preferences saved to {}"
-msgstr ""
+msgstr "Inställningar sparade till {}"
 
 #: pdfstitcher/gui/dialogs.py:453
 msgid "Please restart to switch to {}."
-msgstr ""
+msgstr "Vänligen starta om för att byta till {}."
 
 #: pdfstitcher/gui/dialogs.py:455
 msgid "Preferences saved"
-msgstr ""
+msgstr "Inställningar sparade"
 
 #: pdfstitcher/gui/io_tab.py:30 pdfstitcher/gui/main_frame.py:397
 msgid "Select input PDF"
@@ -408,7 +409,7 @@ msgstr ""
 
 #: pdfstitcher/gui/io_tab.py:71
 msgid "Output Options"
-msgstr ""
+msgstr "Utmatningsalternativ"
 
 #: pdfstitcher/gui/io_tab.py:78 pdfstitcher/gui/tile_tab.py:145
 msgid "Page Range"
@@ -416,7 +417,7 @@ msgstr "Sidintervall"
 
 #: pdfstitcher/gui/io_tab.py:98 pdfstitcher/gui/tile_tab.py:150
 msgid "Pages assemble in specified order. 0 inserts a blank page."
-msgstr ""
+msgstr "Sidor monteras i specificerad ordning. 0 infogar en tom sida."
 
 #: pdfstitcher/gui/io_tab.py:100
 msgid "Use - for ranges. Example: 1-3, 0, 4, 0, 5-10."
@@ -424,11 +425,11 @@ msgstr ""
 
 #: pdfstitcher/gui/io_tab.py:110 pdfstitcher/gui/tile_tab.py:178
 msgid "Margin to add to final output"
-msgstr ""
+msgstr "Marginal att lägga till slutlig utgång"
 
 #: pdfstitcher/gui/io_tab.py:128 pdfstitcher/gui/tile_tab.py:196
 msgid "Inches"
-msgstr ""
+msgstr "Tum"
 
 #: pdfstitcher/gui/io_tab.py:128 pdfstitcher/gui/tile_tab.py:196
 msgid "Centimetres"
@@ -439,8 +440,9 @@ msgid "Units"
 msgstr ""
 
 #: pdfstitcher/gui/io_tab.py:141
+#, fuzzy
 msgid "Process Layers"
-msgstr ""
+msgstr "Bearbetar lager"
 
 #: pdfstitcher/gui/io_tab.py:147
 msgid "Tile pages"
@@ -448,11 +450,12 @@ msgstr ""
 
 #: pdfstitcher/gui/io_tab.py:178
 msgid "Process layers then tile pages and save"
-msgstr ""
+msgstr "Bearbeta lager, sedan sida vid sida sidor och spara"
 
 #: pdfstitcher/gui/io_tab.py:181
+#, fuzzy
 msgid "Process layers and save without tiling pages"
-msgstr ""
+msgstr "Bearbeta lager och spara utan att kakla sidor"
 
 #: pdfstitcher/gui/io_tab.py:184
 msgid "Tile pages and save without processing layers"
@@ -460,11 +463,11 @@ msgstr ""
 
 #: pdfstitcher/gui/io_tab.py:188
 msgid "Open the PDF and save selected page range without modifying"
-msgstr ""
+msgstr "Öppna PDF-filen och spara valt sidintervall utan att ändra"
 
 #: pdfstitcher/gui/io_tab.py:190
 msgid "Optionally, add margins to each page"
-msgstr ""
+msgstr "Alternativt lägga till marginaler till varje sida"
 
 #: pdfstitcher/gui/layers_tab.py:27
 msgid "Load PDF to view layers."
@@ -484,7 +487,7 @@ msgstr "Dölj"
 
 #: pdfstitcher/gui/layers_tab.py:51
 msgid "Include non-optional content"
-msgstr ""
+msgstr "Inkludera icke-valfritt innehåll"
 
 #: pdfstitcher/gui/layers_tab.py:59 pdfstitcher/gui/layers_tab.py:368
 msgid "Deselect all"
@@ -516,7 +519,7 @@ msgstr "Linjetjocklek"
 
 #: pdfstitcher/gui/layers_tab.py:153
 msgid "Line Style"
-msgstr ""
+msgstr "Linjestil"
 
 #: pdfstitcher/gui/layers_tab.py:160
 msgid "Solid"
@@ -536,15 +539,16 @@ msgstr "Applicera"
 
 #: pdfstitcher/gui/layers_tab.py:180 pdfstitcher/gui/layers_tab.py:322
 msgid "Reset"
-msgstr ""
+msgstr "Återställ"
 
 #: pdfstitcher/gui/layers_tab.py:198
 msgid "Apply to checked"
 msgstr "Tillämpa på markerad"
 
 #: pdfstitcher/gui/layers_tab.py:200
+#, fuzzy
 msgid "Reset checked"
-msgstr ""
+msgstr "Återställ kontrollerad"
 
 #: pdfstitcher/gui/layers_tab.py:321
 msgid "Apply to"
@@ -552,7 +556,7 @@ msgstr "Ansök att"
 
 #: pdfstitcher/gui/layers_tab.py:328
 msgid "No layers found in input document."
-msgstr ""
+msgstr "Inga lager hittades i indatadokumentet."
 
 #: pdfstitcher/gui/layers_tab.py:330
 msgid "Selected properties will apply to all lines in the document."
@@ -580,15 +584,15 @@ msgstr "Generera PDF"
 
 #: pdfstitcher/gui/main_frame.py:210
 msgid "Processing"
-msgstr ""
+msgstr "Bearbetar"
 
 #: pdfstitcher/gui/main_frame.py:211
 msgid "Processing, please wait"
-msgstr ""
+msgstr "Behandling, vänligen vänta"
 
 #: pdfstitcher/gui/main_frame.py:219
 msgid "Processing cancelled"
-msgstr ""
+msgstr "Bearbetning av inställd"
 
 #: pdfstitcher/gui/main_frame.py:225 pdfstitcher/gui/main_frame.py:230
 msgid "Something went wrong"
@@ -620,11 +624,11 @@ msgstr "Dokumentation"
 
 #: pdfstitcher/gui/main_frame.py:264
 msgid "Open the documentation in a web browser"
-msgstr ""
+msgstr "Öppna dokumentationen i en webbläsare"
 
 #: pdfstitcher/gui/main_frame.py:274
 msgid "Open the dialog to report a bug"
-msgstr ""
+msgstr "Öppna dialogrutan för att rapportera en bugg"
 
 #: pdfstitcher/gui/main_frame.py:278
 msgid "Help"
@@ -648,19 +652,19 @@ msgstr "Fil kommer att skrivas till "
 
 #: pdfstitcher/gui/main_frame.py:451
 msgid "PDF locked! Enter the correct password."
-msgstr ""
+msgstr "PDF låst! Ange rätt lösenord."
 
 #: pdfstitcher/gui/main_frame.py:454
 msgid "Password"
-msgstr ""
+msgstr "Lösenord"
 
 #: pdfstitcher/gui/main_frame.py:454
 msgid "PDF file is locked"
-msgstr ""
+msgstr "PDF-fil är låst"
 
 #: pdfstitcher/gui/main_frame.py:461
 msgid "PDF will not open as you canceled the operation."
-msgstr ""
+msgstr "PDF öppnas inte när du annullerar operationen."
 
 #: pdfstitcher/gui/main_frame.py:466
 msgid "Cannot open file"
@@ -672,11 +676,11 @@ msgstr "Felmeddelande"
 
 #: pdfstitcher/gui/main_frame.py:470
 msgid "Opening"
-msgstr ""
+msgstr "Öppna"
 
 #: pdfstitcher/gui/main_frame.py:473
 msgid "PDF file loaded without errors."
-msgstr ""
+msgstr "PDF-fil laddad utan fel."
 
 #: pdfstitcher/gui/main_frame.py:478
 msgid "This PDF is encrypted with the following permissions:"
@@ -687,18 +691,20 @@ msgid ""
 "Please be respectful of the author and only use this tool for personal "
 "use."
 msgstr ""
+"Var respektfull för författaren och använd endast detta verktyg för "
+"personligt bruk."
 
 #: pdfstitcher/gui/tile_tab.py:32
 msgid "Required Parameters"
-msgstr ""
+msgstr "Obligatoriska parametrar"
 
 #: pdfstitcher/gui/tile_tab.py:39
 msgid "Number of Columns"
-msgstr ""
+msgstr "Antal kolumner"
 
 #: pdfstitcher/gui/tile_tab.py:54
 msgid "OR Number of Rows"
-msgstr ""
+msgstr "Eller antal Rows"
 
 #: pdfstitcher/gui/tile_tab.py:73 pdfstitcher/processing/pagetiler.py:89
 msgid "Rows then columns"
@@ -730,7 +736,7 @@ msgstr "Sidordning"
 
 #: pdfstitcher/gui/tile_tab.py:121 pdfstitcher/processing/pagetiler.py:23
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #: pdfstitcher/gui/tile_tab.py:122 pdfstitcher/processing/pagetiler.py:25
 msgid "Clockwise"
@@ -747,11 +753,11 @@ msgstr ""
 
 #: pdfstitcher/gui/tile_tab.py:127
 msgid "Page Rotation"
-msgstr ""
+msgstr "Sidrotation"
 
 #: pdfstitcher/gui/tile_tab.py:171
 msgid "Optional Parameters"
-msgstr ""
+msgstr "Valfria parametrar"
 
 #. translation_note: TrimBox and MediaBox are PDF elements, so they likely
 #. won't translate nicely.
@@ -761,7 +767,7 @@ msgstr ""
 
 #: pdfstitcher/gui/tile_tab.py:212
 msgid "May help fix things when output is not as expected"
-msgstr ""
+msgstr "Kan hjälpa till att fixa saker när resultatet inte är som förväntat"
 
 #: pdfstitcher/gui/tile_tab.py:223
 msgid "Amount to trim from each page"
@@ -793,11 +799,11 @@ msgstr "Botten"
 
 #: pdfstitcher/processing/layerfilter.py:470
 msgid "No layers selected, generated PDF would be blank."
-msgstr ""
+msgstr "Inga lager som valts, genererad PDF skulle bli tomt."
 
 #: pdfstitcher/processing/pagefilter.py:47
 msgid "Page"
-msgstr ""
+msgstr "Sidan"
 
 #: pdfstitcher/processing/pagetiler.py:32
 #: pdfstitcher/processing/pagetiler.py:49
@@ -808,7 +814,7 @@ msgstr ""
 #: pdfstitcher/processing/pagetiler.py:45
 #: pdfstitcher/processing/pagetiler.py:61
 msgid "Middle"
-msgstr ""
+msgstr "Mitten"
 
 #: pdfstitcher/processing/pagetiler.py:101
 msgid "Tiling with {} rows and {} columns"
@@ -832,19 +838,20 @@ msgstr "Horisontell anpassning"
 
 #: pdfstitcher/processing/pagetiler.py:208
 msgid "No valid pages included in range"
-msgstr ""
+msgstr "Inga giltiga sidor som ingår i intervallet"
 
 #: pdfstitcher/processing/pagetiler.py:220
 msgid "No input document loaded"
-msgstr ""
+msgstr "Inget inmatningsdokument laddat"
 
 #: pdfstitcher/processing/pagetiler.py:251
 msgid "Warning: pages {} have a different size than the page before"
 msgstr ""
 
 #: pdfstitcher/processing/pagetiler.py:341
+#, fuzzy
 msgid "No pages to tile"
-msgstr ""
+msgstr "Inga sidor att kakla"
 
 #: pdfstitcher/processing/pagetiler.py:349
 msgid "Warning: requested {} columns, but there are only {} pages"
@@ -879,15 +886,15 @@ msgstr ""
 
 #: pdfstitcher/processing/pagetiler.py:612
 msgid "Input document not loaded"
-msgstr ""
+msgstr "Inmatningsdokument inte laddat"
 
 #: pdfstitcher/processing/procbase.py:86
 msgid "No page range specified, defaulting to all"
-msgstr ""
+msgstr "Inget sidintervall specificerat, standardiserat för alla"
 
 #: pdfstitcher/processing/procbase.py:115
 msgid "Page {} is out of range. Removing from page list."
-msgstr ""
+msgstr "Page {} är utom räckhåll. Ta bort från page list."
 
 #~ msgid "Mangling PDF. This may take some time."
 #~ msgstr ""
