@@ -31,7 +31,7 @@ msgstr "Fel vid hämtning av systeminformation: {}"
 #: pdfstitcher/cli/app.py:230 pdfstitcher/gui/layers_tab.py:140
 #: pdfstitcher/utils.py:58
 msgid "in"
-msgstr "i"
+msgstr "in i"
 
 #: pdfstitcher/cli/app.py:45 pdfstitcher/gui/layers_tab.py:140
 #: pdfstitcher/utils.py:60
