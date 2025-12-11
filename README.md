@@ -11,7 +11,7 @@ For up-to-date information, also check out https://www.pdfstitcher.org.
 * [macOS - M1/M2 Processor](https://github.com/cfcurtis/pdfstitcher/releases/latest/download/PDFStitcher-InstallerARM64.dmg)
 * <a href='https://flathub.org/apps/details/com.github.cfcurtis.pdfstitcher'><img width='120' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/></a>
 * Using pip: `pip install pdfstitcher[gui]` **Requires Python between 3.8 and 3.12**. 
-    * Running `pip installl pdfstitcher` without the `[gui]` option will install the command line version only. The `pdfstitcher` command is installed as a command line script, while the GUI is installed as a separate script called `pdfstitcher-gui`.
+    * Running `pip install pdfstitcher` without the `[gui]` option will install the command line version only. The `pdfstitcher` command is installed as a command line script, while the GUI is installed as a separate script called `pdfstitcher-gui`.
     * To run as a Python module, use `python -m pdfstitcher.cli` or `python -m pdfstitcher.gui`
     * As of June 2024, there is a known issue with building the wxPython wheel on systems with GCC 14 (e.g. Fedora 40). If the installation fails, try using Python 3.11 and installing a wheel manually from https://wxpython.org/pages/downloads/index.html.
 
