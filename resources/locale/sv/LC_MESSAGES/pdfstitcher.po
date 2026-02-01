@@ -9,17 +9,17 @@ msgstr ""
 "Project-Id-Version: pdfstitcher VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-08-12 08:24-0600\n"
-"PO-Revision-Date: 2025-07-16 03:01+0000\n"
+"PO-Revision-Date: 2026-02-02 19:01+0000\n"
 "Last-Translator: Stefan Bjornelund the Gnome "
 "<stefan.bjornelund.gnome@gmail.com>\n"
-"Language-Team: Swedish <https://hosted.weblate.org/projects/pdfstitcher/"
-"user-interface/sv/>\n"
+"Language-Team: Swedish <https://hosted.weblate.org/projects/pdfstitcher/user-"
+"interface/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: pdfstitcher/bug_info.py:28
@@ -59,9 +59,8 @@ msgid "Please specify a page range"
 msgstr "Ange ett sidintervall"
 
 #: pdfstitcher/utils.py:357
-#, fuzzy
 msgid "Output size:"
-msgstr "Resultatstorlek:"
+msgstr "Utmatningsstorlek:"
 
 #: pdfstitcher/utils.py:366
 msgid "Warning! Output is larger than {} {}, may not open correctly."
@@ -298,7 +297,7 @@ msgstr ""
 #: pdfstitcher/gui/dialogs.py:171
 #, fuzzy
 msgid "Create mangled PDF (Beta)"
-msgstr "Skapa manglade PDF-filer (beta)"
+msgstr "Skapa förvrängda PDF-filer (beta)"
 
 #: pdfstitcher/gui/dialogs.py:182
 msgid "Report Via GitHub"
@@ -402,7 +401,6 @@ msgid "Preferences saved"
 msgstr "Inställningar sparade"
 
 #: pdfstitcher/gui/io_tab.py:30 pdfstitcher/gui/main_frame.py:397
-#, fuzzy
 msgid "Select input PDF"
 msgstr "Välj indata-PDF"
 
@@ -443,7 +441,6 @@ msgid "Units"
 msgstr "Enheter"
 
 #: pdfstitcher/gui/io_tab.py:141
-#, fuzzy
 msgid "Process Layers"
 msgstr "Bearbetar lager"
 
@@ -551,7 +548,6 @@ msgid "Apply to checked"
 msgstr "Tillämpa på markerad"
 
 #: pdfstitcher/gui/layers_tab.py:200
-#, fuzzy
 msgid "Reset checked"
 msgstr "Återställ kontrollerad"
 
@@ -793,7 +789,6 @@ msgid "Left"
 msgstr "Vänster"
 
 #: pdfstitcher/gui/tile_tab.py:260 pdfstitcher/processing/pagetiler.py:63
-#, fuzzy
 msgid "Right"
 msgstr "Höger"
 
