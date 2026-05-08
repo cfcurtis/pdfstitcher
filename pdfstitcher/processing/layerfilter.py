@@ -423,11 +423,13 @@ class LayerFilter(ProcessingBase):
             try:
                 page_stream = pikepdf.unparse_content_stream(commands)
             except Exception as e:
-                print("Failed writing stream to page with error type {}").format(type(e))
-                pass
+                print(
+                    _("Failed writing stream to page with error type {}").format(type(e).__name__)
+                )
+                page_stream = b""
 
             # get the dictionary of xobjects to process as well
-            for _, info in placed_xobjs.items():
+            for info in placed_xobjs.values():
                 if "/Subtype" in info["xobj"].keys() and info["xobj"].Subtype == "/Form":
                     self._initialize_state(info["state"])
                     self._process_content(
@@ -454,8 +456,7 @@ class LayerFilter(ProcessingBase):
                 # Probably a form xobject
                 content.write(page_stream)
         except Exception as e:
-            print("Failed writing stream to page with error type {}").format(type(e))
-            pass
+            print(_("Failed writing stream to page with error type {}").format(type(e).__name__))
 
     def run(self, progress_win=None) -> bool:
         """
